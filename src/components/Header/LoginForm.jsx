@@ -5,10 +5,6 @@ import { Form, Icon, Input, Button } from 'antd'
 import { Redirect } from 'react-router-dom'
 import './style.css'
 
-function hasErrors(fieldsError) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
-}
-
 class HorizontalLoginForm extends React.Component {
   constructor(props) {
     super(props)
