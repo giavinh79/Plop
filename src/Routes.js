@@ -13,8 +13,7 @@ class Routes extends React.Component {
           <Header />
           <div style={styles.body}>
             <Switch>
-              <Route exact path='/home' render={() => {
-                return ( SignupFormWrapper )}}/>
+              <Route exact path='/home' render={() => { return <SignupFormWrapper/>}}/>
               <Route exact path='/dashboard' render={() => {
                 return <><SideNav/><Dashboard/></>
               }}/>
