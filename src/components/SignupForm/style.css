@@ -1,0 +1,4 @@
+.ant-form-item-children {
+    display: flex;
+    justify-content: space-between;
+}
