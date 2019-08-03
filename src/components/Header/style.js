@@ -9,5 +9,4 @@ export const Wrapper = styled.div`
     height: 8%;
     min-height: 4rem;
     background-color: #445D66;
-    padding: 1rem;
 `

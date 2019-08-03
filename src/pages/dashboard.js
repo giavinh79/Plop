@@ -1,5 +1,5 @@
 import React from 'react'
-import Overview from '../components/Overview/Overview';
+import Overview from '../components/Dashboard/Dashboard';
 
 export default class Dashboard extends React.Component {
     constructor(props) {

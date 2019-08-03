@@ -1,48 +1,53 @@
 import React, { Component } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Icon } from 'antd'
+import { Card } from './Card';
 
 const activeItems = [
     {
         id: '1',
-        content: 'Complete frontend',
+        title: 'Complete frontend',
+        content: 'Fix styling on homepage'
     },
     {
         id: '2',
-        content: 'Create backend',
+        title: 'Create backend',
+        content: 'Setup REST API'
     },
     {
         id: '3',
-        content: 'Add Socket.IO',
+        title: 'Add Socket.IO',
+        content: 'Install and configure for dashboard page'
     }
 ];
 
 const progressItems = [
     // {
     //     id: 'item 4',
-    //     content: 'item 4',
+    //     title: 'item 4',
     // },
     // {
     //     id: 'item 5',
-    //     content: 'item 5',
+    //     title: 'item 5',
     // },
     // {
     //     id: 'item 6',
-    //     content: 'item 6',
+    //     title: 'item 6',
     // }
 ];
 
 const completedItems = [
     // {
     //     id: 'item 4',
-    //     content: 'item 4',
+    //     title: 'item 4',
     // },
     // {
     //     id: 'item 5',
-    //     content: 'item 5',
+    //     title: 'item 5',
     // },
     // {
     //     id: 'item 6',
-    //     content: 'item 6',
+    //     title: 'item 6',
     // }
 ];
 
@@ -74,10 +79,11 @@ const grid = 8;
 
 const getactivetyle = (isDragging, draggableStyle) => ({
     display: 'flex',
+    flexDirection: 'column',
     userSelect: 'none',
-    padding: grid * 2,
+    // padding: grid * 2,
     margin: `0 0 ${grid}px 0`,
-    background: isDragging ? 'lightgreen' : 'white',
+    background: isDragging ? '#eaeaea' : 'white',
     border: '1px solid #ccc',
     borderRadius: '5px',
     ...draggableStyle
@@ -173,7 +179,7 @@ export default class Overview extends Component {
                                                 snapshot.isDragging,
                                                 provided.draggableProps.style
                                             )}>
-                                            {item.content}
+                                            <Card content={item.content} title={item.title}/>
                                         </div>
                                     )}
                                 </Draggable>
@@ -204,7 +210,7 @@ export default class Overview extends Component {
                                                     snapshot.isDragging,
                                                     provided.draggableProps.style
                                                 )}>
-                                                {item.content}
+                                                <Card content={item.content} title={item.title}/>
                                             </div>
                                         )}
                                     </Draggable>
@@ -235,7 +241,7 @@ export default class Overview extends Component {
                                                 snapshot.isDragging,
                                                 provided.draggableProps.style
                                             )}>
-                                            {item.content}
+                                            <Card content={item.content} title={item.title}/>
                                         </div>
                                     )}
                                 </Draggable>
@@ -259,5 +265,22 @@ const styles = {
     title : {
         margin:'1rem',
         color: 'black'
+    },
+    cardTop : {
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '16px',
+        fontWeight: 'bold',
+        backgroundColor: '#c9dde4'
+    },
+    cardBody : {
+        display: 'flex',
+        padding: '16px'
+    },
+    cardIcon : {
+        color: '#6b7080',
+        margin: '-0.5rem -0.5rem 0 0',
+        fontSize: '1.5rem',
+        cursor: 'pointer'
     }
 }
