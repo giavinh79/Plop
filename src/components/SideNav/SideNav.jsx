@@ -5,14 +5,9 @@ import { Menu, Icon } from 'antd'
 
 const { SubMenu } = Menu;
 export default class Sider extends React.Component {
-  handleClick = e => {
-    console.log('click ', e);
-  };
-
   render() {
     return (
       <Menu
-        onClick={this.handleClick}
         style={{ width: 256, minHeight: '100%' }}
         defaultSelectedKeys={['1']}
         defaultOpenKeys={['sub1']}
@@ -27,11 +22,11 @@ export default class Sider extends React.Component {
             </span>
           }
         >
-          <Menu.ItemGroup key="g1" title="Item 1">
-            <Menu.Item key="1">Option 1</Menu.Item>
-            <Menu.Item key="2">Option 2</Menu.Item>
+          <Menu.ItemGroup key="g1" title="Filter">
+            <Menu.Item key="1" onClick={() => this.props.handlePageChange(0)}>All</Menu.Item>
+            <Menu.Item key="2">Assigned To Me</Menu.Item>
           </Menu.ItemGroup>
-          <Menu.ItemGroup key="g2" title="Item 2">
+          <Menu.ItemGroup key="g2" title="Analytics">
             <Menu.Item key="3">Option 3</Menu.Item>
             <Menu.Item key="4">Option 4</Menu.Item>
           </Menu.ItemGroup>
@@ -45,11 +40,9 @@ export default class Sider extends React.Component {
             </span>
           }
         >
-          <Menu.Item key="5">Option 5</Menu.Item>
-          <Menu.Item key="6">Option 6</Menu.Item>
-          <SubMenu key="sub3" title="Submenu">
-            <Menu.Item key="7">Option 7</Menu.Item>
-            <Menu.Item key="8">Option 8</Menu.Item>
+          <Menu.Item key="5">View</Menu.Item>
+          <SubMenu key="sub3" title="Admin Panel">
+            <Menu.Item key="7">Manage members</Menu.Item>
           </SubMenu>
         </SubMenu>
         <SubMenu
@@ -62,11 +55,11 @@ export default class Sider extends React.Component {
           }
         >
           <Menu.Item key="9">Active</Menu.Item>
-          <Menu.Item key="10">Backlog</Menu.Item>
+          <Menu.Item key="10" onClick={() => {this.props.handlePageChange(4)}}>Backlog</Menu.Item>
           <Menu.Item key="11">Archive</Menu.Item>
         </SubMenu>
-        <Menu.Item key="sub5">
-            <Icon type="github" />
+        <Menu.Item key="sub5" onClick={() => {window.open('https://github.com/GV79/Plop', '_blank')}}>
+            <Icon type="github"/>
             GitHub
         </Menu.Item>
       </Menu>
