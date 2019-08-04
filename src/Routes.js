@@ -1,29 +1,24 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom'
-import Dashboard from './pages/dashboard';
+import Panel from './pages/panel';
 import Header from './components/Header/Header';
-import SideNav from './components/SideNav/SideNav';
 import SignupFormWrapper from './components/SignupFormWrapper/SignupFormWrapper';
 
-class Routes extends React.Component {
+export default class Routes extends React.Component {
   render() {
     return (
-      <>
-        <Router>
-          <Header />
-          <div style={styles.body}>
-            <Switch>
-              <Route exact path='/home' render={() => { return <SignupFormWrapper/>}}/>
-              <Route exact path='/dashboard' render={() => {
-                return <><SideNav/><Dashboard/></>
-              }}/>
-              <Route path='/'>
-                <Redirect to="/home"/>
-              </Route>
-            </Switch>
-          </div>
-        </Router>
-      </>
+      <Router>
+        <Header />
+        <div style={styles.body}>
+          <Switch>
+            <Route exact path='/home' render={() => { return <SignupFormWrapper/>}}/>
+            <Route exact path='/dashboard' render={() => { return <Panel/>}}/>
+            <Route path='/'>
+              <Redirect to="/home"/>
+            </Route>
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }
@@ -34,5 +29,3 @@ const styles = {
     minHeight: '92%'
   }
 }
-
-export default Routes;

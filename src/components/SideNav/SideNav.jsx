@@ -57,14 +57,13 @@ export default class Sider extends React.Component {
           title={
             <span>
               <Icon type="pull-request" />
-              <span>Backlog</span>
+              <span>Issues</span>
             </span>
           }
         >
-          <Menu.Item key="9">Option 9</Menu.Item>
-          <Menu.Item key="10">Option 10</Menu.Item>
-          <Menu.Item key="11">Option 11</Menu.Item>
-          <Menu.Item key="12">Option 12</Menu.Item>
+          <Menu.Item key="9">Active</Menu.Item>
+          <Menu.Item key="10">Backlog</Menu.Item>
+          <Menu.Item key="11">Archive</Menu.Item>
         </SubMenu>
         <Menu.Item key="sub5">
             <Icon type="github" />

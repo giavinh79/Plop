@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Icon } from 'antd'
 
 export function Card(props) {
@@ -31,4 +32,9 @@ const styles = {
         fontSize: '1.5rem',
         cursor: 'pointer'
     }
+}
+
+Card.propTypes = {
+    title : PropTypes.string,
+    content : PropTypes.string
 }

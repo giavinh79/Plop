@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Icon } from 'antd'
-import { Card } from './Card';
+import React, { Component } from 'react'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { Card } from './Card'
 
 const activeItems = [
     {
@@ -97,7 +96,7 @@ const getListStyle = isDraggingOver => ({
     // border: '1px solid #ccc'
 });
 
-export default class Overview extends Component {
+export default class Dashboard extends Component {
     state = {
         active: activeItems,
         progress: progressItems,
