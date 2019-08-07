@@ -17,3 +17,11 @@
 const Route = use('Route')
 
 Route.on('/').render('welcome')
+
+Route.post('/signup', ({ request, response}) => {
+    const { email, password, remember } = request.body
+    console.log(`Email - ${email}, Password - ${password}, Remember - ${remember}`)
+    response.send('success')
+})
+
+Route.put('/issue', 'IssueController.add')
