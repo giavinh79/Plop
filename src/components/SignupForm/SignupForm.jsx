@@ -3,15 +3,23 @@ import React from 'react'
 import 'antd/dist/antd.css'
 import { Form, Icon, Input, Button, Checkbox } from 'antd'
 import './style.css'
+import axios from 'axios'
 
 class NormalLoginForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        axios.post('http://localhost:3333/signup', values)
+        .then(res => {
+          console.log('Success')
+        })
+        .catch(err => {
+          console.log(`Request failed - ${err}`);
+        });
       }
     });
+
   };
 
   render() {
@@ -31,7 +39,7 @@ class NormalLoginForm extends React.Component {
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('password', {
-            rules: [{ required: true, message: 'Please input your Password!' }],
+            rules: [{ required: true, message: 'Please input your password!' }],
           })(
             <Input
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -48,7 +56,6 @@ class NormalLoginForm extends React.Component {
           <a className="signup-form-forgot" href="/" style={{color:'#ccc'}}>
             Forgot password
           </a>
-          {/* Or <a href="">register now!</a> */}
         </Form.Item>
         <Form.Item style={{display: 'flex', justifyContent: 'flex-end'}}>
             <Button type="primary" htmlType="submit" className="signup-form-button">

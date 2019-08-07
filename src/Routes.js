@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom'
 import Panel from './pages/panel';
+import Homepage from './pages/homepage';
 import Header from './components/Header/Header';
-import SignupFormWrapper from './components/SignupFormWrapper/SignupFormWrapper';
 
 export default class Routes extends React.Component {
   render() {
@@ -11,7 +11,7 @@ export default class Routes extends React.Component {
         <Header />
         <div style={styles.body}>
           <Switch>
-            <Route exact path='/home' render={() => { return <SignupFormWrapper/>}}/>
+            <Route exact path='/home' render={() => { return <Homepage/>}}/>
             <Route exact path='/dashboard' render={() => { return <Panel/>}}/>
             <Route path='/'>
               <Redirect to="/home"/>
@@ -26,6 +26,6 @@ export default class Routes extends React.Component {
 const styles = {
   body : {
     display: 'flex',
-    minHeight: '92%'
+    minHeight: '91%'
   }
 }

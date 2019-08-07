@@ -1,10 +1,10 @@
 
 import React from 'react'
 import 'antd/dist/antd.css'
-import { Menu, Icon } from 'antd'
+import { Menu, Icon, Tooltip } from 'antd'
 
 const { SubMenu } = Menu;
-export default class Sider extends React.Component {
+export default class SideNav extends React.Component {
   render() {
     return (
       <Menu
@@ -27,8 +27,12 @@ export default class Sider extends React.Component {
             <Menu.Item key="2">Assigned To Me</Menu.Item>
           </Menu.ItemGroup>
           <Menu.ItemGroup key="g2" title="Analytics">
-            <Menu.Item key="3">Option 3</Menu.Item>
-            <Menu.Item key="4">Option 4</Menu.Item>
+            <Menu.Item key="3">
+              <Tooltip title="Displays graphs and data for issues" mouseEnterDelay={0.5}>Project Overview</Tooltip>
+            </Menu.Item>
+            <Menu.Item key="4">
+              <Tooltip title="Issues schedule" mouseEnterDelay={0.5}>Timeline</Tooltip>
+            </Menu.Item>
           </Menu.ItemGroup>
         </SubMenu>
         <SubMenu
@@ -42,7 +46,7 @@ export default class Sider extends React.Component {
         >
           <Menu.Item key="5">View</Menu.Item>
           <SubMenu key="sub3" title="Admin Panel">
-            <Menu.Item key="7">Manage members</Menu.Item>
+            <Menu.Item key="6">Manage members</Menu.Item>
           </SubMenu>
         </SubMenu>
         <SubMenu
@@ -50,17 +54,28 @@ export default class Sider extends React.Component {
           title={
             <span>
               <Icon type="pull-request" />
-              <span>Issues</span>
+              <Tooltip title="Issues are tasks" mouseEnterDelay={0.5}>
+                <span>Issues</span>
+              </Tooltip>
             </span>
           }
         >
+          <Menu.Item key="8" onClick={() => {this.props.handlePageChange(3)}}>Create</Menu.Item>
           <Menu.Item key="9">Active</Menu.Item>
-          <Menu.Item key="10" onClick={() => {this.props.handlePageChange(4)}}>Backlog</Menu.Item>
+          <Menu.Item key="10" onClick={() => {this.props.handlePageChange(4)}}>
+            <Tooltip title="Repository for future tasks" mouseEnterDelay={0.5}>
+              <span>Backlog</span>
+            </Tooltip>
+          </Menu.Item>
           <Menu.Item key="11">Archive</Menu.Item>
         </SubMenu>
-        <Menu.Item key="sub5" onClick={() => {window.open('https://github.com/GV79/Plop', '_blank')}}>
-            <Icon type="github"/>
-            GitHub
+        <Menu.Item key="sub5" onClick={() => {window.open('https://github.com', '_blank')}}>
+          <Icon type="github"/>
+          GitHub
+        </Menu.Item>
+        <Menu.Item key="sub6">
+          <Icon type="database"/>
+          Logs
         </Menu.Item>
       </Menu>
     );

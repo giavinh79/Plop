@@ -97,6 +97,10 @@ const getListStyle = isDraggingOver => ({
 });
 
 export default class Dashboard extends Component {
+    componentDidMount() {
+        // do API calls here, import JSON data, if this.props.filter = true, filter by assignee
+    }
+
     state = {
         active: activeItems,
         progress: progressItems,

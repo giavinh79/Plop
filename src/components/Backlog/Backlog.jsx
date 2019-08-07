@@ -1,4 +1,5 @@
 import React from 'react'
+import { layout, subheader } from '../../globalStyles'
 import Table from './Table';
 
 export default class Backlog extends React.Component {
@@ -11,16 +12,11 @@ export default class Backlog extends React.Component {
 
     render() {
         return (
-            <div style={styles.body}>
+            <div style={layout}>
+                <p style={subheader}>Create Issue</p>
                 <Table />
             </div>
         );
     }
 }
 
-const styles = {
-    body : {
-        width: '100%',
-        padding: '1rem'
-    }
-}

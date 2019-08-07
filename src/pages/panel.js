@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Dashboard from '../components/Dashboard/Dashboard';
 import SideNav from '../components/SideNav/SideNav';
 import Backlog from '../components/Backlog/Backlog';
+import { WrappedCreateIssueForm } from '../components/CreateIssue/CreateIssue';
 
 export default class Panel extends React.Component {
     changePage = (page) => {
@@ -13,9 +14,9 @@ export default class Panel extends React.Component {
     returnPage = (page) => {
         switch(page) {
             case 0: return <Dashboard/>;
-            case 1: 
+            case 1: return <Dashboard filter={true}/>;
             case 2: 
-            case 3: 
+            case 3: return <WrappedCreateIssueForm/>;
             case 4: return <Backlog />;
             default: return <Dashboard/>;
         }

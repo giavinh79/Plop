@@ -78,8 +78,13 @@ const data = [
   },
 ];
 
+const pagination = {
+  pageSize: '8',
+  hideOnSinglePage: true
+}
+
 export default function Table() {
     return (
-        <AntTable columns={columns} dataSource={data} style={{border: '1px solid #ccc', borderRadius: '5px', height: '100%'}}/>
+        <AntTable columns={columns} dataSource={data} pagination={pagination} style={{border: '1px solid #ccc', borderRadius: '5px'}}/>
     )
 }
