@@ -8,8 +8,7 @@ html, body {
 body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 300;
-  background-image: url("/splash.png");
-  background-color: #220052;
+  background-color: #1b1b1b;
 }
 
 * {
@@ -28,35 +27,6 @@ section {
   position: relative;
 }
 
-section:before {
-  content: "";
-  position: absolute;
-  background: url("/pyramid.png") no-repeat;
-  background-size: 100%;
-  width: 100%;
-  height: 402px;
-  z-index: -1;
-}
-
-.logo {
-  background: url("/logo.svg") no-repeat;
-  width: 36px;
-  height: 33px;
-  background-size: 100%;
-  margin-bottom: 35px;
-  opacity: 0;
-  animation: slideUp 1s cubic-bezier(0.19, 1, 0.30, 1) 1.3s forwards;
-}
-
-.title {
-  background: url("/title.svg") no-repeat;
-  width: 219px;
-  height: 36px;
-  background-size: 100%;
-  opacity: 0;
-  animation: slideUp 1s cubic-bezier(0.19, 1, 0.30, 1) 0.2s forwards;
-}
-
 .subtitle {
   margin-top: 25px;
   color: #BDB3CB;
@@ -66,7 +36,6 @@ section:before {
   opacity: 0;
   animation: slideUp 1s cubic-bezier(0.19, 1, 0.30, 1) 0.5s forwards;
 }
-
 
 a {
   color: inherit;
