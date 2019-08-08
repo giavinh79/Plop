@@ -1,4 +1,4 @@
-// for more complex styling with selectors or when responsive media queries are needed
+// for more complex styling with selectors, responsive media queries, or seperating JS and styling code
 import styled from 'styled-components';
 
 export const HeaderWrapper = styled.div`
@@ -9,6 +9,12 @@ export const HeaderWrapper = styled.div`
     height: 9%;
     min-height: 4rem;
     background-color: #445D66;
+`
+
+export const Logo = styled.img`
+    cursor: pointer;
+    width: 6rem;
+    padding: 0 0.5rem;
 `
 
 export const UserPanelWrapper = styled.div`

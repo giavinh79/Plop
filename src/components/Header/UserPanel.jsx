@@ -4,16 +4,18 @@ import { UserPanelWrapper } from './style';
 
 const menu = (
     <Menu>
-      <Menu.Item key="0">
-        <a href="/">Settings</a>
-      </Menu.Item>
-      <Menu.Item key="1">
-        <a href="/">Logout</a>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="3">Help</Menu.Item>
-    </Menu>
-  );
+        <Menu.Item key="0">
+            <a href="/">Settings</a>
+        </Menu.Item>
+        <Menu.Item key="1">
+            <a href="/">Themes</a>
+         </Menu.Item>
+        <Menu.Divider />
+            <Menu.Item key="3">
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>Logout <Icon type="logout" /></div>
+            </Menu.Item>
+        </Menu>
+);
 
 export default class UserPanel extends React.Component {
     constructor(props) {

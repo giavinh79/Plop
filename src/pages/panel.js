@@ -4,10 +4,10 @@ import Dashboard from '../components/Dashboard/Dashboard';
 import SideNav from '../components/SideNav/SideNav';
 import Backlog from '../components/Backlog/Backlog';
 import { WrappedCreateIssueForm } from '../components/CreateIssue/CreateIssue';
+import MembersView from '../components/ViewMembers/ViewMembers';
 
 export default class Panel extends React.Component {
     changePage = (page) => {
-        console.log('wtf ' + page)
         this.setState({ currentPage: page })
     }
 
@@ -16,8 +16,13 @@ export default class Panel extends React.Component {
             case 0: return <Dashboard/>;
             case 1: return <Dashboard filter={true}/>;
             case 2: 
-            case 3: return <WrappedCreateIssueForm/>;
-            case 4: return <Backlog />;
+            case 3: 
+            case 4: return <MembersView/>;
+            case 5: return <WrappedCreateIssueForm/>;
+            case 6:
+            case 7: return <Backlog/>;
+            case 8: 
+            case 9: 
             default: return <Dashboard/>;
         }
     }

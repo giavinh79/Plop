@@ -5,27 +5,27 @@ import Homepage from './pages/homepage';
 import Header from './components/Header/Header';
 
 export default class Routes extends React.Component {
-  render() {
-    return (
-      <Router>
-        <Header />
-        <div style={styles.body}>
-          <Switch>
-            <Route exact path='/home' render={() => { return <Homepage/>}}/>
-            <Route exact path='/dashboard' render={() => { return <Panel/>}}/>
-            <Route path='/'>
-              <Redirect to="/home"/>
-            </Route>
-          </Switch>
-        </div>
-      </Router>
-    );
-  }
+    render() {
+        return (
+            <Router>
+                <Header />
+                <div style={styles.body}>
+                    <Switch>
+                      <Route exact path='/home' render={() => { return <Homepage/>}}/>
+                      <Route exact path='/dashboard' render={() => { return <Panel/>}}/>
+                      <Route path='/'>
+                          <Redirect to="/home"/>
+                      </Route>
+                    </Switch>
+                </div>
+            </Router>
+        );
+    }
 }
 
 const styles = {
-  body : {
-    display: 'flex',
-    minHeight: '91%'
-  }
+    body : {
+        display: 'flex',
+        minHeight: '91%'
+    }
 }
