@@ -15,13 +15,30 @@
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
+// const Database = use('Database')
+// const Hash = use('Hash')
+// const { validate } = use('Validator')
 
 Route.on('/').render('welcome')
 
-Route.post('/signup', ({ request, response}) => {
-    const { email, password, remember } = request.body
-    console.log(`Email - ${email}, Password - ${password}, Remember - ${remember}`)
-    response.send('success')
+Route.post('/login', 'UserController.login')
+Route.post('/signup', 'UserController.addNewUser')
+
+
+Route.post('/session', 'UserController.checkSession')
+Route.post('/logout', 'UserController.logout')
+Route.get('/activeItems', ({ request, response}) => {
+
 })
 
-Route.put('/issue', 'IssueController.add')
+Route.get('/inprogressItems', ({ request, response}) => {
+    
+})
+
+Route.get('/completedItems', ({ request, response}) => {
+    
+})
+
+Route.get('/backlog', ({ request, response}) => {
+    
+})

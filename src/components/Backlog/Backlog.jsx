@@ -1,7 +1,7 @@
 import React from 'react'
 import { layout, subheader } from '../../globalStyles'
 import 'antd/dist/antd.css';
-import { Table as BacklogTable, Divider, Tag } from 'antd';
+import { Popconfirm, Table as BacklogTable, Divider, Tag } from 'antd';
 import './style.css'
 
 const columns = [
@@ -48,7 +48,15 @@ const columns = [
         <span>
             <a href="/">Edit</a>
             <Divider type="vertical" />
-            <a href="/">Delete</a>
+            <Popconfirm
+                title="Are you sure you want to delete this task?"
+                // onConfirm={confirm}
+                // onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+            >
+                <a href="/">Delete</a>
+            </Popconfirm>
         </span>
         ),
     },

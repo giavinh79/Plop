@@ -1,5 +1,6 @@
 
 import React from 'react'
+import axios from 'axios'
 import 'antd/dist/antd.css'
 import { Form, Icon, Input, Button } from 'antd'
 import { Redirect } from 'react-router-dom'
@@ -14,13 +15,23 @@ class HorizontalLoginForm extends React.Component {
   }
 
   componentDidMount() {
-    this.props.form.validateFields();
+    this.props.form.validateFields()
   }
 
   handleSubmit = e => {
-    e.preventDefault();
-    this.setState({ toDashboard : true })
-  };
+    e.preventDefault()
+
+    const values = { email: document.querySelector('#loginEmail').value, password: document.querySelector('#loginPassword').value}
+    axios.post('http://localhost:3333/login', values)
+    .then(res => {
+      // JWT Bearer Token stored on clientside
+      localStorage.setItem('token', res.data.token)
+      this.setState({ toDashboard : true })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 
   render() {
     return !this.state.toDashboard ? (
@@ -28,12 +39,12 @@ class HorizontalLoginForm extends React.Component {
         <Form.Item>
             <Input
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Username" required />
+              placeholder="Username" name="loginEmail" id="loginEmail" required />
         </Form.Item>
         <Form.Item>
             <Input
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type="password"
+              type="password" name="loginPassword" id="loginPassword"
               placeholder="Password" required />
         </Form.Item>
         <Form.Item>

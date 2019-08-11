@@ -1,25 +1,53 @@
 
 import React from 'react'
 import 'antd/dist/antd.css'
-import { Form, Icon, Input, Button, Checkbox } from 'antd'
+import { Form, Icon, Input, Button, Checkbox, notification } from 'antd'
 import './style.css'
 import axios from 'axios'
 
 class NormalLoginForm extends React.Component {
+  openNotification = (status) => {
+    notification.open({
+      message: status ? 'Success!' : 'Error!',
+      duration : 2,
+      placement: 'bottomRight',
+      description:
+        status ? 'Account was created.' : 'Account could not be created.',
+      icon: <Icon type={status ? 'smile' : 'warning'} style={{ color: '#108ee9' }} />,
+    });
+  };
+
+  compareToFirstPassword = (rule, value, callback) => {
+    const { form } = this.props;
+    if (value && value !== form.getFieldValue('password')) {
+      callback('Passwords do not match!');
+    } else {
+      callback();
+    }
+  };
+
+  validateToNextPassword = (rule, value, callback) => {
+    const { form } = this.props;
+    if (value && this.state.confirmDirty) {
+      form.validateFields(['confirm'], { force: true });
+    }
+    callback();
+  };
+
   handleSubmit = e => {
     e.preventDefault();
+    console.log(this.props.form)
     this.props.form.validateFields((err, values) => {
       if (!err) {
         axios.post('http://localhost:3333/signup', values)
         .then(res => {
-          console.log('Success')
+          this.openNotification(true)
         })
         .catch(err => {
-          console.log(`Request failed - ${err}`);
+          this.openNotification(false)
         });
       }
     });
-
   };
 
   render() {
@@ -28,23 +56,35 @@ class NormalLoginForm extends React.Component {
       <Form onSubmit={this.handleSubmit} className="signup-form">
         <div style={{textAlign: 'center'}}><p style={styles.title}>Sign Up</p></div>
         <Form.Item>
-          {getFieldDecorator('email', {
-            rules: [{ required: true, message: 'Please input your email!' }],
-          })(
+          {getFieldDecorator('email')(
             <Input
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="Email"
+              required
             />,
           )}
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('password', {
-            rules: [{ required: true, message: 'Please input your password!' }],
+            // rules: [{ validator: this.validateToNextPassword }],
           })(
             <Input
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
               type="password"
               placeholder="Password"
+              required
+            />,
+          )}
+        </Form.Item>
+        <Form.Item>
+          {getFieldDecorator('confirm', {
+            // rules: [{ validator: this.compareToFirstPassword }],
+          })(
+            <Input
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type="password"
+              placeholder="Confirm password"
+              required
             />,
           )}
         </Form.Item>
@@ -52,7 +92,7 @@ class NormalLoginForm extends React.Component {
           {getFieldDecorator('remember', {
             valuePropName: 'checked',
             initialValue: true,
-          })(<Checkbox style={{color: '#ccc'}}>Remember me</Checkbox>)}
+          })(<Checkbox style={{color: '#ccc'}}>Terms & Conditions</Checkbox>)}
           <a className="signup-form-forgot" href="/" style={{color:'#ccc'}}>
             Forgot password
           </a>

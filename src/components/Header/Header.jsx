@@ -1,5 +1,5 @@
 import React from 'react'
-import UserPanel from './UserPanel'
+import UserPanel from './UserPanel/UserPanel'
 import { HeaderWrapper, Logo } from './style.js'
 import { WrappedHorizontalLoginForm } from './LoginForm.jsx'
 import { withRouter } from 'react-router-dom'

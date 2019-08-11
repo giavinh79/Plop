@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-do
 import Panel from './pages/panel';
 import Homepage from './pages/homepage';
 import Header from './components/Header/Header';
+import Room from './pages/room'
 
 export default class Routes extends React.Component {
     render() {
@@ -13,6 +14,7 @@ export default class Routes extends React.Component {
                     <Switch>
                       <Route exact path='/home' render={() => { return <Homepage/>}}/>
                       <Route exact path='/dashboard' render={() => { return <Panel/>}}/>
+                      <Route exact path='/test' render={() => {return <Room/>}}/>
                       <Route path='/'>
                           <Redirect to="/home"/>
                       </Route>

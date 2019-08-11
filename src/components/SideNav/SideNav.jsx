@@ -22,14 +22,14 @@ export default class SideNav extends React.Component {
                     </span>}
                 >
                     <Menu.ItemGroup key="g1" title="Filter">
-                        <Menu.Item key="1" onClick={() => { this.props.handlePageChange(0) }}>All</Menu.Item>
-                        <Menu.Item key="2" onClick={() => { this.props.handlePageChange(1) }}>Assigned To Me</Menu.Item>
+                        <Menu.Item key="1" onClick={() => this.props.handlePageChange(0)}>All</Menu.Item>
+                        <Menu.Item key="2" onClick={() => this.props.handlePageChange(1)}>Assigned To Me</Menu.Item>
                     </Menu.ItemGroup>
                     <Menu.ItemGroup key="g2" title="Analytics">
-                        <Menu.Item key="3" onClick={() => { this.props.handlePageChange(2) }}>
+                        <Menu.Item key="3" onClick={() => this.props.handlePageChange(2)}>
                             <Tooltip title="Set of graphs and data for issues" mouseEnterDelay={0.8}>Project Overview</Tooltip>
                         </Menu.Item>
-                        <Menu.Item key="4" onClick={() => { this.props.handlePageChange(3) }}>Schedule</Menu.Item>
+                        <Menu.Item key="4" onClick={() => this.props.handlePageChange(3)}>Schedule</Menu.Item>
                     </Menu.ItemGroup>
                 </SubMenu>
                 <SubMenu
@@ -40,7 +40,7 @@ export default class SideNav extends React.Component {
                       <span>Members</span>
                     </span>}
                 >
-                    <Menu.Item key="5" onClick={() => { this.props.handlePageChange(4) }}>View</Menu.Item>
+                    <Menu.Item key="5" onClick={() => this.props.handlePageChange(4)}>View</Menu.Item>
                     <SubMenu key="sub3" title="Admin Panel">
                         <Menu.Item key="6">Manage Members</Menu.Item>
                     </SubMenu>
@@ -55,14 +55,14 @@ export default class SideNav extends React.Component {
                       </Tooltip>
                     </span>}
                 >
-                    <Menu.Item key="8" onClick={() => { this.props.handlePageChange(5) }}>Create</Menu.Item>
-                    <Menu.Item key="9" onClick={() => { this.props.handlePageChange(6) }}>Active</Menu.Item>
-                    <Menu.Item key="10" onClick={() => { this.props.handlePageChange(7) }}>
+                    <Menu.Item key="8" onClick={() => this.props.handlePageChange(5)}>Create</Menu.Item>
+                    <Menu.Item key="9" onClick={() => this.props.handlePageChange(6)}>Active</Menu.Item>
+                    <Menu.Item key="10" onClick={() => this.props.handlePageChange(7)}>
                         <Tooltip title="Repository for future tasks" mouseEnterDelay={0.8}>
                             <span>Backlog</span>
                         </Tooltip>
                     </Menu.Item>
-                    <Menu.Item key="11" onClick={() => { this.props.handlePageChange(8) }}>
+                    <Menu.Item key="11" onClick={() => this.props.handlePageChange(8)}>
                         <Tooltip title="Repository for completed tasks" mouseEnterDelay={0.8}>
                             <span>Archive</span>
                         </Tooltip>
@@ -72,11 +72,15 @@ export default class SideNav extends React.Component {
                     <Icon type="github"/>
                     GitHub
                 </Menu.Item>
-                <Menu.Item key="sub6" onClick={() => { this.props.handlePageChange(9) }}>
+                <Menu.Item key="sub6" onClick={() => this.props.handlePageChange(9)}>
                     <Icon type="database"/>
                     Logs
                 </Menu.Item>
-                <Menu.Item key="sub7" onClick={() => { this.props.handlePageChange(10) }}>
+                <Menu.Item key="sub7" onClick={() => this.props.handlePageChange(10)}>
+                    <Icon type="setting" />
+                    Settings
+                </Menu.Item>
+                <Menu.Item key="sub8" onClick={() => this.props.handlePageChange(11)}>
                     <Icon type="question-circle" />
                     Help
                 </Menu.Item>
