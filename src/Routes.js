@@ -14,7 +14,7 @@ export default class Routes extends React.Component {
                     <Switch>
                       <Route exact path='/home' render={() => { return <Homepage/>}}/>
                       <Route exact path='/dashboard' render={() => { return <Panel/>}}/>
-                      <Route exact path='/test' render={() => {return <Room/>}}/>
+                      <Route exact path='/room' render={() => {return <Room/>}}/>
                       <Route path='/'>
                           <Redirect to="/home"/>
                       </Route>

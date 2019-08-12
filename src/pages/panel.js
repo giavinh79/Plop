@@ -8,6 +8,7 @@ import SideNav from '../components/SideNav/SideNav';
 import Backlog from '../components/Backlog/Backlog';
 import MembersView from '../components/ViewMembers/ViewMembers';
 import { WrappedCreateIssueForm } from '../components/CreateIssue/CreateIssue';
+import Settings from '../components/Settings/Settings';
 
 export default class Panel extends React.Component {
     constructor(props) {
@@ -43,7 +44,7 @@ export default class Panel extends React.Component {
 
     returnPage = (page) => {
         switch(page) {
-            case 0: return <Dashboard/>;
+            case 0: return <Dashboard filter={false}/>;
             case 1: return <Dashboard filter={true}/>;
             case 2: 
             case 3: 
@@ -53,6 +54,7 @@ export default class Panel extends React.Component {
             case 7: return <Backlog/>;
             case 8: 
             case 9: 
+            case 10: return <Settings/>
             default: return <Dashboard/>;
         }
     }

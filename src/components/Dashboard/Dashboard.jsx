@@ -6,16 +6,19 @@ const activeItems = [
     {
         id: '1',
         title: 'Complete frontend',
+        assignee: 'N/A',
         content: 'Fix styling on homepage'
     },
     {
         id: '2',
         title: 'Create backend',
+        assignee: 'randomuser@gmail.com',
         content: 'Setup REST API'
     },
     {
         id: '3',
         title: 'Add Socket.IO',
+        assignee: 'test2@gmail.com',
         content: 'Install and configure for dashboard page'
     }
 ];
@@ -97,21 +100,44 @@ const getListStyle = isDraggingOver => ({
 });
 
 export default class Dashboard extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            active: activeItems,
+            progress: progressItems,
+            complete: completedItems,
+            filter: false
+        };
+    }
+
     componentDidMount() {
         // do API calls here, import JSON data, if this.props.filter = true, filter by assignee
     }
 
-    state = {
-        active: activeItems,
-        progress: progressItems,
-        complete: completedItems
-    };
+    componentWillReceiveProps(props) {
+        if (props.filter) {
+            const activeItemsFiltered = activeItems.filter((item) => {
+                return item.assignee === localStorage.getItem('email')
+            })
 
-    /**
-     * A semi-generic way to handle multiple lists. Matches
-     * the IDs of the droppable container to the names of the
-     * source arrays stored in the state.
-     */
+            const progressItemsFiltered = progressItems.filter((item) => {
+                return item.assignee === localStorage.getItem('email')
+            })
+
+            const completedItemsFiltered = completedItems.filter((item) => {
+                return item.assignee === localStorage.getItem('email')
+            })
+
+            this.setState({
+                active: activeItemsFiltered,
+                progress: progressItemsFiltered,
+                complete: completedItemsFiltered
+            })
+        } else {
+            this.setState({active: activeItems, progress: progressItems, complete: completedItems})
+        }
+    }
+
     id2List = {
         droppable: 'active',
         droppable2: 'progress',

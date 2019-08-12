@@ -45,7 +45,6 @@ class UserController {
     // Using JWT, so I am actually checking for token here
     async checkSession( { auth, response }){
         try {
-            console.log('hi')
             await auth.check()
             response.status(200).send()
         } catch (error) {
@@ -53,15 +52,12 @@ class UserController {
         }
     }
 
+    // If using sessions
     // async logout( { auth }) {
-    //     console.log('hi')
     //     const apiToken = auth.getAuthHeader()
-    //     console.log(apiToken)
     //     try {
     //         await auth.authenticator('api').revokeTokens([apiToken], true)
-    //         console.log('yes')
     //     } catch {
-    //         console.log('wtf')
     //     }
     // }
 }
