@@ -31,7 +31,7 @@ class UserController {
         }
     }
 
-    async login( { request, auth, session, response }){
+    async login( { request, auth, response }){
         const { email, password } = request.body
         try {
             const jwt = await auth.attempt(email, password)
@@ -42,7 +42,6 @@ class UserController {
                 httpOnly: true
             })
             response.status(200).send()
-            console.log('yay')
         } catch (err) {
             console.log(`${new Date()}: ${err}`)
             response.status(404).send('Error')

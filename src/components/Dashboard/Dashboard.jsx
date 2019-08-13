@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { Card } from './Card'
+import { Empty } from 'antd'
 
 const activeItems = [
     {
@@ -106,6 +107,7 @@ export default class Dashboard extends Component {
             active: activeItems,
             progress: progressItems,
             complete: completedItems,
+            empty: false,
             filter: false
         };
     }
@@ -128,13 +130,18 @@ export default class Dashboard extends Component {
                 return item.assignee === localStorage.getItem('email')
             })
 
+            activeItemsFiltered.length + 
+            progressItemsFiltered.length + 
+            completedItemsFiltered.length === 0 ? 
+            this.setState({ empty: true}) :
             this.setState({
                 active: activeItemsFiltered,
                 progress: progressItemsFiltered,
-                complete: completedItemsFiltered
+                complete: completedItemsFiltered,
+                empty: false
             })
         } else {
-            this.setState({active: activeItems, progress: progressItems, complete: completedItems})
+            this.setState({active: activeItems, progress: progressItems, complete: completedItems, empty: false})
         }
     }
 
@@ -184,7 +191,7 @@ export default class Dashboard extends Component {
     };
 
     render() {
-        return (
+        return !this.state.empty ?
             <DragDropContext onDragEnd={this.onDragEnd} style={{height:'50%'}}>
                 <Droppable droppableId="droppable">
                     {(provided, snapshot) => (
@@ -279,8 +286,11 @@ export default class Dashboard extends Component {
                         </div>
                     )}
                 </Droppable>
-            </DragDropContext>
-        );
+        </DragDropContext> : 
+        <div style={styles.emptyWrapper}>
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span style={{fontSize: '3rem'}}>No issues found</span>} 
+            imageStyle={styles.emptyImage}/>
+        </div>;
     }
 }
 
@@ -311,5 +321,16 @@ const styles = {
         margin: '-0.5rem -0.5rem 0 0',
         fontSize: '1.5rem',
         cursor: 'pointer'
+    },
+    emptyWrapper : {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '90%',
+        width: '100%'
+    },
+    emptyImage : {
+        height: '10rem',
+        paddingBottom: '2rem'
     }
 }
