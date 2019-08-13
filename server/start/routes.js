@@ -24,8 +24,12 @@ Route.on('/').render('welcome')
 Route.post('/login', 'UserController.login')
 Route.post('/signup', 'UserController.addNewUser')
 
+const jwtMiddleware = async ({ request }, next) => {
+    request.headers().authorization = `Bearer ${request.cookie('XSStoken')}`
+    await next()
+}
 
-Route.post('/session', 'UserController.checkSession')
+Route.post('/session', 'UserController.checkSession').middleware(jwtMiddleware)
 Route.post('/logout', 'UserController.logout')
 Route.get('/activeItems', ({ request, response}) => {
 

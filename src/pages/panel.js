@@ -30,7 +30,7 @@ export default class Panel extends React.Component {
     };
 
     componentDidMount() {
-        axios.post('http://localhost:3333/session', null, { headers: { Authorization : `Bearer ${localStorage.getItem('token')}`} })
+        axios.post('http://localhost:3333/session', null, { withCredentials: true, headers: { Authorization : `Bearer ${localStorage.getItem('token')}`} })
         .then()
         .catch(() => {
             this.setState({ toHomepage: true })

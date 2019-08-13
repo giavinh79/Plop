@@ -3,6 +3,7 @@ import { Dropdown, Icon, Menu } from 'antd'
 import { UserPanelWrapper } from '../style'
 import { Redirect } from 'react-router-dom'
 import UserSettings from './UserSettings'
+import axios from 'axios';
 
 export default class UserPanel extends React.Component {
     constructor(props) {
@@ -18,8 +19,8 @@ export default class UserPanel extends React.Component {
     }
 
     handleLogout = () => {
-        localStorage.clear()
-        this.setState({ toHomepage: true})
+        axios.post('http://localhost:3333/logout', null, {withCredentials:true})
+        this.setState({ toHomepage: true })
     }
 
     menu = (

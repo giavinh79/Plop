@@ -34,8 +34,15 @@ class UserController {
     async login( { request, auth, session, response }){
         const { email, password } = request.body
         try {
-            const token = await auth.attempt(email, password)
-            response.status(200).json(token)
+            const jwt = await auth.attempt(email, password)
+            // 14400 seconds = 4 hours
+            // add secure attribute when deployed(?)
+            const { token } = jwt;
+            response.cookie('XSStoken', token, {
+                httpOnly: true
+            })
+            response.status(200).send()
+            console.log('yay')
         } catch (err) {
             console.log(`${new Date()}: ${err}`)
             response.status(404).send('Error')
@@ -43,7 +50,7 @@ class UserController {
     }
 
     // Using JWT, so I am actually checking for token here
-    async checkSession( { auth, response }){
+    async checkSession( { request, auth, response }){
         try {
             await auth.check()
             response.status(200).send()
@@ -53,13 +60,9 @@ class UserController {
     }
 
     // If using sessions
-    // async logout( { auth }) {
-    //     const apiToken = auth.getAuthHeader()
-    //     try {
-    //         await auth.authenticator('api').revokeTokens([apiToken], true)
-    //     } catch {
-    //     }
-    // }
+    async logout({request, response}) {
+        response.clearCookie('XSStoken')
+    }
 }
 
 module.exports = UserController
