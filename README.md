@@ -1,28 +1,7 @@
-Plop -> project linker, organizer, and planner
+## Plop
 
-## Available Scripts
+Plop is a SPA that uses React.js as its frontend framework and Adonis.js as its backend framework. It is a simple project management tool targeted towards small teams (< 8) however can also be used by individuals who want a more organized to-do list.
 
-In the project directory, you can run:
+It leverages the best coding and security practices to ensure modularity, code reusability, code readability, and proper authentication and authorization.
 
-### `npm start`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The database used is mySQL which is managed using the Lucid ORM.
