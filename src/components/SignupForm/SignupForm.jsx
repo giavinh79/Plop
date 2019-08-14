@@ -36,11 +36,10 @@ class NormalLoginForm extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    console.log(this.props.form)
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        axios.post('http://localhost:3333/signup', values)
-        .then(res => {
+        axios.post('/signup', values)
+        .then((res) => {
           this.openNotification(true)
         })
         .catch(err => {

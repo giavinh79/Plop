@@ -19,7 +19,7 @@ export default class UserPanel extends React.Component {
     }
 
     handleLogout = () => {
-        axios.post('http://localhost:3333/logout', null, {withCredentials:true})
+        axios.post('/logout', null, {withCredentials:true})
         this.setState({ toHomepage: true })
     }
 

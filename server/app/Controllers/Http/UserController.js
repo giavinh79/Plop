@@ -49,7 +49,7 @@ class UserController {
     }
 
     // Using JWT, so I am actually checking for token here
-    async checkSession( { request, auth, response }){
+    async checkSession( { auth, response }){
         try {
             await auth.check()
             response.status(200).send()
@@ -58,8 +58,7 @@ class UserController {
         }
     }
 
-    // If using sessions
-    async logout({request, response}) {
+    async logout({response}) {
         response.clearCookie('XSStoken')
     }
 }

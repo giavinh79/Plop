@@ -17,6 +17,7 @@ export default class Panel extends React.Component {
             toHomepage : false,
             currentPage : 0
         }
+        console.log(props)
     }
 
     openNotification = (status) => {
@@ -30,7 +31,7 @@ export default class Panel extends React.Component {
     };
 
     componentDidMount() {
-        axios.post('http://localhost:3333/session', null, { withCredentials: true, headers: { Authorization : `Bearer ${localStorage.getItem('token')}`} })
+        axios.post('/session', null, { withCredentials: true })
         .then()
         .catch(() => {
             this.setState({ toHomepage: true })

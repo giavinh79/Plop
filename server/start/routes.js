@@ -15,22 +15,25 @@
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
-// const Database = use('Database')
-// const Hash = use('Hash')
-// const { validate } = use('Validator')
-
-Route.on('/').render('welcome')
-
-Route.post('/login', 'UserController.login')
-Route.post('/signup', 'UserController.addNewUser')
-
 const jwtMiddleware = async ({ request }, next) => {
     request.headers().authorization = `Bearer ${request.cookie('XSStoken')}`
     await next()
 }
 
+Route.on('/').render('welcome')
+
+// Authentication
+Route.post('/login', 'UserController.login')
+Route.post('/signup', 'UserController.addNewUser')
 Route.post('/session', 'UserController.checkSession').middleware(jwtMiddleware)
 Route.post('/logout', 'UserController.logout')
+
+// Teams/Rooms
+Route.post('/createTeam', 'RoomController.create').middleware(jwtMiddleware)
+Route.post('/joinTeam', 'RoomController.join').middleware(jwtMiddleware)
+Route.post('/deleteTeam', 'RoomController.delete')
+
+
 Route.get('/activeItems', ({ request, response}) => {
 
 })

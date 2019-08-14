@@ -7,7 +7,6 @@ class IssueSchema extends Schema {
   up () {
     this.create('issues', (table) => {
       table.increments()
-      table.integer('room_id').references('id').inTable('rooms')
       table.string('title', 100)
       table.string('shortDescription', 100)
       table.string('description', 1000)

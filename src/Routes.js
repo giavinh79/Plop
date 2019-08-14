@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-do
 import Panel from './pages/panel';
 import Homepage from './pages/homepage';
 import Header from './components/Header/Header';
-import Room from './pages/room'
+import Team from './pages/team'
 
 export default class Routes extends React.Component {
     render() {
@@ -12,9 +12,9 @@ export default class Routes extends React.Component {
                 <Header />
                 <div style={styles.body}>
                     <Switch>
-                      <Route exact path='/home' render={() => { return <Homepage/>}}/>
-                      <Route exact path='/dashboard' render={() => { return <Panel/>}}/>
-                      <Route exact path='/room' render={() => {return <Room/>}}/>
+                      <Route exact path='/home' render={() => <Homepage/>}/>
+                      <Route exact path='/dashboard/:team' render={(props) => <Panel {...props}/>}/>
+                      <Route exact path='/team' render={() => <Team/>}/>
                       <Route path='/'>
                           <Redirect to="/home"/>
                       </Route>
