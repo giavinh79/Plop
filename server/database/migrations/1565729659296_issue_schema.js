@@ -11,6 +11,7 @@ class IssueSchema extends Schema {
       table.string('shortDescription', 100)
       table.string('description', 1000)
       table.integer('priority')
+      table.boolean('active')
       table.integer('status')
       table.string('assignee', 100)
       table.json('image')

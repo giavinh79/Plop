@@ -11,7 +11,7 @@ class UserController {
             email: 'required|email',
             password: 'required'
         }
-        
+
         const validation = await validate(request.body, rules)
         if (validation.fails()) {
             response.status(404).send('Error')
@@ -20,6 +20,7 @@ class UserController {
             const { email, password } = request.body
             user.email = email;
             user.password = password;
+            user.numTeams = 0;
 
             try {
                 await user.save()
@@ -48,7 +49,7 @@ class UserController {
         }
     }
 
-    // Using JWT, so I am actually checking for token here
+    // Using JWT, so I am actually checking token here
     async checkSession( { auth, response }){
         try {
             await auth.check()
@@ -58,6 +59,7 @@ class UserController {
         }
     }
 
+    // JWT stored in httpOnly token to prevent XSS and CSRF
     async logout({response}) {
         response.clearCookie('XSStoken')
     }

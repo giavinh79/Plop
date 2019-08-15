@@ -30,22 +30,11 @@ Route.post('/logout', 'UserController.logout')
 
 // Teams/Rooms
 Route.post('/createTeam', 'RoomController.create').middleware(jwtMiddleware)
+Route.post('/sessionTeam', 'RoomController.session').middleware(jwtMiddleware)
 Route.post('/joinTeam', 'RoomController.join').middleware(jwtMiddleware)
 Route.post('/deleteTeam', 'RoomController.delete')
 
-
-Route.get('/activeItems', ({ request, response}) => {
-
-})
-
-Route.get('/inprogressItems', ({ request, response}) => {
-    
-})
-
-Route.get('/completedItems', ({ request, response}) => {
-    
-})
-
-Route.get('/backlog', ({ request, response}) => {
-    
-})
+// Issues - begin setting up other endpoints like this (REST)
+Route.post('/issue', 'IssueController.get').middleware(jwtMiddleware)
+Route.put('/issue', 'IssueController.create').middleware(jwtMiddleware)
+Route.delete('/issue', 'IssueController.delete').middleware(jwtMiddleware)
