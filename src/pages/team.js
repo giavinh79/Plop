@@ -1,9 +1,9 @@
 import React from 'react'
 import axios from 'axios'
 import { Modal, Card, Icon, Input, Button, notification } from 'antd'
+import { Redirect } from 'react-router-dom'
 
 // Seperate this JS file into seperate components later
-
 export default class Team extends React.Component {
     constructor(props) {
         super(props)
@@ -14,12 +14,13 @@ export default class Team extends React.Component {
                 {
                     name: 'Side Projectors',
                     description: 'A team originating from NCR. Wastes a lot of time on side projects.',
+                    id: '1',
                 }
             ]
         }
     }
 
-    openNotification = (res) => {
+    openNotificationCreation = (res) => {
         notification.open({
             message: res !== null ? 'Team created' : 'Team was not created',
             duration : res !== null ? 10 : 4,
@@ -27,6 +28,16 @@ export default class Team extends React.Component {
             description: res !== null ? 'The team ID is ' + res.id + ' and the password is ' + res.password + '. These credentials were also emailed to you as a backup. You may now enter the team\'s room.' :
             'The team could not be created, you may be at your maximum team limit.',
             icon: <Icon type={res !== null ? 'smile' : 'warning'} style={{ color: '#108ee9' }} />,
+        });
+    }
+
+    openNotificationJoin = () => {
+        notification.open({
+            message: 'Unable to join team',
+            duration : 4,
+            placement: 'bottomRight',
+            description: 'You may have incorrect credentials or already have a pending request to join this team.',
+            icon: <Icon type='warning' style={{ color: '#108ee9' }} />,
         });
     }
     
@@ -38,16 +49,32 @@ export default class Team extends React.Component {
         }
         axios.post('/createTeam', data, { withCredentials: true })
         .then(res => {
-            this.setState({ teamCreation: false, teams : [...this.state.teams, { name : res.data.name, description : res.data.description }]})
+            this.setState({ teamCreation: false, teams : [...this.state.teams, { name : res.data.name, description : res.data.description, id : res.data.id }]})
             // console.log(res.data)
             // console.log(this.state.teams)
-            this.openNotification(res.data)
+            this.openNotificationCreation(res.data)
+        })
+        .catch(() => {
+            this.setState({ teamCreation: false })
+            this.openNotificationCreation(null);
+        })
+    }
+
+    handleJoin = () => {
+        const data = {
+            roomId : document.querySelector('#joinId').value,
+            roomPassword : document.querySelector('#joinPassword').value,
+        }
+
+        axios.post('/joinTeam', data, { withCredentials: true })
+        .then(res => {
+            // localStorage.setItem('room', res.id)
+            this.setState({ toDashboard: true })
+            // console.log(res.data)
+            // this.openNotificationCreation(res.data)
         })
         .catch(err => {
-            // console.log(err)
-            // console.log(data)
-            this.setState({ teamCreation: false })
-            this.openNotification(null);
+            this.openNotificationJoin();
         })
     }
     
@@ -56,11 +83,18 @@ export default class Team extends React.Component {
     };
 
     handleTeamCreation = () => {
-        this.setState({teamCreation : true})
+        this.setState({ teamCreation : true })
+    }
+
+    handleEnterTeam = (team) => {
+        // localStorage.setItem('team', team.id)
+        axios.post('/sessionTeam', { withCredentials: true })
+
+        this.setState({ toDashboard: true })
     }
 
     render() {
-        return (
+        return !this.state.toDashboard ? (
             <>
             { this.state.teamCreation ?
             <Modal
@@ -85,64 +119,40 @@ export default class Team extends React.Component {
                     <Card title="Make a team" style={styles.card}>
                             <p><a href="/">Create</a> a new team in order to begin managing your project!</p>
                             <p>In total, you can only be a part of three maximum teams.</p>
-                            <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-                                <Icon type="plus-circle" style={{ fontSize: '2.5rem', paddingTop: '4rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }} onClick={this.handleTeamCreation}/>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+                                <Icon type="plus-circle" style={{ fontSize: '2.5rem', paddingTop: '4rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }} onClick={() => this.handleTeamCreation()}/>
                             </div>
                     </Card>
                     <Card title="Join a team" style={styles.card}>
-                        <Input placeholder='Team ID' style={{ marginBottom: '2rem' }}/>
-                        <Input placeholder='Team Password'/>
-                        <div style={{display: 'flex', justifyContent: 'flex-end'}}><Button type="primary" style={{marginTop: '1rem'}}>Join</Button></div>
+                        <Input placeholder='Team ID' style={{ marginBottom: '2rem' }} id='joinId' required/>
+                        <Input placeholder='Team Password' id='joinPassword' required/>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}><Button type="primary" style={{marginTop: '1rem'}} onClick={() => this.handleJoin()}>Join</Button></div>
                     </Card> 
                 </div>
                 <div style={{display: 'flex', width: '100%', flex: '2'}}>
                     <Card title="Teams joined" style={styles.card} extra={this.state.teams.length + '/3'}>
-                        <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                             {
                                 this.state.teams.map((team, index) => {
                                     return (
                                         <div style={styles.teams} key={index}>
                                             <Card title={'Team ' + team.name} extra="1 member" style={{minHeight: '20rem'}}>
-                                                <a href="/dashboard">Enter</a>
+                                                <a href="/dashboard" onClick={() => this.handleEnterTeam(team.id)}>Enter</a>
                                                 <p>{team.description}</p>
                                                 <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-                                                    <Icon type="right-circle" style={{ fontSize: '2.5rem', paddingTop: '9rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }} onClick={this.handleTeamCreation}/>
+                                                    <Icon type="right-circle" style={{ fontSize: '2.5rem', paddingTop: '9rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }} onClick={() => this.handleEnterTeam(team.id)}/>
                                                 </div>
                                             </Card>
                                         </div>
                                     )
                                 })
                             }
-                            {/* <div style={styles.teams}>
-                                <Card title="Team 1" extra="5 members" style={{minHeight: '20rem'}}>
-                                    <a href="/">Enter</a>
-                                    <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-                                        <Icon type="right-circle" style={{ fontSize: '2.5rem', paddingTop: '9rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }} onClick={this.handleTeamCreation}/>
-                                    </div>
-                                </Card>
-                            </div>
-                            <div style={styles.teams}>
-                                <Card title="Team 2" extra="3 members" style={{minHeight: '20rem'}}>
-                                    <a href="/">Enter</a>
-                                    <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-                                        <Icon type="right-circle" style={{ fontSize: '2.5rem', paddingTop: '9rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }} onClick={this.handleTeamCreation}/>
-                                    </div>
-                                </Card>
-                            </div>
-                            <div style={styles.teams}>
-                                <Card title="N/A" extra="N/A" style={{minHeight: '20rem'}}>
-                                    <a href="/">Enter</a>
-                                    <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-                                        <Icon type="right-circle" style={{ fontSize: '2.5rem', paddingTop: '9rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }} onClick={this.handleTeamCreation}/>
-                                    </div>
-                                </Card>
-                            </div> */}
                         </div>
                     </Card>
                 </div>
             </div>
             </>
-        );
+        ) : <Redirect push to="/dashboard"/>;
     }
 }
 
@@ -152,7 +162,7 @@ const styles = {
         flexDirection: 'column',
         flexWrap: 'wrap',
         width:'100%',
-        backgroundImage: 'url(\'images/wallpaper.png\')',
+        // backgroundImage: 'url(\'images/wallpaper.png\')',
         backgroundPosition: '0 0'
     },
     subcontainer : {

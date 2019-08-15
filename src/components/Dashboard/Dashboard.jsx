@@ -113,7 +113,6 @@ export default class Dashboard extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props)
         // do API calls here, import JSON data, if this.props.filter = true, filter by assignee
     }
 

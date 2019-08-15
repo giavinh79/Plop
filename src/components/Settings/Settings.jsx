@@ -27,6 +27,7 @@ export default class Settings extends React.Component {
                     <div style={styles.settingWrapper}><p style={{marginRight: '1rem'}}>Limit max members: </p><MemberSlider /></div>
                     <div style={styles.settingWrapper}><p style={{marginRight: '1rem'}}>Enable member inviting: </p><Switch defaultChecked /></div>
                     <div style={styles.settingWrapper}><p style={{marginRight: '1rem'}}>Enable logs: </p><Switch defaultChecked /></div>
+                    <div style={styles.settingWrapper}><p style={{marginRight: '1rem'}}>Enable admin approval for new members: </p><Switch /></div>
                 </div>
                 <img src="plannedlayout.png" alt="layout"/>
             </div>

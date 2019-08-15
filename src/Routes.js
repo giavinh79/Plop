@@ -13,8 +13,8 @@ export default class Routes extends React.Component {
                 <div style={styles.body}>
                     <Switch>
                       <Route exact path='/home' render={() => <Homepage/>}/>
-                      <Route exact path='/dashboard/:team' render={(props) => <Panel {...props}/>}/>
                       <Route exact path='/team' render={() => <Team/>}/>
+                      <Route exact path='/dashboard' render={() => <Panel/>}/>
                       <Route path='/'>
                           <Redirect to="/home"/>
                       </Route>
