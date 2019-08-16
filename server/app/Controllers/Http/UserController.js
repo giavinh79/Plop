@@ -5,6 +5,8 @@ const User = use('App/Models/User')
 const Hash = use('Hash')
 const { validate } = use('Validator')
 
+// Add new columns for user and room (temp) for potential upgrades in the future
+// Example - level, expiry date
 class UserController {
     async addNewUser( { request, response }){
         const rules = {
@@ -18,9 +20,7 @@ class UserController {
         } else {
             const user = new User()
             const { email, password } = request.body
-            user.email = email;
-            user.password = password;
-            user.numTeams = 0;
+            user.fill({ email: email, password: password, numTeams: 0 })
 
             try {
                 await user.save()

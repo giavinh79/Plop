@@ -20,12 +20,18 @@ class RoomController {
                 invite: true,
                 adminApproval: false
             })
-            await room.save()
-            await Database.table('user_rooms').insert({user_id: user.id, room_id: room.id })
+
+            // check users currently number of rooms - if 3 then throw error, if less increment by one
+            await Database.transaction(async (trx) => {
+                await room.save()
+                await trx.table('user_rooms').insert({user_id: user.id, room_id: room.id })
+            })
+            // await room.save()
+            // await Database.table('user_rooms').insert({user_id: user.id, room_id: room.id })
             response.status(200).json({ id : room.id, password : roomPassword, name : roomName, description : roomDescription })
 
         } catch(err) {
-            console.log(`${new Date()}: ${err}`)
+            console.log(`${new Date()} [User:${await auth.getUser().id}]: ${err}`)
             response.status(404).send()
         }
     }

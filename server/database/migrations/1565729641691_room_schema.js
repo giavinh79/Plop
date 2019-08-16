@@ -8,8 +8,8 @@ class RoomSchema extends Schema {
     this.create('rooms', (table) => {
       table.increments()
       table.integer('admin').unsigned().references('id').inTable('users')
-      table.string('name', [100])
-      table.string('description', [250])
+      table.string('name', [100]).notNullable()
+      table.string('description', [250]).notNullable()
       table.string('password', 60).notNullable()
       table.integer('maxMembers')
       table.boolean('invite')
