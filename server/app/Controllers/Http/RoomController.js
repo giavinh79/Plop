@@ -65,17 +65,19 @@ class RoomController {
         try {
             const user = await auth.getUser()
             const { roomId, roomPassword } = request.body
-            let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', roomId)
-            if (result.length !== 0) throw new Error('User already in room') 
 
-            result = await Database.from('rooms').where('id', roomId).where('password', Encryption.encrypt(roomPassword))
-            result.length === 0 ? response.status(200).send('No results') :
+            let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', roomId)
+            if (result.length !== 0) throw new Error('User already in room')
+
+            result = await Database.from('rooms').select('password').where('id', roomId)
+            if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('No results')
+
             // Future - add check here for if admin approval == true. If it is false
             // then we have to add it to pending table and tell user via notification/email that their request
             // has been sent to the room admin and needs to be approved
-            await Database.table('user_rooms').insert({user_id: user.id, room_id: result.id })
-            response.cookie('room', result.id)
-            response.status(200).json({ id: result.id })
+            await Database.table('user_rooms').insert({user_id: user.id, room_id: roomId })
+            response.cookie('room', roomId)
+            response.status(200).json({ id: roomId })
 
         } catch (err) {
             console.log(`(room_join) ${new Date()}: ${err}`)
@@ -90,6 +92,7 @@ class RoomController {
         try {
             const user = await auth.getUser()
             let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', request.body.id)
+            
             if (result.length === 0) throw new Error('Unauthorized Access')
             response.cookie('room', request.body.id)
             response.status(200).send()
