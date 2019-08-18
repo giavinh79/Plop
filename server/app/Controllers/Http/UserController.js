@@ -7,6 +7,7 @@ const { validate } = use('Validator')
 
 // Add new columns for user and room (temp) for potential upgrades in the future
 // Example - level, expiry date
+// Encrypt room IDs and pass that to client, decrypt on return
 class UserController {
     async addNewUser( { request, response }){
         const rules = {
@@ -25,7 +26,7 @@ class UserController {
                 await user.save()
                 response.status(200).send('User created successfully')
             } catch (err) {
-                console.log(`${new Date()}: ${err}`)
+                console.log(`(user_add) ${new Date()}: ${err}`)
                 response.status(404).send('Error')
             }
         }
@@ -41,7 +42,7 @@ class UserController {
             })
             response.status(200).send()
         } catch (err) {
-            console.log(`${new Date()}: ${err}`)
+            console.log(`(user_login) ${new Date()}: ${err}`)
             response.status(404).send('Error')
         }
     }
@@ -58,7 +59,14 @@ class UserController {
 
     // JWT stored in httpOnly token to prevent XSS and CSRF
     async logout({response}) {
-        response.clearCookie('XSStoken')
+        try {
+            response.clearCookie('XSStoken')
+            response.clearCookie('room')
+        } catch (err) {
+            console.log(`(user_logout) ${new Date()}: ${err}`)
+            response.status(404).send('Error')
+        }
+
     }
 }
 

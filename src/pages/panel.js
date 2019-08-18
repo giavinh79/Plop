@@ -31,6 +31,11 @@ export default class Panel extends React.Component {
 
     componentDidMount() {
         axios.post('/session', null, { withCredentials: true })
+        .then()
+        .catch(() => {
+            this.setState({ toHomepage: true })
+            this.openNotification()
+        })
     }
 
     changePage = (page) => {

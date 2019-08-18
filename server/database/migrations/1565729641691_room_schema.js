@@ -13,7 +13,7 @@ class RoomSchema extends Schema {
       table.string('password', 60).notNullable()
       table.integer('maxMembers')
       table.integer('status')
-      table.boolean('invite')
+      table.boolean('private')
       table.boolean('adminApproval')
       table.timestamps()
     })

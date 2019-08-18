@@ -3,27 +3,39 @@ import axios from 'axios'
 import { Modal, Card, Icon, Input, Button, notification } from 'antd'
 import { Redirect } from 'react-router-dom'
 
+const { TextArea } = Input
+
 // Seperate this JS file into seperate components later
 export default class Team extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            toHomepage: false,
             toDashboard : false,
             teamCreation : false,
-            teams : [
-                // {
-                //     name: 'Side Projectors',
-                //     description: 'A team originating from NCR. Wastes a lot of time on side projects.',
-                //     id: '1',
-                // }
-            ]
+            teams : []
         }
     }
 
+    openNotification = () => {
+        notification.open({
+            message: 'Session expired',
+            duration : 2,
+            placement: 'bottomRight',
+            description: 'You need to login again.',
+            icon: <Icon type='warning' style={{ color: '#108ee9' }} />,
+        });
+    };
+
     componentDidMount() {
-        axios.get('/getRoom', { withCredentials: true })
-        .then(res => {
-            this.setState({ teams: res.data })
+        axios.post('/session', null, { withCredentials: true }).then(
+            axios.get('/getRoom', { withCredentials: true })
+            .then(res => this.setState({ teams: res.data }))
+            .catch()
+        )
+        .catch(() => {
+            this.setState({ toHomepage: true })
+            this.openNotification()
         })
     }
 
@@ -32,7 +44,7 @@ export default class Team extends React.Component {
             message: res !== null ? 'Team created' : 'Team was not created',
             duration : res !== null ? 10 : 4,
             placement: 'bottomRight',
-            description: res !== null ? 'The team ID is ' + res.id + ' and the password is ' + res.password + '. These credentials were also emailed to you as a backup. You may now enter the team\'s room.' :
+            description: res !== null ? 'The team ID is ' + res.id + '. Your credentials were also emailed to you as a backup. You may now enter the team\'s room.' :
             'The team could not be created, you may be at your maximum team limit.',
             icon: <Icon type={res !== null ? 'smile' : 'warning'} style={{ color: '#108ee9' }} />,
         });
@@ -94,14 +106,12 @@ export default class Team extends React.Component {
     }
 
     handleEnterTeam = (team) => {
-        // localStorage.setItem('team', team.id)
-        axios.post('/sessionRoom', { withCredentials: true })
-
+        axios.post('/sessionRoom', { id: team }, { withCredentials: true }).catch()
         this.setState({ toDashboard: true })
     }
 
     render() {
-        return !this.state.toDashboard ? (
+        return !this.state.toHomepage ? !this.state.toDashboard ? (
             <>
             { this.state.teamCreation ?
             <Modal
@@ -117,9 +127,9 @@ export default class Team extends React.Component {
                         Save
                     </Button>,
             ]}>
-                <p>Team name:</p><Input style={{marginBottom: '1rem'}} name="teamName" id="teamName" required/>
-                <p>Team description:</p><Input style={{marginBottom: '1rem'}} name="teamDescription" id="teamDescription" required/>
-                <p>Team password:</p><Input name="teamPassword" id="teamPassword" required/>
+                <p>Team name:</p><Input style={{marginBottom: '1rem'}} name="teamName" id="teamName" allowClear={true} required/>
+                <p>Team description:</p><TextArea autosize={{ minRows: 2, maxRows: 6 }} style={{marginBottom: '1rem'}} name="teamDescription" id="teamDescription" required/>
+                <p>Team password:</p><Input.Password name="teamPassword" id="teamPassword" autoComplete="new-password" allowClear={true} required/>
             </Modal> : '' }
             <div style={styles.container}>
                 <div style={styles.subcontainer}>   
@@ -131,8 +141,8 @@ export default class Team extends React.Component {
                             </div>
                     </Card>
                     <Card title="Join a team" style={styles.card}>
-                        <Input placeholder='Team ID' style={{ marginBottom: '2rem' }} id='joinId' required/>
-                        <Input placeholder='Team Password' id='joinPassword' required/>
+                        <Input placeholder='Team ID' style={{ marginBottom: '2rem' }} id='joinId' allowClear={true} required/>
+                        <Input.Password placeholder='Team Password' id='joinPassword' autoComplete="new-password" allowClear={true} required/>
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}><Button type="primary" style={{marginTop: '1rem'}} onClick={() => this.handleJoin()}>Join</Button></div>
                     </Card> 
                 </div>
@@ -159,7 +169,7 @@ export default class Team extends React.Component {
                 </div>
             </div>
             </>
-        ) : <Redirect push to="/dashboard"/>;
+        ) : <Redirect push to="/dashboard"/> : <Redirect push to="/home"/> 
     }
 }
 

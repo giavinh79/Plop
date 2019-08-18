@@ -1,6 +1,6 @@
 'use strict'
 
-const Hash = use('Hash')
+const Encryption = use('Encryption')
 const Database = use('Database')
 const Room = use('App/Models/Room')
 
@@ -19,7 +19,7 @@ class RoomController {
              }
             response.status(200).json(roomsInfo)
         } catch (err) {
-            console.log(`${new Date()} [User:${await auth.getUser().id}]: ${err}`)
+            console.log(`(room_get) ${new Date()} [User:${await auth.getUser().id}]: ${err}`)
             response.status(404).send()
         }
     }
@@ -34,13 +34,13 @@ class RoomController {
             }
 
             const room = new Room()
-            room.fill( { 
+            room.fill( {
                 admin: user.id,
                 name: roomName,
                 description: roomDescription,
-                password: roomPassword,
+                password: Encryption.encrypt(roomPassword),
                 maxMembers: 12,
-                invite: true,
+                private: false,
                 adminApproval: false,
                 status: 0
             })
@@ -53,10 +53,10 @@ class RoomController {
             })
             // await room.save()
             // await Database.table('user_rooms').insert({user_id: user.id, room_id: room.id })
-            response.status(200).json({ id : room.id, password : roomPassword, name : roomName, description : roomDescription })
+            response.status(200).json({ id : room.id, name : roomName, description : roomDescription })
 
         } catch(err) {
-            console.log(`${new Date()} [User:${await auth.getUser().id}]: ${err}`)
+            console.log(`(room_create) ${new Date()} [User:${await auth.getUser().id}]: ${err}`)
             response.status(404).send()
         }
     }
@@ -68,7 +68,7 @@ class RoomController {
             let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', roomId)
             if (result.length !== 0) throw new Error('User already in room') 
 
-            result = await Database.from('rooms').where('id', roomId).where('password', roomPassword)
+            result = await Database.from('rooms').where('id', roomId).where('password', Encryption.encrypt(roomPassword))
             result.length === 0 ? response.status(200).send('No results') :
             // Future - add check here for if admin approval == true. If it is false
             // then we have to add it to pending table and tell user via notification/email that their request
@@ -78,7 +78,7 @@ class RoomController {
             response.status(200).json({ id: result.id })
 
         } catch (err) {
-            console.log(`${new Date()}: ${err}`)
+            console.log(`(room_join) ${new Date()}: ${err}`)
             response.status(404).send()
         }
     }
@@ -89,12 +89,12 @@ class RoomController {
     async session({ request, auth, response}) {
         try {
             const user = await auth.getUser()
-            let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id')
+            let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', request.body.id)
             if (result.length === 0) throw new Error('Unauthorized Access')
             response.cookie('room', request.body.id)
             response.status(200).send()
         } catch(err) {
-            console.log(`${new Date()}: ${err}`)
+            console.log(`(room_session) ${new Date()}: ${err}`)
             response.status(404).send()
         }
     }
