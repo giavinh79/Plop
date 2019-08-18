@@ -11,13 +11,20 @@ export default class Team extends React.Component {
             toDashboard : false,
             teamCreation : false,
             teams : [
-                {
-                    name: 'Side Projectors',
-                    description: 'A team originating from NCR. Wastes a lot of time on side projects.',
-                    id: '1',
-                }
+                // {
+                //     name: 'Side Projectors',
+                //     description: 'A team originating from NCR. Wastes a lot of time on side projects.',
+                //     id: '1',
+                // }
             ]
         }
+    }
+
+    componentDidMount() {
+        axios.get('/getRoom', { withCredentials: true })
+        .then(res => {
+            this.setState({ teams: res.data })
+        })
     }
 
     openNotificationCreation = (res) => {
@@ -47,7 +54,7 @@ export default class Team extends React.Component {
             roomDescription : document.querySelector('#teamDescription').value,
             roomPassword : document.querySelector('#teamPassword').value,
         }
-        axios.post('/createTeam', data, { withCredentials: true })
+        axios.post('/createRoom', data, { withCredentials: true })
         .then(res => {
             this.setState({ teamCreation: false, teams : [...this.state.teams, { name : res.data.name, description : res.data.description, id : res.data.id }]})
             // console.log(res.data)
@@ -66,7 +73,7 @@ export default class Team extends React.Component {
             roomPassword : document.querySelector('#joinPassword').value,
         }
 
-        axios.post('/joinTeam', data, { withCredentials: true })
+        axios.post('/joinRoom', data, { withCredentials: true })
         .then(res => {
             // localStorage.setItem('room', res.id)
             this.setState({ toDashboard: true })
@@ -88,7 +95,7 @@ export default class Team extends React.Component {
 
     handleEnterTeam = (team) => {
         // localStorage.setItem('team', team.id)
-        axios.post('/sessionTeam', { withCredentials: true })
+        axios.post('/sessionRoom', { withCredentials: true })
 
         this.setState({ toDashboard: true })
     }
