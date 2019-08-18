@@ -5,11 +5,34 @@ const Database = use('Database')
 const Room = use('App/Models/Room')
 
 class RoomController {
+    async get( { auth, response }) {
+        try {
+            let roomsInfo = [];
+            const user = await auth.getUser()
+            const rooms = await Database.table('user_rooms').select('room_id').where('user_id', user.id)
+
+            for (let room of rooms) {
+                const roomInfo = await Database.table('rooms').select('name', 'description').where('id', room.room_id)
+                const roomObject = JSON.parse(JSON.stringify(roomInfo[0]))
+                roomObject.id = room.room_id
+                roomsInfo.push(roomObject)
+             }
+            response.status(200).json(roomsInfo)
+        } catch (err) {
+            console.log(`${new Date()} [User:${await auth.getUser().id}]: ${err}`)
+            response.status(404).send()
+        }
+    }
+
     async create( { auth, request, response }) {
         try {
             const user = await auth.getUser()
             const { roomName, roomDescription, roomPassword } = request.body
-            console.log(user)
+
+            if (user.numTeams >= 3) {
+                throw new Error('Team limit reached')
+            }
+
             const room = new Room()
             room.fill( { 
                 admin: user.id,
@@ -18,11 +41,13 @@ class RoomController {
                 password: roomPassword,
                 maxMembers: 12,
                 invite: true,
-                adminApproval: false
+                adminApproval: false,
+                status: 0
             })
 
-            // check users currently number of rooms - if 3 then throw error, if less increment by one
+            // Use transactions to safely commit all required changes (if one fails, all get reverted)
             await Database.transaction(async (trx) => {
+                await Database.table('users').where('id', user.id).update({ numTeams: user.numTeams + 1 })
                 await room.save()
                 await trx.table('user_rooms').insert({user_id: user.id, room_id: room.id })
             })
@@ -58,7 +83,9 @@ class RoomController {
         }
     }
 
-    // Use to set current room (prevents client tampering)
+    // Method to set current room on clientside (prevents client tampering to a degree)
+    // With cookie extensions they can edit the httponly cookie however
+    // We will confirm on every request that this user is a part of that room
     async session({ request, auth, response}) {
         try {
             const user = await auth.getUser()

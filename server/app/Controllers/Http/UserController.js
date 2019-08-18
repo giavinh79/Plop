@@ -18,11 +18,10 @@ class UserController {
         if (validation.fails()) {
             response.status(404).send('Error')
         } else {
-            const user = new User()
-            const { email, password } = request.body
-            user.fill({ email: email, password: password, numTeams: 0 })
-
             try {
+                const user = new User()
+                const { email, password } = request.body
+                user.fill({ email: email, password: password, numTeams: 0, status: 0 })
                 await user.save()
                 response.status(200).send('User created successfully')
             } catch (err) {
@@ -36,9 +35,7 @@ class UserController {
         const { email, password } = request.body
         try {
             const jwt = await auth.attempt(email, password)
-            // 14400 seconds = 4 hours
-            // add secure attribute when deployed(?)
-            const { token } = jwt;
+            const { token } = jwt; // add secure attribute when deployed(?)
             response.cookie('XSStoken', token, {
                 httpOnly: true
             })
@@ -49,7 +46,7 @@ class UserController {
         }
     }
 
-    // Using JWT, so I am actually checking token here
+    // Using JWT, so I am actually checking for the token here
     async checkSession( { auth, response }){
         try {
             await auth.check()
