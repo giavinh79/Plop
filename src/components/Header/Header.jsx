@@ -3,6 +3,7 @@ import UserPanel from './UserPanel/UserPanel'
 import { HeaderWrapper, Logo } from './style.js'
 import { WrappedHorizontalLoginForm } from './LoginForm.jsx'
 import { withRouter } from 'react-router-dom'
+import TeamDropdown from './TeamDropdown'
 
 
 function Header(props) {
@@ -13,9 +14,9 @@ function Header(props) {
     return (
         <HeaderWrapper style={{backgroundColor: props.location.pathname === '/home' ? '#445D66' : '#79B7D4'}}>
             <Logo src="images/justlogo.png" alt="logo" onClick={handleClick}/>
-            <div style={{marginLeft: 'auto'}}>
+            <div style={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
                 { props.location.pathname === '/home' ? 
-                    <WrappedHorizontalLoginForm /> : <UserPanel />
+                    <WrappedHorizontalLoginForm /> : <><TeamDropdown /><UserPanel /></>
                 }
             </div>
         </HeaderWrapper>

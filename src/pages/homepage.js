@@ -16,7 +16,7 @@ const styles = {
     formContainer : {
       width:'100%',
       backgroundImage: 'url(\'images/wallpaper.png\')',
-      backgroundPosition: '0 0'
+      backgroundSize: 'cover'
     },
     form : {
       position: 'absolute',
