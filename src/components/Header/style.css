@@ -11,9 +11,8 @@ color: rgb(173, 173, 173) !important;
 color: rgb(173, 173, 173) !important;
 }
 
-.ant-dropdown {
+#dropdownMenu {
     width: 9.5rem;
-   
 }
 
 .ant-dropdown-menu {

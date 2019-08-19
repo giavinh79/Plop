@@ -1,10 +1,10 @@
 import React from 'react'
 import 'antd/dist/antd.css'
 import { Menu, Dropdown, Icon } from 'antd'
-// import './index.css';
+import './style.css';
 
 const menu = (
-        <Menu onClick={() => {}}>
+        <Menu onClick={() => {}} id="dropdownMenu">
             <Menu.Item key="1">
                 <Icon type="appstore" />
                 Overview
