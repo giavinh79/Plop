@@ -33,7 +33,7 @@ const styles = {
     formBackground : {
       zIndex: '2',
       position: 'absolute',
-      bottom: '30%',
+      bottom: '25%',
       left: '0',
       right: '0',
       marginLeft: 'auto',
@@ -41,7 +41,8 @@ const styles = {
       height: '50%',
       width:'30%',
       opacity: 0.6,
-      backgroundColor: 'black',
-      maxWidth: '25rem'
+      backgroundColor: '#2c4054',
+      maxWidth: '25rem',
+      borderRadius: '10px'
     }
   }

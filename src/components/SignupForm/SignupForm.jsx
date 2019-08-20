@@ -52,13 +52,14 @@ class NormalLoginForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form onSubmit={this.handleSubmit} className="signup-form">
+      <Form onSubmit={this.handleSubmit} className='signup-form'>
         <div style={{textAlign: 'center'}}><p style={styles.title}>Sign Up</p></div>
         <Form.Item>
           {getFieldDecorator('email')(
             <Input
-              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Email"
+              prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder='Email'
+              type='email'
               required
             />,
           )}
@@ -68,9 +69,10 @@ class NormalLoginForm extends React.Component {
             // rules: [{ validator: this.validateToNextPassword }],
           })(
             <Input
-              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type="password"
-              placeholder="Password"
+              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type='password'
+              placeholder='Password'
+              autoComplete='new-password'
               required
             />,
           )}
@@ -80,9 +82,10 @@ class NormalLoginForm extends React.Component {
             // rules: [{ validator: this.compareToFirstPassword }],
           })(
             <Input
-              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type="password"
-              placeholder="Confirm Password"
+              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type='password'
+              placeholder='Confirm Password'
+              autoComplete='new-password'
               required
             />,
           )}
@@ -92,13 +95,14 @@ class NormalLoginForm extends React.Component {
             valuePropName: 'checked',
             initialValue: true,
           })(<Checkbox style={{color: '#ccc'}}>Terms & Conditions</Checkbox>)}
-          <a className="signup-form-forgot" href="/" style={{color:'#ccc'}}>
+          <a className='signup-form-forgot' href='/' style={{color:'#ccc'}}>
             Forgot password
           </a>
         </Form.Item>
         <Form.Item style={{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button type="primary" htmlType="submit" className="signup-form-button">
-                Sign Up
+          {/* button bg color potential #495463 */}
+            <Button type='primary' htmlType='submit' className='signup-form-button'>
+                Register
             </Button>
         </Form.Item>
       </Form>
