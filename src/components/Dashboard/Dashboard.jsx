@@ -56,26 +56,26 @@ const completedItems = [
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-};
+    const result = Array.from(list)
+    const [removed] = result.splice(startIndex, 1)
+    result.splice(endIndex, 0, removed)
+    return result
+}
 
 /**
  * Moves an item from one list to another list.
  */
 const move = (source, destination, droppableSource, droppableDestination) => {
-    const sourceClone = Array.from(source);
-    const destClone = Array.from(destination);
-    const [removed] = sourceClone.splice(droppableSource.index, 1);
+    const sourceClone = Array.from(source)
+    const destClone = Array.from(destination)
+    const [removed] = sourceClone.splice(droppableSource.index, 1)
 
-    destClone.splice(droppableDestination.index, 0, removed);
+    destClone.splice(droppableDestination.index, 0, removed)
 
-    const result = {};
-    result[droppableSource.droppableId] = sourceClone;
-    result[droppableDestination.droppableId] = destClone;
-    return result;
+    const result = {}
+    result[droppableSource.droppableId] = sourceClone
+    result[droppableDestination.droppableId] = destClone
+    return result
 };
 
 const grid = 8;
@@ -100,6 +100,31 @@ const getListStyle = isDraggingOver => ({
     // border: '1px solid #ccc'
 });
 
+const filterItems = (obj, activeItems, progressItems, completedItems) => {
+    const activeItemsFiltered = activeItems.filter((item) => {
+        return item.assignee === localStorage.getItem('email')
+    })
+
+    const progressItemsFiltered = progressItems.filter((item) => {
+        return item.assignee === localStorage.getItem('email')
+    })
+
+    const completedItemsFiltered = completedItems.filter((item) => {
+        return item.assignee === localStorage.getItem('email')
+    })
+
+    activeItemsFiltered.length + 
+    progressItemsFiltered.length + 
+    completedItemsFiltered.length === 0 ? 
+    obj.setState({ empty: true}) :
+    obj.setState({
+        active: activeItemsFiltered,
+        progress: progressItemsFiltered,
+        complete: completedItemsFiltered,
+        empty: false
+    })
+}
+
 export default class Dashboard extends Component {
     constructor(props) {
         super(props)
@@ -113,52 +138,34 @@ export default class Dashboard extends Component {
     }
 
     componentDidMount() {
+        if (this.props.filter) {
+            filterItems(this, activeItems, progressItems, completedItems)
+        }
         // do API calls here, import JSON data, if this.props.filter = true, filter by assignee
     }
 
     componentWillReceiveProps(props) {
         if (props.filter) {
-            const activeItemsFiltered = activeItems.filter((item) => {
-                return item.assignee === localStorage.getItem('email')
-            })
-
-            const progressItemsFiltered = progressItems.filter((item) => {
-                return item.assignee === localStorage.getItem('email')
-            })
-
-            const completedItemsFiltered = completedItems.filter((item) => {
-                return item.assignee === localStorage.getItem('email')
-            })
-
-            activeItemsFiltered.length + 
-            progressItemsFiltered.length + 
-            completedItemsFiltered.length === 0 ? 
-            this.setState({ empty: true}) :
-            this.setState({
-                active: activeItemsFiltered,
-                progress: progressItemsFiltered,
-                complete: completedItemsFiltered,
-                empty: false
-            })
+            filterItems(this, activeItems, progressItems, completedItems)
         } else {
             this.setState({active: activeItems, progress: progressItems, complete: completedItems, empty: false})
         }
     }
 
     id2List = {
-        droppable: 'active',
+        droppable1: 'active',
         droppable2: 'progress',
         droppable3: 'complete'
     };
 
-    getList = id => this.state[this.id2List[id]];
+    getList = id => this.state[this.id2List[id]]
 
     onDragEnd = result => {
-        const { source, destination } = result;
+        const { source, destination } = result
 
         // dropped outside the list
         if (!destination) {
-            return;
+            return
         }
 
         if (source.droppableId === destination.droppableId) {
@@ -166,34 +173,39 @@ export default class Dashboard extends Component {
                 this.getList(source.droppableId),
                 source.index,
                 destination.index
-            );
+            )
 
             let state = { active };
 
             if (source.droppableId === 'droppable2') {
-                state = { progress: active };
+                state = { progress: active }
             }
 
-            this.setState(state);
+            if (source.droppableId === 'droppable3') {
+                state = { complete: active }
+            }
+
+            this.setState(state)
         } else {
             const result = move(
                 this.getList(source.droppableId),
                 this.getList(destination.droppableId),
                 source,
                 destination
-            );
+            )
 
-            this.setState({
-                active: result.droppable,
-                progress: result.droppable2
-            });
+            // To identify which states to change and allow 3 way drag and drop
+            const identify = parseInt(source.droppableId.slice(-1)) + parseInt(destination.droppableId.slice(-1))
+            if (identify === 3) this.setState({ active: result.droppable1, progress: result.droppable2})
+            else if (identify === 4) this.setState({ active: result.droppable1, complete: result.droppable3})
+            else this.setState({ progress: result.droppable2, complete: result.droppable3})
         }
-    };
+    }
 
     render() {
         return !this.state.empty ?
             <DragDropContext onDragEnd={this.onDragEnd} style={{height:'50%'}}>
-                <Droppable droppableId="droppable">
+                <Droppable droppableId="droppable1">
                     {(provided, snapshot) => (
                         <div
                             ref={provided.innerRef}
@@ -290,7 +302,7 @@ export default class Dashboard extends Component {
         <div style={styles.emptyWrapper}>
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span style={{fontSize: '3rem'}}>No issues found</span>} 
             imageStyle={styles.emptyImage}/>
-        </div>;
+        </div>
     }
 }
 

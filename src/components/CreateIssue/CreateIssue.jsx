@@ -103,7 +103,7 @@ class CreateIssue extends React.Component {
                   </Form.Item>
                 </div>
                 
-                <Form.Item label='Images' style={{flex: 3, padding: '1rem'}}>
+                <Form.Item label='Files' style={{flex: 3, padding: '1rem'}}>
                   <div className='dropbox' style={{width:'100%'}}>
                     {getFieldDecorator('dragger', {
                       valuePropName: 'fileList',

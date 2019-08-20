@@ -41,7 +41,7 @@ const styles = {
       height: '50%',
       width:'30%',
       opacity: 0.6,
-      backgroundColor: '#2c4054',
+      backgroundColor: 'rgb(31, 42, 53)',
       maxWidth: '25rem',
       borderRadius: '10px'
     }
