@@ -7,7 +7,8 @@ It leverages the best coding and security practices to ensure modularity, code r
 The database used is mySQL which is managed using the Lucid ORM. The database can be changed to postgresQL with ease as well.
 
 ## Future plans
-### Redux/MobX for more complex state management
-### Add Rate Limiter to server-side stuff
-### Redis for caching certain data
-### Docker for containerizing different components (if needed, however this may just be a monolithic architecture)
+
+Redux/MobX for more complex state management
+Add Rate Limiter to server-side stuff
+Redis for caching certain data
+Docker for containerizing different components (if needed, however this may just be a monolithic architecture)
