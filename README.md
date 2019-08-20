@@ -9,6 +9,9 @@ The database used is mySQL which is managed using the Lucid ORM. The database ca
 ## Future plans
 
 Redux/MobX for more complex state management
+
 Add Rate Limiter to server-side stuff
+
 Redis for caching certain data
+
 Docker for containerizing different components (if needed, however this may just be a monolithic architecture)
