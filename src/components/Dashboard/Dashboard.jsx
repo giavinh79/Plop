@@ -8,21 +8,29 @@ const activeItems = [
         id: '1',
         title: 'Complete frontend',
         assignee: 'N/A',
-        content: 'Fix styling on homepage'
+        content: 'Fix styling on homepage',
+        priority: 1
     },
     {
         id: '2',
         title: 'Create backend',
         assignee: 'randomuser@gmail.com',
-        content: 'Setup REST API'
+        content: 'Setup REST API',
+        priority: 0,
     },
     {
         id: '3',
         title: 'Add Socket.IO',
         assignee: 'test2@gmail.com',
-        content: 'Install and configure for dashboard page'
+        content: 'Install and configure for dashboard page',
+        priority: 1
     }
 ];
+
+activeItems.sort((itemOne, itemTwo) => 
+// if result is > 0, second item (itemOne) comes before
+    itemTwo.priority - itemOne.priority
+)
 
 const progressItems = [
     // {
