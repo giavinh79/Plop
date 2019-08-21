@@ -29,7 +29,10 @@ class CreateIssue extends React.Component {
           <Select.Option key='3'>Testing</Select.Option>,
           <Select.Option key='4'>Documentation</Select.Option>,
           <Select.Option key='5'>Database</Select.Option>,
-          <Select.Option key='6'>DevOps</Select.Option>
+          <Select.Option key='6'>DevOps</Select.Option>,
+          <Select.Option key='7'>Research</Select.Option>,
+          <Select.Option key='8'>Bug</Select.Option>,
+          <Select.Option key='9'>Security</Select.Option>
         ]
 
         const { getFieldDecorator } = this.props.form;
