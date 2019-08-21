@@ -16,8 +16,13 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 const jwtMiddleware = async ({ request }, next) => {
-    request.headers().authorization = `Bearer ${request.cookie('XSStoken')}`
-    await next()
+    try {
+        request.headers().authorization = `Bearer ${request.cookie('XSStoken')}`
+    } catch(err) {
+        console.log(`${new Date()} : ${err}`)
+    } finally {
+        await next()
+    }
 }
 
 Route.on('/').render('welcome')
