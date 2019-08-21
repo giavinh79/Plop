@@ -184,7 +184,8 @@ const styles = {
     },
     subcontainer : {
         display: 'flex',
-        width: '100%'
+        width: '100%',
+        marginTop: '1rem'
     },
     card : {
         boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
