@@ -1,39 +1,39 @@
 .createIssue .ant-form {
-    max-width: 60rem;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 1rem;
+  max-width: 60rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 1rem;
 }
 
 .createIssue .ant-form-item-label {
-    text-align: left;
+  text-align: left;
 }
 
 .createIssue .ant-form-item {
-    display: flex;
-    flex-direction: column;
-    /* width: 100%; */
+  display: flex;
+  flex-direction: column;
+  /* width: 100%; */
 }
 
 .createIssue .dropbox {
-    min-height: 15rem;
-    min-width: 20rem;
+  min-height: 15rem;
+  min-width: 20rem;
 }
 
 .createIssue .ant-col {
-    width: auto;
+  width: auto;
 }
 
 .createIssue .ant-select-selection {
-    min-width: 10rem;
-    max-width: 12rem;
+  min-width: 10rem;
+  max-width: 12rem;
 }
 
 .dropbox .ant-upload-text {
-    margin: 1rem !important;
+  margin: 1rem !important;
 }
 
 .createIssue .ant-btn-primary {
-    border-color: #689bca;
-    background-color: #689bca;
+  border-color: #689bca;
+  background-color: #689bca;
 }
