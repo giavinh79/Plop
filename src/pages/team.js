@@ -9,11 +9,12 @@ const { TextArea } = Input
 export default class Team extends React.Component {
   constructor(props) {
     super(props)
+    const teamsObject = JSON.parse(localStorage.getItem('teams'))
     this.state = {
       toHomepage: false,
       toDashboard: false,
       teamCreation: false,
-      teams: []
+      teams: teamsObject == null ? [] : teamsObject
     }
   }
 
@@ -30,13 +31,17 @@ export default class Team extends React.Component {
   componentDidMount() {
     axios.post('/session', null, { withCredentials: true }).then(
       axios.get('/getRoom', { withCredentials: true })
-        .then(res => this.setState({ teams: res.data }))
-        .catch()
+      .then(res => {
+        if (JSON.stringify(this.state.teams) !== JSON.stringify(res.data)) {
+          this.setState({ teams: res.data })
+          localStorage.setItem('teams', JSON.stringify(res.data))
+        }
+      }).catch()
     )
-      .catch(() => {
-        this.setState({ toHomepage: true })
-        this.openNotification()
-      })
+    .catch(() => {
+      this.setState({ toHomepage: true })
+      this.openNotification()
+    })
   }
 
   openNotificationCreation = (res) => {
