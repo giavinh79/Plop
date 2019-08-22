@@ -12,7 +12,7 @@ Web Sockets to be implemented to allow chat, track member statuses, and show liv
 
 Add Rate Limiter to server-side stuff
 
-Redis for caching certain data
+Redis for caching certain data (may not be necessary after thinking about it)
 
 Redux/MobX for more complex state management
 
@@ -42,4 +42,6 @@ Databases - mySQL or postgreSQL has been used and tested
 
 ## Practices
 
-Although not everything is consistent yet, single quotes are desired, no semi-colons terminating lines unless it is a callback, small design changes for inline CSS styling otherwise make a 'const style' JSON object or use styled-components, split code up into components, camelCase variable names, and 4 space indentation for nested code lines. In the future, add a ESlint config so that coding styles are enforced.
+Although not everything is consistent yet, single quotes are desired, no semi-colons terminating lines unless it is a callback, small design changes for inline CSS styling otherwise make a 'const style' JSON object or use styled-components, split code up into components, camelCase variable names, and 2 space indentation for nested code lines. In the future, add a ESlint config so that coding styles are enforced.
+
+Other preferred styles: {{ attribute: 'value' }}, <Component />, <> over <React.Fragment>, extends React.Component
