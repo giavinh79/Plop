@@ -42,7 +42,6 @@ export default class Panel extends React.Component {
   }
 
   changePage = (page, params) => {
-    console.log(params)
     this.setState({ data: params, currentPage: page })
   }
 

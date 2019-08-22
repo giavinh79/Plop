@@ -74,8 +74,6 @@ export default class Team extends React.Component {
     axios.post('/createRoom', data, { withCredentials: true })
       .then(res => {
         this.setState({ teamCreation: false, teams: [...this.state.teams, { name: res.data.name, description: res.data.description, id: res.data.id }] })
-        // console.log(res.data)
-        // console.log(this.state.teams)
         this.openNotificationCreation(res.data)
       })
       .catch(() => {
@@ -94,7 +92,6 @@ export default class Team extends React.Component {
       .then(res => {
         // localStorage.setItem('room', res.id)
         this.setState({ toDashboard: true })
-        // console.log(res.data)
         // this.openNotificationCreation(res.data)
       })
       .catch(err => {
