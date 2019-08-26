@@ -3,7 +3,7 @@ import { Icon, notification } from 'antd'
 
 // File for using commonly used functions - simply import the one desired
 
-export const openNotification = (status, messageOne, messageTwo) => {
+export const displayNotification = (status, messageOne, messageTwo) => {
   notification.open({
     message: status ? 'Success' : 'Error',
     duration: 2,

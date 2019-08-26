@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { Card } from './Card'
-import { Empty } from 'antd'
 import axios from 'axios'
 
 let isMounted;
@@ -98,8 +97,7 @@ export default class Dashboard extends Component {
     this.state = {
       active: activeItems,
       progress: progressItems,
-      complete: completedItems,
-      empty: false,
+      complete: completedItems
     }
   }
 
@@ -109,9 +107,9 @@ export default class Dashboard extends Component {
       .then(res => {
         const { activeItems, progressItems, completedItems } = res.data
         if (isMounted) {
-          if (activeItems.length === 0 && progressItems.length === 0 && completedItems.length === 0)
-            this.setState({ empty: true })
-          else
+          if (activeItems.length + progressItems.length + completedItems.length > 0)
+            this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
+          else if (this.state.active.length + this.state.progress.length + this.state.complete.length > 0)
             this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
         }
       }).catch()
@@ -122,9 +120,7 @@ export default class Dashboard extends Component {
     axios.get('/teamIssue/1', { withCredentials: true })
       .then(res => {
         const { activeItems, progressItems, completedItems } = res.data
-        if (activeItems.length === 0 && progressItems.length === 0 && completedItems.length === 0)
-          this.setState({ empty: true })
-        else
+        if (activeItems.length !== 0 || progressItems.length !== 0 || completedItems.length !== 0)
           this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
       }).catch()
   }
@@ -199,7 +195,7 @@ export default class Dashboard extends Component {
   }
 
   render() {
-    return !this.state.empty ? (
+    return (
       <DragDropContext onDragEnd={this.onDragEnd} style={{ height: '50%' }}>
         <Droppable droppableId="droppable1">
           {(provided, snapshot) => (
@@ -221,7 +217,7 @@ export default class Dashboard extends Component {
                         provided.draggableProps.style
                       )}>
                       <Card
-                        data={{ shortDescription: item.shortDescription, title: item.title, id: item.id }}
+                        data={item}
                         changePage={this.props.changePage}
                       />
                     </div>
@@ -252,7 +248,7 @@ export default class Dashboard extends Component {
                         provided.draggableProps.style
                       )}>
                       <Card
-                        data={{ shortDescription: item.shortDescription, title: item.title, id: item.id }}
+                        data={item}
                         changePage={this.props.changePage}
                       />
                     </div>
@@ -283,7 +279,7 @@ export default class Dashboard extends Component {
                         provided.draggableProps.style
                       )}>
                       <Card
-                        data={{ shortDescription: item.shortDescription, title: item.title, id: item.id }}
+                        data={item}
                         changePage={this.props.changePage}
                       />
                     </div>
@@ -295,17 +291,7 @@ export default class Dashboard extends Component {
           )}
         </Droppable>
       </DragDropContext>
-    ) : (
-        <div style={styles.emptyWrapper}>
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={
-              <span style={{ fontSize: '3rem' }}>No issues found</span>
-            }
-            imageStyle={styles.emptyImage}
-          />
-        </div>
-      )
+    )
   }
 }
 

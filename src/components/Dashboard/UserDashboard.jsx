@@ -4,6 +4,7 @@ import { Card } from './Card'
 import { Empty } from 'antd'
 import axios from 'axios'
 
+let isMounted;
 let activeItems = []
 let progressItems = []
 let completedItems = []
@@ -88,21 +89,27 @@ export default class Dashboard extends Component {
   }
 
   componentWillReceiveProps(props) {
+    isMounted = true
     axios.get('/userIssue/1', { withCredentials: true })
       .then(res => {
         const { activeItems, progressItems, completedItems } = res.data
         if (activeItems.length === 0 && progressItems.length === 0 && completedItems.length === 0) {
-          this.setState({ empty: true })
-          localStorage.setItem('empty', 1)
+          if (isMounted) {
+            this.setState({ empty: true })
+            localStorage.setItem('empty', 1)
+          }
         } else {
-          this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
-          localStorage.removeItem('empty');
+          if (isMounted) {
+            this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
+            localStorage.removeItem('empty');
+          }
         }
 
       }).catch()
   }
 
   componentWillUnmount() {
+    isMounted = false
     this.props.setIssue(this.state.active, this.state.progress, this.state.complete, true)
   }
 
@@ -193,7 +200,7 @@ export default class Dashboard extends Component {
                         provided.draggableProps.style
                       )}>
                       <Card
-                        data={{ shortDescription: item.shortDescription, title: item.title, id: item.id }}
+                        data={item}
                         changePage={this.props.changePage}
                       />
                     </div>
@@ -224,7 +231,7 @@ export default class Dashboard extends Component {
                         provided.draggableProps.style
                       )}>
                       <Card
-                        data={{ shortDescription: item.shortDescription, title: item.title, id: item.id }}
+                        data={item}
                         changePage={this.props.changePage}
                       />
                     </div>
@@ -255,7 +262,7 @@ export default class Dashboard extends Component {
                         provided.draggableProps.style
                       )}>
                       <Card
-                        data={{ shortDescription: item.shortDescription, title: item.title, id: item.id }}
+                        data={item}
                         changePage={this.props.changePage}
                       />
                     </div>

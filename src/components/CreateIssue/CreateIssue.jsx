@@ -1,8 +1,11 @@
 import React from 'react'
 import axios from 'axios'
+import { Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon, notification } from 'antd'
+import { displayNotification } from '../../services/services.jsx'
 import { layout, subheader } from '../../globalStyles'
 import './style.css'
-import { Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon, notification } from 'antd'
+
+
 const { TextArea } = Input
 
 // Divide this up into two components and make a HOC
@@ -18,7 +21,14 @@ class CreateIssue extends React.Component {
   }
 
   handleDeletion = (id) => {
-    axios.delete(`/issue/${id}`, { withCredentials: true }).catch()
+    axios.delete(`/issue/${id}`, { withCredentials: true })
+      .then(() => {
+        displayNotification(true, 'Issue was deleted successfully', 'Issue could not be deleted')
+      })
+      .catch(() => {
+        displayNotification(false, 'Issue was deleted successfully', 'Issue could not be deleted')
+      })
+
   }
 
   handleSubmit = e => {
@@ -66,12 +76,11 @@ class CreateIssue extends React.Component {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 }
     }
-    console.log(data)
 
     return (
       <div style={layout} className="createIssue">
         <div style={{ display: 'flex' }}>
-          <p style={subheader}>{data == null ? 'Create Issue' : `${data.title}`}</p>
+          <p style={subheader}>{data == null ? 'Create Issue' : data.title}</p>
           {data == null ? '' : <Icon type="rollback" style={{ margin: '0 1rem', fontSize: '1.5rem', cursor: 'pointer' }} onClick={() => { this.props.changePage(0) }} />}
           {/* <div style="justify-content: center;display: flex;border-radius: 50%;height: 2.5rem;width: 2.5rem;margin: 0 1rem;border: 1px solid #ccc;align-items: center;"> */}
         </div>
@@ -88,7 +97,7 @@ class CreateIssue extends React.Component {
                     message: 'Please input your title!'
                   }
                 ],
-                initialValue: data == null ? '' : `${data.title}`
+                initialValue: data == null ? '' : data.title
               })(<Input />)}
             </Form.Item>
 
@@ -100,12 +109,14 @@ class CreateIssue extends React.Component {
                     message: 'Please input a short description'
                   }
                 ],
-                initialValue: data == null ? '' : `${this.props.data.shortDescription}`
+                initialValue: data == null ? '' : data.shortDescription
               })(<Input />)}
             </Form.Item>
 
             <Form.Item label="Description">
-              {getFieldDecorator('description')(
+              {getFieldDecorator('description', {
+                initialValue: data == null ? '' : data.description
+              })(
                 <TextArea autosize={{ minRows: '2' }} />
               )}
             </Form.Item>
@@ -114,7 +125,9 @@ class CreateIssue extends React.Component {
               <Form.Item
                 label="Assignee"
                 style={{ flexDirection: 'row', alignItems: 'center', marginRight: '1rem' }}>
-                {getFieldDecorator('assignee')(
+                {getFieldDecorator('assignee', {
+                  initialValue: data == null ? '' : data.assignee
+                })(
                   <Input.Search
                     placeholder="Search by email"
                     onSearch={value => console.log(value)}
@@ -126,7 +139,9 @@ class CreateIssue extends React.Component {
               <Form.Item
                 label="Tags"
                 style={{ flexDirection: 'row', alignItems: 'center' }}>
-                {getFieldDecorator('tag')(
+                {getFieldDecorator('tag', {
+                  initialValue: data == null ? [] : data.tag
+                })(
                   <Select
                     mode="tags"
                     maxTagTextLength={10}
@@ -135,7 +150,7 @@ class CreateIssue extends React.Component {
                     style={{ width: '100%' }}
                     placeholder="Issue Tags"
                     onChange={() => {
-                      console.log('hi')
+                      // console.log('hi')
                     }}>
                     {tagSuggestions}
                   </Select>
@@ -147,7 +162,7 @@ class CreateIssue extends React.Component {
               style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
               <Form.Item label="Priority" style={{ flexDirection: 'row' }}>
                 {getFieldDecorator('priority', {
-                  initialValue: 0
+                  initialValue: data == null ? 0 : data.priority | 0
                 })(
                   <Radio.Group>
                     <Radio value={0}>Minor</Radio>
@@ -162,7 +177,7 @@ class CreateIssue extends React.Component {
                   justifyContent: 'flex-end'
                 }}>
                 {getFieldDecorator('status', {
-                  initialValue: 0
+                  initialValue: data == null ? 0 : data.status | 0
                 })(
                   <Radio.Group>
                     <Radio value={0}>Backlog</Radio>
