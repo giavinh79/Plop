@@ -1,15 +1,40 @@
 import React from 'react'
+import axios from 'axios'
 import { layout, subheader } from '../../globalStyles'
 import './style.css'
-import { Input, Form, Radio, Button, Divider, Select, Upload, Icon } from 'antd'
+import { Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon, notification } from 'antd'
 const { TextArea } = Input
 
+// Divide this up into two components and make a HOC
 class CreateIssue extends React.Component {
+  openNotification = (status) => {
+    notification.open({
+      message: status !== null ? 'Success' : 'Error',
+      duration: 2,
+      placement: 'bottomRight',
+      description: status !== null ? `Issue sent to ${status}.` : 'Issue could not be created.',
+      icon: <Icon type={status !== null ? 'smile' : 'warning'} style={{ color: status !== null ? '#108ee9' : 'red' }} />,
+    })
+  }
+
+  handleDeletion = (id) => {
+    axios.delete(`/issue/${id}`, { withCredentials: true }).catch()
+  }
+
   handleSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values)
+        axios.put('/issue', values)
+          .then((res) => {
+            this.props.form.resetFields()
+            this.openNotification(res.data.status)
+            console.log(res)
+          })
+          .catch((err) => {
+            this.openNotification()
+            console.log(err)
+          })
       }
     })
   }
@@ -25,15 +50,15 @@ class CreateIssue extends React.Component {
   render() {
     const data = this.props.data
     const tagSuggestions = [
-      <Select.Option key="1">Frontend</Select.Option>,
-      <Select.Option key="2">Backend</Select.Option>,
-      <Select.Option key="3">Testing</Select.Option>,
-      <Select.Option key="4">Documentation</Select.Option>,
-      <Select.Option key="5">Database</Select.Option>,
-      <Select.Option key="6">DevOps</Select.Option>,
-      <Select.Option key="7">Research</Select.Option>,
-      <Select.Option key="8">Bug</Select.Option>,
-      <Select.Option key="9">Security</Select.Option>
+      <Select.Option key="Backend">Backend</Select.Option>,
+      <Select.Option key="Bug">Bug</Select.Option>,
+      <Select.Option key="Database">Database</Select.Option>,
+      <Select.Option key="DevOps">DevOps</Select.Option>,
+      <Select.Option key="Documentation">Documentation</Select.Option>,
+      <Select.Option key="Frontend">Frontend</Select.Option>,
+      <Select.Option key="Research">Research</Select.Option>,
+      <Select.Option key="Security">Security</Select.Option>,
+      <Select.Option key="Testing">Testing</Select.Option>
     ]
 
     const { getFieldDecorator } = this.props.form
@@ -41,6 +66,7 @@ class CreateIssue extends React.Component {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 }
     }
+    console.log(data)
 
     return (
       <div style={layout} className="createIssue">
@@ -54,26 +80,27 @@ class CreateIssue extends React.Component {
           onSubmit={this.handleSubmit}
           style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '80rem' }}>
           <div style={{ flex: 4, padding: '1rem' }}>
-            <Form.Item label="Title">
+            <Form.Item label='Title'>
               {getFieldDecorator('title', {
                 rules: [
                   {
                     required: true,
                     message: 'Please input your title!'
                   }
-                ]
+                ],
+                initialValue: data == null ? '' : `${data.title}`
               })(<Input />)}
             </Form.Item>
 
             <Form.Item label="Short Description">
-              {getFieldDecorator('short-description', {
+              {getFieldDecorator('shortDescription', {
                 rules: [
                   {
                     required: true,
                     message: 'Please input a short description'
                   }
                 ],
-                initialValue: data == null ? '' : `${this.props.data.content}`
+                initialValue: data == null ? '' : `${this.props.data.shortDescription}`
               })(<Input />)}
             </Form.Item>
 
@@ -104,6 +131,7 @@ class CreateIssue extends React.Component {
                     mode="tags"
                     maxTagTextLength={10}
                     maxTagCount={1}
+                    tokenSeparators={[',']}
                     style={{ width: '100%' }}
                     placeholder="Issue Tags"
                     onChange={() => {
@@ -119,11 +147,11 @@ class CreateIssue extends React.Component {
               style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
               <Form.Item label="Priority" style={{ flexDirection: 'row' }}>
                 {getFieldDecorator('priority', {
-                  initialValue: 1
+                  initialValue: 0
                 })(
                   <Radio.Group>
-                    <Radio value={1}>Minor</Radio>
-                    <Radio value={2}>Major</Radio>
+                    <Radio value={0}>Minor</Radio>
+                    <Radio value={1}>Major</Radio>
                   </Radio.Group>
                 )}
               </Form.Item>
@@ -134,24 +162,43 @@ class CreateIssue extends React.Component {
                   justifyContent: 'flex-end'
                 }}>
                 {getFieldDecorator('status', {
-                  initialValue: 1
+                  initialValue: 0
                 })(
                   <Radio.Group>
-                    <Radio value={1}>Backlog</Radio>
-                    <Radio value={2}>Active</Radio>
+                    <Radio value={0}>Backlog</Radio>
+                    <Radio value={1}>Active</Radio>
                   </Radio.Group>
                 )}
               </Form.Item>
             </div>
 
             <Divider />
-            <Form.Item
-              wrapperCol={{ span: 12, offset: 6 }}
-              style={{ alignItems: 'flex-end' }}>
-              <Button type="primary" htmlType="submit">
-                {data == null ? 'Submit' : 'Save'}
-              </Button>
-            </Form.Item>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Form.Item
+                wrapperCol={{ span: 12, offset: 6 }}
+                style={{ alignItems: 'flex-end' }}>
+                <Popconfirm
+                  title="Are you sure you want to delete this task?"
+                  onConfirm={() => this.handleDeletion(data.id)}
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button type="primary" htmlType="submit" style={{ display: data == null ? 'none' : 'block', backgroundColor: '#cc8181', borderColor: '#cc8181', marginRight: '1rem' }}>
+                    Delete
+                </Button>
+                </Popconfirm>
+
+              </Form.Item>
+              <Form.Item
+                wrapperCol={{ span: 12, offset: 6 }}
+                style={{ alignItems: 'flex-end' }}>
+                <Button type="primary" htmlType="submit">
+                  {data == null ? 'Submit' : 'Save'}
+                </Button>
+              </Form.Item>
+            </div>
           </div>
 
           <Form.Item label="Files" style={{ flex: 3, padding: '1rem' }}>
@@ -178,7 +225,7 @@ class CreateIssue extends React.Component {
             </div>
           </Form.Item>
         </Form>
-      </div>
+      </div >
     )
   }
 }

@@ -2,65 +2,17 @@ import React, { Component } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { Card } from './Card'
 import { Empty } from 'antd'
+import axios from 'axios'
 
-const activeItems = [
-  {
-    id: '1',
-    title: 'Complete frontend',
-    assignee: 'N/A',
-    content: 'Fix styling on homepage',
-    priority: 1
-  },
-  {
-    id: '2',
-    title: 'Create backend',
-    assignee: 'randomuser@gmail.com',
-    content: 'Setup REST API',
-    priority: 0
-  },
-  {
-    id: '3',
-    title: 'Add Socket.IO',
-    assignee: 'test2@gmail.com',
-    content: 'Install and configure for dashboard page',
-    priority: 1
-  }
-]
+let isMounted;
+let activeItems = []
+let progressItems = []
+let completedItems = []
 
-// if result is > 0, second item (itemOne) comes before
-activeItems.sort((itemOne, itemTwo) => itemTwo.priority - itemOne.priority)
+// if result is > 0, second item (itemOne) comes before, for future filtering
+// activeItems.sort((itemOne, itemTwo) => itemTwo.priority - itemOne.priority)
 
-const progressItems = [
-  // {
-  //     id: 'item 4',
-  //     title: 'item 4',
-  // },
-  // {
-  //     id: 'item 5',
-  //     title: 'item 5',
-  // },
-  // {
-  //     id: 'item 6',
-  //     title: 'item 6',
-  // }
-]
-
-const completedItems = [
-  // {
-  //     id: 'item 4',
-  //     title: 'item 4',
-  // },
-  // {
-  //     id: 'item 5',
-  //     title: 'item 5',
-  // },
-  // {
-  //     id: 'item 6',
-  //     title: 'item 6',
-  // }
-]
-
-// a little function to help us with reordering the result
+// A little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list)
   const [removed] = result.splice(startIndex, 1)
@@ -68,9 +20,7 @@ const reorder = (list, startIndex, endIndex) => {
   return result
 }
 
-/**
- * Moves an item from one list to another list.
- */
+// Moves an item from one list to another list.
 const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source)
   const destClone = Array.from(destination)
@@ -106,62 +56,82 @@ const getListStyle = isDraggingOver => ({
   // border: '1px solid #ccc'
 })
 
-const filterItems = (obj, activeItems, progressItems, completedItems) => {
-  const activeItemsFiltered = activeItems.filter(item => {
-    return item.assignee === localStorage.getItem('email')
-  })
+// const filterItems = (obj, activeItems, progressItems, completedItems) => {
+//   const activeItemsFiltered = activeItems.filter(item => {
+//     return item.assignee === localStorage.getItem('email')
+//   })
 
-  const progressItemsFiltered = progressItems.filter(item => {
-    return item.assignee === localStorage.getItem('email')
-  })
+//   const progressItemsFiltered = progressItems.filter(item => {
+//     return item.assignee === localStorage.getItem('email')
+//   })
 
-  const completedItemsFiltered = completedItems.filter(item => {
-    return item.assignee === localStorage.getItem('email')
-  })
+//   const completedItemsFiltered = completedItems.filter(item => {
+//     return item.assignee === localStorage.getItem('email')
+//   })
 
-  activeItemsFiltered.length +
-    progressItemsFiltered.length +
-    completedItemsFiltered.length ===
-    0
-    ? obj.setState({ empty: true })
-    : obj.setState({
-      active: activeItemsFiltered,
-      progress: progressItemsFiltered,
-      complete: completedItemsFiltered,
-      empty: false
-    })
-}
+//   if (activeItemsFiltered.length === activeItems.length && progressItemsFiltered.length === progressItems.length && completedItemsFiltered.length === completedItems.length) {
+//     return
+//   }
+
+//   activeItemsFiltered.length +
+//     progressItemsFiltered.length +
+//     completedItemsFiltered.length === 0
+//     ? obj.setState({ empty: true })
+//     : obj.setState({
+//       active: activeItemsFiltered,
+//       progress: progressItemsFiltered,
+//       complete: completedItemsFiltered,
+//       empty: false
+//     })
+// }
 
 export default class Dashboard extends Component {
   constructor(props) {
     super(props)
+    const { active, progress, complete } = props.issue
+    if (active !== null || progress !== null || complete !== null) {
+      activeItems = active
+      progressItems = progress
+      completedItems = complete
+    }
+
     this.state = {
       active: activeItems,
       progress: progressItems,
       complete: completedItems,
       empty: false,
-      filter: false
     }
   }
 
   componentDidMount() {
-    if (this.props.filter) {
-      filterItems(this, activeItems, progressItems, completedItems)
-    }
-    // do API calls here, import JSON data, if this.props.filter = true, filter by assignee
+    isMounted = true
+    axios.get('/teamIssue/1', { withCredentials: true })
+      .then(res => {
+        const { activeItems, progressItems, completedItems } = res.data
+        if (isMounted) {
+          if (activeItems.length === 0 && progressItems.length === 0 && completedItems.length === 0)
+            this.setState({ empty: true })
+          else
+            this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
+        }
+      }).catch()
   }
 
-  componentWillReceiveProps(props) {
-    if (props.filter) {
-      filterItems(this, activeItems, progressItems, completedItems)
-    } else {
-      this.setState({
-        active: activeItems,
-        progress: progressItems,
-        complete: completedItems,
-        empty: false
-      })
-    }
+  componentWillReceiveProps() {
+    // Refresh
+    axios.get('/teamIssue/1', { withCredentials: true })
+      .then(res => {
+        const { activeItems, progressItems, completedItems } = res.data
+        if (activeItems.length === 0 && progressItems.length === 0 && completedItems.length === 0)
+          this.setState({ empty: true })
+        else
+          this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
+      }).catch()
+  }
+
+  componentWillUnmount() {
+    isMounted = false
+    this.props.setIssue(this.state.active, this.state.progress, this.state.complete, false)
   }
 
   id2List = {
@@ -251,7 +221,7 @@ export default class Dashboard extends Component {
                         provided.draggableProps.style
                       )}>
                       <Card
-                        data={{ content: item.content, title: item.title, id: item.id }}
+                        data={{ shortDescription: item.shortDescription, title: item.title, id: item.id }}
                         changePage={this.props.changePage}
                       />
                     </div>
@@ -282,7 +252,7 @@ export default class Dashboard extends Component {
                         provided.draggableProps.style
                       )}>
                       <Card
-                        data={{ content: item.content, title: item.title, id: item.id }}
+                        data={{ shortDescription: item.shortDescription, title: item.title, id: item.id }}
                         changePage={this.props.changePage}
                       />
                     </div>
@@ -313,7 +283,7 @@ export default class Dashboard extends Component {
                         provided.draggableProps.style
                       )}>
                       <Card
-                        data={{ content: item.content, title: item.title, id: item.id }}
+                        data={{ shortDescription: item.shortDescription, title: item.title, id: item.id }}
                         changePage={this.props.changePage}
                       />
                     </div>

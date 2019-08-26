@@ -20,6 +20,7 @@ export default class UserPanel extends React.Component {
 
   handleLogout = () => {
     axios.post('/logout', null, { withCredentials: true }).catch()
+    localStorage.clear() // get rid of team caching and email
     this.setState({ toHomepage: true })
   }
 

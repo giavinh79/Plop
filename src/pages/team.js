@@ -31,17 +31,17 @@ export default class Team extends React.Component {
   componentDidMount() {
     axios.post('/session', null, { withCredentials: true }).then(
       axios.get('/getRoom', { withCredentials: true })
-      .then(res => {
-        if (JSON.stringify(this.state.teams) !== JSON.stringify(res.data)) {
-          this.setState({ teams: res.data })
-          localStorage.setItem('teams', JSON.stringify(res.data))
-        }
-      }).catch()
+        .then(res => {
+          if (JSON.stringify(this.state.teams) !== JSON.stringify(res.data)) {
+            this.setState({ teams: res.data })
+            localStorage.setItem('teams', JSON.stringify(res.data))
+          }
+        }).catch()
     )
-    .catch(() => {
-      this.setState({ toHomepage: true })
-      this.openNotification()
-    })
+      .catch(() => {
+        this.setState({ toHomepage: true })
+        this.openNotification()
+      })
   }
 
   openNotificationCreation = (res) => {
@@ -51,7 +51,7 @@ export default class Team extends React.Component {
       placement: 'bottomRight',
       description: res !== null ? 'The team ID is ' + res.id + '. Your credentials were also emailed to you as a backup. You may now enter the team\'s room.' :
         'The team could not be created, you may be at your maximum team limit.',
-      icon: <Icon type={res !== null ? 'smile' : 'warning'} style={{ color: '#108ee9' }} />,
+      icon: <Icon type={res !== null ? 'smile' : 'warning'} style={{ color: res !== null ? '#108ee9' : 'red' }} />,
     });
   }
 
@@ -103,7 +103,8 @@ export default class Team extends React.Component {
     this.setState({ teamCreation: false });
   }
 
-  handleTeamCreation = () => {
+  handleTeamCreation = (e) => {
+    e.preventDefault()
     this.setState({ teamCreation: true })
   }
 
@@ -137,10 +138,10 @@ export default class Team extends React.Component {
         <div style={styles.container}>
           <div style={styles.subcontainer}>
             <Card title="Make a team" style={styles.card}>
-              <p><a href="/">Create</a> a new team in order to begin managing your project!</p>
+              <p><a href="/" onClick={(e) => this.handleTeamCreation(e)}>Create</a> a new team in order to begin managing your project!</p>
               <p>In total, you can only be a part of three maximum teams.</p>
               <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-                <Icon type="plus-circle" style={{ fontSize: '2.5rem', paddingTop: '4rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }} onClick={() => this.handleTeamCreation()} />
+                <Icon type="plus-circle" style={{ fontSize: '2.5rem', paddingTop: '4rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }} onClick={(e) => this.handleTeamCreation(e)} />
               </div>
             </Card>
             <Card title="Join a team" style={styles.card}>

@@ -15,7 +15,7 @@ export function Card(props) {
           />
         </div>
       </div>
-      <div style={styles.cardBody}>{props.data.content}</div>
+      <div style={styles.cardBody}>{props.data.shortDescription}</div>
     </>
   )
 }
@@ -42,5 +42,5 @@ const styles = {
 
 Card.propTypes = {
   title: PropTypes.string,
-  content: PropTypes.string
+  shortDescription: PropTypes.string
 }

@@ -3,7 +3,8 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import { Redirect } from 'react-router-dom'
 import { Icon, notification } from 'antd'
-import Dashboard from '../components/Dashboard/Dashboard'
+import TeamDashboard from '../components/Dashboard/TeamDashboard'
+import UserDashboard from '../components/Dashboard/UserDashboard'
 import Issue from '../components/Issue/Issue'
 import SideNav from '../components/SideNav/SideNav'
 import Backlog from '../components/Backlog/Backlog'
@@ -18,7 +19,13 @@ export default class Panel extends React.Component {
     this.state = {
       toHomepage: false,
       currentPage: 0,
-      data: {}
+      data: {},
+      active: null, // store information for faster perceived renders
+      progress: null,
+      complete: null,
+      activeFiltered: null, // store information for faster perceived renders
+      progressFiltered: null,
+      completeFiltered: null
     }
   }
 
@@ -45,21 +52,28 @@ export default class Panel extends React.Component {
     this.setState({ data: params, currentPage: page })
   }
 
+  setIssue = (active, progress, complete, filter) => {
+    if (!filter)
+      this.setState({ active, progress, complete })
+    else
+      this.setState({ activeFiltered: active, progressFiltered: progress, completeFiltered: complete })
+  }
+
   returnPage = (page) => {
     switch (page) {
-      case 0: return <Dashboard filter={false} changePage={this.changePage} />;
-      case 1: return <Dashboard filter={true} changePage={this.changePage} />;
+      case 0: return <TeamDashboard changePage={this.changePage} setIssue={this.setIssue} issue={{ active: this.state.active, progress: this.state.progress, complete: this.state.complete }} />;
+      case 1: return <UserDashboard changePage={this.changePage} setIssue={this.setIssue} issue={{ active: this.state.activeFiltered, progress: this.state.progressFiltered, complete: this.state.completeFiltered }} />;
       case 2:
       case 3:
       case 4: return <MembersView />;
-      case 5: return <WrappedCreateIssueForm />;
+      case 5: return <WrappedCreateIssueForm changePage={this.changePage} />;
       case 6:
       case 7: return <Backlog />;
       case 8:
       case 9:
       case 10: return <Settings />;
       case 11: return <Issue data={this.state.data} changePage={this.changePage} />;
-      default: return <Dashboard />;
+      default: return <TeamDashboard />;
     }
   }
 
