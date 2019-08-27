@@ -162,7 +162,7 @@ class CreateIssue extends React.Component {
               style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
               <Form.Item label="Priority" style={{ flexDirection: 'row' }}>
                 {getFieldDecorator('priority', {
-                  initialValue: data == null ? 0 : data.priority | 0
+                  initialValue: data == null ? 0 : data.priority || 0
                 })(
                   <Radio.Group>
                     <Radio value={0}>Minor</Radio>
@@ -177,7 +177,7 @@ class CreateIssue extends React.Component {
                   justifyContent: 'flex-end'
                 }}>
                 {getFieldDecorator('status', {
-                  initialValue: data == null ? 0 : data.status | 0
+                  initialValue: data == null ? 0 : data.status || 0
                 })(
                   <Radio.Group>
                     <Radio value={0}>Backlog</Radio>

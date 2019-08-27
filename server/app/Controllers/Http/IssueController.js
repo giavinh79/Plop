@@ -28,8 +28,8 @@ class IssueController {
         description,
         assignee,
         creator: user.email,
-        priority: priority | 0,
-        status: status | 0,
+        priority: priority || 0,
+        status: status || 0,
         tag: JSON.stringify(tag)
       })
       await issue.save()
