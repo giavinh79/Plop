@@ -24,6 +24,7 @@ class CreateIssue extends React.Component {
     axios.delete(`/issue/${id}`, { withCredentials: true })
       .then(() => {
         displayNotification(true, 'Issue was deleted successfully', 'Issue could not be deleted')
+        this.props.changePage(0)
       })
       .catch(() => {
         displayNotification(false, 'Issue was deleted successfully', 'Issue could not be deleted')
@@ -59,6 +60,7 @@ class CreateIssue extends React.Component {
 
   render() {
     const data = this.props.data
+    console.log(data)
     const tagSuggestions = [
       <Select.Option key="Backend">Backend</Select.Option>,
       <Select.Option key="Bug">Bug</Select.Option>,
@@ -140,7 +142,7 @@ class CreateIssue extends React.Component {
                 label="Tags"
                 style={{ flexDirection: 'row', alignItems: 'center' }}>
                 {getFieldDecorator('tag', {
-                  initialValue: data == null ? [] : data.tag
+                  initialValue: data == null ? [] : JSON.parse(data.tag)
                 })(
                   <Select
                     mode="tags"
