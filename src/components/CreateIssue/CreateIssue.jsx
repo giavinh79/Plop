@@ -232,8 +232,8 @@ class CreateIssue extends React.Component {
                   <p className="ant-upload-text">
                     Click or drag images/text files to this area to upload
                   </p>
-                  <p className="ant-upload-hint">
-                    Upload size limit set to 10MB.
+                  <p className="ant-upload-hint">g
+                    Upload size limit set to 5MB.
                   </p>
                 </Upload.Dragger>
               )}
