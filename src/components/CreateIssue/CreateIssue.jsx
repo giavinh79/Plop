@@ -40,11 +40,9 @@ class CreateIssue extends React.Component {
           .then((res) => {
             this.props.form.resetFields()
             this.openNotification(res.data.status)
-            console.log(res)
           })
           .catch((err) => {
             this.openNotification()
-            console.log(err)
           })
       }
     })
@@ -60,7 +58,7 @@ class CreateIssue extends React.Component {
 
   render() {
     const data = this.props.data
-    console.log(data)
+    // console.log(data)
     const tagSuggestions = [
       <Select.Option key="Backend">Backend</Select.Option>,
       <Select.Option key="Bug">Bug</Select.Option>,
@@ -226,7 +224,7 @@ class CreateIssue extends React.Component {
               })(
                 <Upload.Dragger
                   name="files"
-                  action="/upload.do"
+                  action="/image"
                   accept="image/*,.xml,.json,.txt,.doc,.docx,.js,.html">
                   <p className="ant-upload-drag-icon">
                     <Icon type="inbox" />
