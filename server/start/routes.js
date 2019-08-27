@@ -44,3 +44,8 @@ Route.get('/userIssue/:status', 'IssueController.userGet').middleware(jwtMiddlew
 Route.post('/issue', 'IssueController.update').middleware(jwtMiddleware)
 Route.put('/issue', 'IssueController.create').middleware(jwtMiddleware)
 Route.delete('/issue/:id', 'IssueController.delete').middleware(jwtMiddleware)
+
+// Images
+Route.post('/image', 'ImageController.create').middleware(jwtMiddleware)
+Route.get('/image/:id', 'ImageController.get').middleware(jwtMiddleware)
+Route.delete('/image/:id', 'ImageController.delete').middleware(jwtMiddleware)

@@ -4,11 +4,7 @@ const Database = use('Database')
 const Issue = use('App/Models/Issue')
 
 class IssueController {
-  async create({
-    auth,
-    request,
-    response
-  }) {
+  async create({ auth, request, response }) {
     try {
       const user = await auth.getUser()
       const {
@@ -46,30 +42,25 @@ class IssueController {
     }
   }
 
-  async delete({
-    auth,
-    request,
-    response
-  }) {
+  async delete({ auth, request, response }) {
     // will need to add more logic for administration levels
     try {
       const user = await auth.getUser()
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', request.cookie('room'))
       if (result.length === 0) throw new Error('User not in this room')
 
-      await Database.table('issues').where('id', request.params.id).delete()
-      response.status(200).send()
+      const deletions = await Database.table('issues').where('id', request.params.id).delete()
+      if (deletions == null)
+        response.status(404).send()
+      else
+        response.status(200).send()
     } catch (err) {
       console.log(`(issue_delete) ${new Date()}: ${err}`)
       response.status(404).send()
     }
   }
 
-  async teamGet({
-    auth,
-    request,
-    response
-  }) {
+  async teamGet({ auth, request, response }) {
     try {
       // type of issue trying to be requested given by request.params.status (0 - backlog, 1 - active, 2 - )
       const user = await auth.getUser()
@@ -108,11 +99,7 @@ class IssueController {
     }
   }
 
-  async userGet({
-    auth,
-    request,
-    response
-  }) {
+  async userGet({ auth, request, response }) {
     try {
       const user = await auth.getUser()
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', request.cookie('room'))
