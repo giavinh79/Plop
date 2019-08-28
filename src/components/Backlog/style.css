@@ -1,3 +1,7 @@
 .ant-table-pagination.ant-pagination {
     margin-right: 1rem !important;
 }
+
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+    max-width: 20rem !important;
+}

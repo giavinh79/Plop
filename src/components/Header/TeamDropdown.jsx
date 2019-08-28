@@ -17,7 +17,9 @@ const menu = (
       <Icon type="appstore" />
       Overview
     </Menu.Item>
-    {JSON.parse(localStorage.getItem('teams')).map((team, index) => {
+    {
+      localStorage.getItem('teams') == null ? '' :
+      JSON.parse(localStorage.getItem('teams')).map((team, index) => {
       return (
         <Menu.Item key={index + 1} onClick={(team) => { displayLoading() }}>
           <Icon type="team" />

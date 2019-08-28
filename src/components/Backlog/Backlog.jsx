@@ -1,7 +1,8 @@
 import React from 'react'
+import axios from 'axios'
+import { Popconfirm, Table as BacklogTable, Divider, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles'
 import 'antd/dist/antd.css';
-import { Popconfirm, Table as BacklogTable, Divider, Tag } from 'antd';
 import './style.css'
 
 const tagMap = { major: 'volcano', minor: 'green', frontend: 'geekblue', backend: 'cadetblue', testing: 'saddlebrown' }
@@ -25,19 +26,12 @@ const columns = [
 	},
 	{
 		title: 'Tags',
-		key: 'tags',
-		dataIndex: 'tags',
-		render: tags => (
+		key: 'tag',
+		dataIndex: 'tag',
+		render: tag => (
 			<span>
-				{tags.map(tag => {
-
-					// let color = tag.length > 5 ? 'geekblue' : 'green';
-					// if (tag === 'major') {
-					//     color = 'volcano';
-					// } else if (tag === 'minor') {
-					//     color = 'green';
-					// }
-					let color = tagMap[tag]
+				{tag.map(tag => {
+					let color = tagMap[tag.toLowerCase()]
 					if (color == null) color = 'black';
 					return (
 						<Tag color={color} key={tag}>
@@ -64,34 +58,44 @@ const columns = [
 				>
 					<a href="/">Delete</a>
 				</Popconfirm>
+        <Divider type="vertical" />
+        <Popconfirm
+					title="Make task active (dashboard)?"
+					// onConfirm={confirm}
+					// onCancel={cancel}
+					okText="Yes"
+					cancelText="No"
+				>
+					<a href="/">Activate</a>
+				</Popconfirm>
 			</span>
 		),
 	},
 ];
 
-const data = [
-	{
-		key: '1',
-		title: 'Create favicon',
-		description: 'Convert .png to .ico',
-		date: '04/08/2019',
-		tags: ['frontend', 'minor'],
-	},
-	{
-		key: '2',
-		title: 'Google SSO',
-		description: 'Implement SSO in login screen',
-		date: '04/12/2019',
-		tags: ['major'],
-	},
-	{
-		key: '3',
-		title: 'Server load testing',
-		description: 'Test with some NPM module',
-		date: '04/14/2019',
-		tags: ['backend', 'minor'],
-	},
-];
+// let data = [
+	// {
+	// 	key: '1',
+	// 	title: 'Create favicon',
+	// 	description: 'Convert .png to .ico',
+	// 	date: '04/08/2019',
+	// 	tags: ['frontend', 'minor'],
+	// },
+	// {
+	// 	key: '2',
+	// 	title: 'Google SSO',
+	// 	description: 'Implement SSO in login screen',
+	// 	date: '04/12/2019',
+	// 	tags: ['major'],
+	// },
+	// {
+	// 	key: '3',
+	// 	title: 'Server load testing',
+	// 	description: 'Test with some NPM module',
+	// 	date: '04/14/2019',
+	// 	tags: ['backend', 'minor'],
+	// },
+// ];
 
 const pagination = {
 	pageSize: 8,
@@ -100,13 +104,22 @@ const pagination = {
 
 export default class Backlog extends React.Component {
 	componentDidMount() {
-		// API Call here
+    axios.get('/teamIssue/0', { withCredentials: true })
+      .then(res => {
+        res.data.map((item, index) => {
+          return item.key = index
+        })
+        this.setState({ data: res.data })
+      })
+      .catch(err => {
+        console.log(err)
+      })
 	}
 
 	constructor(props) {
 		super(props)
 		this.state = {
-
+      data : []
 		}
 	}
 
@@ -114,7 +127,7 @@ export default class Backlog extends React.Component {
 		return (
 			<div style={layout}>
 				<p style={subheader}>Backlog</p>
-				<BacklogTable columns={columns} dataSource={data} pagination={pagination} style={{ border: '1px solid #ccc', borderRadius: '5px' }} />
+				<BacklogTable columns={columns} dataSource={this.state.data} pagination={pagination} style={{ border: '1px solid #ccc', borderRadius: '5px' }} />
 			</div>
 		);
 	}
