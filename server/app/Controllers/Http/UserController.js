@@ -1,6 +1,7 @@
 'use strict'
 
-const Database = use('Database')
+const nodemailer = require('nodemailer')
+const Env = use('Env')
 const User = use('App/Models/User')
 const Hash = use('Hash')
 const { validate } = use('Validator')
@@ -24,6 +25,27 @@ class UserController {
                 const { email, password } = request.body
                 user.fill({ email: email, password: password, numTeams: 0, status: 0 })
                 await user.save()
+
+                const mailOptions = {
+                    from: Env.get('EMAIL_USER'),
+                    to: user.email,
+                    subject: 'Welcome to Plop!',
+                    html: '<p>You have successfully signed up. If this was not you, please unsubscribe with the following link: http://example.com</p>'
+                }
+
+                let transport = nodemailer.createTransport({
+                    host: 'smtp.gmail.com',
+                    secure: 'false', 
+                    auth: {
+                        user: Env.get('EMAIL_USER'),
+                        pass: Env.get('EMAIL_PASSWORD')
+                    },
+                })
+
+                transport.sendMail(mailOptions , (res) => {
+                    console.log(`MAIL_ERROR ${res}`)
+                })
+
                 response.status(200).send('User created successfully')
             } catch (err) {
                 console.log(`(user_add) ${new Date()}: ${err}`)

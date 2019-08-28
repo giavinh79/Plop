@@ -67,7 +67,7 @@ class IssueController {
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', request.cookie('room'))
       if (result.length === 0) throw new Error('User not in this room')
 
-      if (request.params.status === 0) {
+      if (request.params.status === '0') {
         const issues = await Database.table('issues').select('*').where({
           room: request.cookie('room'),
           status: 0
