@@ -43,7 +43,7 @@ Database Deletion (Adonis CLI required) - 'cd to ./server' and then run 'adonis 
 
 Database Initialization (Adonis CLI required) - 'cd to ./server' and then run 'adonis seed'. You will now be able to login as a user called 'tester@gmail.com' with password 'test'. A room will be setup for this user with some imported issues. You must have already done 'adonis migration:run' successfully.
 
-Databases - mySQL or postgreSQL has been used and tested
+Databases - mySQL or postgreSQL has been used and tested (for development purposes, a mySQL remote database can be setup via http://remotemysql.com and a postgresQL database can be hosted locally http://www.postgresqltutorial.com/install-postgresql/)
 
 
 ## Practices
