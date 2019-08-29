@@ -58,7 +58,7 @@ class CreateIssue extends React.Component {
 
   render() {
     const data = this.props.data
-    // console.log(data)
+    console.log(data)
     const tagSuggestions = [
       <Select.Option key="Backend">Backend</Select.Option>,
       <Select.Option key="Bug">Bug</Select.Option>,
@@ -140,7 +140,7 @@ class CreateIssue extends React.Component {
                 label="Tags"
                 style={{ flexDirection: 'row', alignItems: 'center' }}>
                 {getFieldDecorator('tag', {
-                  initialValue: data == null ? [] : JSON.parse(data.tag)
+                  initialValue: data == null ? [] : data.tag
                 })(
                   <Select
                     mode="tags"
@@ -162,7 +162,7 @@ class CreateIssue extends React.Component {
               style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
               <Form.Item label="Priority" style={{ flexDirection: 'row' }}>
                 {getFieldDecorator('priority', {
-                  initialValue: data == null ? 0 : data.priority || 0
+                  initialValue: data == null ? 0 : +data.priority || 0
                 })(
                   <Radio.Group>
                     <Radio value={0}>Minor</Radio>
@@ -232,7 +232,7 @@ class CreateIssue extends React.Component {
                   <p className="ant-upload-text">
                     Click or drag images/text files to this area to upload
                   </p>
-                  <p className="ant-upload-hint">g
+                  <p className="ant-upload-hint">
                     Upload size limit set to 5MB.
                   </p>
                 </Upload.Dragger>

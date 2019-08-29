@@ -5,7 +5,7 @@ import { layout, subheader } from '../../globalStyles'
 import 'antd/dist/antd.css';
 import './style.css'
 
-const tagMap = { major: 'volcano', minor: 'green', frontend: 'geekblue', backend: 'cadetblue', testing: 'saddlebrown' }
+const tagMap = { bug: 'volcano', database: 'green', frontend: 'blue', backend: 'orange', testing: 'purple', security: 'red', documentation: 'gold', research: 'gray' }
 
 const columns = [
 	{
@@ -32,7 +32,7 @@ const columns = [
 			<span>
 				{tag.map(tag => {
 					let color = tagMap[tag.toLowerCase()]
-					if (color == null) color = 'black';
+					if (color == null) color = 'geekblue';
 					return (
 						<Tag color={color} key={tag}>
 							{tag.toUpperCase()}
@@ -107,7 +107,9 @@ export default class Backlog extends React.Component {
     axios.get('/teamIssue/0', { withCredentials: true })
       .then(res => {
         res.data.map((item, index) => {
-          return item.key = index
+          item.key = index
+          item.date = item.created_at.substring(0, 10)
+          return item
         })
         this.setState({ data: res.data })
       })

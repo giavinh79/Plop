@@ -2,6 +2,7 @@
 import React from 'react'
 import 'antd/dist/antd.css'
 import { Menu, Icon, Tooltip } from 'antd'
+import './style.css'
 
 const { SubMenu } = Menu;
 export default class SideNav extends React.Component {
