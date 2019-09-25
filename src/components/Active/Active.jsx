@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { Tooltip, Icon, Popconfirm, Table as ActiveTable, Divider, Tag } from 'antd';
+import { Tooltip, Popconfirm, Table as ActiveTable, Divider, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles'
 import 'antd/dist/antd.css';
 // import './style.css'

@@ -108,9 +108,9 @@ export default class Team extends React.Component {
     this.setState({ teamCreation: true })
   }
 
-  handleEnterTeam = (e, team) => {
+  handleEnterTeam = async (e, team) => {
     e.preventDefault()
-    axios.post('/sessionRoom', { id: team }, { withCredentials: true }).catch()
+    await axios.post('/sessionRoom', { id: team }, { withCredentials: true })
     this.setState({ toDashboard: true })
   }
 

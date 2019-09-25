@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import { layout, subheader } from '../../globalStyles'
 import 'antd/dist/antd.css'
 import { Typography, Tooltip, Icon, Input, Switch } from 'antd'
@@ -8,13 +9,25 @@ const { Paragraph } = Typography
 
 export default class Settings extends React.Component {
   componentDidMount() {
-    // API Call here
+    axios.post('/roomInfo', { withCredentials: true })
+      .then(res => {
+        this.setState(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   constructor(props) {
     super(props)
     this.state = {
-
+      name: '',
+      description: '',
+      decryptPass: '',
+      id: 0,
+      maxMembers: '4',
+      adminApproval: false,
+      private: false,
     }
   }
 
@@ -24,11 +37,11 @@ export default class Settings extends React.Component {
         <p style={subheader}>Team Settings</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%', border: '1px solid #ccc', borderRadius: '10px', color: '#757575' }}>
           <div style={{ backgroundColor: 'white', flex: '1', borderBottomLeftRadius: '10px', borderTopLeftRadius: '10px', padding: '1rem' }}>
-            <div style={styles.wrapper}><p style={styles.text}>Room name: </p><Input type='password' /></div>
-            <div style={styles.wrapper}><p style={styles.text}>Room description: </p><Input.TextArea type='text' autosize={{ minRows: 10 }} /></div>
+            <div style={styles.wrapper}><p style={styles.text}>Room name: </p><Input type='text' value={this.state.name}/></div>
+            <div style={styles.wrapper}><p style={styles.text}>Room description: </p><Input.TextArea type='text' value={this.state.description} autosize={{ minRows: 10 }} /></div>
           </div>
           <div style={{ backgroundColor: 'white', flex: '1', borderTopRightRadius: '10px', borderBottomRightRadius: '10px', padding: '1rem' }}>
-            <div style={styles.wrapper}><p style={styles.text}>Room password: </p><Input.Password autoComplete='new-password' type='password' /></div>
+            <div style={styles.wrapper}><p style={styles.text}>Room password: </p><Input.Password value={this.state.decryptPass} autoComplete='new-password' type='password' /></div>
             <div style={styles.wrapper}>
               <div style={{ flex: 1, padding: '1rem 0' }}>
                 <div style={styles.wrapperC}><p style={styles.text}>Room ID: </p><Paragraph copyable={{ text: '42jf1k23ll18d92' }} style={{ margin: 0 }}>42jf1k23ll18d92</Paragraph></div>
@@ -36,19 +49,22 @@ export default class Settings extends React.Component {
               </div>
               <div style={{ flex: 1, padding: '1rem 0' }}>
                 <div style={styles.wrapperC}>
-                  <Switch />
+                  <Switch defaultChecked={this.state.private}/>
                   <p style={styles.textC}>Enable private room <span>
                     <Tooltip title="Lock room and prevent new members">
                       <Icon type="question-circle-o" style={{ paddingRight: '0.3rem' }} />
                     </Tooltip></span></p>
                 </div>
-                <div style={styles.wrapperC}><Switch defaultChecked /><p style={styles.textC}>Enable logs</p></div>
-                <div style={styles.wrapperC}><Switch /><p style={styles.textC}>Enable member approval</p></div>
+                <div style={styles.wrapperC}><Switch defaultChecked={true} />
+                  <p style={styles.textC}>Enable logs</p>
+                </div>
+                <div style={styles.wrapperC}><Switch defaultChecked={this.state.adminApproval} />
+                  <p style={styles.textC}>Enable member approval</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        {/* <img src="plannedlayout.png" alt="layout"/> */}
       </div>
     );
   }

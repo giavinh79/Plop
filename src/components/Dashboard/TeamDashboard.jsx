@@ -3,13 +3,10 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { Card } from './Card'
 import axios from 'axios'
 
-let isMounted;
+let isMounted = false;
 let activeItems = []
 let progressItems = []
 let completedItems = []
-
-// if result is > 0, second item (itemOne) comes before, for future filtering
-// activeItems.sort((itemOne, itemTwo) => itemTwo.priority - itemOne.priority)
 
 // A little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -21,16 +18,21 @@ const reorder = (list, startIndex, endIndex) => {
 
 // Moves an item from one list to another list.
 const move = (source, destination, droppableSource, droppableDestination) => {
+  let issueId;
+  let issueStatus = droppableDestination.droppableId.slice(-1) - 0;
   const sourceClone = Array.from(source)
   const destClone = Array.from(destination)
+  issueId = source[droppableSource.index].id;
+  source[droppableSource.index].status = issueStatus;
   const [removed] = sourceClone.splice(droppableSource.index, 1)
 
   destClone.splice(droppableDestination.index, 0, removed)
-
   const result = {}
   result[droppableSource.droppableId] = sourceClone
   result[droppableDestination.droppableId] = destClone
-  return result
+  result['id'] = issueId;
+  result['status'] = issueStatus;
+  return result;
 }
 
 const grid = 8
@@ -55,35 +57,6 @@ const getListStyle = isDraggingOver => ({
   // border: '1px solid #ccc'
 })
 
-// const filterItems = (obj, activeItems, progressItems, completedItems) => {
-//   const activeItemsFiltered = activeItems.filter(item => {
-//     return item.assignee === localStorage.getItem('email')
-//   })
-
-//   const progressItemsFiltered = progressItems.filter(item => {
-//     return item.assignee === localStorage.getItem('email')
-//   })
-
-//   const completedItemsFiltered = completedItems.filter(item => {
-//     return item.assignee === localStorage.getItem('email')
-//   })
-
-//   if (activeItemsFiltered.length === activeItems.length && progressItemsFiltered.length === progressItems.length && completedItemsFiltered.length === completedItems.length) {
-//     return
-//   }
-
-//   activeItemsFiltered.length +
-//     progressItemsFiltered.length +
-//     completedItemsFiltered.length === 0
-//     ? obj.setState({ empty: true })
-//     : obj.setState({
-//       active: activeItemsFiltered,
-//       progress: progressItemsFiltered,
-//       complete: completedItemsFiltered,
-//       empty: false
-//     })
-// }
-
 export default class Dashboard extends Component {
   constructor(props) {
     super(props)
@@ -107,27 +80,27 @@ export default class Dashboard extends Component {
       .then(res => {
         const { activeItems, progressItems, completedItems } = res.data
         if (isMounted) {
-          if (activeItems.length + progressItems.length + completedItems.length > 0)
-            this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
-          else if (this.state.active.length + this.state.progress.length + this.state.complete.length > 0)
+          if (activeItems.length + progressItems.length + completedItems.length > 0 || this.state.active.length + this.state.progress.length + this.state.complete.length > 0)
             this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
         }
       }).catch()
   }
 
+  // If user refreshes this navigation item
   componentWillReceiveProps() {
-    // Refresh
+    if (isMounted) {
     axios.get('/teamIssue/1', { withCredentials: true })
       .then(res => {
         const { activeItems, progressItems, completedItems } = res.data
-        if (activeItems.length !== 0 || progressItems.length !== 0 || completedItems.length !== 0)
+        if (isMounted & (activeItems.length !== 0 || progressItems.length !== 0 || completedItems.length !== 0))
           this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
       }).catch()
+    }
   }
 
   componentWillUnmount() {
     isMounted = false
-    this.props.setIssue(this.state.active, this.state.progress, this.state.complete, false)
+    // this.props.setIssue(this.state.active, this.state.progress, this.state.complete, false)
   }
 
   id2List = {
@@ -140,7 +113,6 @@ export default class Dashboard extends Component {
 
   onDragEnd = result => {
     const { source, destination } = result
-
     // dropped outside the list
     if (!destination) {
       return
@@ -157,9 +129,7 @@ export default class Dashboard extends Component {
 
       if (source.droppableId === 'droppable2') {
         state = { progress: active }
-      }
-
-      if (source.droppableId === 'droppable3') {
+      } else if (source.droppableId === 'droppable3') {
         state = { complete: active }
       }
 
@@ -170,12 +140,17 @@ export default class Dashboard extends Component {
         this.getList(destination.droppableId),
         source,
         destination
-      )
+      );
+
+      axios.post('/issue', { id: result.id, status: result.status }, { withCredentials: true }).catch(() => {
+        console.log(`ERROR - Was not able to update issue ${result.id}`);
+      });
 
       // To identify which states to change and allow 3 way drag and drop
       const identify =
         parseInt(source.droppableId.slice(-1)) +
         parseInt(destination.droppableId.slice(-1))
+
       if (identify === 3)
         this.setState({
           active: result.droppable1,

@@ -4,7 +4,7 @@ import { Card } from './Card'
 import { Empty } from 'antd'
 import axios from 'axios'
 
-let isMounted;
+let isMounted = false;
 let activeItems = []
 let progressItems = []
 let completedItems = []
@@ -19,16 +19,21 @@ const reorder = (list, startIndex, endIndex) => {
 
 // Moves an item from one list to another list.
 const move = (source, destination, droppableSource, droppableDestination) => {
+  let issueId;
+  let issueStatus = droppableDestination.droppableId.slice(-1) - 0;
   const sourceClone = Array.from(source)
   const destClone = Array.from(destination)
+  issueId = source[droppableSource.index].id;
+  source[droppableSource.index].status = issueStatus;
   const [removed] = sourceClone.splice(droppableSource.index, 1)
 
   destClone.splice(droppableDestination.index, 0, removed)
-
   const result = {}
   result[droppableSource.droppableId] = sourceClone
   result[droppableDestination.droppableId] = destClone
-  return result
+  result['id'] = issueId;
+  result['status'] = issueStatus;
+  return result;
 }
 
 const grid = 8
@@ -73,44 +78,44 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount() {
+    isMounted = true;
     axios.get('/userIssue/1', { withCredentials: true })
       .then(res => {
         const { activeItems, progressItems, completedItems } = res.data
-        if (activeItems.length === 0 && progressItems.length === 0 && completedItems.length === 0) {
-          this.setState({ empty: true })
-          localStorage.setItem('empty', '1')
-        }
-        else {
-          this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
-          localStorage.removeItem('empty');
-        }
-
-      }).catch()
-  }
-
-  componentWillReceiveProps(props) {
-    isMounted = true
-    axios.get('/userIssue/1', { withCredentials: true })
-      .then(res => {
-        const { activeItems, progressItems, completedItems } = res.data
-        if (activeItems.length === 0 && progressItems.length === 0 && completedItems.length === 0) {
-          if (isMounted) {
+        if (isMounted) {
+          if (activeItems.length + progressItems.length + completedItems.length === 0) {
             this.setState({ empty: true })
-            localStorage.setItem('empty', 1)
+            localStorage.setItem('empty', '1')
           }
-        } else {
-          if (isMounted) {
+          else {
             this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
             localStorage.removeItem('empty');
           }
         }
-
       }).catch()
   }
 
+  componentWillReceiveProps() {
+    if (isMounted) {
+      axios.get('/userIssue/1', { withCredentials: true })
+      .then(res => {
+        const { activeItems, progressItems, completedItems } = res.data
+        if (isMounted) {
+          if (activeItems.length === 0 && progressItems.length === 0 && completedItems.length === 0) {
+              this.setState({ empty: true })
+              localStorage.setItem('empty', 1)
+          } else {
+              this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
+              localStorage.removeItem('empty');
+          }
+        }
+      }).catch()
+    }
+  }
+
   componentWillUnmount() {
-    isMounted = false
-    this.props.setIssue(this.state.active, this.state.progress, this.state.complete, true)
+    isMounted = false;
+    // this.props.setIssue(this.state.active, this.state.progress, this.state.complete, true)
   }
 
   id2List = {
@@ -140,9 +145,7 @@ export default class Dashboard extends Component {
 
       if (source.droppableId === 'droppable2') {
         state = { progress: active }
-      }
-
-      if (source.droppableId === 'droppable3') {
+      } else if (source.droppableId === 'droppable3') {
         state = { complete: active }
       }
 
@@ -154,6 +157,10 @@ export default class Dashboard extends Component {
         source,
         destination
       )
+
+      axios.post('/issue', { id: result.id, status: result.status }, { withCredentials: true }).catch(() => {
+        console.log(`ERROR - Was not able to update issue ${result.id}`);
+      });
 
       // To identify which states to change and allow 3 way drag and drop
       const identify =

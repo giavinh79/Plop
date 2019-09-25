@@ -35,7 +35,7 @@ class HorizontalLoginForm extends React.Component {
     axios.post('/login', values, { withCredentials: true })
       .then(res => {
         // JWT Bearer Token stored on clientside
-        localStorage.setItem('email', values.email)
+        // localStorage.setItem('email', values.email)
         this.setState({ toDashboard: true })
       })
       .catch(err => {
