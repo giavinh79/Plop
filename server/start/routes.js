@@ -33,6 +33,7 @@ Route.post('/logout', 'UserController.logout')
 
 // Teams/Rooms
 Route.get('/getRoom', 'RoomController.get').middleware(jwtMiddleware)
+Route.post('/roomInfo', 'RoomController.info').middleware(jwtMiddleware)
 Route.post('/createRoom', 'RoomController.create').middleware(jwtMiddleware)
 Route.post('/sessionRoom', 'RoomController.session').middleware(jwtMiddleware)
 Route.post('/joinRoom', 'RoomController.join').middleware(jwtMiddleware)

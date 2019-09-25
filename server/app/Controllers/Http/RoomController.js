@@ -24,6 +24,38 @@ class RoomController {
     }
   }
 
+  async info({ request, auth, response }) {
+    try {
+      const user = await auth.getUser()
+
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', request.cookie('room'))
+      if (result.length === 0) throw new Error('User not in room')
+
+      const roomInfo = await Database.table('rooms').select('*').where('id', request.cookie('room'))
+      const decryptPass = Encryption.decrypt(roomInfo[0].password);
+      const { name, description, id, maxMembers, adminApproval } = roomInfo[0];
+
+      response.status(200).json({ name, description, decryptPass, id, maxMembers, private: roomInfo[0].private, adminApproval })
+    } catch(err) {
+      console.log(`(room_roomInfo) ${new Date()} [User:${await auth.getUser().id}]: ${err}`)
+      response.status(404).send()
+    }
+  }
+
+  async update({ auth, request, response }) {
+    try {
+      // This method promotes an issue from backlog to active
+      // or progresses it from active -> in progress -> completed
+      const user = await auth.getUser()
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', response.cookie('roomId'))
+      if (result.length === 0) throw new Error('User not in room')
+
+    } catch(err) {
+      console.log(`(room_update) ${new Date()} [User:${await auth.getUser().id}]: ${err}`)
+      response.status(404).send()
+    }
+  }
+
   async create({ auth, request, response }) {
     try {
       const user = await auth.getUser()
