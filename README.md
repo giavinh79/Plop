@@ -45,9 +45,14 @@ Database Initialization (Adonis CLI required) - 'cd to ./server' and then run 'a
 
 Databases - mySQL or postgreSQL has been used and tested (for development purposes, a mySQL remote database can be setup via http://remotemysql.com and a postgresQL database can be hosted locally http://www.postgresqltutorial.com/install-postgresql/)
 
+## Testing
+
+Will likely use Jest for testing (and Enzyme for better React unit testing)
+https://devhints.io/jest
+
 
 ## Practices
 
-Although not everything is consistent yet, single quotes are desired, no semi-colons terminating lines unless it is a callback, small design changes for inline CSS styling otherwise make a 'const style' JSON object or use styled-components, split code up into components, camelCase variable names, and 2 space indentation for nested code lines. In the future, add a ESlint config so that coding styles are enforced. For now, on VScode, enable format on save and set tab indentation to 2 spaces.
+Although not everything is consistent yet, single quotes are desired, semi-colons terminating lines, small design changes for inline CSS styling otherwise make a 'const style' JSON object or use styled-components, split code up into components, camelCase variable names, and 2 space indentation for nested code lines. In the future, add a ESlint config so that coding styles are enforced. For now, on VScode, enable format on save and set tab indentation to 2 spaces.
 
 Other preferred styles: {{ attribute: 'value' }}, <Component />, <> over <React.Fragment>, extends React.Component
