@@ -83,7 +83,9 @@ export default class Dashboard extends Component {
           if (activeItems.length + progressItems.length + completedItems.length > 0 || this.state.active.length + this.state.progress.length + this.state.complete.length > 0)
             this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
         }
-      }).catch()
+      }).catch(() => {
+        this.props.checkSession();
+      })
   }
 
   // If user refreshes this navigation item
@@ -94,7 +96,9 @@ export default class Dashboard extends Component {
         const { activeItems, progressItems, completedItems } = res.data
         if (isMounted & (activeItems.length !== 0 || progressItems.length !== 0 || completedItems.length !== 0))
           this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
-      }).catch()
+      }).catch(() => {
+        this.props.checkSession();
+      })
     }
   }
 

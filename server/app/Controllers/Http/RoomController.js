@@ -24,6 +24,15 @@ class RoomController {
     }
   }
 
+  async members({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+    } catch(err) {
+      console.log(`(room_members) ${new Date()} [User:${await auth.getUser().id}]: ${err}`)
+      response.status(404).send()
+    }
+  }
+
   async info({ request, auth, response }) {
     try {
       const user = await auth.getUser()
@@ -102,9 +111,10 @@ class RoomController {
       if (result.length !== 0) throw new Error('User already in room')
 
       result = await Database.from('rooms').select('password').where('id', roomId)
-      if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('No results')
+      if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('Wrong password')
 
-      // Future - add check here for if admin approval == true. If it is false
+
+      // Future - add check here for if admin approval == true. If it is true
       // then we have to add it to pending table and tell user via notification/email that their request
       // has been sent to the room admin and needs to be approved
       await Database.table('user_rooms').insert({ user_id: user.id, room_id: roomId })

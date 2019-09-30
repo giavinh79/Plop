@@ -81,7 +81,7 @@ export default class SideNav extends React.Component {
                     <Icon type="setting" />
                     Settings
                 </Menu.Item>
-                <Menu.Item key="sub8" onClick={() => this.props.handlePageChange(11)}>
+                <Menu.Item key="sub8" onClick={() => this.props.handlePageChange(12)}>
                     <Icon type="question-circle" />
                     Help
                 </Menu.Item>

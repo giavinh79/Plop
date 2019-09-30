@@ -1,7 +1,7 @@
-import React from 'react'
-import { layout, subheader } from '../../globalStyles'
+import React from 'react';
 import 'antd/dist/antd.css';
 import { Table as MembersTable } from 'antd';
+import { layout, subheader } from '../../globalStyles';
 
 const columns = [
   {
@@ -23,9 +23,9 @@ const columns = [
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    render: text => <span style={{ color: text === 'Online' ? 'green' : '#882929' }}>{text}</span>,
+    render: (text) => <span style={{ color: text === 'Online' ? 'green' : '#882929' }}>{text}</span>,
   },
-]
+];
 
 const data = [
   {
@@ -33,23 +33,23 @@ const data = [
     member: 'Jim Halpert',
     role: 'Sales',
     administration: '1',
-    status: 'Online'
+    status: 'Online',
   },
   {
     key: '2',
     member: 'Richard Hendricks',
     role: 'CEO',
     administration: '5',
-    status: 'Offline'
+    status: 'Offline',
   },
-]
+];
 
 const pagination = {
   pageSize: 8,
-  hideOnSinglePage: true
-}
+  hideOnSinglePage: true,
+};
 
-// Tiers of administration: 5 (create issues, move issues to and from archive, invite members, delete members...
+// Tiers of administration: 5
 // 4 - cann't delete members
 // 3 - can't invite new members
 // 2 - can't create issues but can move issues
@@ -57,15 +57,15 @@ const pagination = {
 // 0 - can only see issues assigned to them
 
 export default class ViewMembers extends React.Component {
-  componentDidMount() {
-    // API Call here
-  }
-
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
 
-    }
+    };
+  }
+
+  componentDidMount() {
+    // API Call here
   }
 
   render() {

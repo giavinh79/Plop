@@ -13,6 +13,7 @@ import { WrappedCreateIssueForm } from '../components/CreateIssue/CreateIssue'
 import Settings from '../components/Settings/Settings'
 import Active from '../components/Active/Active';
 import Schedule from '../components/Schedule/Schedule';
+import Help from '../components/Help/Help';
 
 export default class Panel extends React.Component {
   constructor(props) {
@@ -42,12 +43,16 @@ export default class Panel extends React.Component {
   };
 
   componentDidMount() {
-    axios.post('/session', null, { withCredentials: true })
-      .then()
-      .catch(() => {
-        this.setState({ toHomepage: true })
-        this.openNotification()
-      })
+    this.checkSession();
+  }
+
+  async checkSession() {
+    try {
+      await axios.post('/session', null, { withCredentials: true });
+    } catch(err) {
+      this.setState({ toHomepage: true })
+      this.openNotification()
+    }
   }
 
   changePage = (page, params) => {
@@ -63,8 +68,18 @@ export default class Panel extends React.Component {
 
   returnPage = (page) => {
     switch (page) {
-      case 0: return <TeamDashboard changePage={this.changePage} setIssue={this.setIssue} issue={{ active: this.state.active, progress: this.state.progress, complete: this.state.complete }} />;
-      case 1: return <UserDashboard changePage={this.changePage} setIssue={this.setIssue} issue={{ active: this.state.activeFiltered, progress: this.state.progressFiltered, complete: this.state.completeFiltered }} />;
+      case 0: return <TeamDashboard changePage={this.changePage} setIssue={this.setIssue} issue={
+        {
+          active: this.state.active,
+          progress: this.state.progress,
+          complete: this.state.complete
+        }} checkSession={this.checkSession} />;
+      case 1: return <UserDashboard changePage={this.changePage} setIssue={this.setIssue} issue={
+        {
+          active: this.state.activeFiltered,
+          progress: this.state.progressFiltered,
+          complete: this.state.completeFiltered
+        }} checkSession={this.checkSession} />;
       case 2: return <Schedule />;
       case 3: return <Schedule />;
       case 4: return <MembersView />;
@@ -74,7 +89,8 @@ export default class Panel extends React.Component {
       case 8: return <Schedule />;
       case 9: return <Schedule />;
       case 10: return <Settings />;
-      case 11: return <Issue data={this.state.data} changePage={this.changePage} />;
+      case 11: return <Issue data={this.state.data} changePage={this.changePage} />; // issue information
+      case 12: return <Help />
       default: return <TeamDashboard />;
     }
   }
