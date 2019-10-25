@@ -95,24 +95,6 @@ export default class Dashboard extends Component {
       }).catch()
   }
 
-  static getDerivedStateFromProps(props) {
-    if (isMounted) {
-      axios.get('/userIssue/1', { withCredentials: true })
-      .then(res => {
-        const { activeItems, progressItems, completedItems } = res.data
-        if (isMounted) {
-          if (activeItems.length === 0 && progressItems.length === 0 && completedItems.length === 0) {
-              this.setState({ empty: true })
-              localStorage.setItem('empty', 1)
-          } else {
-              this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
-              localStorage.removeItem('empty');
-          }
-        }
-      }).catch()
-    }
-  }
-
   componentWillUnmount() {
     isMounted = false;
     // this.props.setIssue(this.state.active, this.state.progress, this.state.complete, true)

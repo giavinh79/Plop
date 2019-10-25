@@ -88,21 +88,6 @@ export default class Dashboard extends Component {
       })
   }
 
-  // If user refreshes this navigation item
-  static getDerivedStateFromProps(props) {
-    if (isMounted) {
-    axios.get('/teamIssue/1', { withCredentials: true })
-      .then(res => {
-        const { activeItems, progressItems, completedItems } = res.data
-        if (isMounted & (activeItems.length !== 0 || progressItems.length !== 0 || completedItems.length !== 0))
-          this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
-      }).catch(() => {
-        props.checkSession();
-      })
-    }
-    return false;
-  }
-
   componentWillUnmount() {
     isMounted = false
     // this.props.setIssue(this.state.active, this.state.progress, this.state.complete, false)
