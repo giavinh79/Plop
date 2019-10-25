@@ -95,7 +95,7 @@ export default class Dashboard extends Component {
       }).catch()
   }
 
-  componentWillReceiveProps() {
+  static getDerivedStateFromProps(props) {
     if (isMounted) {
       axios.get('/userIssue/1', { withCredentials: true })
       .then(res => {

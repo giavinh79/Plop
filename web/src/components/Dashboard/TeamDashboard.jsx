@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { Card } from './Card'
-import axios from 'axios'
+import React, { Component } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Card } from './Card';
+import axios from 'axios';
 
 let isMounted = false;
 let activeItems = []
@@ -89,7 +89,7 @@ export default class Dashboard extends Component {
   }
 
   // If user refreshes this navigation item
-  componentWillReceiveProps() {
+  static getDerivedStateFromProps(props) {
     if (isMounted) {
     axios.get('/teamIssue/1', { withCredentials: true })
       .then(res => {
@@ -97,9 +97,10 @@ export default class Dashboard extends Component {
         if (isMounted & (activeItems.length !== 0 || progressItems.length !== 0 || completedItems.length !== 0))
           this.setState({ active: activeItems, progress: progressItems, complete: completedItems })
       }).catch(() => {
-        this.props.checkSession();
+        props.checkSession();
       })
     }
+    return false;
   }
 
   componentWillUnmount() {

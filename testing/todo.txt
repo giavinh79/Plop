@@ -1,1 +1,0 @@
-Do unit testing for React with Jest and Enzyme
