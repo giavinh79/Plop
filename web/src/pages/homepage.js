@@ -1,5 +1,5 @@
-import React from 'react'
-import { WrappedNormalLoginForm } from '../components/SignupForm/SignupForm'
+import React from 'react';
+import { WrappedNormalLoginForm } from '../components/SignupForm/SignupForm';
 
 export default function Homepage() {
   return (
@@ -9,14 +9,14 @@ export default function Homepage() {
       </div>
       <div style={styles.formBackground} />
     </div>
-  )
+  );
 }
 
 const styles = {
   formContainer: {
     width: '100%',
     backgroundImage: "url('images/wallpaper.png')",
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
   },
   form: {
     position: 'absolute',
@@ -28,7 +28,7 @@ const styles = {
     marginRight: 'auto',
     width: '20%',
     maxWidth: '20rem',
-    zIndex: '3'
+    zIndex: '3',
   },
   formBackground: {
     zIndex: '2',
@@ -43,6 +43,6 @@ const styles = {
     opacity: 0.6,
     backgroundColor: 'rgb(31, 42, 53)',
     maxWidth: '25rem',
-    borderRadius: '10px'
-  }
-}
+    borderRadius: '10px',
+  },
+};

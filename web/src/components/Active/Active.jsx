@@ -1,20 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Tooltip, Popconfirm, Table as ActiveTable, Divider, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
-import 'antd/dist/antd.css';
-// import './style.css'
+// import 'antd/dist/antd.css';
+import { tagMap } from '../../utility/constants';
 
-const tagMap = {
-  bug: 'volcano',
-  database: 'green',
-  frontend: 'blue',
-  backend: 'orange',
-  testing: 'purple',
-  security: 'red',
-  documentation: 'gold',
-  research: 'gray',
-};
 const progressMap = { 1: 'Active', 2: 'In Progress', 3: 'Completed' };
 
 const columns = [
@@ -141,45 +131,37 @@ const pagination = {
   hideOnSinglePage: true,
 };
 
-export default class Active extends React.Component {
-  componentDidMount() {
+export default function Active() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
     axios
       .get('/teamIssue/1', { withCredentials: true })
       .then(res => {
         let activeIssues = [...res.data.activeItems, ...res.data.completedItems, ...res.data.progressItems];
-        console.log(activeIssues);
         activeIssues.map((item, index) => {
           item.key = index;
           item.date = item.created_at.substring(0, 10);
+          item.tag = JSON.parse(item.tag); // convert "[]" to []
           return item;
-          //   item.progress =
         });
 
-        this.setState({ data: activeIssues });
+        setData(activeIssues);
       })
       .catch(err => {
         console.log(err);
       });
-  }
+  }, []);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
-
-  render() {
-    return (
-      <div style={layout}>
-        <p style={subheader}>Active Issues</p>
-        <ActiveTable
-          columns={columns}
-          dataSource={this.state.data}
-          pagination={pagination}
-          style={{ border: '1px solid #ccc', borderRadius: '5px' }}
-        />
-      </div>
-    );
-  }
+  return (
+    <div style={layout}>
+      <p style={subheader}>Active Issues</p>
+      <ActiveTable
+        columns={columns}
+        dataSource={data}
+        pagination={pagination}
+        style={{ border: '1px solid #ccc', borderRadius: '5px' }}
+      />
+    </div>
+  );
 }

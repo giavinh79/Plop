@@ -1,20 +1,20 @@
 import React from 'react';
-import 'antd/dist/antd.css';
 import { Form, Icon, Input, Button, Checkbox, notification } from 'antd';
 import './style.css';
 import axios from 'axios';
+import { displaySimpleNotification } from '../../utility/services';
+
+const styles = {
+  title: {
+    fontSize: '3rem',
+    fontFamily: 'Montserrat',
+    paddingBottom: '2rem',
+    color: 'white',
+    margin: '0',
+  },
+};
 
 class NormalLoginForm extends React.Component {
-  openNotification = status => {
-    notification.open({
-      message: status ? 'Success!' : 'Error!',
-      duration: 2,
-      placement: 'bottomRight',
-      description: status ? 'Account was created.' : 'Account could not be created.',
-      icon: <Icon type={status ? 'smile' : 'warning'} style={{ color: '#108ee9' }} />,
-    });
-  };
-
   compareToFirstPassword = (rule, value, callback) => {
     const { form } = this.props;
     if (value && value !== form.getFieldValue('password')) {
@@ -39,10 +39,17 @@ class NormalLoginForm extends React.Component {
         axios
           .post('/signup', values)
           .then(res => {
-            this.openNotification(true);
+            displaySimpleNotification('Success!', 2, 'bottomRight', 'Account was created.', 'smile', '#108ee9');
           })
           .catch(err => {
-            this.openNotification(false);
+            displaySimpleNotification(
+              'Error!',
+              2,
+              'bottomRight',
+              'Account could not be created.',
+              'warning',
+              '#108ee9'
+            );
           });
       }
     });
@@ -111,13 +118,4 @@ class NormalLoginForm extends React.Component {
   }
 }
 
-const styles = {
-  title: {
-    fontSize: '3rem',
-    fontFamily: 'Montserrat',
-    paddingBottom: '2rem',
-    color: 'white',
-    margin: '0',
-  },
-};
 export const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(NormalLoginForm);

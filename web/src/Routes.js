@@ -27,7 +27,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
     getToken();
   }, []);
 
-  if (authenticated === null) {
+  if (authenticated == null) {
     return <></>;
   } else if (authenticated) {
     return <Route {...rest} render={props => <Component {...props} />} />;
@@ -37,22 +37,20 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   }
 };
 
-export default class Routes extends React.Component {
-  render() {
-    return (
-      <Router>
-        <Header />
-        <BodyWrapper>
-          <Switch>
-            <Route path='/home' component={Homepage} />
-            <ProtectedRoute path='/team' component={Team} />
-            <ProtectedRoute path='/dashboard' component={Panel} />
-            <Route path='/'>
-              <Redirect to='/home' />
-            </Route>
-          </Switch>
-        </BodyWrapper>
-      </Router>
-    );
-  }
+export default function Routes() {
+  return (
+    <Router>
+      <Header />
+      <BodyWrapper>
+        <Switch>
+          <Route path='/home' component={Homepage} />
+          <ProtectedRoute path='/team' component={Team} />
+          <ProtectedRoute path='/dashboard' component={Panel} />
+          <Route path='/'>
+            <Redirect to='/home' />
+          </Route>
+        </Switch>
+      </BodyWrapper>
+    </Router>
+  );
 }

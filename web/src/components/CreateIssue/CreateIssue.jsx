@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon, notification } from 'antd';
-import { displayNotification } from '../../utility/services.jsx';
+import { displaySimpleNotification } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
 import './style.css';
 
@@ -25,11 +25,11 @@ class CreateIssue extends React.Component {
     axios
       .delete(`/issue/${id}`, { withCredentials: true })
       .then(() => {
-        displayNotification(true, 'Issue was deleted successfully', 'Issue could not be deleted');
+        displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
         this.props.changePage(0);
       })
       .catch(() => {
-        displayNotification(false, 'Issue was deleted successfully', 'Issue could not be deleted');
+        displaySimpleNotification('Error', 2, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
       });
   };
 
@@ -60,7 +60,6 @@ class CreateIssue extends React.Component {
 
   render() {
     const data = this.props.data;
-    console.log(data);
     const tagSuggestions = [
       <Select.Option key='Backend'>Backend</Select.Option>,
       <Select.Option key='Bug'>Bug</Select.Option>,
@@ -83,9 +82,7 @@ class CreateIssue extends React.Component {
       <div style={layout} className='createIssue'>
         <div style={{ display: 'flex' }}>
           <p style={subheader}>{data == null ? 'Create Issue' : data.title}</p>
-          {data == null ? (
-            ''
-          ) : (
+          {!data ? null : (
             <Icon
               type='rollback'
               style={{ margin: '0 1rem', fontSize: '1.5rem', cursor: 'pointer' }}
