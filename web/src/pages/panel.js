@@ -12,6 +12,7 @@ import Settings from '../components/Settings/Settings';
 import Active from '../components/Active/Active';
 import Schedule from '../components/Schedule/Schedule';
 import Help from '../components/Help/Help';
+import axios from 'axios';
 
 export default class Panel extends React.Component {
   constructor(props) {
@@ -39,6 +40,15 @@ export default class Panel extends React.Component {
     else this.setState({ activeFiltered: active, progressFiltered: progress, completeFiltered: complete });
   };
 
+  async checkSession() {
+    try {
+      await axios.post('/session', null, { withCredentials: true });
+    } catch (err) {
+      this.setState({ toHomepage: true });
+      this.openNotification();
+    }
+  }
+
   returnPage = page => {
     switch (page) {
       case 0:
@@ -51,6 +61,7 @@ export default class Panel extends React.Component {
               progress: this.state.progress,
               complete: this.state.complete,
             }}
+            checkSession={this.checkSession}
           />
         );
       case 1:
@@ -63,6 +74,7 @@ export default class Panel extends React.Component {
               progress: this.state.progressFiltered,
               complete: this.state.completeFiltered,
             }}
+            checkSession={this.checkSession}
           />
         );
       case 2:

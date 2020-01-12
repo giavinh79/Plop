@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon, notification } from 'antd';
+import { Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon } from 'antd';
 import { displaySimpleNotification } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
 import './style.css';
@@ -9,18 +9,6 @@ const { TextArea } = Input;
 
 // Divide this up into two components and make a HOC
 class CreateIssue extends React.Component {
-  openNotification = status => {
-    notification.open({
-      message: status !== null ? 'Success' : 'Error',
-      duration: 2,
-      placement: 'bottomRight',
-      description: status !== null ? `Issue sent to ${status}.` : 'Issue could not be created.',
-      icon: (
-        <Icon type={status !== null ? 'smile' : 'warning'} style={{ color: status !== null ? '#108ee9' : 'red' }} />
-      ),
-    });
-  };
-
   handleDeletion = id => {
     axios
       .delete(`/issue/${id}`, { withCredentials: true })
@@ -35,18 +23,46 @@ class CreateIssue extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+
     this.props.form.validateFields((err, values) => {
-      if (!err) {
-        axios
-          .put('/issue', values)
-          .then(res => {
-            this.props.form.resetFields();
-            this.openNotification(res.data.status);
-          })
-          .catch(err => {
-            this.openNotification();
-          });
-      }
+      const toBase64 = file =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+        });
+
+      (async function getEncodedImageValues(values, resetForm) {
+        let base = [];
+        if (values.dragger) {
+          for (let item of values.dragger) {
+            base.push(await toBase64(item.originFileObj));
+          }
+          values.dragger = base; // replace image file objects with base64 version
+        }
+
+        if (!err) {
+          axios
+            .put('/issue', values)
+            .then(res => {
+              resetForm();
+              displaySimpleNotification(
+                'Success',
+                2,
+                'bottomRight',
+                `Issue was sent to ${res.data.status}.`,
+                'smile',
+                '#108ee9'
+              );
+            })
+            .catch(err => {
+              displaySimpleNotification('Error', 2, 'bottomRight', `Issue could not be created.`, 'warning', 'red');
+            });
+        }
+      })(values, this.props.form.resetFields);
+
+      // getEncodedImageValues(values, this.props.form.resetFields);
     });
   };
 
@@ -231,7 +247,21 @@ class CreateIssue extends React.Component {
                 valuePropName: 'fileList',
                 getValueFromEvent: this.normFile,
               })(
-                <Upload.Dragger name='files' action='/image' accept='image/*,.xml,.json,.txt,.doc,.docx,.js,.html'>
+                <Upload.Dragger
+                  // name='files'
+                  // action='/image'
+                  // accept='image/*,.xml,.json,.txt,.doc,.docx,.js,.html'
+                  beforeUpload={file => {
+                    //   const reader = new FileReader();
+
+                    //   reader.onload = e => {
+                    //     console.log(e.target.result);
+                    //   };
+                    //   reader.readAsDataURL(file);
+                    //   console.log('wtfwtf');
+                    return false;
+                  }}
+                >
                   <p className='ant-upload-drag-icon'>
                     <Icon type='inbox' />
                   </p>
