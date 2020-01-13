@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Icon, Input, Button, Checkbox, notification } from 'antd';
+import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import './style.css';
 import axios from 'axios';
 import { displaySimpleNotification } from '../../utility/services';

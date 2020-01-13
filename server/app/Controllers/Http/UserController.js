@@ -48,7 +48,7 @@ class UserController {
         });
         response.status(200).send('User created successfully');
       } catch (err) {
-        console.log(`(user_add) ${new Date()}: ${err}`);
+        console.log(`(user_add) ${new Date()}: ${err.message}`);
         response.status(404).send('Error');
       }
     }
@@ -64,7 +64,7 @@ class UserController {
       });
       response.status(200).send();
     } catch (err) {
-      console.log(`(user_login) ${new Date()}: ${err}`);
+      console.log(`(user_login) ${new Date()}: ${err.message}`);
       response.status(404).send('Error');
     }
   }
@@ -85,7 +85,7 @@ class UserController {
       response.clearCookie('XSStoken');
       response.clearCookie('room');
     } catch (err) {
-      console.log(`(user_logout) ${new Date()}: ${err}`);
+      console.log(`(user_logout) ${new Date()}: ${err.message}`);
       response.status(404).send('Error');
     }
   }
