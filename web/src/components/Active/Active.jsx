@@ -86,6 +86,7 @@ const columns = [
     render: priority => {
       return (
         <div style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
+          {/* Instead maybe exclamation mark vs something else */}
           <Tooltip title={priority ? 'Major Priority' : 'Minor Priority'} mouseEnterDelay={0.8}>
             {priority ? (
               <div style={{ height: '1rem', width: '1rem', backgroundColor: '#b23f3f', borderRadius: '50%' }}></div>
