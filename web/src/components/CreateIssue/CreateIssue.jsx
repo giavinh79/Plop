@@ -142,7 +142,7 @@ class CreateIssue extends React.Component {
             <Form.Item label='Description'>
               {getFieldDecorator('description', {
                 initialValue: data == null ? '' : data.description,
-              })(<TextArea autosize={{ minRows: '2' }} />)}
+              })(<TextArea autosize={{ minRows: '2', maxRows: '15' }} />)}
             </Form.Item>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
@@ -250,22 +250,15 @@ class CreateIssue extends React.Component {
                 <Upload.Dragger
                   // name='files'
                   // action='/image'
-                  // accept='image/*,.xml,.json,.txt,.doc,.docx,.js,.html'
-                  beforeUpload={file => {
-                    //   const reader = new FileReader();
-
-                    //   reader.onload = e => {
-                    //     console.log(e.target.result);
-                    //   };
-                    //   reader.readAsDataURL(file);
-                    //   console.log('wtfwtf');
+                  accept='image/*'
+                  beforeUpload={() => {
                     return false;
                   }}
                 >
                   <p className='ant-upload-drag-icon'>
                     <Icon type='inbox' />
                   </p>
-                  <p className='ant-upload-text'>Click or drag images/text files to this area to upload</p>
+                  <p className='ant-upload-text'>Click or drag images to this area to upload</p>
                   <p className='ant-upload-hint'>Upload size limit set to 5MB.</p>
                 </Upload.Dragger>
               )}
