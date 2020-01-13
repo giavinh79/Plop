@@ -76,7 +76,7 @@ class CreateIssue extends React.Component {
 
   render() {
     const data = this.props.data;
-    data.tag = JSON.parse(data.tag);
+    if (data && data.tag) data.tag = JSON.parse(data.tag);
     const tagSuggestions = [
       <Select.Option key='Backend'>Backend</Select.Option>,
       <Select.Option key='Bug'>Bug</Select.Option>,
