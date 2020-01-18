@@ -15,5 +15,15 @@ const displaySimpleNotification = (message, duration, placement, description, ic
   });
 };
 
+const displaySessionExpired = () => {
+  notification.open({
+    message: 'Session expired',
+    duration: 2,
+    placement: 'bottomRight',
+    description: 'You need to login again.',
+    icon: <Icon type='warning' style={{ color: '#108ee9' }} />,
+  });
+};
+
 // Using export { } over export const to give quick summary of utility functions
-export { displaySimpleNotification };
+export { displaySimpleNotification, displaySessionExpired };

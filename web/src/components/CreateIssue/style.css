@@ -37,3 +37,8 @@
   border-color: #689bca;
   background-color: #689bca;
 }
+
+/* should probably find the proper ant design prop to override the styles instead of doing this */
+.ant-upload-drag {
+  height: 15rem !important;
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Tooltip, Popconfirm, Table as ActiveTable, Divider, Tag } from 'antd';
+import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 // import 'antd/dist/antd.css';
 import { tagMap } from '../../utility/constants';
@@ -86,12 +86,14 @@ const columns = [
     render: priority => {
       return (
         <div style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
-          {/* Instead maybe exclamation mark vs something else */}
           <Tooltip title={priority ? 'Major Priority' : 'Minor Priority'} mouseEnterDelay={0.8}>
             {priority ? (
-              <div style={{ height: '1rem', width: '1rem', backgroundColor: '#b23f3f', borderRadius: '50%' }}></div>
+              // make that member online status
+              // <div style={{ height: '1rem', width: '1rem', backgroundColor: '#b23f3f', borderRadius: '50%' }}></div>
+              <Icon type='arrow-up' style={{ color: '#b23f3f' }} />
             ) : (
-              <div style={{ height: '1rem', width: '1rem', backgroundColor: '#40b33f', borderRadius: '50%' }}></div>
+              <Icon type='arrow-down' style={{ color: '#40b33f' }} />
+              // <div style={{ height: '1rem', width: '1rem', backgroundColor: '#40b33f', borderRadius: '50%' }}></div>
             )}
           </Tooltip>
         </div>

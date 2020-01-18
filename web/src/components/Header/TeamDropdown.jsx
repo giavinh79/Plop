@@ -1,33 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Menu, Dropdown, Icon } from 'antd';
 import 'antd/dist/antd.css';
 import './style.css';
 
-export default class TeamDropdown extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      toTeam: false,
-    };
-  }
+export default function TeamDropdown() {
+  const [toTeam, setToTeam] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  displayLoading = () => {
-    document.querySelector('#loading').style.display = 'block';
+  const displayLoading = () => {
+    setLoading(true);
     setTimeout(function() {
-      document.querySelector('#loading').style.display = 'none';
+      try {
+        setLoading(false);
+      } catch (err) {}
     }, 1200);
 
     // send request to session endpoint and change the team
     // force redirect to /dashboard to refresh or better, find a way just so that the dashboard component recalls the API
   };
 
-  menu = (
+  const menu = (
     <Menu id='dropdownMenu'>
       <Menu.Item
         key='0'
         onClick={() => {
-          this.setState({ toTeam: !this.state.toTeam });
+          setToTeam(!toTeam);
         }}
       >
         <Icon type='appstore' />
@@ -40,7 +38,7 @@ export default class TeamDropdown extends React.Component {
               <Menu.Item
                 key={index + 1}
                 onClick={team => {
-                  this.displayLoading();
+                  displayLoading();
                 }}
               >
                 <Icon type='team' />
@@ -50,29 +48,25 @@ export default class TeamDropdown extends React.Component {
           })}
     </Menu>
   );
-
-  render() {
-    return !this.state.toTeam ? (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Icon
-          id='loading'
-          type='loading'
-          style={{ display: 'none', color: 'white', fontSize: '1.4rem', marginLeft: '0.7rem' }}
-          spin
-        />
-        <Dropdown.Button
-          overlay={this.menu}
-          style={{ margin: '0 1.3rem 0 1rem' }}
-          icon={<Icon type='switcher' />}
-          onClick={() => {
-            this.setState({ toTeam: true });
-          }}
-        >
-          Switch Team
-        </Dropdown.Button>
-      </div>
-    ) : (
-      <Redirect push to='/team' />
-    );
-  }
+  return toTeam ? (
+    <Redirect push to='/team' />
+  ) : (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <Icon
+        type='loading'
+        style={{ display: loading ? 'block' : 'none', color: 'white', fontSize: '1.4rem', marginLeft: '0.7rem' }}
+        spin
+      />
+      <Dropdown.Button
+        overlay={menu}
+        style={{ margin: '0 1.3rem 0 1rem' }}
+        icon={<Icon type='switcher' />}
+        onClick={() => {
+          setToTeam(true);
+        }}
+      >
+        Switch Team
+      </Dropdown.Button>
+    </div>
+  );
 }

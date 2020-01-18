@@ -23,7 +23,34 @@ const columns = [
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    render: (text) => <span style={{ color: text === 'Online' ? 'green' : '#882929' }}>{text}</span>,
+    render: text =>
+      text !== 'Online' ? (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div
+            style={{
+              height: '1rem',
+              width: '1rem',
+              backgroundColor: '#b23f3f',
+              borderRadius: '50%',
+              marginRight: '0.5rem',
+            }}
+          ></div>
+          Offline
+        </div>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div
+            style={{
+              height: '1rem',
+              width: '1rem',
+              backgroundColor: '#40b33f',
+              borderRadius: '50%',
+              marginRight: '0.5rem',
+            }}
+          ></div>
+          Online
+        </div>
+      ),
   },
 ];
 
@@ -59,9 +86,7 @@ const pagination = {
 export default class ViewMembers extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -72,7 +97,12 @@ export default class ViewMembers extends React.Component {
     return (
       <div style={layout}>
         <p style={subheader}>Members List</p>
-        <MembersTable columns={columns} dataSource={data} pagination={pagination} style={{ border: '1px solid #ccc', borderRadius: '5px' }} />
+        <MembersTable
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          style={{ border: '1px solid #ccc', borderRadius: '5px' }}
+        />
       </div>
     );
   }

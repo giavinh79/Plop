@@ -251,6 +251,7 @@ class CreateIssue extends React.Component {
                 <Upload.Dragger
                   // name='files'
                   // action='/image'
+                  listType='picture'
                   accept='image/*'
                   beforeUpload={() => {
                     return false;

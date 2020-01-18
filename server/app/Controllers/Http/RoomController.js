@@ -105,9 +105,8 @@ class RoomController {
         await room.save();
         await trx.table('user_rooms').insert({ user_id: user.id, room_id: room.id });
       });
-      // await room.save()
-      // await Database.table('user_rooms').insert({user_id: user.id, room_id: room.id })
-      response.status(200).json({ id: room.id, name: roomName, description: roomDescription });
+
+      response.status(200).json({ id: Encryption.encrypt(room.id), name: roomName, description: roomDescription });
     } catch (err) {
       console.log(`(room_create) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
@@ -117,7 +116,8 @@ class RoomController {
   async join({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const { roomId, roomPassword } = request.body;
+      let { roomId, roomPassword } = request.body;
+      roomId = Encryption.decrypt(roomId);
 
       let result = await Database.from('user_rooms')
         .where('user_id', user.id)
