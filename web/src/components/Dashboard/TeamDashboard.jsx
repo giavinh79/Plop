@@ -41,7 +41,7 @@ export default function TeamDashboard({ issue, changePage, checkSession }) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [checkSession]);
 
   return <DragDropComponent changePage={changePage} items={items} setItems={setItems} />;
 }

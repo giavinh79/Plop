@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Modal, Card, Icon, Input, Button, notification } from 'antd';
+import { Modal, Card, Icon, Input, Button } from 'antd';
 import { Redirect } from 'react-router-dom';
+import { displaySimpleNotification } from '../utility/services';
 
 const { TextArea } = Input;
 
@@ -26,60 +27,35 @@ export default function Team() {
       .catch();
   }, [teams]);
 
-  const openNotification = () => {
-    notification.open({
-      message: 'Session expired',
-      duration: 2,
-      placement: 'bottomRight',
-      description: 'You need to login again.',
-      icon: <Icon type='warning' style={{ color: '#108ee9' }} />,
-    });
-  };
-
-  const openNotificationCreation = res => {
-    notification.open({
-      message: res !== null ? 'Team created' : 'Team was not created',
-      duration: res !== null ? 10 : 4,
-      placement: 'bottomRight',
-      description:
-        res !== null
-          ? 'The team ID is ' +
-            res.id +
-            ". Your credentials were also emailed to you as a backup. You may now enter the team's room."
-          : 'The team could not be created, you may be at your maximum team limit.',
-      icon: <Icon type={res !== null ? 'smile' : 'warning'} style={{ color: res !== null ? '#108ee9' : 'red' }} />,
-    });
-  };
-
-  const openNotificationJoin = () => {
-    notification.open({
-      message: 'Unable to join team',
-      duration: 4,
-      placement: 'bottomRight',
-      description: 'You may have incorrect credentials or already have a pending request to join this team.',
-      icon: <Icon type='warning' style={{ color: '#108ee9' }} />,
-    });
-  };
-
   const handleCreate = async () => {
     const data = {
-      roomName: document.querySelector('#teamName').value,
-      roomDescription: document.querySelector('#teamDescription').value,
-      roomPassword: document.querySelector('#teamPassword').value,
+      roomName: createTeamData.current.name,
+      roomDescription: createTeamData.current.description,
+      roomPassword: createTeamData.current.password,
     };
 
     try {
       const res = await axios.post('/createRoom', data, { withCredentials: true });
-      setTeamCreation(true);
       setTeams([...teams, { name: res.data.name, description: res.data.description, id: res.data.id }]);
-      // this.setState({
-      //   teamCreation: false,
-      //   teams: ,
-      // });
-      openNotificationCreation(res.data);
+      displaySimpleNotification(
+        'Team created',
+        15,
+        'bottomRight',
+        `The team ID is '${res.data.id}'. Your credentials were also emailed to you as a backup and can be accessed in team settings. You may now enter the team's room.`,
+        'smile',
+        '#108ee9'
+      );
     } catch (err) {
+      displaySimpleNotification(
+        'Team was not created',
+        4,
+        'bottomRight',
+        'The team could not be created, you may be at your maximum team limit.',
+        'warning',
+        'red'
+      );
+    } finally {
       setTeamCreation(false);
-      openNotificationCreation(null);
     }
   };
 
@@ -89,12 +65,18 @@ export default function Team() {
       roomPassword: joinTeamData.current.password,
     };
 
-    console.log(data);
     try {
       await axios.post('/joinRoom', data, { withCredentials: true });
       setToDashboard(true);
     } catch (err) {
-      openNotificationJoin();
+      displaySimpleNotification(
+        'Unable to join team',
+        4,
+        'bottomRight',
+        'You may have incorrect credentials or already have a pending request to join this team.',
+        'warning',
+        '#108ee9'
+      );
     }
   };
 
@@ -132,7 +114,16 @@ export default function Team() {
           ]}
         >
           <p>Team name:</p>
-          <Input style={{ marginBottom: '1rem' }} name='teamName' id='teamName' allowClear={true} required />
+          <Input
+            style={{ marginBottom: '1rem' }}
+            name='teamName'
+            id='teamName'
+            allowClear={true}
+            required
+            onChange={e => {
+              createTeamData.current.name = e.currentTarget.value;
+            }}
+          />
           <p>Team description:</p>
           <TextArea
             autosize={{ minRows: 2, maxRows: 6 }}
@@ -140,6 +131,9 @@ export default function Team() {
             name='teamDescription'
             id='teamDescription'
             required
+            onChange={e => {
+              createTeamData.current.description = e.currentTarget.value;
+            }}
           />
           <p>Team password:</p>
           <Input.Password
@@ -148,6 +142,9 @@ export default function Team() {
             autoComplete='new-password'
             allowClear={true}
             required
+            onChange={e => {
+              createTeamData.current.password = e.currentTarget.value;
+            }}
           />
         </Modal>
       ) : null}
@@ -234,7 +231,6 @@ const styles = {
     flexDirection: 'column',
     flexWrap: 'wrap',
     width: '100%',
-    // backgroundImage: 'url(\'images/wallpaper.png\')',
     backgroundPosition: '0 0',
   },
   subcontainer: {

@@ -47,7 +47,7 @@ export default function UserDashboard({ issue, changePage, checkSession }) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [checkSession]);
 
   return empty ? (
     <div style={styles.emptyWrapper}>
