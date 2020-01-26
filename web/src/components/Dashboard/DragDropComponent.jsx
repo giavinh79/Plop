@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card } from './Card';
-import styles from './DashboardStyles';
+import { styles } from './DashboardStyles';
 
 /*
  * Component representing the three drag & drop columns active, progress, and complete
@@ -80,7 +80,7 @@ export default function DragDropComponent({ changePage, items, setItems }) {
         state = { complete: active };
       }
 
-      setItems(...items, state);
+      setItems({...items, state});
     } else {
       const result = move(getList(source.droppableId), getList(destination.droppableId), source, destination);
 

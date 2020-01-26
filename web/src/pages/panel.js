@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import TeamDashboard from '../components/Dashboard/TeamDashboard';
 import UserDashboard from '../components/Dashboard/UserDashboard';
@@ -13,6 +12,7 @@ import Active from '../components/Active/Active';
 import Schedule from '../components/Schedule/Schedule';
 import Help from '../components/Help/Help';
 import axios from 'axios';
+import { displaySessionExpired } from '../utility/services';
 
 export default class Panel extends React.Component {
   constructor(props) {
@@ -45,7 +45,7 @@ export default class Panel extends React.Component {
       await axios.post('/session', null, { withCredentials: true });
     } catch (err) {
       this.setState({ toHomepage: true });
-      this.openNotification();
+      displaySessionExpired();
     }
   }
 
@@ -105,13 +105,13 @@ export default class Panel extends React.Component {
   };
 
   render() {
-    return !this.state.toHomepage ? (
+    return this.state.toHomepage ? (
+      <Redirect push to='/home' />
+    ) : (
       <>
         <SideNav handlePageChange={page => this.changePage(page)} />
         <div style={styles.body}>{this.returnPage(this.state.currentPage)}</div>
       </>
-    ) : (
-      <Redirect push to='/home' />
     );
   }
 }
@@ -121,8 +121,4 @@ const styles = {
     display: 'flex',
     width: '100%',
   },
-};
-
-Panel.propTypes = {
-  page: PropTypes.number,
 };
