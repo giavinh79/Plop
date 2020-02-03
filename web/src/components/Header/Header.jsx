@@ -2,12 +2,17 @@ import React from 'react';
 import UserPanel from './UserPanel/UserPanel';
 import { HeaderWrapper, Logo } from './style.js';
 import { WrappedHorizontalLoginForm } from './LoginForm.jsx';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import TeamDropdown from './TeamDropdown';
 
-function Header({ location }) {
+export default function Header() {
+  let history = useHistory();
+  let { location } = history;
+
   const handleClick = () => {
-    // run function passed in as prop from routes when it is implemented - check what path we are currently on as well
+    if (location.pathname !== '/home') {
+      history.push('/team');
+    }
   };
 
   return (
@@ -26,5 +31,3 @@ function Header({ location }) {
     </HeaderWrapper>
   );
 }
-
-export default withRouter(Header);

@@ -1,17 +1,19 @@
-import React from 'react'
-import { Comment, Tooltip, List } from 'antd'
-import moment from 'moment'
+import React from 'react';
+import { Comment, Tooltip, List } from 'antd';
+import moment from 'moment';
 
 export default class CommentBody extends React.Component {
   render() {
     const data = [
       {
-        actions: [<span key="comment-list-reply-to-0">Reply</span>],
+        actions: [<span key='comment-list-reply-to-0'>Reply</span>],
         author: 'Han Solo',
         avatar: 'images/avatars/monster2.svg',
         content: (
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, optio quis aut eveniet enim praesentium error incidunt officia, culpa, alias accusantium. Doloremque sunt dolorem dolore nesciunt error, saepe quasi illum!
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, optio quis aut eveniet enim praesentium
+            error incidunt officia, culpa, alias accusantium. Doloremque sunt dolorem dolore nesciunt error, saepe quasi
+            illum!
           </p>
         ),
         datetime: (
@@ -29,12 +31,14 @@ export default class CommentBody extends React.Component {
         ),
       },
       {
-        actions: [<span key="comment-list-reply-to-0">Reply</span>],
+        actions: [<span key='comment-list-reply-to-0'>Reply</span>],
         author: 'San Holo',
         avatar: 'images/avatars/monster1.svg',
         content: (
           <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse architecto perferendis culpa debitis laborum? Animi, dolorem rerum minus eaque consequatur, commodi, quas magnam asperiores fuga necessitatibus esse molestiae beatae harum?
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse architecto perferendis culpa debitis laborum?
+            Animi, dolorem rerum minus eaque consequatur, commodi, quas magnam asperiores fuga necessitatibus esse
+            molestiae beatae harum?
           </p>
         ),
         datetime: (
@@ -53,14 +57,15 @@ export default class CommentBody extends React.Component {
       },
     ];
 
-
     return (
-      <div style={{ border: '1px solid #ccc', maxWidth: '80rem', margin: '2rem', padding: '1rem', borderRadius: '10px' }}>
+      <div
+        style={{ border: '1px solid #ccc', maxWidth: '80rem', margin: '2rem', padding: '1rem', borderRadius: '10px' }}
+      >
         {/* <h2>Comments - </h2> */}
         <List
-          className="comment-list"
+          className='comment-list'
           header={<h3>Comments</h3>}
-          itemLayout="horizontal"
+          itemLayout='horizontal'
           dataSource={data}
           renderItem={item => (
             <li>
@@ -73,8 +78,9 @@ export default class CommentBody extends React.Component {
               />
             </li>
           )}
-        />,
+        />
+        ,
       </div>
-    )
+    );
   }
 }

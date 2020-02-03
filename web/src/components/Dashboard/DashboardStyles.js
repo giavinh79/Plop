@@ -43,15 +43,17 @@ export const skeletonStyles = {
   wrapper: {
     backgroundRepeat: 'no-repeat',
     backgroundImage: `
-      radial-gradient(circle 16px, white 99%, transparent 0),
-      linear-gradient(white 40px, transparent 0)`,
+      radial-gradient(circle 16px, yellow 99%, transparent 0),
+      linear-gradient(black 40px, transparent 0),
+      linear-gradient(gray 100%, transparent 0)`,
     backgroundSize: `
       32px 32px,
-      200px 40px`,
+      200px 40px
+      100% 100%`,
     backgroundPosition: `
     24px 24px,
-    24px 200px`,      
+    24px 200px`,
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 };

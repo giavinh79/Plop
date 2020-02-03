@@ -15,6 +15,7 @@ export default class Settings extends React.Component {
         // should just change this in the DB maybe
         res.data.private = !!res.data.private;
         res.data.adminApproval = !!res.data.adaminApproval;
+        console.log(res);
         this.setState(res.data);
       })
       .catch(err => {
@@ -81,7 +82,7 @@ export default class Settings extends React.Component {
               <Input.Password value={this.state.decryptPass} autoComplete='new-password' type='password' />
             </div>
             <div style={styles.wrapper}>
-              <div style={{ flex: 1, padding: '1rem 0' }}>
+              <div style={{ flex: 1, padding: '0.5rem 0' }}>
                 <div style={styles.wrapperC}>
                   <p style={styles.text}>Team ID: </p>
                   <Paragraph copyable={{ text: '42jf1k23ll18d92' }} style={{ margin: 0 }}>
@@ -92,8 +93,14 @@ export default class Settings extends React.Component {
                   <p style={styles.text}>Limit max members: </p>
                   <MemberSlider style={{ marginRight: '1rem' }} />
                 </div>
+                <div>
+                  <p style={styles.text}>Repository Link: </p>
+                  <a href='https://github.com' target='_blank' rel='noopener'>
+                    https://github.com
+                  </a>
+                </div>
               </div>
-              <div style={{ flex: 1, padding: '1rem 0' }}>
+              <div style={{ flex: 1, padding: '0.5rem 0' }}>
                 <div style={styles.wrapperC}>
                   <Switch defaultChecked={this.state.private} />
                   <p style={styles.textC}>
@@ -152,6 +159,8 @@ const styles = {
   wrapper: {
     display: 'flex',
     flexWrap: 'wrap',
+
+    paddingBottom: '1rem',
     // alignItems: 'center'
     // justifyContent: 'space-between'
   },
@@ -159,6 +168,7 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     alignItems: 'center',
+    paddingBottom: '0.5rem',
     // justifyContent: 'space-between'
   },
   text: {

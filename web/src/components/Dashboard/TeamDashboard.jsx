@@ -43,6 +43,6 @@ export default function TeamDashboard({ issue, changePage, checkSession }) {
       isMounted = false;
     };
   }, [checkSession]);
-  return <div style={skeletonStyles.wrapper}></div>
-  // return <DragDropComponent changePage={changePage} items={items} setItems={setItems} />;
+  // return <div style={skeletonStyles.wrapper}></div>;
+  return <DragDropComponent changePage={changePage} items={items} setItems={setItems} />;
 }
