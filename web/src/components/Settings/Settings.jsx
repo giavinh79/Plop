@@ -95,7 +95,7 @@ export default class Settings extends React.Component {
                 </div>
                 <div>
                   <p style={styles.text}>Repository Link: </p>
-                  <a href='https://github.com' target='_blank' rel='noopener'>
+                  <a href='https://github.com' target='_blank' rel='noopener noreferrer'>
                     https://github.com
                   </a>
                 </div>

@@ -25,5 +25,15 @@ const displaySessionExpired = () => {
   });
 };
 
+const displayUnknownError = () => {
+  notification.open({
+    message: 'Error occured',
+    duration: 15,
+    placement: 'bottomRight',
+    description: 'Unknown Error. Contact plopwebapp@gmail.com.',
+    icon: <Icon type='warning' style={{ color: '#108ee9' }} />,
+  });
+};
+
 // Using export { } over export const to give quick summary of utility functions
-export { displaySimpleNotification, displaySessionExpired };
+export { displaySimpleNotification, displaySessionExpired, displayUnknownError };

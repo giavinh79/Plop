@@ -17,7 +17,7 @@ export default function Backlog() {
         res.data.map((item, index) => {
           item.key = index;
           item.date = item.created_at.substring(0, 10);
-          item.tag = JSON.parse(item.tag); // convert "[]" to []
+          // item.tag = JSON.parse(item.tag); // convert "[]" to [] if mySQL
           return item;
         });
         setData(res.data);

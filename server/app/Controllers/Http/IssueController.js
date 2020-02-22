@@ -36,10 +36,11 @@ class IssueController {
                   resource_type: 'auto',
                 },
                 (error, res) => {
+                  console.log(res);
                   if (error) {
                     reject(new Error('Cloudinary image upload failed'));
                   } else {
-                    imageIdArray.push(res.public_id);
+                    imageIdArray.push({ id: res.public_id, url: res.url });
                     resolve();
                   }
                 }
@@ -169,6 +170,7 @@ class IssueController {
             room: request.cookie('room'),
             status: 3,
           });
+
         response.status(200).send({
           activeItems,
           progressItems,
