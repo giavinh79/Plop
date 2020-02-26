@@ -18,7 +18,7 @@ export default function Team() {
 
   useEffect(() => {
     axios
-      .get('/getRoom', { withCredentials: true })
+      .get(`${API_ENDPOINT}/room`)
       .then(res => {
         if (JSON.stringify(teams) !== JSON.stringify(res.data)) {
           setTeams(res.data);

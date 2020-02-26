@@ -75,7 +75,7 @@ class UserController {
       await auth.check();
       response.status(200).send();
     } catch (err) {
-      console.log(`(user_session_check) ${new Date()}: ${err.message}`);
+      // console.log(`(user_session_check) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -85,7 +85,6 @@ class UserController {
     try {
       response.clearCookie('XSStoken');
       response.clearCookie('room');
-      Database.close(['mysql']);
     } catch (err) {
       console.log(`(user_logout) ${new Date()}: ${err.message}`);
       response.status(404).send('Error');

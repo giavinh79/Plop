@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Popconfirm, Table as BacklogTable, Divider, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import './style.css';
-import { tagMap } from '../../utility/constants';
+import { tagMap, API_ENDPOINT } from '../../utility/constants';
 import { displaySimpleNotification } from '../../utility/services';
 
 export default function Backlog() {
@@ -12,7 +12,7 @@ export default function Backlog() {
 
   useEffect(() => {
     axios
-      .get('/teamIssue/0', { withCredentials: true })
+      .get(`${API_ENDPOINT}/teamIssue/0`)
       .then(res => {
         res.data.map((item, index) => {
           item.key = index;

@@ -2,9 +2,6 @@ const Route = use('Route');
 const jwtMiddleware = async ({ request }, next) => {
   try {
     request.headers().authorization = `Bearer ${request.cookie('XSStoken')}`;
-    console.log('test');
-    console.log(request.cookie('XSStoken'));
-    console.log(request.cookies());
   } catch (err) {
     console.log(`${new Date()} : ${err.message}`);
   } finally {
@@ -21,7 +18,7 @@ Route.post('/session', 'UserController.checkSession').middleware(jwtMiddleware);
 Route.post('/logout', 'UserController.logout');
 
 // Teams/Rooms
-Route.get('/getRoom', 'RoomController.get').middleware(jwtMiddleware);
+Route.get('/room', 'RoomController.get').middleware(jwtMiddleware);
 Route.post('/roomInfo', 'RoomController.info').middleware(jwtMiddleware);
 Route.post('/createRoom', 'RoomController.create').middleware(jwtMiddleware);
 Route.post('/sessionRoom', 'RoomController.session').middleware(jwtMiddleware);

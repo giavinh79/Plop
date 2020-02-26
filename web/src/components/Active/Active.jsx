@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 // import 'antd/dist/antd.css';
-import { tagMap } from '../../utility/constants';
+import { tagMap, API_ENDPOINT } from '../../utility/constants';
 
 const progressMap = { 1: 'Active', 2: 'In Progress', 3: 'Completed' };
 
@@ -139,7 +139,7 @@ export default function Active() {
 
   useEffect(() => {
     axios
-      .get('/teamIssue/1', { withCredentials: true })
+      .get(`${API_ENDPOINT}/teamIssue/1`)
       .then(res => {
         let activeIssues = [...res.data.activeItems, ...res.data.completedItems, ...res.data.progressItems];
         activeIssues.map((item, index) => {
