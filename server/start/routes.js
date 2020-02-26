@@ -2,7 +2,9 @@ const Route = use('Route');
 const jwtMiddleware = async ({ request }, next) => {
   try {
     request.headers().authorization = `Bearer ${request.cookie('XSStoken')}`;
+    console.log('test');
     console.log(request.cookie('XSStoken'));
+    console.log(request.cookies());
   } catch (err) {
     console.log(`${new Date()} : ${err.message}`);
   } finally {
