@@ -8,9 +8,6 @@
     "start": "nodemon server.js --ignore ../src",
     "test": "node ace test"
   },
-  "engines": {
-    "node": "12.14.1"
-  },
   "keywords": [
     "adonisjs",
     "adonis-app"
@@ -40,5 +37,8 @@
   "devDependencies": {},
   "autoload": {
     "App": "./app"
+  },
+  "engines": {
+    "node": "12.14.1"
   }
 }
