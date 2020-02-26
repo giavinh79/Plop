@@ -114,14 +114,24 @@ export default function CreateIssue({ changePage, data, form }) {
     <div style={layout} className='createIssue'>
       <div style={{ display: 'flex' }}>
         <p style={subheader}>{data == null ? 'Create Issue' : data.title}</p>
-        {!data ? null : (
-          <Icon
-            type='rollback'
-            style={{ margin: '0 1rem', fontSize: '1.5rem', cursor: 'pointer' }}
-            onClick={() => {
-              changePage(0);
-            }}
-          />
+        {data && (
+          <>
+            <p
+              style={{ marginLeft: '1rem', fontSize: '1rem', cursor: 'pointer', color: '#595a5d' }}
+              onClick={() => {
+                changePage(0);
+              }}
+            >
+              Go back
+            </p>
+            <Icon
+              type='rollback'
+              style={{ margin: '0 0.5rem', fontSize: '1.5rem', cursor: 'pointer' }}
+              onClick={() => {
+                changePage(0);
+              }}
+            />
+          </>
         )}
         {/* <div style="justify-content: center;display: flex;border-radius: 50%;height: 2.5rem;width: 2.5rem;margin: 0 1rem;border: 1px solid #ccc;align-items: center;"> */}
       </div>

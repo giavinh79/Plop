@@ -58,7 +58,7 @@ export default class UserPanel extends React.Component {
       <Redirect push to='/home' />
     ) : (
       <>
-        {this.state.userModal ? <UserSettings handleUserModal={this.handleUserModal} /> : null}
+        {this.state.userModal && <UserSettings handleUserModal={this.handleUserModal} />}
         <Dropdown overlay={this.menu} trigger={['click']}>
           <UserPanelWrapper>
             <div style={styles.iconWrapper}>

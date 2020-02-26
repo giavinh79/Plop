@@ -57,10 +57,10 @@ export default function CommentBody() {
 
   return (
     // <div>
-    <div style={{ margin: '0 2rem', padding: '0 1rem' }}>
+    <div style={{ margin: '0 2rem', padding: '0 1rem 3rem 1rem' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <h3 style={{ margin: 0 }}>Comment here</h3>
-        <Input placeholder='Basic usage' style={{ maxWidth: '50rem', margin: '1rem' }} />
+        <Input style={{ maxWidth: '50rem', margin: '1rem' }} />
         <Icon type='enter' style={{ cursor: 'pointer' }} />
       </div>
       <List
