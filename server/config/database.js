@@ -7,7 +7,7 @@ const Env = use('Env');
 const Helpers = use('Helpers');
 
 const url = require('url-parse');
-const POSTGRESQL_DATABASE_URL = new url(Env.get('DATABASE_URL'));
+const DATABASE_URL = new url(Env.get('DATABASE_URL'));
 
 module.exports = {
   /*
@@ -82,12 +82,12 @@ module.exports = {
       // user: Env.get('DB_USER', 'root'),
       // password: Env.get('DB_PASSWORD', ''),
       // database: Env.get('DB_DATABASE', 'adonis'),
-      host: Env.get('DB_HOST', POSTGRESQL_DATABASE_URL.host),
-      port: Env.get('DB_PORT', ''),
-      user: Env.get('DB_USER', POSTGRESQL_DATABASE_URL.username),
-      password: Env.get('DB_PASSWORD', POSTGRESQL_DATABASE_URL.password),
-      database: Env.get('DB_DATABASE', POSTGRESQL_DATABASE_URL.pathname.substr(1)),
-      ssl: true,
+      host: Env.get('DB_HOST', DATABASE_URL.host),
+      port: Env.get('DB_PORT', DATABASE_URL.port),
+      user: Env.get('DB_USER', DATABASE_URL.username),
+      password: Env.get('DB_PASSWORD', DATABASE_URL.password),
+      database: Env.get('DB_DATABASE', DATABASE_URL.pathname.substr(1)),
+      // ssl: true,
     },
   },
 };
