@@ -74,7 +74,8 @@ class UserController {
     try {
       await auth.check();
       response.status(200).send();
-    } catch (error) {
+    } catch (err) {
+      console.log(`(user_session_check) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }
