@@ -43,7 +43,7 @@ export default class Panel extends React.Component {
 
   async checkSession() {
     try {
-      await axios.post(`${API_ENDPOINT}/session`, null, { withCredentials: true });
+      await axios.post(`${API_ENDPOINT}/session`, { withCredentials: true });
     } catch (err) {
       this.setState({ toHomepage: true });
       displaySessionExpired();
