@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card } from './Card';
+import { API_ENDPOINT } from '../../utility/constants';
 import { styles } from './DashboardStyles';
 
 /*
@@ -80,13 +81,15 @@ export default function DragDropComponent({ changePage, items, setItems }) {
         state = { complete: active };
       }
 
-      setItems({...items, state});
+      setItems({ ...items, state });
     } else {
       const result = move(getList(source.droppableId), getList(destination.droppableId), source, destination);
 
-      axios.post('/issue', { id: result.id, status: result.status }, { withCredentials: true }).catch(() => {
-        console.log(`ERROR - Was not able to update issue ${result.id}`);
-      });
+      axios
+        .post(`${API_ENDPOINT}/issue`, { id: result.id, status: result.status }, { withCredentials: true })
+        .catch(() => {
+          console.log(`ERROR - Was not able to update issue ${result.id}`);
+        });
 
       // To identify which states to change and allow 3 way drag and drop
       const identify = parseInt(source.droppableId.slice(-1)) + parseInt(destination.droppableId.slice(-1));

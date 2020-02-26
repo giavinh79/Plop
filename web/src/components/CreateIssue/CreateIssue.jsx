@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon } from 'antd';
 import { displaySimpleNotification } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
+import { API_ENDPOINT } from '../../utility/constants';
 import './style.css';
 
 const { TextArea } = Input;
@@ -34,7 +35,7 @@ export default function CreateIssue({ changePage, data, form }) {
 
   const handleDeletion = id => {
     try {
-      axios.delete(`/issue/${id}`, { withCredentials: true });
+      axios.delete(`${API_ENDPOINT}/issue/${id}`, { withCredentials: true });
       displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
       changePage(0);
     } catch (err) {

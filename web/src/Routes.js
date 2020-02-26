@@ -7,6 +7,7 @@ import Team from './pages/team';
 import styled from 'styled-components';
 import axios from 'axios';
 import { displaySimpleNotification } from './utility/services';
+import { API_ENDPOINT } from './utility/constants';
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   useEffect(() => {
     async function getToken() {
       try {
-        await axios.post('/session', null, { withCredentias: true });
+        await axios.post(`${API_ENDPOINT}/session`, null, { withCredentias: true });
         setAuthenticated(true);
       } catch (err) {
         setAuthenticated(false);

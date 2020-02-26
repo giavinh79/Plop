@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DragDropComponent from './DragDropComponent';
 import { skeletonStyles } from './DashboardStyles';
+import { API_ENDPOINT } from '../../utility/constants';
 
 let isMounted = false;
 let activeItems = [];
@@ -26,7 +27,7 @@ export default function TeamDashboard({ issue, changePage, checkSession }) {
     isMounted = true;
 
     (async () => {
-      let res = await axios.get('/teamIssue/1', { withCredentials: true });
+      let res = await axios.get(`${API_ENDPOINT}/teamIssue/1`, { withCredentials: true });
       const { activeItems, progressItems, completedItems } = res.data;
       if (isMounted) {
         if (

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Empty } from 'antd';
 import axios from 'axios';
 import DragDropComponent from './DragDropComponent';
+import { API_ENDPOINT } from '../../utility/constants';
 
 let isMounted = false;
 let activeItems = [];
@@ -29,7 +30,7 @@ export default function UserDashboard({ issue, changePage, checkSession }) {
     isMounted = true;
 
     (async () => {
-      let res = await axios.get('/userIssue/1', { withCredentials: true });
+      let res = await axios.get(`${API_ENDPOINT}/userIssue/1`, { withCredentials: true });
       const { activeItems, progressItems, completedItems } = res.data;
       if (isMounted) {
         if (activeItems.length + progressItems.length + completedItems.length === 0) {

@@ -1,3 +1,5 @@
+export const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT || 'https://plopwebapp.herokuapp.com';
+
 export const tagMap = {
   bug: 'volcano',
   database: 'green',

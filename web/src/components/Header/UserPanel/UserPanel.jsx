@@ -4,6 +4,7 @@ import { UserPanelWrapper } from '../style';
 import { Redirect } from 'react-router-dom';
 import UserSettings from './UserSettings';
 import axios from 'axios';
+import { API_ENDPOINT } from '../../../utility/constants';
 
 export default class UserPanel extends React.Component {
   constructor(props) {
@@ -19,7 +20,7 @@ export default class UserPanel extends React.Component {
   };
 
   handleLogout = () => {
-    axios.post('/logout', null, { withCredentials: true }).catch();
+    axios.post(`${API_ENDPOINT}/logout`, null, { withCredentials: true }).catch();
     localStorage.clear(); // get rid of team caching and email
     this.setState({ toHomepage: true });
   };

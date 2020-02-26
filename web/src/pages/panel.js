@@ -13,6 +13,7 @@ import Schedule from '../components/Schedule/Schedule';
 import Help from '../components/Help/Help';
 import axios from 'axios';
 import { displaySessionExpired } from '../utility/services';
+import { API_ENDPOINT } from '../utility/constants';
 
 export default class Panel extends React.Component {
   constructor(props) {
@@ -42,7 +43,7 @@ export default class Panel extends React.Component {
 
   async checkSession() {
     try {
-      await axios.post('/session', null, { withCredentials: true });
+      await axios.post(`${API_ENDPOINT}/session`, null, { withCredentials: true });
     } catch (err) {
       this.setState({ toHomepage: true });
       displaySessionExpired();

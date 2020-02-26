@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Modal, Card, Icon, Input, Button } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { displaySimpleNotification } from '../utility/services';
+import { API_ENDPOINT } from '../utility/constants';
 
 const { TextArea } = Input;
 
@@ -35,7 +36,7 @@ export default function Team() {
     };
 
     try {
-      const res = await axios.post('/createRoom', data, { withCredentials: true });
+      const res = await axios.post(`${API_ENDPOINT}/createRoom`, data, { withCredentials: true });
       setTeams([...teams, { name: res.data.name, description: res.data.description, id: res.data.id }]);
       displaySimpleNotification(
         'Team created',
@@ -66,7 +67,7 @@ export default function Team() {
     };
 
     try {
-      await axios.post('/joinRoom', data, { withCredentials: true });
+      await axios.post(`${API_ENDPOINT}/joinRoom`, data, { withCredentials: true });
       setToDashboard(true);
     } catch (err) {
       displaySimpleNotification(
@@ -91,7 +92,7 @@ export default function Team() {
 
   const handleEnterTeam = async (e, team) => {
     e.preventDefault();
-    await axios.post('/sessionRoom', { id: team }, { withCredentials: true });
+    await axios.post(`${API_ENDPOINT}/sessionRoom`, { id: team }, { withCredentials: true });
     setToDashboard(true);
   };
 
