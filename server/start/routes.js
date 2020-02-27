@@ -28,6 +28,7 @@ Route.delete('/room', 'RoomController.delete');
 // Issues - begin setting up other endpoints like this (REST)
 Route.get('/teamIssue/:status', 'IssueController.teamGet').middleware(jwtMiddleware);
 Route.get('/userIssue/:status', 'IssueController.userGet').middleware(jwtMiddleware);
+Route.post('/issueProgress', 'IssueController.updateProgress').middleware(jwtMiddleware);
 Route.post('/issue', 'IssueController.update').middleware(jwtMiddleware);
 Route.put('/issue', 'IssueController.create').middleware(jwtMiddleware);
 Route.delete('/issue/:id', 'IssueController.delete').middleware(jwtMiddleware);

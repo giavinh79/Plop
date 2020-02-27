@@ -240,6 +240,35 @@ class IssueController {
         .where('user_id', user.id)
         .where('room_id', request.cookie('room'));
       if (result.length === 0) throw new Error('User not in this room');
+      const { title, shortDescription, description, assignee, tag, priority, status, dragger } = request.body;
+      console.log(request.body);
+      console.log(request.body.id);
+      console.log(request.cookie('room'));
+      await Database.table('issues')
+        .where({ room: request.cookie('room'), id: request.body.id })
+        .update({
+          title,
+          shortDescription,
+          description,
+          assignee,
+          tag: JSON.stringify(tag),
+          priority,
+          status,
+        });
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(issue_update) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async updateProgress({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const result = await Database.from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', request.cookie('room'));
+      if (result.length === 0) throw new Error('User not in this room');
 
       await Database.table('issues')
         .where({ room: request.cookie('room'), id: request.body.id })

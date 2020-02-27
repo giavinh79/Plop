@@ -65,10 +65,19 @@ export default function CreateIssue({ changePage, data, form }) {
         }
 
         if (!err) {
-          axios
-            .put('/issue', values)
-            .then(res => {
-              resetForm();
+          try {
+            if (data) {
+              await axios.post(`${API_ENDPOINT}/issue`, { ...values, id: data.id });
+              displaySimpleNotification(
+                'Success',
+                2,
+                'bottomRight',
+                `Issue was updated successfully.`,
+                'smile',
+                '#108ee9'
+              );
+            } else {
+              const res = await axios.put('/issue', values);
               displaySimpleNotification(
                 'Success',
                 2,
@@ -77,10 +86,18 @@ export default function CreateIssue({ changePage, data, form }) {
                 'smile',
                 '#108ee9'
               );
-            })
-            .catch(err => {
-              displaySimpleNotification('Error', 2, 'bottomRight', `Issue could not be created.`, 'warning', 'red');
-            });
+              resetForm();
+            }
+          } catch (err) {
+            displaySimpleNotification(
+              'Error',
+              2,
+              'bottomRight',
+              `Issue could not be created/updated.`,
+              'warning',
+              'red'
+            );
+          }
         }
       })(values, form.resetFields);
     });
@@ -234,32 +251,38 @@ export default function CreateIssue({ changePage, data, form }) {
           <Divider />
 
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {data && (
+              <Form.Item wrapperCol={{ span: 12, offset: 6 }} style={{ alignItems: 'flex-end' }}>
+                <Popconfirm
+                  title='Are you sure you want to delete this task?'
+                  onConfirm={() => handleDeletion(data.id)}
+                  // onCancel={cancel}
+                  okText='Yes'
+                  cancelText='No'
+                >
+                  <Button
+                    type='primary'
+                    style={{
+                      backgroundColor: '#cc8181',
+                      borderColor: '#cc8181',
+                      marginRight: '1rem',
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </Popconfirm>
+              </Form.Item>
+            )}
             <Form.Item wrapperCol={{ span: 12, offset: 6 }} style={{ alignItems: 'flex-end' }}>
               <Popconfirm
-                title='Are you sure you want to delete this task?'
-                onConfirm={() => handleDeletion(data.id)}
-                // onCancel={cancel}
+                title='Are you sure you want to save this task?'
+                onConfirm={handleSubmit}
                 okText='Yes'
                 cancelText='No'
+                disabled={data == null ? true : false}
               >
-                <Button
-                  type='primary'
-                  htmlType='submit'
-                  style={{
-                    display: data == null ? 'none' : 'block',
-                    backgroundColor: '#cc8181',
-                    borderColor: '#cc8181',
-                    marginRight: '1rem',
-                  }}
-                >
-                  Delete
-                </Button>
+                <Button type='primary'>{data == null ? 'Submit' : 'Save'}</Button>
               </Popconfirm>
-            </Form.Item>
-            <Form.Item wrapperCol={{ span: 12, offset: 6 }} style={{ alignItems: 'flex-end' }}>
-              <Button type='primary' htmlType='submit'>
-                {data == null ? 'Submit' : 'Save'}
-              </Button>
             </Form.Item>
           </div>
         </div>
