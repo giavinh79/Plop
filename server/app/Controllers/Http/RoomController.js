@@ -30,6 +30,34 @@ class RoomController {
     }
   }
 
+  async getAssignees({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+
+      let result = await Database.from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', request.cookie('room'));
+      if (result.length === 0) throw new Error('User not in room');
+
+      let assignees = await Database.select('user_id')
+        .from('user_rooms')
+        .where('room_id', request.cookie('room'));
+
+      let assigneesEmails = [];
+      for (let assignee of assignees) {
+        let emails = await Database.select('email')
+          .from('users')
+          .where('id', assignee.user_id);
+        assigneesEmails.push(emails[0].email);
+      }
+
+      response.status(200).json(assigneesEmails);
+    } catch (err) {
+      console.log(`(room_getAssignees) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
   async members({ auth, request, response }) {
     try {
       const user = await auth.getUser();

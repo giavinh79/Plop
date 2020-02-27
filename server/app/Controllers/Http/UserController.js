@@ -1,6 +1,7 @@
 'use strict';
 
 const nodemailer = require('nodemailer');
+const Database = use('Database');
 const Env = use('Env');
 const User = use('App/Models/User');
 const Hash = use('Hash');
@@ -23,7 +24,7 @@ class UserController {
       try {
         const user = new User();
         const { email, password } = request.body;
-        user.fill({ email: email, password: password, numTeams: 0, status: 0 });
+        user.fill({ email: email, password: password, numTeams: 0, status: 0, avatar: 1 });
         await user.save();
 
         const mailOptions = {
@@ -64,6 +65,35 @@ class UserController {
       response.status(200).send();
     } catch (err) {
       console.log(`(user_login) ${new Date()}: ${err.message}`);
+      response.status(404).send('Error');
+    }
+  }
+
+  async getAvatar({ request, auth, response }) {
+    try {
+      const user = await auth.getUser();
+
+      let res = await Database.select('avatar')
+        .from('users')
+        .where('id', user.id);
+      response.status(200).json({ avatar: res[0].avatar });
+    } catch (err) {
+      console.log(`(user_avatar_get) ${new Date()}: ${err.message}`);
+      response.status(404).send('Error');
+    }
+  }
+
+  async setAvatar({ request, auth, response }) {
+    try {
+      const user = await auth.getUser();
+      const { avatar } = request.body;
+
+      await Database.table('users')
+        .where('id', user.id)
+        .update('avatar', avatar);
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(user_avatar_set) ${new Date()}: ${err.message}`);
       response.status(404).send('Error');
     }
   }

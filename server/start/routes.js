@@ -1,4 +1,5 @@
 const Route = use('Route');
+
 const jwtMiddleware = async ({ request }, next) => {
   try {
     request.headers().authorization = `Bearer ${request.cookie('XSStoken')}`;
@@ -11,7 +12,10 @@ const jwtMiddleware = async ({ request }, next) => {
 
 Route.on('/').render('welcome');
 
-// Authentication
+// Authentication and Users
+Route.get('/avatar', 'UserController.getAvatar').middleware(jwtMiddleware);
+Route.post('/avatar', 'UserController.setAvatar').middleware(jwtMiddleware);
+
 Route.post('/login', 'UserController.login');
 Route.post('/signup', 'UserController.addNewUser');
 Route.post('/session', 'UserController.checkSession').middleware(jwtMiddleware);
@@ -19,8 +23,9 @@ Route.post('/logout', 'UserController.logout');
 
 // Teams/Rooms
 Route.get('/room', 'RoomController.get').middleware(jwtMiddleware);
-Route.post('/roomInfo', 'RoomController.info').middleware(jwtMiddleware);
+Route.get('/assignees', 'RoomController.getAssignees').middleware(jwtMiddleware);
 Route.put('/room', 'RoomController.create').middleware(jwtMiddleware);
+Route.post('/roomInfo', 'RoomController.info').middleware(jwtMiddleware);
 Route.post('/sessionRoom', 'RoomController.session').middleware(jwtMiddleware);
 Route.post('/joinRoom', 'RoomController.join').middleware(jwtMiddleware);
 Route.delete('/room', 'RoomController.delete');

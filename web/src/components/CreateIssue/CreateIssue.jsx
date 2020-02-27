@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon } from 'antd';
+import { AutoComplete, Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon } from 'antd';
 import { displaySimpleNotification } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT } from '../../utility/constants';
 import './style.css';
+import { retrieveAssignees } from '../../utility/restCalls.js';
 
 const { TextArea } = Input;
 
@@ -16,21 +17,31 @@ const formItemLayout = {
 // Divide this up into two components and make a HOC (maybe)
 export default function CreateIssue({ changePage, data, form }) {
   const [defaultFileList, setDefaultFileList] = useState([]);
+  const [assignees, setAssignees] = useState([]);
 
   useEffect(() => {
-    if (data && data.image) {
-      setDefaultFileList(
-        JSON.parse(data.image).map((item, key) => {
-          return {
-            uid: item.id,
-            key: key,
-            name: item.id,
-            status: 'done',
-            url: item.url,
-          };
-        })
-      );
+    if (data) {
+      if (data.image) {
+        setDefaultFileList(
+          JSON.parse(data.image).map((item, key) => {
+            return {
+              uid: item.id,
+              key: key,
+              name: item.id,
+              status: 'done',
+              url: item.url,
+            };
+          })
+        );
+      }
     }
+
+    (async function() {
+      const res = await retrieveAssignees();
+      setAssignees(res.data);
+    })().catch(err => {
+      console.log(err);
+    });
   }, [data]);
 
   const handleDeletion = id => {
@@ -190,11 +201,22 @@ export default function CreateIssue({ changePage, data, form }) {
               {getFieldDecorator('assignee', {
                 initialValue: data == null ? '' : data.assignee,
               })(
-                <Input.Search
-                  placeholder='Search by email'
-                  onSearch={value => console.log(value)}
+                <AutoComplete
                   style={{ width: 200 }}
-                />
+                  dataSource={assignees}
+                  filterOption={(inputValue, option) =>
+                    option.props.children
+                      .toUpperCase()
+                      .substring(0, inputValue.length)
+                      .includes(inputValue.toUpperCase())
+                  }
+                >
+                  <Input.Search
+                    placeholder='Search by email'
+                    onSearch={value => console.log(value)}
+                    style={{ width: 200 }}
+                  />
+                </AutoComplete>
               )}
             </Form.Item>
 
@@ -209,9 +231,6 @@ export default function CreateIssue({ changePage, data, form }) {
                   tokenSeparators={[',']}
                   style={{ width: '100%' }}
                   placeholder='Issue Tags'
-                  onChange={() => {
-                    // console.log('hi')
-                  }}
                 >
                   {tagSuggestions}
                 </Select>

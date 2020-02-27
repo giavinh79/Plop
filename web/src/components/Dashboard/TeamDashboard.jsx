@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DragDropComponent from './DragDropComponent';
-import { skeletonStyles } from './DashboardStyles';
 import { API_ENDPOINT } from '../../utility/constants';
 
 let isMounted = false;
@@ -44,6 +43,5 @@ export default function TeamDashboard({ issue, changePage, checkSession }) {
       isMounted = false;
     };
   }, [checkSession, items.complete.length, items.progress.length, items.active.length]);
-  // return <div style={skeletonStyles.wrapper}></div>;
   return <DragDropComponent changePage={changePage} items={items} setItems={setItems} />;
 }

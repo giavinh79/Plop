@@ -5,7 +5,13 @@
 import axios from 'axios';
 import { API_ENDPOINT } from './constants';
 
-const retrieveAssignees = () => {};
+const retrieveAssignees = async () => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/assignees`);
+  } catch (err) {
+    throw err;
+  }
+};
 
 const retrieveTeams = async () => {
   try {
@@ -15,4 +21,4 @@ const retrieveTeams = async () => {
   }
 };
 
-export { retrieveTeams };
+export { retrieveAssignees, retrieveTeams };

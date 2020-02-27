@@ -8,7 +8,6 @@ import TeamDropdown from './TeamDropdown';
 export default function Header() {
   let history = useHistory();
   let { location } = history;
-  console.log(location);
 
   const handleClick = () => {
     if (location.pathname !== '/') {
@@ -16,9 +15,23 @@ export default function Header() {
     }
   };
 
+  const getTeamLabel = () => {
+    for (let item of JSON.parse(localStorage.getItem('teams'))) {
+      if (item.id.toString() === localStorage.getItem('currentTeam')) {
+        return item.name;
+      }
+    }
+  };
+
   return (
     <HeaderWrapper style={{ backgroundColor: location.pathname === '/' ? '#445D66' : '#79B7D4' }}>
       <Logo src='images/justlogo.png' alt='logo' onClick={handleClick} />
+      {location.pathname === '/dashboard' && (
+        <div style={styles.team}>
+          <h1 style={{ margin: 0, color: 'white' }}>{getTeamLabel()}</h1>
+        </div>
+      )}
+
       <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
         {location.pathname === '/' ? (
           <WrappedHorizontalLoginForm />
@@ -32,3 +45,15 @@ export default function Header() {
     </HeaderWrapper>
   );
 }
+
+const styles = {
+  team: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    color: 'white',
+    width: '20rem',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+};

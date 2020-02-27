@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /*
 |--------------------------------------------------------------------------
@@ -10,11 +10,11 @@
 */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
-const Encryption = use('Encryption')
-const Database = use('Database')
-const User = use('App/Models/User')
-const Room = use('App/Models/Room')
-const Issue = use('App/Models/Issue')
+const Encryption = use('Encryption');
+const Database = use('Database');
+const User = use('App/Models/User');
+const Room = use('App/Models/Room');
+const Issue = use('App/Models/Issue');
 
 // const createIssue = async (roomID, ) => {
 //   let issue = new Issue()
@@ -36,29 +36,30 @@ class SetupSeeder {
   async run() {
     try {
       // Creating the new user, will fail if already exists
-      const user = new User()
-      user.fill({ email: 'tester@gmail.com', password: 'test', numTeams: 0, status: 0 })
-      await user.save()
+      const user = new User();
+      user.fill({ email: 'tester@gmail.com', password: 'test', numTeams: 0, status: 0, avatar: 1 });
+      await user.save();
 
       // Creating a room tied to the user above
-      const room = new Room()
+      const room = new Room();
       room.fill({
         admin: user.id,
         name: 'Testing Room',
-        description: 'This room was created automatically using a database seed. Manual and automated testing will be done using this room.',
+        description:
+          'This room was created automatically using a database seed. Manual and automated testing will be done using this room.',
         password: Encryption.encrypt('test'),
         maxMembers: 12,
         private: false,
         adminApproval: false,
-        status: 0
-      })
-      await room.save()
+        status: 0,
+      });
+      await room.save();
 
       // Adding row to link room/team with user
-      await Database.table('user_rooms').insert({ user_id: user.id, room_id: room.id })
+      await Database.table('user_rooms').insert({ user_id: user.id, room_id: room.id });
 
       // Creating issues for the room/team's dashboard and backlog
-      let issue = new Issue()
+      let issue = new Issue();
       issue.fill({
         title: 'Implement Socket.IO',
         room: room.id,
@@ -68,11 +69,11 @@ class SetupSeeder {
         creator: user.email,
         priority: 0,
         status: 1,
-        tag: JSON.stringify(['Backend', 'Frontend'])
-      })
-      await issue.save()
+        tag: JSON.stringify(['Backend', 'Frontend']),
+      });
+      await issue.save();
 
-      issue = new Issue()
+      issue = new Issue();
       issue.fill({
         title: 'Google SEO',
         room: room.id,
@@ -82,11 +83,11 @@ class SetupSeeder {
         creator: user.email,
         priority: 1,
         status: 0,
-        tag: JSON.stringify([])
-      })
-      await issue.save()
+        tag: JSON.stringify([]),
+      });
+      await issue.save();
 
-      issue = new Issue()
+      issue = new Issue();
       issue.fill({
         title: 'Implement unit tests',
         room: room.id,
@@ -96,14 +97,13 @@ class SetupSeeder {
         creator: user.email,
         priority: 0,
         status: 1,
-        tag: JSON.stringify(['Backend'])
-      })
-      await issue.save()
-
-    } catch(err) {
-      console.log(err)
+        tag: JSON.stringify(['Backend']),
+      });
+      await issue.save();
+    } catch (err) {
+      console.log(err);
     }
   }
 }
 
-module.exports = SetupSeeder
+module.exports = SetupSeeder;

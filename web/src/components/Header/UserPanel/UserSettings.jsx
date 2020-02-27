@@ -1,48 +1,52 @@
-
-import React from 'react'
-import 'antd/dist/antd.css'
-import { Modal, Button } from 'antd'
+import React, { useEffect, useState } from 'react';
+import { Modal, Button } from 'antd';
 import Avatar from './Avatar';
+import axios from 'axios';
+import 'antd/dist/antd.css';
+import { API_ENDPOINT } from '../../../utility/constants';
 
-export default class UserSettings extends React.Component {
-  state = {
-    loading: false
-  };
+export default function UserSettings({ handleUserModal }) {
+  const [loading, setLoading] = useState(false);
+  const [avatar, setAvatar] = useState('1');
 
-  handleOk = () => {
-    this.setState({ loading: true });
+  useEffect(() => {
+    (async function() {
+      const { data } = await axios.get(`${API_ENDPOINT}/avatar`);
+      setAvatar(data.avatar.toString());
+    })().catch(err => {
+      console.log(err);
+    });
+  }, []);
+
+  const handleOk = async () => {
+    setLoading(true);
     setTimeout(() => {
-      this.setState({ loading: false });
-      this.props.handleUserModal();
+      setLoading(false);
+      handleUserModal();
     }, 3000);
+    await axios.post(`${API_ENDPOINT}/avatar`, { avatar });
   };
 
-  handleCancel = () => {
-    this.props.handleUserModal();
+  const handleCancel = () => {
+    handleUserModal();
   };
 
-  render() {
-    const { loading } = this.state;
-    return (
-      <div>
-        <Modal
-          visible={true}
-          title="Settings"
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          footer={[
-            <Button key="back" onClick={this.handleCancel}>
-              Return
-            </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
-              Save
-            </Button>,
-          ]}
-        >
-        <Avatar />
-        </Modal>
-      </div>
-    );
-  }
+  return (
+    <Modal
+      visible={true}
+      title='Settings'
+      onOk={handleOk}
+      onCancel={handleCancel}
+      footer={[
+        <Button key='back' onClick={handleCancel}>
+          Return
+        </Button>,
+        <Button key='submit' type='primary' loading={loading} onClick={handleOk}>
+          Save
+        </Button>,
+      ]}
+    >
+      <Avatar avatar={avatar} setAvatar={setAvatar} />
+    </Modal>
+  );
 }
-          

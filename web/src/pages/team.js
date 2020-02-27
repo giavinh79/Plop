@@ -92,6 +92,7 @@ export default function Team() {
 
   const handleEnterTeam = async (e, team) => {
     e.preventDefault();
+    localStorage.setItem('currentTeam', team);
     await axios.post(`${API_ENDPOINT}/sessionRoom`, { id: team }, { withCredentials: true });
     setToDashboard(true);
   };

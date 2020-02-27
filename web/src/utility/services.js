@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, notification, Modal } from 'antd';
+import { Icon, notification, Modal } from 'antd';
 
 /*
  * File for using commonly used functions - simply import the one desired
