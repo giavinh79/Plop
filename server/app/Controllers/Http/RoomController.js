@@ -1,6 +1,7 @@
 'use strict';
 
 const nodemailer = require('nodemailer');
+const Env = use('Env');
 const Encryption = use('Encryption');
 const Database = use('Database');
 const Room = use('App/Models/Room');
