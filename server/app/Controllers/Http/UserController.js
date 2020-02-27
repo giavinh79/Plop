@@ -30,8 +30,7 @@ class UserController {
           from: Env.get('EMAIL_USER'),
           to: user.email,
           subject: 'Welcome to Plop!',
-          html:
-            '<p>You have successfully signed up. If this was not you, please unsubscribe with the following link: http://example.com</p>',
+          html: '<p>You have successfully signed up.</p>',
         };
 
         let transport = nodemailer.createTransport({

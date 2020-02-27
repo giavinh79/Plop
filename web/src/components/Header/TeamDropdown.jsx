@@ -20,6 +20,15 @@ export default function TeamDropdown() {
     // force redirect to /dashboard to refresh or better, find a way just so that the dashboard component recalls the API
   };
 
+  const verifyTeamsValue = teams => {
+    try {
+      if (teams == null) return false;
+      JSON.parse(teams);
+    } catch (err) {
+      return false;
+    }
+  };
+
   const menu = (
     <Menu id='dropdownMenu'>
       <Menu.Item
@@ -31,21 +40,20 @@ export default function TeamDropdown() {
         <Icon type='appstore' />
         Overview
       </Menu.Item>
-      {localStorage.getItem('teams') == null
-        ? null
-        : JSON.parse(localStorage.getItem('teams')).map((team, index) => {
-            return (
-              <Menu.Item
-                key={index + 1}
-                onClick={team => {
-                  displayLoading();
-                }}
-              >
-                <Icon type='team' />
-                {team.name}
-              </Menu.Item>
-            );
-          })}
+      {verifyTeamsValue(localStorage.getItem('teams')) &&
+        JSON.parse(localStorage.getItem('teams')).map((team, index) => {
+          return (
+            <Menu.Item
+              key={index + 1}
+              onClick={team => {
+                displayLoading();
+              }}
+            >
+              <Icon type='team' />
+              {team.name}
+            </Menu.Item>
+          );
+        })}
     </Menu>
   );
   return toTeam ? (

@@ -2,14 +2,16 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Modal, Card, Icon, Input, Button } from 'antd';
 import { Redirect } from 'react-router-dom';
-import { displaySimpleNotification } from '../utility/services';
+import { displayInfoDialog, displaySimpleNotification } from '../utility/services';
 import { API_ENDPOINT } from '../utility/constants';
+import { retrieveTeams } from '../utility/restCalls';
 
 const { TextArea } = Input;
 
 // Seperate this JS file into seperate components later
 export default function Team() {
-  const teamsObject = JSON.parse(localStorage.getItem('teams'));
+  let teamsObject = JSON.parse(localStorage.getItem('teams'));
+
   const [toDashboard, setToDashboard] = useState(false);
   const [teamCreation, setTeamCreation] = useState(false);
   const [teams, setTeams] = useState(teamsObject == null ? [] : teamsObject);
@@ -17,15 +19,15 @@ export default function Team() {
   const joinTeamData = useRef({});
 
   useEffect(() => {
-    axios
-      .get(`${API_ENDPOINT}/room`)
-      .then(res => {
-        if (JSON.stringify(teams) !== JSON.stringify(res.data)) {
-          setTeams(res.data);
-          localStorage.setItem('teams', JSON.stringify(res.data));
-        }
-      })
-      .catch();
+    (async () => {
+      const res = await retrieveTeams();
+      if (JSON.stringify(teams) !== JSON.stringify(res.data)) {
+        setTeams(res.data);
+        localStorage.setItem('teams', JSON.stringify(res.data));
+      }
+    })().catch(err => {
+      displaySimpleNotification('Error', 4, 'bottomRight', `Unable to retrieve teams. (${err})`, 'warning', 'red');
+    });
   }, [teams]);
 
   const handleCreate = async () => {
@@ -36,15 +38,13 @@ export default function Team() {
     };
 
     try {
-      const res = await axios.post(`${API_ENDPOINT}/createRoom`, data, { withCredentials: true });
+      const res = await axios.put(`${API_ENDPOINT}/room`, data);
       setTeams([...teams, { name: res.data.name, description: res.data.description, id: res.data.id }]);
-      displaySimpleNotification(
-        'Team created',
-        15,
-        'bottomRight',
-        `The team ID is '${res.data.id}'. Your credentials were also emailed to you as a backup and can be accessed in team settings. You may now enter the team's room.`,
-        'smile',
-        '#108ee9'
+      displayInfoDialog(
+        'Team was successfully created!',
+        'Your team ID is:{" "}',
+        res.data.id,
+        "These credentials were emailed to you as a backup and can also be found in your team settings. You may now enter the team's room."
       );
     } catch (err) {
       displaySimpleNotification(

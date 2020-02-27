@@ -19,7 +19,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   useEffect(() => {
     async function getToken() {
       try {
-        await axios.post(`${API_ENDPOINT}/session`, { withCredentials: true });
+        await axios.post(`${API_ENDPOINT}/session`);
         setAuthenticated(true);
       } catch (err) {
         setAuthenticated(false);

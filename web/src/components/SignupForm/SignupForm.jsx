@@ -3,6 +3,7 @@ import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import './style.css';
 import axios from 'axios';
 import { displaySimpleNotification } from '../../utility/services';
+import { API_ENDPOINT } from '../../utility/constants';
 
 const styles = {
   title: {
@@ -37,7 +38,7 @@ class NormalLoginForm extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         axios
-          .post('/signup', values)
+          .post(`${API_ENDPOINT}/signup`, values)
           .then(res => {
             displaySimpleNotification('Success!', 2, 'bottomRight', 'Account was created.', 'smile', '#108ee9');
           })

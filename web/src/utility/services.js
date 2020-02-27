@@ -1,9 +1,26 @@
 import React from 'react';
-import { Icon, notification } from 'antd';
+import { Button, Icon, notification, Modal } from 'antd';
 
 /*
  * File for using commonly used functions - simply import the one desired
  */
+
+const displayInfoDialog = (title, dataLabel, data, content) => {
+  Modal.info({
+    title: title,
+    content: (
+      <div>
+        <p>
+          {dataLabel}
+          <div style={{ padding: '0.5rem', border: '1px solid #ccc', margin: '0.5rem 0' }}>
+            <em>{data}</em>
+          </div>
+        </p>
+        <p>{content}</p>
+      </div>
+    ),
+  });
+};
 
 const displaySimpleNotification = (message, duration, placement, description, icon, iconColor) => {
   notification.open({
@@ -36,4 +53,4 @@ const displayUnknownError = () => {
 };
 
 // Using export { } over export const to give quick summary of utility functions
-export { displaySimpleNotification, displaySessionExpired, displayUnknownError };
+export { displayInfoDialog, displaySimpleNotification, displaySessionExpired, displayUnknownError };

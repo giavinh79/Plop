@@ -29,7 +29,7 @@ export default class Settings extends React.Component {
       name: '',
       description: '',
       decryptPass: '',
-      id: 0,
+      id: 123456123456,
       maxMembers: '4',
       adminApproval: false,
       private: false,
@@ -85,8 +85,11 @@ export default class Settings extends React.Component {
               <div style={{ flex: 1, padding: '0.5rem 0' }}>
                 <div style={styles.wrapperC}>
                   <p style={styles.text}>Team ID: </p>
-                  <Paragraph copyable={{ text: '42jf1k23ll18d92' }} style={{ margin: 0 }}>
-                    42jf1k23ll18d92
+                  <Paragraph
+                    copyable={{ text: this.state.id || 'default' }}
+                    style={{ margin: 0, maxWidth: '10rem', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                  >
+                    {this.state.id}
                   </Paragraph>
                 </div>
                 <div>

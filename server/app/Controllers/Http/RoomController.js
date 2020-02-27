@@ -50,7 +50,8 @@ class RoomController {
         .select('*')
         .where('id', request.cookie('room'));
       const decryptPass = Encryption.decrypt(roomInfo[0].password);
-      const { name, description, id, maxMembers, adminApproval } = roomInfo[0];
+      const { name, description, maxMembers, adminApproval } = roomInfo[0];
+      const id = Encryption.encrypt(roomInfo[0].id);
 
       response
         .status(200)

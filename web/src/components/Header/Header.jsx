@@ -23,7 +23,7 @@ export default function Header() {
           <WrappedHorizontalLoginForm />
         ) : (
           <>
-            {location.pathname === '/team' ? null : <TeamDropdown />}
+            {location.pathname === '/team' && <TeamDropdown />}
             <UserPanel />
           </>
         )}

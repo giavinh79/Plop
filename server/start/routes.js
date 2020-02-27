@@ -20,7 +20,7 @@ Route.post('/logout', 'UserController.logout');
 // Teams/Rooms
 Route.get('/room', 'RoomController.get').middleware(jwtMiddleware);
 Route.post('/roomInfo', 'RoomController.info').middleware(jwtMiddleware);
-Route.post('/createRoom', 'RoomController.create').middleware(jwtMiddleware);
+Route.put('/room', 'RoomController.create').middleware(jwtMiddleware);
 Route.post('/sessionRoom', 'RoomController.session').middleware(jwtMiddleware);
 Route.post('/joinRoom', 'RoomController.join').middleware(jwtMiddleware);
 Route.delete('/room', 'RoomController.delete');
