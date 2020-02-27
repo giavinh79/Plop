@@ -4,22 +4,30 @@ import { layout, subheader } from '../../globalStyles';
 import 'antd/dist/antd.css';
 import { Button, Typography, Tooltip, Icon, Input, Switch } from 'antd';
 import MemberSlider from './MemberSlider';
+import { displaySimpleNotification } from '../../utility/services';
+import { API_ENDPOINT } from '../../utility/constants';
 
 const { Paragraph } = Typography;
 
 export default class Settings extends React.Component {
   componentDidMount() {
     axios
-      .post('/roomInfo', { withCredentials: true })
+      .post(`${API_ENDPOINT}/roomInfo`)
       .then(res => {
         // should just change this in the DB maybe
         res.data.private = !!res.data.private;
         res.data.adminApproval = !!res.data.adaminApproval;
-        console.log(res);
         this.setState(res.data);
       })
       .catch(err => {
-        console.log(err);
+        displaySimpleNotification(
+          'Error',
+          4,
+          'bottomRight',
+          `Unable to retrieve team info. (${err})`,
+          'warning',
+          'red'
+        );
       });
   }
 

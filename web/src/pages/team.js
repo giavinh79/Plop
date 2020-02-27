@@ -42,7 +42,7 @@ export default function Team() {
       setTeams([...teams, { name: res.data.name, description: res.data.description, id: res.data.id }]);
       displayInfoDialog(
         'Team was successfully created!',
-        'Your team ID is:{" "}',
+        'Your team ID is:',
         res.data.id,
         "These credentials were emailed to you as a backup and can also be found in your team settings. You may now enter the team's room."
       );

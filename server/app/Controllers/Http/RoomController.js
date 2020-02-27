@@ -1,5 +1,6 @@
 'use strict';
 
+const nodemailer = require('nodemailer');
 const Encryption = use('Encryption');
 const Database = use('Database');
 const Room = use('App/Models/Room');
@@ -107,7 +108,29 @@ class RoomController {
         await trx.table('user_rooms').insert({ user_id: user.id, room_id: room.id });
       });
 
-      response.status(200).json({ id: Encryption.encrypt(room.id), name: roomName, description: roomDescription });
+      const encryptedRoomId = Encryption.encrypt(room.id);
+
+      const mailOptions = {
+        from: Env.get('EMAIL_USER'),
+        to: user.email,
+        subject: 'Team Credentials',
+        html: `<p>Your team ID is { ${encryptedRoomId} } and your password is { ${roomPassword} }</p>`,
+      };
+
+      let transport = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        secure: 'false',
+        auth: {
+          user: Env.get('EMAIL_USER'),
+          pass: Env.get('EMAIL_PASSWORD'),
+        },
+      });
+
+      transport.sendMail(mailOptions, res => {
+        if (res) console.log(`MAIL_ERROR ${res}`);
+      });
+
+      response.status(200).json({ id: encryptedRoomId, name: roomName, description: roomDescription });
     } catch (err) {
       console.log(`(room_create) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
