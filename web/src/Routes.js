@@ -34,7 +34,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
     return <Route {...rest} render={props => <Component {...props} />} />;
   } else {
     displaySimpleNotification('Session expired', 2, 'bottomRight', 'You need to login again.', 'warning', '#108ee9');
-    return <Route {...rest} render={props => <Redirect to='/home' />} />;
+    return <Route {...rest} render={props => <Redirect to='/' />} />;
   }
 };
 
@@ -44,12 +44,10 @@ export default function Routes() {
       <Header />
       <BodyWrapper>
         <Switch>
-          <Route path='/home' component={Homepage} />
+          <Route exact path='/' component={Homepage} />
           <ProtectedRoute path='/team' component={Team} />
           <ProtectedRoute path='/dashboard' component={Panel} />
-          <Route path='/'>
-            <Redirect to='/home' />
-          </Route>
+          <Redirect to='/' />
         </Switch>
       </BodyWrapper>
     </Router>

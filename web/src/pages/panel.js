@@ -107,7 +107,7 @@ export default class Panel extends React.Component {
 
   render() {
     return this.state.toHomepage ? (
-      <Redirect push to='/home' />
+      <Redirect push to='/' />
     ) : (
       <>
         <SideNav handlePageChange={page => this.changePage(page)} />

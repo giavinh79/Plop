@@ -236,6 +236,6 @@ module.exports = {
     httpOnly: true,
     sameSite: false,
     path: '/',
-    maxAge: 7200,
+    maxAge: 86400,
   },
 };

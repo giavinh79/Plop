@@ -24,6 +24,7 @@ export default function TeamDropdown() {
     try {
       if (teams == null) return false;
       JSON.parse(teams);
+      return true;
     } catch (err) {
       return false;
     }

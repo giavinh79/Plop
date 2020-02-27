@@ -56,7 +56,7 @@ export default class UserPanel extends React.Component {
 
   render() {
     return this.state.toHomepage ? (
-      <Redirect push to='/home' />
+      <Redirect push to='/' />
     ) : (
       <>
         {this.state.userModal && <UserSettings handleUserModal={this.handleUserModal} />}

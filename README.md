@@ -6,6 +6,8 @@ A relational database is used which is managed using the Lucid ORM to take advan
 
 ## To Do
 
+Immediate: JWT token refresh, comments, showing team name somewhere, refreshing teams, showing members for assigning issues to, add notification icon design
+
 Responsiveness (alert when user is on mobile screen to download mobile app)
 
 Web Sockets to be implemented to allow chat, track member statuses, and show live changes on the dashboard
@@ -21,8 +23,6 @@ Better server-side logging
 Testing Lighthouse via Chrome Dev Tools for fixing any optimization or accessibility problems
 
 Creating more seeds for fast queries and factories for creating dummy data (which the tests will use)
-
-Deploying via Heroku/Digital Ocean
 
 ## Development
 

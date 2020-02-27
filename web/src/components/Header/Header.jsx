@@ -8,18 +8,19 @@ import TeamDropdown from './TeamDropdown';
 export default function Header() {
   let history = useHistory();
   let { location } = history;
+  console.log(location);
 
   const handleClick = () => {
-    if (location.pathname !== '/home') {
+    if (location.pathname !== '/') {
       history.push('/team');
     }
   };
 
   return (
-    <HeaderWrapper style={{ backgroundColor: location.pathname === '/home' ? '#445D66' : '#79B7D4' }}>
+    <HeaderWrapper style={{ backgroundColor: location.pathname === '/' ? '#445D66' : '#79B7D4' }}>
       <Logo src='images/justlogo.png' alt='logo' onClick={handleClick} />
       <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
-        {location.pathname === '/home' ? (
+        {location.pathname === '/' ? (
           <WrappedHorizontalLoginForm />
         ) : (
           <>
