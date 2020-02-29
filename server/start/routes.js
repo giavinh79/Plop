@@ -14,6 +14,7 @@ Route.on('/').render('welcome');
 
 // Authentication and Users
 Route.get('/userInfo', 'UserController.getUserInfo').middleware(jwtMiddleware);
+Route.get('/avatar', 'UserController.getAvatar').middleware(jwtMiddleware);
 Route.post('/avatar', 'UserController.setAvatar').middleware(jwtMiddleware);
 
 Route.post('/login', 'UserController.login');

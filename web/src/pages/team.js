@@ -30,6 +30,26 @@ export default function Team() {
     });
   }, []);
 
+  const handleLeaveTeam = async teamId => {
+    try {
+      await axios.post('/leaveRoom', { teamId });
+      setTeams(
+        teams.filter(item => {
+          return item.id != teamId;
+        })
+      );
+    } catch (err) {
+      displaySimpleNotification(
+        'Error',
+        4,
+        'bottomRight',
+        `Unable to leave team. If you are the owner, please delete the team through settings. (${err})`,
+        'warning',
+        'red'
+      );
+    }
+  };
+
   const handleCreate = async () => {
     const data = {
       roomName: createTeamData.current.name,
@@ -201,7 +221,11 @@ export default function Team() {
               {teams.map((team, index) => {
                 return (
                   <div style={styles.teams} key={index}>
-                    <Card title={'Team ' + team.name} extra='1 member' style={{ minHeight: '20rem' }}>
+                    <Card
+                      title={'Team ' + team.name}
+                      extra={team.currentMembers + ' member(s)'}
+                      style={{ minHeight: '20rem' }}
+                    >
                       <a href='/dashboard' onClick={e => handleEnterTeam(e, team.id)}>
                         Enter
                       </a>
@@ -209,7 +233,7 @@ export default function Team() {
                       <div style={{ display: 'flex', alignItems: 'flex-end' }}>
                         <Popconfirm
                           title='Are you sure you want to leave this team?'
-                          // onConfirm={confirm}
+                          onConfirm={() => handleLeaveTeam(team.id)}
                           okText='Yes'
                           cancelText='No'
                         >

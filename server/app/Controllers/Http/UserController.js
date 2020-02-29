@@ -100,6 +100,19 @@ class UserController {
     }
   }
 
+  async getAvatar({ auth, response }) {
+    try {
+      const user = await auth.getUser();
+      const data = await Database.table('users')
+        .select('avatar')
+        .where('id', user.id);
+      response.status(200).json({ avatar: data[0].avatar });
+    } catch (err) {
+      console.log(`(user_avatar_get) ${new Date()}: ${err.message}`);
+      response.status(404).send('Error');
+    }
+  }
+
   // Using JWT, so I am actually checking for the token here
   async checkSession({ auth, response }) {
     try {

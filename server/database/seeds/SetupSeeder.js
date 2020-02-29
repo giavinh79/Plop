@@ -52,6 +52,7 @@ class SetupSeeder {
         private: false,
         adminApproval: false,
         status: 0,
+        currentMembers: 1,
       });
       await room.save();
 

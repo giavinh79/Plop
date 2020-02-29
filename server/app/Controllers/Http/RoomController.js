@@ -17,7 +17,7 @@ class RoomController {
 
       for (let room of rooms) {
         const roomInfo = await Database.table('rooms')
-          .select('name', 'description')
+          .select('name', 'description', 'currentMembers')
           .where('id', room.room_id);
         const roomObject = JSON.parse(JSON.stringify(roomInfo[0]));
         roomObject.id = Encryption.encrypt(room.room_id);
@@ -124,6 +124,7 @@ class RoomController {
         name: roomName,
         description: roomDescription,
         password: Encryption.encrypt(roomPassword),
+        currentMembers: 1,
         maxMembers: 12,
         private: false,
         adminApproval: false,
@@ -180,15 +181,34 @@ class RoomController {
       if (result.length !== 0) throw new Error('User already in room');
 
       result = await Database.from('rooms')
-        .select('password')
+        .select('password', 'adminApproval')
         .where('id', decryptedRoomId);
 
       if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('Wrong password');
+      // if (result[0].adminApproval) throw
 
       // Future - add check here for if admin approval == true. If it is true
       // then we have to add it to pending table and tell user via notification/email that their request
       // has been sent to the room admin and needs to be approved
-      await Database.table('user_rooms').insert({ user_id: user.id, room_id: roomId });
+
+      await Database.table('users')
+        .where('id', user.id)
+        .update({ numTeams: user.numTeams + 1 });
+
+      await Database.transaction(async trx => {
+        await trx.table('user_rooms').insert({ user_id: user.id, room_id: decryptedRoomId });
+        const data = await trx
+          .table('rooms')
+          .select('currentMembers')
+          .where('id', decryptedRoomId);
+        await trx
+          .table('rooms')
+          .where('id', decryptedRoomId)
+          .update({
+            currentMembers: data[0].currentMembers + 1,
+          });
+      });
+
       response.cookie('room', roomId);
       response.status(200).json({ id: roomId, name: result[0].name });
     } catch (err) {
@@ -199,13 +219,35 @@ class RoomController {
 
   async leave({ auth, request, response }) {
     try {
-      // const user = await auth.getUser();
-      // let { roomId, roomPassword } = request.body;
-      // roomId = Encryption.decrypt(roomId);
-      // let result = await Database.from('user_rooms')
-      //   .where('user_id', user.id)
-      //   .where('room_id', roomId);
-      // if (result.length !== 0) throw new Error('User already in room');
+      const user = await auth.getUser();
+      const { teamId } = request.body;
+      const decryptedRoomId = Encryption.decrypt(teamId);
+
+      let result = await Database.from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+
+      await Database.transaction(async trx => {
+        let data = await trx
+          .table('rooms')
+          .select('currentMembers')
+          .where('id', decryptedRoomId);
+
+        await trx
+          .table('rooms')
+          .where('id', decryptedRoomId)
+          .update({
+            currentMembers: Math.max(1, data[0].currentMembers - 1),
+          });
+
+        await trx
+          .table('user_rooms')
+          .where('user_id', user.id)
+          .where('room_id', decryptedRoomId)
+          .delete();
+      });
+
       // result = await Database.from('rooms')
       //   .select('password')
       //   .where('id', roomId);
@@ -214,9 +256,9 @@ class RoomController {
       // // then we have to add it to pending table and tell user via notification/email that their request
       // // has been sent to the room admin and needs to be approved
       // await Database.table('user_rooms').insert({ user_id: user.id, room_id: roomId });
-      // response.status(200).json({ id: roomId, name: result[0].name });
+      response.status(200).send();
     } catch (err) {
-      console.log(`(room_join) ${new Date()}: ${err.message}`);
+      console.log(`(room_leave) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }
