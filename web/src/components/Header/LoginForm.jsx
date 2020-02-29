@@ -36,10 +36,10 @@ class HorizontalLoginForm extends React.Component {
       password: document.querySelector('#loginPassword').value,
     };
     axios
-      .post(`${API_ENDPOINT}/login`, values, { withCredentials: true })
+      .post(`${API_ENDPOINT}/login`, values)
       .then(res => {
         // JWT Bearer Token stored on clientside
-        // localStorage.setItem('email', values.email)
+        // localStorage.setItem('email', values.email);
         this.setState({ toDashboard: true });
       })
       .catch(err => {

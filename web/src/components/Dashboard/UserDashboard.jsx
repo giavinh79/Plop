@@ -23,7 +23,9 @@ export default function UserDashboard({ issue, changePage, checkSession }) {
     complete: completedItems,
   });
 
-  // const filter = useRef(false); //investigate why I had this again
+  const [loaded, setLoaded] = useState(false);
+
+  // const filter = useRef(false); // investigate why I had this again - think i was trying to cache locally for faster perceived speeds
   const [empty, setEmpty] = useState(localStorage.getItem('empty') !== null ? true : false);
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export default function UserDashboard({ issue, changePage, checkSession }) {
           setItems({ active: activeItems, progress: progressItems, complete: completedItems });
           localStorage.removeItem('empty');
         }
+        setLoaded(true);
       }
     })().catch(() => {
       checkSession();
@@ -59,7 +62,7 @@ export default function UserDashboard({ issue, changePage, checkSession }) {
       />
     </div>
   ) : (
-    <DragDropComponent changePage={changePage} items={items} setItems={setItems} />
+    <DragDropComponent changePage={changePage} items={items} setItems={setItems} loaded={loaded} />
   );
 }
 

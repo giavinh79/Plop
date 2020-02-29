@@ -22,11 +22,13 @@ export default function TeamDashboard({ issue, changePage, checkSession }) {
     complete: completedItems,
   });
 
+  const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
     isMounted = true;
 
     (async () => {
-      let res = await axios.get(`${API_ENDPOINT}/teamIssue/1`, { withCredentials: true });
+      let res = await axios.get(`${API_ENDPOINT}/teamIssue/1`);
       const { activeItems, progressItems, completedItems } = res.data;
       if (isMounted) {
         if (
@@ -34,8 +36,9 @@ export default function TeamDashboard({ issue, changePage, checkSession }) {
           items.active.length + items.progress.length + items.complete.length > 0
         )
           setItems({ active: activeItems, progress: progressItems, complete: completedItems });
+        setLoaded(true);
       }
-    })().catch(() => {
+    })().catch(err => {
       checkSession();
     });
 
@@ -43,5 +46,5 @@ export default function TeamDashboard({ issue, changePage, checkSession }) {
       isMounted = false;
     };
   }, [checkSession, items.complete.length, items.progress.length, items.active.length]);
-  return <DragDropComponent changePage={changePage} items={items} setItems={setItems} />;
+  return <DragDropComponent changePage={changePage} items={items} setItems={setItems} loaded={loaded} />;
 }

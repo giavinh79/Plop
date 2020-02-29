@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Modal, Card, Icon, Input, Button } from 'antd';
+import { Button, Card, Icon, Input, Modal, Popconfirm, Row } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { displayInfoDialog, displaySimpleNotification } from '../utility/services';
 import { API_ENDPOINT } from '../utility/constants';
@@ -28,7 +28,7 @@ export default function Team() {
     })().catch(err => {
       displaySimpleNotification('Error', 4, 'bottomRight', `Unable to retrieve teams. (${err})`, 'warning', 'red');
     });
-  }, [teams]);
+  }, []);
 
   const handleCreate = async () => {
     const data = {
@@ -68,6 +68,9 @@ export default function Team() {
 
     try {
       await axios.post(`${API_ENDPOINT}/joinRoom`, data, { withCredentials: true });
+      const res = await retrieveTeams();
+      localStorage.setItem('teams', JSON.stringify(res.data));
+      localStorage.setItem('currentTeam', data.roomId);
       setToDashboard(true);
     } catch (err) {
       displaySimpleNotification(
@@ -93,7 +96,7 @@ export default function Team() {
   const handleEnterTeam = async (e, team) => {
     e.preventDefault();
     localStorage.setItem('currentTeam', team);
-    await axios.post(`${API_ENDPOINT}/sessionRoom`, { id: team }, { withCredentials: true });
+    await axios.post(`${API_ENDPOINT}/sessionRoom`, { id: team });
     setToDashboard(true);
   };
 
@@ -203,13 +206,34 @@ export default function Team() {
                         Enter
                       </a>
                       <p>{team.description}</p>
-                      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                        <Popconfirm
+                          title='Are you sure you want to leave this team?'
+                          // onConfirm={confirm}
+                          okText='Yes'
+                          cancelText='No'
+                        >
+                          <Row type='flex' align='middle' style={{ cursor: 'pointer' }}>
+                            <p style={{ margin: 0 }}>Leave</p>
+                            <img
+                              src='images/exit.svg'
+                              alt='exit icon'
+                              style={{
+                                margin: '0 0.5rem',
+                                width: '2rem',
+                                transform: 'scaleX(-1)',
+                                color: 'rgb(144, 181, 208)',
+                              }}
+                            />
+                          </Row>
+                        </Popconfirm>
                         <Icon
                           type='right-circle'
                           style={{
+                            marginLeft: 'auto',
                             fontSize: '2.5rem',
                             paddingTop: '9rem',
-                            color: 'rgb(144, 181, 208)',
+                            color: '#848484b5',
                             cursor: 'pointer',
                           }}
                           onClick={e => handleEnterTeam(e, team.id)}

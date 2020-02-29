@@ -20,7 +20,7 @@ class RoomController {
           .select('name', 'description')
           .where('id', room.room_id);
         const roomObject = JSON.parse(JSON.stringify(roomInfo[0]));
-        roomObject.id = room.room_id;
+        roomObject.id = Encryption.encrypt(room.room_id);
         roomsInfo.push(roomObject);
       }
       response.status(200).json(roomsInfo);
@@ -33,15 +33,16 @@ class RoomController {
   async getAssignees({ auth, request, response }) {
     try {
       const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
       let result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', request.cookie('room'));
+        .where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
       let assignees = await Database.select('user_id')
         .from('user_rooms')
-        .where('room_id', request.cookie('room'));
+        .where('room_id', decryptedRoomId);
 
       let assigneesEmails = [];
       for (let assignee of assignees) {
@@ -70,15 +71,16 @@ class RoomController {
   async info({ request, auth, response }) {
     try {
       const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
       let result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', request.cookie('room'));
+        .where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
       const roomInfo = await Database.table('rooms')
         .select('*')
-        .where('id', request.cookie('room'));
+        .where('id', decryptedRoomId);
       const decryptPass = Encryption.decrypt(roomInfo[0].password);
       const { name, description, maxMembers, adminApproval } = roomInfo[0];
       const id = Encryption.encrypt(roomInfo[0].id);
@@ -99,7 +101,7 @@ class RoomController {
       const user = await auth.getUser();
       let result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', response.cookie('roomId'));
+        .where('room_id', Encryption.decrypt(response.cookie('roomId')));
       if (result.length === 0) throw new Error('User not in room');
     } catch (err) {
       console.log(`(room_update) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
@@ -170,16 +172,17 @@ class RoomController {
     try {
       const user = await auth.getUser();
       let { roomId, roomPassword } = request.body;
-      roomId = Encryption.decrypt(roomId);
+      const decryptedRoomId = Encryption.decrypt(roomId);
 
       let result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', roomId);
+        .where('room_id', decryptedRoomId);
       if (result.length !== 0) throw new Error('User already in room');
 
       result = await Database.from('rooms')
         .select('password')
-        .where('id', roomId);
+        .where('id', decryptedRoomId);
+
       if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('Wrong password');
 
       // Future - add check here for if admin approval == true. If it is true
@@ -187,7 +190,31 @@ class RoomController {
       // has been sent to the room admin and needs to be approved
       await Database.table('user_rooms').insert({ user_id: user.id, room_id: roomId });
       response.cookie('room', roomId);
-      response.status(200).json({ id: roomId });
+      response.status(200).json({ id: roomId, name: result[0].name });
+    } catch (err) {
+      console.log(`(room_join) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async leave({ auth, request, response }) {
+    try {
+      // const user = await auth.getUser();
+      // let { roomId, roomPassword } = request.body;
+      // roomId = Encryption.decrypt(roomId);
+      // let result = await Database.from('user_rooms')
+      //   .where('user_id', user.id)
+      //   .where('room_id', roomId);
+      // if (result.length !== 0) throw new Error('User already in room');
+      // result = await Database.from('rooms')
+      //   .select('password')
+      //   .where('id', roomId);
+      // if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('Wrong password');
+      // // Future - add check here for if admin approval == true. If it is true
+      // // then we have to add it to pending table and tell user via notification/email that their request
+      // // has been sent to the room admin and needs to be approved
+      // await Database.table('user_rooms').insert({ user_id: user.id, room_id: roomId });
+      // response.status(200).json({ id: roomId, name: result[0].name });
     } catch (err) {
       console.log(`(room_join) ${new Date()}: ${err.message}`);
       response.status(404).send();
@@ -195,14 +222,15 @@ class RoomController {
   }
 
   // Method to set current room on clientside (prevents client tampering to a degree)
-  // With cookie extensions they can edit the httponly cookie however
   // We will confirm on every request that this user is a part of that room
   async session({ request, auth, response }) {
     try {
       const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.body.id);
+
       let result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', request.body.id);
+        .where('room_id', decryptedRoomId);
 
       if (result.length === 0) throw new Error('Unauthorized Access');
       response.cookie('room', request.body.id);

@@ -1,9 +1,10 @@
 'use strict';
 
+const cloudinary = require('cloudinary');
 const Database = use('Database');
+const Encryption = use('Encryption');
 const Env = use('Env');
 const Issue = use('App/Models/Issue');
-const cloudinary = require('cloudinary');
 
 cloudinary.config({
   cloud_name: Env.get('CLOUDINARY_CLOUD'),
@@ -19,7 +20,7 @@ class IssueController {
 
       const result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', request.cookie('room'));
+        .where('room_id', Encryption.decrypt(request.cookie('room')));
       if (result.length === 0) throw new Error('User not in this room');
 
       const issue = new Issue();
@@ -51,7 +52,7 @@ class IssueController {
         await Promise.all(imagePromises);
         issue.fill({
           title,
-          room: request.cookie('room'),
+          room: Encryption.decrypt(request.cookie('room')),
           shortDescription,
           description,
           assignee,
@@ -60,6 +61,7 @@ class IssueController {
           status: status || 0,
           image: JSON.stringify(imageIdArray),
           tag: JSON.stringify(tag),
+          comment: JSON.stringify([]),
         });
         await issue.save();
         response.status(200).json({
@@ -68,7 +70,7 @@ class IssueController {
       } else {
         issue.fill({
           title,
-          room: request.cookie('room'),
+          room: Encryption.decrypt(request.cookie('room')),
           shortDescription,
           description,
           assignee,
@@ -76,6 +78,7 @@ class IssueController {
           priority: priority || 0,
           status: status || 0,
           tag: JSON.stringify(tag),
+          comment: JSON.stringify([]),
         });
         await issue.save();
         response.status(200).json({
@@ -94,7 +97,7 @@ class IssueController {
       const user = await auth.getUser();
       const result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', request.cookie('room'));
+        .where('room_id', Encryption.decrypt(request.cookie('room')));
 
       if (result.length === 0) throw new Error('User not in this room');
 
@@ -134,20 +137,22 @@ class IssueController {
     }
   }
 
-  async teamGet({ auth, request, response }) {
+  async getTeam({ auth, request, response }) {
     try {
       // type of issue trying to be requested given by request.params.status (0 - backlog, 1 - active, 2 - )
       const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
       const result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', request.cookie('room'));
+        .where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
       if (request.params.status === '0') {
         const issues = await Database.table('issues')
           .select('*')
           .where({
-            room: request.cookie('room'),
+            room: decryptedRoomId,
             status: 0,
           });
         response.status(200).send(issues);
@@ -155,19 +160,19 @@ class IssueController {
         const activeItems = await Database.table('issues')
           .select('*')
           .where({
-            room: request.cookie('room'),
+            room: decryptedRoomId,
             status: 1,
           });
         const progressItems = await Database.table('issues')
           .select('*')
           .where({
-            room: request.cookie('room'),
+            room: decryptedRoomId,
             status: 2,
           });
         const completedItems = await Database.table('issues')
           .select('*')
           .where({
-            room: request.cookie('room'),
+            room: decryptedRoomId,
             status: 3,
           });
 
@@ -178,24 +183,26 @@ class IssueController {
         });
       }
     } catch (err) {
-      console.log(`(issue_teamget) ${new Date()}: ${err.message}`);
+      console.log(`(issue_getTeam) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }
 
-  async userGet({ auth, request, response }) {
+  async getUser({ auth, request, response }) {
     try {
       const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
       const result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', request.cookie('room'));
+        .where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
       if (request.params.status === 0) {
         const issues = await Database.table('issues')
           .select('*')
           .where({
-            room: request.cookie('room'),
+            room: decryptedRoomId,
             assignee: user.email,
           });
         response.status(200).send(issues);
@@ -203,21 +210,21 @@ class IssueController {
         const activeItems = await Database.table('issues')
           .select('*')
           .where({
-            room: request.cookie('room'),
+            room: decryptedRoomId,
             status: 1,
             assignee: user.email,
           });
         const progressItems = await Database.table('issues')
           .select('*')
           .where({
-            room: request.cookie('room'),
+            room: decryptedRoomId,
             status: 2,
             assignee: user.email,
           });
         const completedItems = await Database.table('issues')
           .select('*')
           .where({
-            room: request.cookie('room'),
+            room: decryptedRoomId,
             status: 3,
             assignee: user.email,
           });
@@ -228,7 +235,54 @@ class IssueController {
         });
       }
     } catch (err) {
-      console.log(`(issue_userget) ${new Date()}: ${err.message}`);
+      console.log(`(issue_getUser) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async getComments({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
+      const result = await Database.from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in this room');
+
+      const data = await Database.table('issues')
+        .select('comments')
+        .where('id', request.params.id);
+      response.status(200).json(data[0].comments);
+    } catch (err) {
+      console.log(`(issue_getComments) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async setComments({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
+      const result = await Database.from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in this room');
+
+      let data = await Database.table('issues')
+        .select('comments')
+        .where('id', request.body.id);
+
+      data[0].comments.push(request.body.comment);
+      await Database.table('issues')
+        .where({ room: decryptedRoomId, id: request.body.id })
+        .update({
+          comments: JSON.stringify(data[0].comments),
+        });
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(issue_setComments) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -236,16 +290,16 @@ class IssueController {
   async update({ auth, request, response }) {
     try {
       const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
       const result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', request.cookie('room'));
+        .where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
       const { title, shortDescription, description, assignee, tag, priority, status, dragger } = request.body;
-      console.log(request.body);
-      console.log(request.body.id);
-      console.log(request.cookie('room'));
+
       await Database.table('issues')
-        .where({ room: request.cookie('room'), id: request.body.id })
+        .where({ room: decryptedRoomId, id: request.body.id })
         .update({
           title,
           shortDescription,
@@ -265,13 +319,15 @@ class IssueController {
   async updateProgress({ auth, request, response }) {
     try {
       const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
       const result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', request.cookie('room'));
+        .where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
       await Database.table('issues')
-        .where({ room: request.cookie('room'), id: request.body.id })
+        .where({ room: decryptedRoomId, id: request.body.id })
         .update({ status: request.body.status });
       response.status(200).send();
     } catch (err) {

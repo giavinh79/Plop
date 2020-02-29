@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Tag } from 'antd';
+import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Row, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
-// import 'antd/dist/antd.css';
 import { tagMap, API_ENDPOINT } from '../../utility/constants';
+import { ActionText } from './ActiveStyles';
 
 const progressMap = { 1: 'Active', 2: 'In Progress', 3: 'Completed' };
 
@@ -47,15 +47,21 @@ const columns = [
     dataIndex: 'status',
     key: 'status',
     render: status => {
-      return <p>{progressMap[status]}</p>;
+      return <p style={{ margin: 0 }}>{progressMap[status]}</p>;
     },
   },
   {
     title: 'Action',
     key: 'action',
     render: () => (
-      <span>
-        <a href='/'>Edit</a>
+      <Row type='flex' align='middle'>
+        <ActionText
+          onClick={() => {
+            console.log('hey');
+          }}
+        >
+          Edit
+        </ActionText>
         <Divider type='vertical' />
         <Popconfirm
           title='Are you sure you want to delete this task?'
@@ -64,7 +70,7 @@ const columns = [
           okText='Yes'
           cancelText='No'
         >
-          <a href='/'>Delete</a>
+          <ActionText>Delete</ActionText>
         </Popconfirm>
         <Divider type='vertical' />
         <Popconfirm
@@ -74,9 +80,9 @@ const columns = [
           okText='Yes'
           cancelText='No'
         >
-          <a href='/'>Progress</a>
+          <ActionText>Progress</ActionText>
         </Popconfirm>
-      </span>
+      </Row>
     ),
   },
   {

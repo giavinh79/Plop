@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Skeleton } from 'antd';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card } from './Card';
 import { API_ENDPOINT } from '../../utility/constants';
@@ -9,7 +10,7 @@ import { styles } from './DashboardStyles';
  * Component representing the three drag & drop columns active, progress, and complete
  * Takes inputs from TeamDashboard and UserDashboard components
  */
-export default function DragDropComponent({ changePage, items, setItems }) {
+export default function DragDropComponent({ changePage, loaded, items, setItems }) {
   const getActiveStyle = (isDragging, draggableStyle) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -104,8 +105,15 @@ export default function DragDropComponent({ changePage, items, setItems }) {
         {(provided, snapshot) => (
           <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
             <div style={styles.titleWrapper}>
-              <h5 style={styles.title}>Active</h5>
+              <h5 style={{ ...styles.title, opacity: loaded ? 1 : 0.3 }}>Active</h5>
             </div>
+            {!loaded && (
+              <>
+                <Skeleton active />
+                <Skeleton active />
+              </>
+            )}
+
             {items.active.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided, snapshot) => (
@@ -128,8 +136,14 @@ export default function DragDropComponent({ changePage, items, setItems }) {
         {(provided, snapshot) => (
           <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
             <div style={styles.titleWrapper}>
-              <h5 style={styles.title}>In Progress</h5>
+              <h5 style={{ ...styles.title, opacity: loaded ? 1 : 0.3 }}>In Progress</h5>
             </div>
+            {!loaded && (
+              <>
+                <Skeleton active />
+                <Skeleton active />
+              </>
+            )}
             {items.progress.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided, snapshot) => (
@@ -152,8 +166,14 @@ export default function DragDropComponent({ changePage, items, setItems }) {
         {(provided, snapshot) => (
           <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
             <div style={styles.titleWrapper}>
-              <h5 style={styles.title}>Completed</h5>
+              <h5 style={{ ...styles.title, opacity: loaded ? 1 : 0.3 }}>Completed</h5>
             </div>
+            {!loaded && (
+              <>
+                <Skeleton active />
+                <Skeleton active />
+              </>
+            )}
             {items.complete.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided, snapshot) => (

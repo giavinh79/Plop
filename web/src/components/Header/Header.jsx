@@ -16,10 +16,14 @@ export default function Header() {
   };
 
   const getTeamLabel = () => {
-    for (let item of JSON.parse(localStorage.getItem('teams'))) {
-      if (item.id.toString() === localStorage.getItem('currentTeam')) {
-        return item.name;
+    try {
+      for (let item of JSON.parse(localStorage.getItem('teams'))) {
+        if (item.id.toString() === localStorage.getItem('currentTeam')) {
+          return item.name;
+        }
       }
+    } catch (err) {
+      return '';
     }
   };
 

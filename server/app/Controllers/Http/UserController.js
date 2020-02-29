@@ -69,14 +69,16 @@ class UserController {
     }
   }
 
-  async getAvatar({ request, auth, response }) {
+  async getUserInfo({ auth, response }) {
     try {
       const user = await auth.getUser();
 
-      let res = await Database.select('avatar')
+      let res = await Database.select('email', 'avatar')
         .from('users')
         .where('id', user.id);
-      response.status(200).json({ avatar: res[0].avatar });
+
+      const date = new Date();
+      response.status(200).json({ avatar: res[0].avatar, email: res[0].email, date });
     } catch (err) {
       console.log(`(user_avatar_get) ${new Date()}: ${err.message}`);
       response.status(404).send('Error');

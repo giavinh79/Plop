@@ -5,6 +5,16 @@
 import axios from 'axios';
 import { API_ENDPOINT } from './constants';
 
+const createSession = async event => {
+  try {
+    await axios.post(`${API_ENDPOINT}/sessionRoom`, {
+      id: JSON.parse(localStorage.getItem('teams'))[event.key - 1].id,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
 const retrieveAssignees = async () => {
   try {
     return await axios.get(`${API_ENDPOINT}/assignees`);
@@ -21,4 +31,4 @@ const retrieveTeams = async () => {
   }
 };
 
-export { retrieveAssignees, retrieveTeams };
+export { createSession, retrieveAssignees, retrieveTeams };

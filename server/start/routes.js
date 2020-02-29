@@ -13,7 +13,7 @@ const jwtMiddleware = async ({ request }, next) => {
 Route.on('/').render('welcome');
 
 // Authentication and Users
-Route.get('/avatar', 'UserController.getAvatar').middleware(jwtMiddleware);
+Route.get('/userInfo', 'UserController.getUserInfo').middleware(jwtMiddleware);
 Route.post('/avatar', 'UserController.setAvatar').middleware(jwtMiddleware);
 
 Route.post('/login', 'UserController.login');
@@ -28,11 +28,14 @@ Route.put('/room', 'RoomController.create').middleware(jwtMiddleware);
 Route.post('/roomInfo', 'RoomController.info').middleware(jwtMiddleware);
 Route.post('/sessionRoom', 'RoomController.session').middleware(jwtMiddleware);
 Route.post('/joinRoom', 'RoomController.join').middleware(jwtMiddleware);
+Route.post('/leaveRoom', 'RoomController.leave').middleware(jwtMiddleware);
 Route.delete('/room', 'RoomController.delete');
 
 // Issues - begin setting up other endpoints like this (REST)
-Route.get('/teamIssue/:status', 'IssueController.teamGet').middleware(jwtMiddleware);
-Route.get('/userIssue/:status', 'IssueController.userGet').middleware(jwtMiddleware);
+Route.get('/teamIssue/:status', 'IssueController.getTeam').middleware(jwtMiddleware);
+Route.get('/userIssue/:status', 'IssueController.getUser').middleware(jwtMiddleware);
+Route.get('/comments/:id', 'IssueController.getComments').middleware(jwtMiddleware);
+Route.post('/comment', 'IssueController.setComments').middleware(jwtMiddleware);
 Route.post('/issueProgress', 'IssueController.updateProgress').middleware(jwtMiddleware);
 Route.post('/issue', 'IssueController.update').middleware(jwtMiddleware);
 Route.put('/issue', 'IssueController.create').middleware(jwtMiddleware);

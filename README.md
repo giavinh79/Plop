@@ -4,9 +4,11 @@ Plop is a web application that uses React.js as its frontend framework and Adoni
 
 A relational database is used which is managed using the Lucid ORM to take advantage of models, controllers, migrations, seeds and factories. This allows us to easily replicate common SQL queries, setup the database with ease, and create dummy data.
 
+Current deployed on https://www.plop.team/ as version 0.5. Backend is deployed on https://plopwebapp.herokuapp.com/.
+
 ## To Do
 
-Immediate: JWT token refresh, comments, showing team name somewhere, refreshing teams, showing members for assigning issues to, add notification icon design
+Immediate: JWT token refresh, comments, refreshing teams, add notification icon design
 
 Responsiveness (alert when user is on mobile screen to download mobile app)
 

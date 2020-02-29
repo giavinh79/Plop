@@ -70,6 +70,7 @@ class SetupSeeder {
         priority: 0,
         status: 1,
         tag: JSON.stringify(['Backend', 'Frontend']),
+        comments: JSON.stringify([]),
       });
       await issue.save();
 
@@ -84,6 +85,7 @@ class SetupSeeder {
         priority: 1,
         status: 0,
         tag: JSON.stringify([]),
+        comments: JSON.stringify([]),
       });
       await issue.save();
 
@@ -98,6 +100,7 @@ class SetupSeeder {
         priority: 0,
         status: 1,
         tag: JSON.stringify(['Backend']),
+        comments: JSON.stringify([]),
       });
       await issue.save();
     } catch (err) {

@@ -43,7 +43,7 @@ export default class Panel extends React.Component {
 
   async checkSession() {
     try {
-      await axios.post(`${API_ENDPOINT}/session`, { withCredentials: true });
+      await axios.post(`${API_ENDPOINT}/session`);
     } catch (err) {
       this.setState({ toHomepage: true });
       displaySessionExpired();
@@ -87,7 +87,7 @@ export default class Panel extends React.Component {
       case 5:
         return <WrappedCreateIssueForm changePage={this.changePage} />;
       case 6:
-        return <Active />;
+        return <Active changePage={this.changePage} />;
       case 7:
         return <Backlog />;
       case 8:
@@ -111,15 +111,8 @@ export default class Panel extends React.Component {
     ) : (
       <>
         <SideNav handlePageChange={page => this.changePage(page)} />
-        <div style={styles.body}>{this.returnPage(this.state.currentPage)}</div>
+        <div style={{ display: 'flex', width: '100%' }}>{this.returnPage(this.state.currentPage)}</div>
       </>
     );
   }
 }
-
-const styles = {
-  body: {
-    display: 'flex',
-    width: '100%',
-  },
-};

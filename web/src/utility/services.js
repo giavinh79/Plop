@@ -10,12 +10,12 @@ const displayInfoDialog = (title, dataLabel, data, content) => {
     title: title,
     content: (
       <div>
-        <p>
+        <div>
           {dataLabel}
           <div style={{ padding: '0.5rem', border: '1px solid #ccc', margin: '0.5rem 0' }}>
             <em>{data}</em>
           </div>
-        </p>
+        </div>
         <p>{content}</p>
       </div>
     ),

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { Menu, Dropdown, Icon } from 'antd';
 import 'antd/dist/antd.css';
 import './style.css';
+import { createSession } from '../../utility/restCalls';
 
-export default function TeamDropdown() {
+function TeamDropdown({ history }) {
   const [toTeam, setToTeam] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const displayLoading = () => {
+  const displayLoading = async event => {
     setLoading(true);
     setTimeout(function() {
       try {
@@ -16,8 +17,12 @@ export default function TeamDropdown() {
       } catch (err) {}
     }, 1200);
 
-    // send request to session endpoint and change the team
-    // force redirect to /dashboard to refresh or better, find a way just so that the dashboard component recalls the API
+    try {
+      await createSession();
+      // history.push('/dashboard');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const verifyTeamsValue = teams => {
@@ -46,8 +51,8 @@ export default function TeamDropdown() {
           return (
             <Menu.Item
               key={index + 1}
-              onClick={team => {
-                displayLoading();
+              onClick={event => {
+                displayLoading(event);
               }}
             >
               <Icon type='team' />
@@ -79,3 +84,5 @@ export default function TeamDropdown() {
     </div>
   );
 }
+
+export default withRouter(TeamDropdown);
