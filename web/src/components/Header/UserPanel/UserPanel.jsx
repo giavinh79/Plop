@@ -38,7 +38,7 @@ export default class UserPanel extends React.Component {
         </p>
       </Menu.Item>
       <Menu.Item key='1'>
-        <p style={{ margin: 0 }}>Themes</p>
+        <p style={{ margin: 0, color: '#ccc' }}>Themes</p>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key='2'>

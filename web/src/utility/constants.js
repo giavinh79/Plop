@@ -10,3 +10,8 @@ export const tagMap = {
   documentation: 'gold',
   research: 'gray',
 };
+
+export const pagination = {
+  pageSize: 8,
+  hideOnSinglePage: true,
+};

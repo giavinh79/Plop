@@ -146,7 +146,7 @@ class RoomController {
         from: Env.get('EMAIL_USER'),
         to: user.email,
         subject: 'Team Credentials',
-        html: `<p>Your team ID is { ${encryptedRoomId} } and your password is { ${roomPassword} }</p>`,
+        html: `<p>Your team ID is <strong>${encryptedRoomId}</strong> and your password is <strong>${roomPassword}</strong></p>.`,
       };
 
       let transport = nodemailer.createTransport({
@@ -181,10 +181,11 @@ class RoomController {
       if (result.length !== 0) throw new Error('User already in room');
 
       result = await Database.from('rooms')
-        .select('password', 'adminApproval')
+        .select('password', 'adminApproval', 'private')
         .where('id', decryptedRoomId);
 
       if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('Wrong password');
+      if (result[0].private) throw new Error('Private room');
       // if (result[0].adminApproval) throw
 
       // Future - add check here for if admin approval == true. If it is true

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Row, Tag } from 'antd';
+import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Row, Skeleton, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { tagMap, API_ENDPOINT } from '../../utility/constants';
 import { ActionText } from './ActiveStyles';
+import { pagination } from '../../utility/constants';
 
 const progressMap = { 1: 'Active', 2: 'In Progress', 3: 'Completed' };
 
@@ -108,40 +109,9 @@ const columns = [
   },
 ];
 
-// let data = [
-// 	{
-// 		key: '1',
-// 		title: 'Create favicon',
-// 		description: 'Convert .png to .ico',
-//         date: '04/08/2019',
-//         status : 'Active',
-// 		tags: ['frontend', 'minor'],
-// 	},
-// 	{
-// 		key: '2',
-// 		title: 'Google SSO',
-// 		description: 'Implement SSO in login screen',
-//         date: '04/12/2019',
-//         status : 'In Progress',
-// 		tags: ['major'],
-// 	},
-// 	{
-// 		key: '3',
-// 		title: 'Server load testing',
-// 		description: 'Test with some NPM module',
-//         date: '04/14/2019',
-//         status : 'Active',
-// 		tags: ['backend', 'minor'],
-// 	},
-// ];
-
-const pagination = {
-  pageSize: 8,
-  hideOnSinglePage: true,
-};
-
 export default function Active() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -154,7 +124,7 @@ export default function Active() {
           // item.tag = JSON.parse(item.tag); // convert "[]" to [] if using mySQL
           return item;
         });
-
+        setLoading(false);
         setData(activeIssues);
       })
       .catch(err => {
@@ -165,12 +135,28 @@ export default function Active() {
   return (
     <div style={layout}>
       <p style={subheader}>Active Issues</p>
-      <ActiveTable
-        columns={columns}
-        dataSource={data}
-        pagination={pagination}
-        style={{ border: '1px solid #ccc', borderRadius: '5px' }}
-      />
+      {loading ? (
+        <Skeleton active />
+      ) : (
+        <ActiveTable
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          style={{ border: '1px solid #ccc', borderRadius: '5px' }}
+        />
+      )}
     </div>
   );
 }
+
+// Sample Data
+// let data = [
+// 	{
+// 		key: '1',
+// 		title: 'Create favicon',
+// 		description: 'Convert .png to .ico',
+//         date: '04/08/2019',
+//         status : 'Active',
+// 		tags: ['frontend', 'minor'],
+// 	},
+// ];

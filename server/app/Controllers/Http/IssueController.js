@@ -61,7 +61,7 @@ class IssueController {
           status: status || 0,
           image: JSON.stringify(imageIdArray),
           tag: JSON.stringify(tag),
-          comment: JSON.stringify([]),
+          comments: JSON.stringify([]),
         });
         await issue.save();
         response.status(200).json({
@@ -78,7 +78,7 @@ class IssueController {
           priority: priority || 0,
           status: status || 0,
           tag: JSON.stringify(tag),
-          comment: JSON.stringify([]),
+          comments: JSON.stringify([]),
         });
         await issue.save();
         response.status(200).json({
@@ -298,17 +298,103 @@ class IssueController {
       if (result.length === 0) throw new Error('User not in this room');
       const { title, shortDescription, description, assignee, tag, priority, status, dragger } = request.body;
 
-      await Database.table('issues')
-        .where({ room: decryptedRoomId, id: request.body.id })
-        .update({
-          title,
-          shortDescription,
-          description,
-          assignee,
-          tag: JSON.stringify(tag),
-          priority,
-          status,
+      if (dragger) {
+        // Enters here if images were attached to the issue
+        let imagePromises = [];
+        const imageIdArray = [];
+
+        // This block of code determines if there's a missing image reference - means that user wants it deleted
+        const imageData = await Database.table('issues')
+          .select('image')
+          .where('id', request.body.id);
+
+        const previousImages = dragger.reduce((accumulator, item) => {
+          if (item.id != null) {
+            accumulator.push(item.id);
+            imageIdArray.push({ id: item.id, url: item.url });
+          }
+          return accumulator;
+        }, []);
+
+        const imagesToDelete = imageData[0].image.filter(item => {
+          return !previousImages.includes(item.id);
         });
+
+        if (imagesToDelete.length > 0) {
+          for (let item of imagesToDelete) {
+            imagePromises.push(
+              new Promise((resolve, reject) => {
+                cloudinary.v2.uploader.destroy(item.id, (error, result) => {
+                  if (error) {
+                    if (error.result !== 'not found') {
+                      reject(new Error('Cloudinary image deletion failed'));
+                    } else {
+                      resolve();
+                    }
+                  } else {
+                    resolve();
+                  }
+                });
+              })
+            );
+          }
+          await Promise.all(imagePromises);
+          imagePromises = [];
+        }
+
+        // Adding new updated images
+        for (let item of dragger) {
+          if (item.id == null) {
+            imagePromises.push(
+              new Promise((resolve, reject) => {
+                cloudinary.v2.uploader.upload(
+                  item,
+                  {
+                    resource_type: 'auto',
+                  },
+                  (error, res) => {
+                    console.log(res);
+                    if (error) {
+                      reject(new Error('Cloudinary image upload failed'));
+                    } else {
+                      imageIdArray.push({ id: res.public_id, url: res.url });
+                      resolve();
+                    }
+                  }
+                );
+              })
+            );
+          }
+        }
+
+        if (imagePromises.length > 0) {
+          await Promise.all(imagePromises);
+        }
+        await Database.table('issues')
+          .where({ room: decryptedRoomId, id: request.body.id })
+          .update({
+            title,
+            shortDescription,
+            description,
+            assignee,
+            tag: JSON.stringify(tag),
+            image: JSON.stringify(imageIdArray),
+            priority,
+            status,
+          });
+      } else {
+        await Database.table('issues')
+          .where({ room: decryptedRoomId, id: request.body.id })
+          .update({
+            title,
+            shortDescription,
+            description,
+            assignee,
+            tag: JSON.stringify(tag),
+            priority,
+            status,
+          });
+      }
       response.status(200).send();
     } catch (err) {
       console.log(`(issue_update) ${new Date()}: ${err.message}`);

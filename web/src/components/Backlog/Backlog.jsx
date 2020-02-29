@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Popconfirm, Table as BacklogTable, Divider, Tag } from 'antd';
+import { Divider, Popconfirm, Table as BacklogTable, Skeleton, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import './style.css';
 import { tagMap, API_ENDPOINT } from '../../utility/constants';
 import { displaySimpleNotification } from '../../utility/services';
+import { pagination } from '../../utility/constants';
 
 export default function Backlog() {
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -20,6 +22,7 @@ export default function Backlog() {
           // item.tag = JSON.parse(item.tag); // convert "[]" to [] if mySQL
           return item;
         });
+        setLoading(false);
         setData(res.data);
       })
       .catch(err => {
@@ -110,20 +113,19 @@ export default function Backlog() {
     },
   ];
 
-  const pagination = {
-    pageSize: 8,
-    hideOnSinglePage: true,
-  };
-
   return (
     <div style={layout}>
       <p style={subheader}>Backlog</p>
-      <BacklogTable
-        columns={columns}
-        dataSource={data}
-        pagination={pagination}
-        style={{ border: '1px solid #ccc', borderRadius: '5px' }}
-      />
+      {loading ? (
+        <Skeleton active />
+      ) : (
+        <BacklogTable
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          style={{ border: '1px solid #ccc', borderRadius: '5px' }}
+        />
+      )}
     </div>
   );
 }

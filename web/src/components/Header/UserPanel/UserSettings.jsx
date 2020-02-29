@@ -7,12 +7,14 @@ import { API_ENDPOINT } from '../../../utility/constants';
 
 export default function UserSettings({ handleUserModal }) {
   const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState('1');
+  const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || '1');
 
   useEffect(() => {
     (async function() {
       const { data } = await axios.get(`${API_ENDPOINT}/avatar`);
-      setAvatar(data.avatar.toString());
+      let avatarIndex = data.avatar.toString();
+      setAvatar(avatarIndex);
+      localStorage.setItem('avatar', avatarIndex);
     })().catch(err => {
       console.log(err);
     });
@@ -23,7 +25,7 @@ export default function UserSettings({ handleUserModal }) {
     setTimeout(() => {
       setLoading(false);
       handleUserModal();
-    }, 3000);
+    }, 1000);
     await axios.post(`${API_ENDPOINT}/avatar`, { avatar });
   };
 

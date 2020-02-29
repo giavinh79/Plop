@@ -55,8 +55,8 @@ export default function Settings() {
         >
           {state.id === 'default' ? (
             <>
-              <Skeleton active={true} />
-              <Skeleton active={true} />
+              <Skeleton active />
+              <Skeleton active />
             </>
           ) : (
             <>
@@ -82,8 +82,8 @@ export default function Settings() {
         >
           {state.id === 'default' ? (
             <>
-              <Skeleton active={true} />
-              <Skeleton active={true} />
+              <Skeleton active />
+              <Skeleton active />
             </>
           ) : (
             <>

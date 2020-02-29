@@ -23,7 +23,7 @@ export default function CreateIssue({ changePage, data, form }) {
     if (data) {
       if (data.image) {
         setDefaultFileList(
-          JSON.parse(data.image).map((item, key) => {
+          data.image.map((item, key) => {
             return {
               uid: item.id,
               key: key,
@@ -70,7 +70,8 @@ export default function CreateIssue({ changePage, data, form }) {
         let base = [];
         if (values.dragger) {
           for (let item of values.dragger) {
-            base.push(await toBase64(item.originFileObj));
+            if (item.originFileObj) base.push(await toBase64(item.originFileObj));
+            else base.push({ id: item.uid, url: item.url });
           }
           values.dragger = base; // replace image file objects with base64 version
         }
@@ -109,6 +110,8 @@ export default function CreateIssue({ changePage, data, form }) {
               'red'
             );
           }
+        } else {
+          console.log(err);
         }
       })(values, form.resetFields);
     });
@@ -175,7 +178,7 @@ export default function CreateIssue({ changePage, data, form }) {
                 },
               ],
               initialValue: data == null ? '' : data.title,
-            })(<Input />)}
+            })(<Input maxLength={100} />)}
           </Form.Item>
 
           <Form.Item label='Short Description'>
@@ -187,13 +190,13 @@ export default function CreateIssue({ changePage, data, form }) {
                 },
               ],
               initialValue: data == null ? '' : data.shortDescription,
-            })(<Input />)}
+            })(<Input maxLength={200} />)}
           </Form.Item>
 
           <Form.Item label='Description'>
             {getFieldDecorator('description', {
               initialValue: data == null ? '' : data.description,
-            })(<TextArea autosize={{ minRows: '2', maxRows: '15' }} />)}
+            })(<TextArea autosize={{ minRows: '2', maxRows: '15' }} maxLength={2000} />)}
           </Form.Item>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
@@ -293,15 +296,20 @@ export default function CreateIssue({ changePage, data, form }) {
               </Form.Item>
             )}
             <Form.Item wrapperCol={{ span: 12, offset: 6 }} style={{ alignItems: 'flex-end' }}>
-              <Popconfirm
-                title='Are you sure you want to save this task?'
-                onConfirm={handleSubmit}
-                okText='Yes'
-                cancelText='No'
-                disabled={data == null ? true : false}
-              >
-                <Button type='primary'>{data == null ? 'Submit' : 'Save'}</Button>
-              </Popconfirm>
+              {data == null ? (
+                <Button type='primary' onClick={handleSubmit}>
+                  Submit
+                </Button>
+              ) : (
+                <Popconfirm
+                  title='Are you sure you want to save this task?'
+                  onConfirm={handleSubmit}
+                  okText='Yes'
+                  cancelText='No'
+                >
+                  <Button type='primary'>Save</Button>
+                </Popconfirm>
+              )}
             </Form.Item>
           </div>
         </div>

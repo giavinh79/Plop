@@ -5,61 +5,9 @@ import axios from 'axios';
 import { API_ENDPOINT } from '../../utility/constants';
 import { displaySimpleNotification } from '../../utility/services';
 
-const dataSource = [
-  {
-    actions: [<span key='comment-list-reply-to-0'>Reply</span>],
-    author: 'Han Solo',
-    avatar: 'images/avatars/monster2.svg',
-    content: (
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, optio quis aut eveniet enim praesentium error
-        incidunt officia, culpa, alias accusantium. Doloremque sunt dolorem dolore nesciunt error, saepe quasi illum!
-      </p>
-    ),
-    datetime: (
-      <Tooltip
-        title={moment()
-          .subtract(1, 'days')
-          .format('YYYY-MM-DD HH:mm:ss')}
-      >
-        <span>
-          {moment()
-            .subtract(1, 'days')
-            .fromNow()}
-        </span>
-      </Tooltip>
-    ),
-  },
-  {
-    actions: [<span key='comment-list-reply-to-0'>Reply</span>],
-    author: 'San Holo',
-    avatar: 'images/avatars/monster1.svg',
-    content: (
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse architecto perferendis culpa debitis laborum?
-        Animi, dolorem rerum minus eaque consequatur, commodi, quas magnam asperiores fuga necessitatibus esse molestiae
-        beatae harum?
-      </p>
-    ),
-    datetime: (
-      <Tooltip
-        title={moment()
-          .subtract(2, 'days')
-          .format('YYYY-MM-DD HH:mm:ss')}
-      >
-        <span>
-          {moment()
-            .subtract(2, 'days')
-            .fromNow()}
-        </span>
-      </Tooltip>
-    ),
-  },
-];
-
 export default function CommentBody({ id }) {
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState(dataSource);
+  const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [loadingUserInfo, setLoadingUserInfo] = useState(false);
 
@@ -70,7 +18,7 @@ export default function CommentBody({ id }) {
       let dataSource = [];
       for (let item of comments.data) {
         dataSource.unshift({
-          actions: [<span key='comment-list-reply-to-0'>Reply</span>],
+          // actions: [<span key='comment-list-reply-to-0'>Reply</span>],
           author: item.author,
           avatar: `images/avatars/monster${item.avatar}.svg`,
           content: <p>{item.content}</p>,
@@ -85,7 +33,7 @@ export default function CommentBody({ id }) {
     })().catch(err => {
       console.log(err);
     });
-  }, []);
+  }, [id]);
 
   const handleComment = async () => {
     if (comment.trim() === '') return;
@@ -98,7 +46,7 @@ export default function CommentBody({ id }) {
       setLoadingUserInfo(false);
 
       const commentObject = {
-        actions: [<span key='comment-list-reply-to-0'>Reply</span>],
+        // actions: [<span key='comment-list-reply-to-0'>Reply</span>],
         author: email,
         avatar: `images/avatars/monster${avatar}.svg`,
         content: <p>{comment}</p>,
@@ -139,7 +87,7 @@ export default function CommentBody({ id }) {
         renderItem={item => (
           <li>
             {loadingComments ? (
-              <Skeleton active={true} />
+              <Skeleton active avatar />
             ) : (
               <Comment
                 actions={item.actions}

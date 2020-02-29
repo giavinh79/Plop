@@ -35,7 +35,7 @@ export default function Team() {
       await axios.post('/leaveRoom', { teamId });
       setTeams(
         teams.filter(item => {
-          return item.id != teamId;
+          return item.id !== teamId;
         })
       );
     } catch (err) {
@@ -71,7 +71,7 @@ export default function Team() {
         'Team was not created',
         4,
         'bottomRight',
-        'The team could not be created, you may be at your maximum team limit.',
+        'This may be due to you being at your team limit or exceeding input values (description < 300 characters and title < 100 characters).',
         'warning',
         'red'
       );

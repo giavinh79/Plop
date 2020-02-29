@@ -13,7 +13,7 @@ class RoomSchema extends Schema {
         .references('id')
         .inTable('users');
       table.string('name', [100]).notNullable();
-      table.string('description', [250]).notNullable();
+      table.string('description', [300]).notNullable();
       table.string('password', 60).notNullable();
       table.integer('maxMembers');
       table.integer('status');

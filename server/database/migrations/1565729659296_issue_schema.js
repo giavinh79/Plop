@@ -11,8 +11,8 @@ class IssueSchema extends Schema {
       table.increments();
       table.integer('room').unsigned();
       table.string('title', 100);
-      table.string('shortDescription', 100);
-      table.string('description', 1000);
+      table.string('shortDescription', 200);
+      table.string('description', 2000);
       table.boolean('priority');
       table.integer('status');
       table.string('assignee', 100);
