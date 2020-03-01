@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import TeamDashboard from '../components/Dashboard/TeamDashboard';
 import UserDashboard from '../components/Dashboard/UserDashboard';
@@ -11,23 +12,22 @@ import Settings from '../components/Settings/Settings';
 import Active from '../components/Active/Active';
 import Schedule from '../components/Schedule/Schedule';
 import Help from '../components/Help/Help';
-import axios from 'axios';
 import { displaySessionExpired } from '../utility/services';
 import { API_ENDPOINT } from '../utility/constants';
 
 export default class Panel extends React.Component {
   constructor(props) {
     super(props);
-    // data is optional paramater to changePage() function if extra data needs to be passed to new section
     this.state = {
       toHomepage: false,
       currentPage: 0,
       data: {},
+      source: null,
     };
   }
 
-  changePage = (page, params) => {
-    this.setState({ data: params, currentPage: page });
+  changePage = (page, params, source) => {
+    this.setState({ currentPage: page, data: params, source: source });
   };
 
   async checkSession() {
@@ -56,7 +56,7 @@ export default class Panel extends React.Component {
       case 6:
         return <Active changePage={this.changePage} />;
       case 7:
-        return <Backlog />;
+        return <Backlog changePage={this.changePage} />;
       case 8:
         return <Schedule />;
       case 9:
@@ -64,7 +64,7 @@ export default class Panel extends React.Component {
       case 10:
         return <Settings />;
       case 11:
-        return <Issue data={this.state.data} changePage={this.changePage} />; // issue information
+        return <Issue changePage={this.changePage} data={this.state.data} source={this.state.source} />; // issue information
       case 12:
         return <Help />;
       default:

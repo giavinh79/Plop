@@ -105,8 +105,10 @@ class IssueController {
       const issue = await Database.table('issues')
         .where('id', request.params.id)
         .select('image');
+
       const imagePromises = [];
-      for (let item of JSON.parse(issue[0].image)) {
+      // need to JSON.parse(issue[0].image) if mySQL
+      for (let item of issue[0].image) {
         imagePromises.push(
           new Promise((resolve, reject) => {
             cloudinary.v2.uploader.destroy(item, (error, result) => {

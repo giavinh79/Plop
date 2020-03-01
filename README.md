@@ -9,7 +9,7 @@ Current deployed on https://www.plop.team/ as version 0.6. Backend is deployed o
 
 ## To Do
 
-Immediate: JWT token refresh, refreshing teams, add notification icon design (notified when someone comments on an issue assigned to you or someone comments on something you commented on), refactoring routes, making actions clickable on Active and Backlog tables, more informative landing page
+Immediate: JWT token refresh, add notification icon design (notified when someone comments on an issue assigned to you or someone comments on something you commented on), refactoring routes, making actions clickable on Active and Backlog tables, more informative landing page
 
 Longterm: Make functionality for room settings work (room deletion, add pending invitations table...), themes and changing password, administration levels, mobile responsiveness (or alert to download mobile app)
 

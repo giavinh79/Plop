@@ -147,6 +147,7 @@ export default function Team() {
             name='teamName'
             id='teamName'
             allowClear={true}
+            maxLength={100}
             required
             onChange={e => {
               createTeamData.current.name = e.currentTarget.value;
@@ -158,6 +159,7 @@ export default function Team() {
             style={{ marginBottom: '1rem' }}
             name='teamDescription'
             id='teamDescription'
+            maxLength={300}
             required
             onChange={e => {
               createTeamData.current.description = e.currentTarget.value;

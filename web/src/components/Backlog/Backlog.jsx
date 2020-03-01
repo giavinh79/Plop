@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Divider, Popconfirm, Table as BacklogTable, Skeleton, Tag } from 'antd';
+import { Divider, Popconfirm, Row, Table as BacklogTable, Skeleton, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT, tagMap, pagination } from '../../utility/constants';
 import { displaySimpleNotification } from '../../utility/services';
+import { deleteIssue } from '../../utility/restCalls';
+import { ActionText } from '../Active/ActiveStyles';
 import './style.css';
 
-export default function Backlog() {
+export default function Backlog({ changePage }) {
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,16 +29,23 @@ export default function Backlog() {
     });
   }, [refresh]);
 
-  const handleDeletion = id => {
-    axios
-      .delete(`/issue/${id}`, { withCredentials: true })
-      .then(() => {
-        displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
-        setRefresh(!refresh);
-      })
-      .catch(() => {
-        displaySimpleNotification('Error', 2, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
-      });
+  const handleDeletion = async id => {
+    try {
+      await deleteIssue(id);
+      displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
+      setRefresh(!refresh);
+    } catch (err) {
+      displaySimpleNotification('Error', 2, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
+    }
+  };
+
+  const handleProgressUpdate = async (id, status) => {
+    try {
+      await axios.post(`${API_ENDPOINT}/issueProgress`, { id, status: status + 1 });
+      setRefresh(!refresh);
+    } catch (err) {
+      console.log(`ERROR - Was not able to update issue ${id}`);
+    }
   };
 
   const columns = [
@@ -44,7 +53,11 @@ export default function Backlog() {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: text => <a href='/'>{text}</a>,
+      render: text => (
+        <a href='#' style={{ color: '#5185bb' }}>
+          {text}
+        </a>
+      ),
     },
     {
       title: 'Id',
@@ -63,8 +76,8 @@ export default function Backlog() {
     },
     {
       title: 'Tags',
-      key: 'tag',
       dataIndex: 'tag',
+      key: 'tag',
       render: tag => (
         <span>
           {tag.map(tag => {
@@ -83,29 +96,27 @@ export default function Backlog() {
       title: 'Action',
       key: 'action',
       render: item => (
-        <span>
-          <a href='/'>Edit</a>
+        <Row type='flex' align='middle'>
+          <ActionText onClick={() => changePage(11, item, 7)}>Edit</ActionText>
           <Divider type='vertical' />
           <Popconfirm
             title='Are you sure you want to delete this task?'
             onConfirm={() => handleDeletion(item.id)}
-            // onCancel={cancel}
             okText='Yes'
             cancelText='No'
           >
-            <a href='/'>Delete</a>
+            <ActionText>Delete</ActionText>
           </Popconfirm>
           <Divider type='vertical' />
           <Popconfirm
             title='Send task to dashboard?'
-            // onConfirm={}
-            // onCancel={cancel}
+            onConfirm={() => handleProgressUpdate(item.id, item.status)}
             okText='Yes'
             cancelText='No'
           >
-            <a href='/'>Make Active</a>
+            <ActionText>Make Active</ActionText>
           </Popconfirm>
-        </span>
+        </Row>
       ),
     },
   ];

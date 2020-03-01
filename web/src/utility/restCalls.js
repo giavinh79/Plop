@@ -31,4 +31,12 @@ const retrieveTeams = async () => {
   }
 };
 
-export { createSession, retrieveAssignees, retrieveTeams };
+const deleteIssue = async id => {
+  try {
+    await axios.delete(`${API_ENDPOINT}/issue/${id}`);
+  } catch (err) {
+    throw err;
+  }
+};
+
+export { createSession, deleteIssue, retrieveAssignees, retrieveTeams };

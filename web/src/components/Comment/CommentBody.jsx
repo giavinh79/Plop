@@ -80,15 +80,16 @@ export default function CommentBody({ id }) {
         <Icon type='enter' style={{ cursor: 'pointer', paddingRight: '1rem' }} onClick={handleComment} />
         {loadingUserInfo && <Spin />}
       </div>
-      <List
-        className='comment-list'
-        itemLayout='horizontal'
-        dataSource={comments}
-        renderItem={item => (
-          <li>
-            {loadingComments ? (
-              <Skeleton active avatar />
-            ) : (
+
+      {loadingComments ? (
+        <Skeleton active avatar />
+      ) : (
+        <List
+          className='comment-list'
+          itemLayout='horizontal'
+          dataSource={comments}
+          renderItem={item => (
+            <li>
               <Comment
                 actions={item.actions}
                 author={item.author}
@@ -96,10 +97,10 @@ export default function CommentBody({ id }) {
                 content={item.content}
                 datetime={item.datetime}
               />
-            )}
-          </li>
-        )}
-      />
+            </li>
+          )}
+        />
+      )}
     </div>
   );
 }

@@ -4,8 +4,8 @@ import { AutoComplete, Popconfirm, Input, Form, Radio, Button, Divider, Select, 
 import { displaySimpleNotification } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT } from '../../utility/constants';
+import { retrieveAssignees, deleteIssue } from '../../utility/restCalls.js';
 import './style.css';
-import { retrieveAssignees } from '../../utility/restCalls.js';
 
 const { TextArea } = Input;
 
@@ -14,39 +14,37 @@ const formItemLayout = {
   wrapperCol: { span: 14 },
 };
 
-// Divide this up into two components and make a HOC (maybe)
-export default function CreateIssue({ changePage, data, form }) {
+// Divide this up into two components and make a HoC (maybe)
+export default function CreateIssue({ data, changePage, form, source }) {
   const [defaultFileList, setDefaultFileList] = useState([]);
   const [assignees, setAssignees] = useState([]);
 
   useEffect(() => {
-    if (data) {
-      if (data.image) {
-        setDefaultFileList(
-          data.image.map((item, key) => {
-            return {
-              uid: item.id,
-              key: key,
-              name: item.id,
-              status: 'done',
-              url: item.url,
-            };
-          })
-        );
-      }
+    if (data && data.image) {
+      setDefaultFileList(
+        data.image.map((item, key) => {
+          return {
+            uid: item.id,
+            key: key,
+            name: item.id,
+            status: 'done',
+            url: item.url,
+          };
+        })
+      );
     }
 
     (async function() {
-      const res = await retrieveAssignees();
-      setAssignees(res.data);
+      const { data } = await retrieveAssignees();
+      setAssignees(data);
     })().catch(err => {
       console.log(err);
     });
   }, [data]);
 
-  const handleDeletion = id => {
+  const handleDeletion = async id => {
     try {
-      axios.delete(`${API_ENDPOINT}/issue/${id}`);
+      await deleteIssue(id);
       displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
       changePage(0);
     } catch (err) {
@@ -151,7 +149,7 @@ export default function CreateIssue({ changePage, data, form }) {
             <p
               style={{ marginLeft: '1rem', fontSize: '1rem', cursor: 'pointer', color: '#595a5d' }}
               onClick={() => {
-                changePage(0);
+                changePage(source || 0);
               }}
             >
               Go back
@@ -160,7 +158,7 @@ export default function CreateIssue({ changePage, data, form }) {
               type='rollback'
               style={{ margin: '0 0.5rem', fontSize: '1.5rem', cursor: 'pointer' }}
               onClick={() => {
-                changePage(0);
+                changePage(source || 0);
               }}
             />
           </>
@@ -260,7 +258,7 @@ export default function CreateIssue({ changePage, data, form }) {
               }}
             >
               {getFieldDecorator('status', {
-                initialValue: data == null ? 0 : data.status || 0,
+                initialValue: data == null ? 1 : data.status || 1,
               })(
                 <Radio.Group>
                   <Radio value={0}>Backlog</Radio>

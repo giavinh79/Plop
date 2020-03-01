@@ -4,108 +4,13 @@ import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Row, Skeleton
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT, tagMap, pagination, progressMap } from '../../utility/constants';
 import { ActionText } from './ActiveStyles';
+import { deleteIssue } from '../../utility/restCalls';
+import { displaySimpleNotification } from '../../utility/services';
 
-const columns = [
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    key: 'title',
-    render: text => <a href='/'>{text}</a>,
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    key: 'description',
-  },
-  {
-    title: 'Date',
-    dataIndex: 'date',
-    key: 'date',
-  },
-  {
-    title: 'Tags',
-    key: 'tag',
-    dataIndex: 'tag',
-    render: tag => (
-      <span>
-        {tag.map(item => {
-          let color = tagMap[item.toLowerCase()];
-          if (color == null) color = 'geekblue';
-          return (
-            <Tag color={color} key={item} style={{ margin: '4px 8px 4px 0' }}>
-              {item.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </span>
-    ),
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    key: 'status',
-    render: status => {
-      return <p style={{ margin: 0 }}>{progressMap[status]}</p>;
-    },
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: () => (
-      <Row type='flex' align='middle'>
-        <ActionText
-          onClick={() => {
-            console.log('hey');
-          }}
-        >
-          Edit
-        </ActionText>
-        <Divider type='vertical' />
-        <Popconfirm
-          title='Are you sure you want to delete this task?'
-          // onConfirm={confirm}
-          // onCancel={cancel}
-          okText='Yes'
-          cancelText='No'
-        >
-          <ActionText>Delete</ActionText>
-        </Popconfirm>
-        <Divider type='vertical' />
-        <Popconfirm
-          title='Promote to next stage?'
-          // onConfirm={confirm}
-          // onCancel={cancel}
-          okText='Yes'
-          cancelText='No'
-        >
-          <ActionText>Progress</ActionText>
-        </Popconfirm>
-      </Row>
-    ),
-  },
-  {
-    title: '',
-    key: 'priority',
-    dataIndex: 'priority',
-    render: priority => {
-      return (
-        <div style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
-          <Tooltip title={priority ? 'Major Priority' : 'Minor Priority'} mouseEnterDelay={0.8}>
-            {priority ? (
-              <Icon type='arrow-up' style={{ color: '#b23f3f' }} />
-            ) : (
-              <Icon type='arrow-down' style={{ color: '#40b33f' }} />
-            )}
-          </Tooltip>
-        </div>
-      );
-    },
-  },
-];
-
-export default function Active() {
+export default function Active({ changePage }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false); // toggle
 
   useEffect(() => {
     (async () => {
@@ -122,7 +27,119 @@ export default function Active() {
     })().catch(err => {
       console.log(err);
     });
-  }, []);
+  }, [refresh]);
+
+  const handleDeletion = async id => {
+    try {
+      await deleteIssue(id);
+      setRefresh(!refresh);
+      displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
+    } catch (err) {
+      displaySimpleNotification('Error', 2, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
+    }
+  };
+
+  const handleProgressUpdate = async (id, status) => {
+    try {
+      await axios.post(`${API_ENDPOINT}/issueProgress`, { id, status: status + 1 });
+      setRefresh(!refresh);
+    } catch (err) {
+      console.log(`ERROR - Was not able to update issue ${id}`);
+    }
+  };
+
+  const columns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+      render: text => (
+        <a href='#' style={{ color: '#5185bb' }}>
+          {text}
+        </a>
+      ),
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+    },
+    {
+      title: 'Tags',
+      dataIndex: 'tag',
+      key: 'tag',
+      render: tag => (
+        <span>
+          {tag.map(item => {
+            let color = tagMap[item.toLowerCase()] || 'geekblue';
+            return (
+              <Tag color={color} key={item} style={{ margin: '4px 8px 4px 0' }}>
+                {item.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </span>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: status => {
+        return <p style={{ margin: 0 }}>{progressMap[status]}</p>;
+      },
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: item => (
+        <Row type='flex' align='middle'>
+          <ActionText onClick={() => changePage(11, item, 6)}>Edit</ActionText>
+          <Divider type='vertical' />
+          <Popconfirm
+            title='Are you sure you want to delete this task?'
+            onConfirm={() => handleDeletion(item.id)}
+            okText='Yes'
+            cancelText='No'
+          >
+            <ActionText>Delete</ActionText>
+          </Popconfirm>
+          <Divider type='vertical' />
+          <Popconfirm
+            title='Promote to next stage?'
+            onConfirm={() => handleProgressUpdate(item.id, item.status)}
+            okText='Yes'
+            cancelText='No'
+          >
+            <ActionText>Progress</ActionText>
+          </Popconfirm>
+        </Row>
+      ),
+    },
+    {
+      title: '',
+      key: 'priority',
+      dataIndex: 'priority',
+      render: priority => {
+        return (
+          <div style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
+            <Tooltip title={priority ? 'Major Priority' : 'Minor Priority'} mouseEnterDelay={0.8}>
+              {priority ? (
+                <Icon type='arrow-up' style={{ color: '#b23f3f' }} />
+              ) : (
+                <Icon type='arrow-down' style={{ color: '#40b33f' }} />
+              )}
+            </Tooltip>
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <div style={layout}>
