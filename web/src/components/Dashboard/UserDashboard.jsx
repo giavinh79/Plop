@@ -1,46 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { Empty } from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import { Empty } from 'antd';
 import DragDropComponent from './DragDropComponent';
 import { API_ENDPOINT } from '../../utility/constants';
 
-let isMounted = false;
-let activeItems = [];
-let progressItems = [];
-let completedItems = [];
-
-export default function UserDashboard({ issue, changePage, checkSession }) {
-  const { active, progress, complete } = issue;
-  if (active || progress || complete) {
-    activeItems = active;
-    progressItems = progress;
-    completedItems = complete;
-  }
-
+export default function UserDashboard({ changePage, checkSession }) {
+  const [empty, setEmpty] = useState(localStorage.getItem('empty') != null ? true : false);
+  const [loaded, setLoaded] = useState(false);
   const [items, setItems] = useState({
-    active: activeItems,
-    progress: progressItems,
-    complete: completedItems,
+    active: [],
+    progress: [],
+    complete: [],
   });
 
-  const [loaded, setLoaded] = useState(false);
-
-  // const filter = useRef(false); // investigate why I had this again - think i was trying to cache locally for faster perceived speeds
-  const [empty, setEmpty] = useState(localStorage.getItem('empty') !== null ? true : false);
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    isMounted = true;
+    isMounted.current = true;
 
     (async () => {
-      let res = await axios.get(`${API_ENDPOINT}/userIssue/1`, { withCredentials: true });
-      const { activeItems, progressItems, completedItems } = res.data;
-      if (isMounted) {
+      let { data } = await axios.get(`${API_ENDPOINT}/userIssue/1`);
+      const { activeItems, progressItems, completedItems } = data;
+      if (isMounted.current) {
         if (activeItems.length + progressItems.length + completedItems.length === 0) {
           setEmpty(true);
-          localStorage.setItem('empty', '1');
         } else {
           setItems({ active: activeItems, progress: progressItems, complete: completedItems });
-          localStorage.removeItem('empty');
         }
         setLoaded(true);
       }
@@ -49,7 +34,7 @@ export default function UserDashboard({ issue, changePage, checkSession }) {
     });
 
     return () => {
-      isMounted = false;
+      isMounted.current = false;
     };
   }, [checkSession]);
 

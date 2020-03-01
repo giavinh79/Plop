@@ -1,41 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import DragDropComponent from './DragDropComponent';
 import { API_ENDPOINT } from '../../utility/constants';
 
-let isMounted = false;
-let activeItems = [];
-let progressItems = [];
-let completedItems = [];
-
-export default function TeamDashboard({ issue, changePage, checkSession }) {
-  const { active, progress, complete } = issue;
-  if (active || progress || complete) {
-    activeItems = active;
-    progressItems = progress;
-    completedItems = complete;
-  }
-
+export default function TeamDashboard({ changePage, checkSession }) {
+  const [loaded, setLoaded] = useState(false);
   const [items, setItems] = useState({
-    active: activeItems,
-    progress: progressItems,
-    complete: completedItems,
+    active: [],
+    progress: [],
+    complete: [],
   });
 
-  const [loaded, setLoaded] = useState(false);
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    isMounted = true;
+    isMounted.current = true;
 
     (async () => {
-      let res = await axios.get(`${API_ENDPOINT}/teamIssue/1`);
-      const { activeItems, progressItems, completedItems } = res.data;
-      if (isMounted) {
-        if (
-          activeItems.length + progressItems.length + completedItems.length > 0 ||
-          items.active.length + items.progress.length + items.complete.length > 0
-        )
-          setItems({ active: activeItems, progress: progressItems, complete: completedItems });
+      let { data } = await axios.get(`${API_ENDPOINT}/teamIssue/1`);
+      const { activeItems, progressItems, completedItems } = data;
+      if (isMounted.current) {
+        setItems({ active: activeItems, progress: progressItems, complete: completedItems });
         setLoaded(true);
       }
     })().catch(err => {
@@ -43,7 +28,7 @@ export default function TeamDashboard({ issue, changePage, checkSession }) {
     });
 
     return () => {
-      isMounted = false;
+      isMounted.current = false;
     };
   }, [checkSession, items.complete.length, items.progress.length, items.active.length]);
   return <DragDropComponent changePage={changePage} items={items} setItems={setItems} loaded={loaded} />;
