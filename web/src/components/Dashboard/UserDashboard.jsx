@@ -1,44 +1,20 @@
-import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Empty } from 'antd';
 import DragDropComponent from './DragDropComponent';
-import { API_ENDPOINT } from '../../utility/constants';
+import { useActiveIssues } from '../../utility/hooks';
 
 export default function UserDashboard({ changePage, checkSession }) {
-  const [empty, setEmpty] = useState(localStorage.getItem('empty') != null ? true : false);
-  const [loaded, setLoaded] = useState(false);
-  const [items, setItems] = useState({
-    active: [],
-    progress: [],
-    complete: [],
-  });
+  const [items, setItems, loaded] = useActiveIssues('user', checkSession);
 
-  const isMounted = useRef(false);
+  const isEmpty = () => {
+    try {
+      return items.activeItems.length + items.progressItems.length + items.completedItems.length === 0;
+    } catch (err) {
+      return false;
+    }
+  };
 
-  useEffect(() => {
-    isMounted.current = true;
-
-    (async () => {
-      let { data } = await axios.get(`${API_ENDPOINT}/userIssue/1`);
-      const { activeItems, progressItems, completedItems } = data;
-      if (isMounted.current) {
-        if (activeItems.length + progressItems.length + completedItems.length === 0) {
-          setEmpty(true);
-        } else {
-          setItems({ active: activeItems, progress: progressItems, complete: completedItems });
-        }
-        setLoaded(true);
-      }
-    })().catch(() => {
-      checkSession();
-    });
-
-    return () => {
-      isMounted.current = false;
-    };
-  }, [checkSession]);
-
-  return empty ? (
+  return isEmpty() ? (
     <div style={styles.emptyWrapper}>
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
