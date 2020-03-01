@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Divider, Popconfirm, Table as BacklogTable, Skeleton, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
-import './style.css';
-import { tagMap, API_ENDPOINT } from '../../utility/constants';
+import { API_ENDPOINT, tagMap, pagination } from '../../utility/constants';
 import { displaySimpleNotification } from '../../utility/services';
-import { pagination } from '../../utility/constants';
+import './style.css';
 
 export default function Backlog() {
   const [refresh, setRefresh] = useState(false);
@@ -13,21 +12,19 @@ export default function Backlog() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`${API_ENDPOINT}/teamIssue/0`)
-      .then(res => {
-        res.data.map((item, index) => {
-          item.key = index;
-          item.date = item.created_at.substring(0, 10);
-          // item.tag = JSON.parse(item.tag); // convert "[]" to [] if mySQL
-          return item;
-        });
-        setLoading(false);
-        setData(res.data);
-      })
-      .catch(err => {
-        console.log(err);
+    (async () => {
+      const { data } = await axios.get(`${API_ENDPOINT}/teamIssue/0`);
+      data.map((item, index) => {
+        item.key = index;
+        item.date = item.created_at.substring(0, 10);
+        // item.tag = JSON.parse(item.tag); // convert "[]" to [] if mySQL
+        return item;
       });
+      setLoading(false);
+      setData(data);
+    })().catch(err => {
+      console.log(err);
+    });
   }, [refresh]);
 
   const handleDeletion = id => {
@@ -130,7 +127,7 @@ export default function Backlog() {
   );
 }
 
-// //Sample data
+// Sample data
 // let data = [
 // {
 // 	key: '1',
@@ -138,19 +135,5 @@ export default function Backlog() {
 // 	description: 'Convert .png to .ico',
 // 	date: '04/08/2019',
 // 	tags: ['frontend', 'minor'],
-// },
-// {
-// 	key: '2',
-// 	title: 'Google SSO',
-// 	description: 'Implement SSO in login screen',
-// 	date: '04/12/2019',
-// 	tags: ['major'],
-// },
-// {
-// 	key: '3',
-// 	title: 'Server load testing',
-// 	description: 'Test with some NPM module',
-// 	date: '04/14/2019',
-// 	tags: ['backend', 'minor'],
-// },
+// }
 // ];

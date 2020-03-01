@@ -4,13 +4,16 @@ Plop is a web application that uses React.js as its frontend framework and Adoni
 
 A relational database is used which is managed using the Lucid ORM to take advantage of models, controllers, migrations, seeds and factories. This allows us to easily replicate common SQL queries, setup the database with ease, and create dummy data.
 
-Current deployed on https://www.plop.team/ as version 0.5. Backend is deployed on https://plopwebapp.herokuapp.com/.
+Current deployed on https://www.plop.team/ as version 0.6. Backend is deployed on https://plopwebapp.herokuapp.com/.
+
 
 ## To Do
 
-Immediate: JWT token refresh, comments, refreshing teams, add notification icon design
+Immediate: JWT token refresh, refreshing teams, add notification icon design (notified when someone comments on an issue assigned to you or someone comments on something you commented on), refactoring routes, making actions clickable on Active and Backlog tables, more informative landing page
 
-Responsiveness (alert when user is on mobile screen to download mobile app)
+Longterm: Make functionality for room settings work (room deletion, add pending invitations table...), themes and changing password, administration levels, mobile responsiveness (or alert to download mobile app)
+
+Very longterm:
 
 Web Sockets to be implemented to allow chat, track member statuses, and show live changes on the dashboard
 
@@ -40,7 +43,7 @@ Database Deletion (Adonis CLI required) - 'cd to ./server' and then run 'adonis 
 
 Database Initialization (Adonis CLI required) - 'cd to ./server' and then run 'adonis seed'. You will now be able to login as a user called 'tester@gmail.com' with password 'test'. A room will be setup for this user with some imported issues. You must have already done 'adonis migration:run' successfully.
 
-Databases - mySQL or postgreSQL (for development purposes, a mySQL remote database can be setup via http://remotemysql.com and a postgresQL database can be hosted locally via http://www.postgresqltutorial.com/install-postgresql/)
+Databases - postgreSQL (for development purposes, a mySQL remote database can be setup via http://remotemysql.com and a postgresQL database can be hosted locally via http://www.postgresqltutorial.com/install-postgresql/)
 
 ## Testing
 

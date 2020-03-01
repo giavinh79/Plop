@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Icon, notification, Modal } from 'antd';
 
 /*
- * File for using commonly used functions - simply import the one desired
+ * Commonly used functions
  */
 
 const displayInfoDialog = (title, dataLabel, data, content) => {
@@ -52,5 +52,4 @@ const displayUnknownError = () => {
   });
 };
 
-// Using export { } over export const to give quick summary of utility functions
 export { displayInfoDialog, displaySimpleNotification, displaySessionExpired, displayUnknownError };

@@ -95,7 +95,7 @@ class SetupSeeder {
         title: 'Implement unit tests',
         room: room.id,
         shortDescription: 'Unit testing React',
-        description: 'Import Jest and Enzyme for unit testing and create basic tests',
+        description: 'Create basic tests with React Testing Library',
         assignee: 'tester@gmail.com',
         creator: user.email,
         priority: 0,

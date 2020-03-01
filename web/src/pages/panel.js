@@ -23,22 +23,11 @@ export default class Panel extends React.Component {
       toHomepage: false,
       currentPage: 0,
       data: {},
-      active: null, // store information for faster perceived renders
-      progress: null,
-      complete: null,
-      activeFiltered: null, // store information for faster perceived renders
-      progressFiltered: null,
-      completeFiltered: null,
     };
   }
 
   changePage = (page, params) => {
     this.setState({ data: params, currentPage: page });
-  };
-
-  setIssue = (active, progress, complete, filter) => {
-    if (!filter) this.setState({ active, progress, complete });
-    else this.setState({ activeFiltered: active, progressFiltered: progress, completeFiltered: complete });
   };
 
   async checkSession() {
@@ -53,31 +42,9 @@ export default class Panel extends React.Component {
   returnPage = page => {
     switch (page) {
       case 0:
-        return (
-          <TeamDashboard
-            changePage={this.changePage}
-            setIssue={this.setIssue}
-            issue={{
-              active: this.state.active,
-              progress: this.state.progress,
-              complete: this.state.complete,
-            }}
-            checkSession={this.checkSession}
-          />
-        );
+        return <TeamDashboard changePage={this.changePage} checkSession={this.checkSession} />;
       case 1:
-        return (
-          <UserDashboard
-            changePage={this.changePage}
-            setIssue={this.setIssue}
-            issue={{
-              active: this.state.activeFiltered,
-              progress: this.state.progressFiltered,
-              complete: this.state.completeFiltered,
-            }}
-            checkSession={this.checkSession}
-          />
-        );
+        return <UserDashboard changePage={this.changePage} checkSession={this.checkSession} />;
       case 2:
         return <Schedule />;
       case 3:

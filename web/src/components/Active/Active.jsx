@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Row, Skeleton, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
-import { tagMap, API_ENDPOINT } from '../../utility/constants';
+import { API_ENDPOINT, tagMap, pagination, progressMap } from '../../utility/constants';
 import { ActionText } from './ActiveStyles';
-import { pagination } from '../../utility/constants';
-
-const progressMap = { 1: 'Active', 2: 'In Progress', 3: 'Completed' };
 
 const columns = [
   {
@@ -95,12 +92,9 @@ const columns = [
         <div style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
           <Tooltip title={priority ? 'Major Priority' : 'Minor Priority'} mouseEnterDelay={0.8}>
             {priority ? (
-              // make that member online status
-              // <div style={{ height: '1rem', width: '1rem', backgroundColor: '#b23f3f', borderRadius: '50%' }}></div>
               <Icon type='arrow-up' style={{ color: '#b23f3f' }} />
             ) : (
               <Icon type='arrow-down' style={{ color: '#40b33f' }} />
-              // <div style={{ height: '1rem', width: '1rem', backgroundColor: '#40b33f', borderRadius: '50%' }}></div>
             )}
           </Tooltip>
         </div>
@@ -114,22 +108,20 @@ export default function Active() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`${API_ENDPOINT}/teamIssue/1`)
-      .then(res => {
-        let activeIssues = [...res.data.activeItems, ...res.data.completedItems, ...res.data.progressItems];
-        activeIssues.map((item, index) => {
-          item.key = index;
-          item.date = item.created_at.substring(0, 10);
-          // item.tag = JSON.parse(item.tag); // convert "[]" to [] if using mySQL
-          return item;
-        });
-        setLoading(false);
-        setData(activeIssues);
-      })
-      .catch(err => {
-        console.log(err);
+    (async () => {
+      const { data } = await axios.get(`${API_ENDPOINT}/teamIssue/1`);
+      let activeIssues = [...data.activeItems, ...data.completedItems, ...data.progressItems];
+      activeIssues.map((item, index) => {
+        item.key = index;
+        item.date = item.created_at.substring(0, 10);
+        // item.tag = JSON.parse(item.tag); // convert "[]" to [] if using mySQL
+        return item;
       });
+      setLoading(false);
+      setData(activeIssues);
+    })().catch(err => {
+      console.log(err);
+    });
   }, []);
 
   return (

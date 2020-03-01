@@ -46,7 +46,7 @@ export default function CreateIssue({ changePage, data, form }) {
 
   const handleDeletion = id => {
     try {
-      axios.delete(`${API_ENDPOINT}/issue/${id}`, { withCredentials: true });
+      axios.delete(`${API_ENDPOINT}/issue/${id}`);
       displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
       changePage(0);
     } catch (err) {

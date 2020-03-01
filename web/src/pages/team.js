@@ -59,7 +59,10 @@ export default function Team() {
 
     try {
       const res = await axios.put(`${API_ENDPOINT}/room`, data);
-      setTeams([...teams, { name: res.data.name, description: res.data.description, id: res.data.id }]);
+      setTeams([
+        ...teams,
+        { name: res.data.name, description: res.data.description, id: res.data.id, currentMembers: '1' },
+      ]);
       displayInfoDialog(
         'Team was successfully created!',
         'Your team ID is:',
@@ -69,7 +72,7 @@ export default function Team() {
     } catch (err) {
       displaySimpleNotification(
         'Team was not created',
-        4,
+        5,
         'bottomRight',
         'This may be due to you being at your team limit or exceeding input values (description < 300 characters and title < 100 characters).',
         'warning',

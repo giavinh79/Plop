@@ -8,7 +8,7 @@ export default function Help() {
       <p style={subheader}>Help</p>
       <div>
         Plop is an application that allows users to collaborate and manage projects within a small team. For any
-        questions, concerns, or feedback please email email@email.com.
+        questions, concerns, or feedback please email plopwebapp@gmail.com.
       </div>
       <div style={styles.table}>
         <h2 style={{ marginTop: '1rem' }}>Table of Contents</h2>
