@@ -18,8 +18,10 @@ function TeamDropdown({ history }) {
     }, 1200);
 
     try {
-      await createSession();
-      // history.push('/dashboard');
+      localStorage.setItem('currentTeam', JSON.parse(localStorage.getItem('teams'))[event.key - 1].id);
+      await createSession(event);
+      window.location.reload();
+      // Works for now but will want to change this to simply refetch data with the new room session
     } catch (err) {
       console.log(err);
     }
