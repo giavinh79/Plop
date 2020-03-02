@@ -108,24 +108,27 @@ class IssueController {
 
       const imagePromises = [];
       // need to JSON.parse(issue[0].image) if mySQL
-      for (let item of issue[0].image) {
-        imagePromises.push(
-          new Promise((resolve, reject) => {
-            cloudinary.v2.uploader.destroy(item, (error, result) => {
-              if (error) {
-                if (error.result !== 'not found') {
-                  reject(new Error('Cloudinary image deletion failed'));
+
+      if (issue[0].image && Array.isArray(issue[0].image)) {
+        for (let item of issue[0].image) {
+          imagePromises.push(
+            new Promise((resolve, reject) => {
+              cloudinary.v2.uploader.destroy(item, (error, result) => {
+                if (error) {
+                  if (error.result !== 'not found') {
+                    reject(new Error('Cloudinary image deletion failed'));
+                  } else {
+                    resolve();
+                  }
                 } else {
                   resolve();
                 }
-              } else {
-                resolve();
-              }
-            });
-          })
-        );
+              });
+            })
+          );
+        }
+        await Promise.all(imagePromises);
       }
-      await Promise.all(imagePromises);
 
       const deletions = await Database.table('issues')
         .where('id', request.params.id)
