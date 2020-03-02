@@ -46,7 +46,7 @@ export default function CreateIssue({ data, changePage, form, source }) {
     try {
       await deleteIssue(id);
       displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
-      changePage(0);
+      changePage(source || 0);
     } catch (err) {
       displaySimpleNotification('Error', 2, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
     }
@@ -87,7 +87,7 @@ export default function CreateIssue({ data, changePage, form, source }) {
                 '#108ee9'
               );
             } else {
-              const res = await axios.put('/issue', values);
+              const res = await axios.put(`${API_ENDPOINT}/issue`, values);
               displaySimpleNotification(
                 'Success',
                 2,

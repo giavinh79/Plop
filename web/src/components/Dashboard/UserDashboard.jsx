@@ -8,7 +8,7 @@ export default function UserDashboard({ changePage, checkSession }) {
 
   const isEmpty = () => {
     try {
-      return items.activeItems.length + items.progressItems.length + items.completedItems.length === 0;
+      return items.active.length + items.progress.length + items.complete.length === 0;
     } catch (err) {
       return false;
     }

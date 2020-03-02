@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { layout, subheader } from '../../globalStyles';
-import 'antd/dist/antd.css';
-import { Button, Typography, Tooltip, Icon, Input, Skeleton, Switch } from 'antd';
+import { Button, Col, Icon, Input, Modal, Popconfirm, Typography, Tooltip, Skeleton, Switch } from 'antd';
 import MemberSlider from './MemberSlider';
 import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../utility/constants';
+import 'antd/dist/antd.css';
 
 const { Paragraph } = Typography;
+const { confirm } = Modal;
 
 export default function Settings() {
   const [state, setState] = useState({
@@ -30,6 +31,40 @@ export default function Settings() {
       displaySimpleNotification('Error', 4, 'bottomRight', `Unable to retrieve team info. (${err})`, 'warning', 'red');
     });
   }, []);
+
+  const showDeleteConfirmMessage = () => {
+    confirm({
+      title: 'Team Deletion Confirmation',
+      icon: <Icon type='exclamation-circle' />,
+      content: (
+        <>
+          Your changes will be permanent. Please enter your email and password below to confirm.
+          <Col type='flex' style={{ paddingTop: '2rem' }}>
+            <Input placeholder='Email' style={{ margin: '0.5rem 0' }} type='email' autoComplete='new-password' />
+            <Input placeholder='Password' style={{ margin: '0.5rem 0' }} type='password' autoComplete='new-password' />
+          </Col>
+        </>
+      ),
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk() {
+        console.log('OK');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      await axios.post(`${API_ENDPOINT}/room`, state);
+      displaySimpleNotification('Success', 2, 'bottomRight', 'Team was saved', 'smile', '#108ee9');
+    } catch (err) {
+      displaySimpleNotification('Error', 2, 'bottomRight', 'Team could not be saved', 'warning', 'red');
+    }
+  };
 
   return (
     <div style={layout}>
@@ -62,11 +97,20 @@ export default function Settings() {
             <>
               <div style={styles.wrapper}>
                 <p style={styles.text}>Team name: </p>
-                <Input type='text' value={state.name} />
+                <Input
+                  type='text'
+                  defaultValue={state.name}
+                  onChange={e => setState({ ...state, name: e.target.value })}
+                />
               </div>
               <div style={styles.wrapper}>
                 <p style={styles.text}>Team description: </p>
-                <Input.TextArea type='text' value={state.description} autosize={{ minRows: 10 }} />
+                <Input.TextArea
+                  type='text'
+                  defaultValue={state.description}
+                  autosize={{ minRows: 10 }}
+                  onChange={e => setState({ ...state, description: e.target.value })}
+                />
               </div>
             </>
           )}
@@ -89,7 +133,12 @@ export default function Settings() {
             <>
               <div style={styles.wrapper}>
                 <p style={styles.text}>Team password: </p>
-                <Input.Password value={state.decryptPass} autoComplete='new-password' type='password' />
+                <Input.Password
+                  defaultValue={state.decryptPass}
+                  autoComplete='new-password'
+                  type='password'
+                  onChange={e => setState({ ...state, decryptPass: e.target.value })}
+                />
               </div>
               <div style={styles.wrapper}>
                 <div style={{ flex: 1, padding: '0.5rem 0' }}>
@@ -126,7 +175,7 @@ export default function Settings() {
                     </p>
                   </div>
                   <div style={styles.wrapperC}>
-                    <Switch defaultChecked={true} />
+                    <Switch defaultChecked={false} disabled />
                     <p style={styles.textC}>
                       Enable logs{' '}
                       <span>
@@ -137,7 +186,7 @@ export default function Settings() {
                     </p>
                   </div>
                   <div style={styles.wrapperC}>
-                    <Switch defaultChecked={state.adminApproval} />
+                    <Switch defaultChecked={state.adminApproval} disabled />
                     <p style={styles.textC}>
                       Enable member approval{' '}
                       <span>
@@ -157,13 +206,21 @@ export default function Settings() {
         <Button
           key='submit'
           type='primary'
-          onClick={() => {
-            console.log('Clicked Save');
+          style={{
+            backgroundColor: '#cc8181',
+            borderColor: '#cc8181',
+            marginRight: '1rem',
           }}
+          onClick={showDeleteConfirmMessage}
+          disabled
         >
-          Save
+          Delete Team
         </Button>
-        ,
+        <Popconfirm title='Are you sure you want to save?' onConfirm={() => handleSave()} okText='Yes' cancelText='No'>
+          <Button key='submit' type='primary'>
+            Save
+          </Button>
+        </Popconfirm>
       </div>
     </div>
   );

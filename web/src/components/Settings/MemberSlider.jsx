@@ -12,10 +12,10 @@ export default function MemberSlider() {
   return (
     <Row>
       <Col span={12}>
-        <Slider min={4} max={12} onChange={onChange} value={value} />
+        <Slider min={4} max={12} onChange={onChange} value={value} disabled />
       </Col>
       <Col span={4}>
-        <InputNumber min={4} max={12} style={{ marginLeft: 16 }} onChange={onChange} value={value} />
+        <InputNumber min={4} max={12} style={{ marginLeft: 16 }} onChange={onChange} value={value} disabled />
       </Col>
     </Row>
   );

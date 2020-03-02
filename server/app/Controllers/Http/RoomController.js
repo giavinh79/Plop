@@ -96,15 +96,36 @@ class RoomController {
 
   async update({ auth, request, response }) {
     try {
-      // This method promotes an issue from backlog to active
-      // or progresses it from active -> in progress -> completed
       const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
       let result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', Encryption.decrypt(response.cookie('roomId')));
+        .where('room_id', decryptedRoomId);
+
       if (result.length === 0) throw new Error('User not in room');
+      let data = await Database.table('rooms')
+        .select('admin')
+        .where('id', decryptedRoomId);
+      if (data[0].admin !== user.id) {
+        throw new Error('User changing room settings must be the owner');
+      }
+
+      // Cannot destructure private as it is a keyword
+      let { name, description, decryptPass, maxMembers, adminApproval } = request.body;
+
+      await Database.table('rooms')
+        .where('id', decryptedRoomId)
+        .update({
+          name: name,
+          description: description,
+          password: Encryption.encrypt(decryptPass),
+          maxMembers: maxMembers,
+          private: request.body.private,
+          adminApproval: adminApproval,
+        });
+      response.status(200).send();
     } catch (err) {
-      console.log(`(room_update) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      console.log(`(room_update) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -230,6 +251,14 @@ class RoomController {
         .where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
+      let data = await Database.table('rooms')
+        .select('admin')
+        .where('id', decryptedRoomId);
+
+      if (data[0].admin === user.id) {
+        throw new Error('Must delete room if user is the owner');
+      }
+
       await Database.transaction(async trx => {
         let data = await trx
           .table('rooms')
@@ -254,15 +283,6 @@ class RoomController {
           .where('room_id', decryptedRoomId)
           .delete();
       });
-
-      // result = await Database.from('rooms')
-      //   .select('password')
-      //   .where('id', roomId);
-      // if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('Wrong password');
-      // // Future - add check here for if admin approval == true. If it is true
-      // // then we have to add it to pending table and tell user via notification/email that their request
-      // // has been sent to the room admin and needs to be approved
-      // await Database.table('user_rooms').insert({ user_id: user.id, room_id: roomId });
       response.status(200).send();
     } catch (err) {
       console.log(`(room_leave) ${new Date()}: ${err.message}`);
