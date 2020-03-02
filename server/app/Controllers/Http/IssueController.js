@@ -113,7 +113,7 @@ class IssueController {
         for (let item of issue[0].image) {
           imagePromises.push(
             new Promise((resolve, reject) => {
-              cloudinary.v2.uploader.destroy(item, (error, result) => {
+              cloudinary.v2.uploader.destroy(item.id, (error, result) => {
                 if (error) {
                   if (error.result !== 'not found') {
                     reject(new Error('Cloudinary image deletion failed'));
