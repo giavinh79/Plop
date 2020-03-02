@@ -133,7 +133,8 @@ class RoomController {
 
       // Use transactions to safely commit all required changes (if one fails, all get reverted)
       await Database.transaction(async trx => {
-        await Database.table('users')
+        await trx
+          .table('users')
           .where('id', user.id)
           .update({ numTeams: user.numTeams + 1 });
         await room.save();
@@ -164,7 +165,7 @@ class RoomController {
 
       response.status(200).json({ id: encryptedRoomId, name: roomName, description: roomDescription });
     } catch (err) {
-      console.log(`(room_create) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      console.log(`(room_create) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -241,6 +242,11 @@ class RoomController {
           .update({
             currentMembers: Math.max(1, data[0].currentMembers - 1),
           });
+
+        await trx
+          .table('users')
+          .where('id', user.id)
+          .update({ numTeams: user.numTeams - 1 });
 
         await trx
           .table('user_rooms')

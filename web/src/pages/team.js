@@ -159,7 +159,7 @@ export default function Team() {
             style={{ marginBottom: '1rem' }}
             name='teamDescription'
             id='teamDescription'
-            maxLength={300}
+            maxLength={250}
             required
             onChange={e => {
               createTeamData.current.description = e.currentTarget.value;

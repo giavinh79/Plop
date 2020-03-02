@@ -10,7 +10,7 @@ import { styles } from './DashboardStyles';
  * Component representing the three drag & drop columns active, progress, and complete
  * Takes inputs from TeamDashboard and UserDashboard components
  */
-export default function DragDropComponent({ changePage, loaded, items, setItems }) {
+export default function DragDropComponent({ changePage, loaded, items, setItems, source }) {
   const getActiveStyle = (isDragging, draggableStyle) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -123,7 +123,7 @@ export default function DragDropComponent({ changePage, loaded, items, setItems 
                     {...provided.dragHandleProps}
                     style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
                   >
-                    <Card data={item} changePage={changePage} />
+                    <Card data={item} changePage={changePage} source={source} />
                   </div>
                 )}
               </Draggable>
@@ -153,7 +153,7 @@ export default function DragDropComponent({ changePage, loaded, items, setItems 
                     {...provided.dragHandleProps}
                     style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
                   >
-                    <Card data={item} changePage={changePage} />
+                    <Card data={item} changePage={changePage} source={source} />
                   </div>
                 )}
               </Draggable>
@@ -183,7 +183,7 @@ export default function DragDropComponent({ changePage, loaded, items, setItems 
                     {...provided.dragHandleProps}
                     style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
                   >
-                    <Card data={item} changePage={changePage} />
+                    <Card data={item} changePage={changePage} source={source} />
                   </div>
                 )}
               </Draggable>

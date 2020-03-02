@@ -23,7 +23,7 @@ export default function UserDashboard({ changePage, checkSession }) {
       />
     </div>
   ) : (
-    <DragDropComponent changePage={changePage} items={items} setItems={setItems} loaded={loaded} />
+    <DragDropComponent changePage={changePage} items={items} setItems={setItems} loaded={loaded} source={1} />
   );
 }
 

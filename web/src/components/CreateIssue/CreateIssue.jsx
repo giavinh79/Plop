@@ -194,7 +194,7 @@ export default function CreateIssue({ data, changePage, form, source }) {
           <Form.Item label='Description'>
             {getFieldDecorator('description', {
               initialValue: data == null ? '' : data.description,
-            })(<TextArea autosize={{ minRows: '2', maxRows: '15' }} maxLength={2000} />)}
+            })(<TextArea autosize={{ minRows: '2', maxRows: '15' }} maxLength={1000} />)}
           </Form.Item>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
