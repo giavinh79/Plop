@@ -321,9 +321,12 @@ class IssueController {
           return accumulator;
         }, []);
 
-        const imagesToDelete = imageData[0].image.filter(item => {
-          return !previousImages.includes(item.id);
-        });
+        let imagesToDelete = [];
+        if (imageData[0].image && Array.isArray(imageData[0].image)) {
+          imagesToDelete = imageData[0].image.filter(item => {
+            return !previousImages.includes(item.id);
+          });
+        }
 
         if (imagesToDelete.length > 0) {
           for (let item of imagesToDelete) {
@@ -422,7 +425,7 @@ class IssueController {
         .update({ status: request.body.status });
       response.status(200).send();
     } catch (err) {
-      console.log(`(issue_update) ${new Date()}: ${err.message}`);
+      console.log(`(issue_updateProgress) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }
