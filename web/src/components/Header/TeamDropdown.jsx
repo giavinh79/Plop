@@ -38,7 +38,7 @@ function TeamDropdown({ history }) {
   };
 
   const menu = (
-    <Menu id='dropdownMenu'>
+    <Menu class='dropdownMenu'>
       <Menu.Item
         key='0'
         onClick={() => {

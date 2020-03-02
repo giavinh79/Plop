@@ -34,7 +34,7 @@ const useActiveIssues = (type, checkSession) => {
     return () => {
       isMounted.current = false;
     };
-  }, [checkSession, items.complete.length, items.progress.length, items.active.length]);
+  }, [checkSession, items.complete.length, items.progress.length, items.active.length, type]);
 
   return [items, setItems, loaded];
 };

@@ -41,10 +41,11 @@ export default function Backlog({ changePage }) {
 
   const handleProgressUpdate = async (id, status) => {
     try {
+      if (status === 3) throw new Error('Issue completed, can only delete');
       await axios.post(`${API_ENDPOINT}/issueProgress`, { id, status: status + 1 });
       setRefresh(!refresh);
     } catch (err) {
-      console.log(`ERROR - Was not able to update issue ${id}`);
+      displaySimpleNotification('Error', 3, 'bottomRight', 'Issue could not be progressed.', 'warning', 'red');
     }
   };
 
@@ -53,11 +54,7 @@ export default function Backlog({ changePage }) {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: text => (
-        <a href='#' style={{ color: '#5185bb' }}>
-          {text}
-        </a>
-      ),
+      render: text => <ActionText style={{ color: '#5185bb' }}>{text}</ActionText>,
     },
     {
       title: 'Id',

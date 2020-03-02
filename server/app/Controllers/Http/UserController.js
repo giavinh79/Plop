@@ -117,9 +117,9 @@ class UserController {
   async checkSession({ auth, response }) {
     try {
       await auth.check();
-      response.status(200).send();
+      const user = await auth.getUser();
+      response.status(200).send({ email: user.email });
     } catch (err) {
-      // console.log(`(user_session_check) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }

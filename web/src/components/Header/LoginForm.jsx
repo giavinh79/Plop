@@ -1,85 +1,102 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import 'antd/dist/antd.css';
-import { Form, Icon, Input, Button, notification } from 'antd';
+import { Button, Col, Form, Input, Icon } from 'antd';
 import { Redirect } from 'react-router-dom';
-import './style.css';
 import { API_ENDPOINT } from '../../utility/constants';
+import { displaySimpleNotification } from '../../utility/services';
+import 'antd/dist/antd.css';
+import './style.css';
 
-class HorizontalLoginForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      toDashboard: false,
-    };
-  }
+function HorizontalLoginForm({ form }) {
+  const [loggedInEmail, setLoggedInEmail] = useState(null);
+  const [toDashboard, setToDashboard] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  openNotification = status => {
-    notification.open({
-      message: 'Error',
-      duration: 2,
-      placement: 'bottomRight',
-      description: 'Invalid login.',
-      icon: <Icon type='warning' style={{ color: 'red' }} />,
-    });
+  useEffect(() => {
+    form.validateFields();
+    checkSession();
+  }, [form]);
+
+  const handleLoginFail = () => {
+    displaySimpleNotification('Error', 2, 'bottomRight', 'Invalid login.', 'warning', 'red');
   };
 
-  componentDidMount() {
-    this.props.form.validateFields();
-  }
+  const checkSession = async () => {
+    try {
+      const {
+        data: { email },
+      } = await axios.post(`${API_ENDPOINT}/session`);
+      setLoggedInEmail(email);
+    } catch (err) {
+      setLoggedInEmail(null);
+    }
+  };
 
-  handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
-    const values = {
-      email: document.querySelector('#loginEmail').value,
-      password: document.querySelector('#loginPassword').value,
-    };
-    axios
-      .post(`${API_ENDPOINT}/login`, values)
-      .then(res => {
-        // JWT Bearer Token stored on clientside
-        // localStorage.setItem('email', values.email);
-        this.setState({ toDashboard: true });
-      })
-      .catch(err => {
-        this.openNotification();
-      });
+    try {
+      await axios.post(`${API_ENDPOINT}/login`, { email, password });
+      setToDashboard(true);
+    } catch (err) {
+      handleLoginFail();
+      setPassword('');
+    }
   };
 
-  render() {
-    return !this.state.toDashboard ? (
-      <Form layout='inline' onSubmit={this.handleSubmit}>
-        <Form.Item>
-          <Input
-            prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder='Username'
-            name='loginEmail'
-            id='loginEmail'
-            required
-          />
-        </Form.Item>
-        <Form.Item>
-          <Input
-            prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-            type='password'
-            name='loginPassword'
-            id='loginPassword'
-            placeholder='Password'
-            required
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button type='primary' htmlType='submit'>
-            {' '}
-            Log in{' '}
-          </Button>
-        </Form.Item>
-      </Form>
-    ) : (
-      <Redirect push to='/team' />
-    );
-  }
+  const handleLogout = async () => {
+    await axios.post(`${API_ENDPOINT}/logout`).catch();
+    localStorage.clear(); // get rid of team caching and other vars
+    setLoggedInEmail(false);
+  };
+
+  return (
+    <>
+      {loggedInEmail ? (
+        <Col type='flex' align='middle' style={{ textAlign: 'right' }}>
+          <p className='loggedInText' onClick={() => setToDashboard(true)}>
+            Continue as {loggedInEmail}
+          </p>
+          <p className='loggedInText' onClick={handleLogout}>
+            Sign out
+          </p>
+        </Col>
+      ) : (
+        <Form layout='inline' onSubmit={handleSubmit}>
+          <Form.Item>
+            <Input
+              prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder='Username'
+              name='loginEmail'
+              id='loginEmail'
+              onChange={e => setEmail(e.target.value)}
+              value={email}
+              required
+            />
+          </Form.Item>
+          <Form.Item>
+            <Input
+              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type='password'
+              name='loginPassword'
+              id='loginPassword'
+              placeholder='Password'
+              onChange={e => setPassword(e.target.value)}
+              value={password}
+              required
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button type='primary' htmlType='submit'>
+              Log in
+            </Button>
+          </Form.Item>
+        </Form>
+      )}
+      {toDashboard && <Redirect push to='/team' />}
+    </>
+  );
 }
 
 export const WrappedHorizontalLoginForm = Form.create({ name: 'horizontal_login' })(HorizontalLoginForm);

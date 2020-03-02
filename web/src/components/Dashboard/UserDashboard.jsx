@@ -14,7 +14,7 @@ export default function UserDashboard({ changePage, checkSession }) {
     }
   };
 
-  return isEmpty() ? (
+  return isEmpty() && loaded ? (
     <div style={styles.emptyWrapper}>
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}

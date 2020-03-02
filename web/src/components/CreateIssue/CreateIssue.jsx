@@ -258,7 +258,7 @@ export default function CreateIssue({ data, changePage, form, source }) {
               }}
             >
               {getFieldDecorator('status', {
-                initialValue: data == null ? 1 : data.status || 1,
+                initialValue: data == null ? 1 : data.status / data.status || 0,
               })(
                 <Radio.Group>
                   <Radio value={0}>Backlog</Radio>

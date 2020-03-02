@@ -21,10 +21,8 @@ export default function Team() {
   useEffect(() => {
     (async () => {
       const res = await retrieveTeams();
-      if (JSON.stringify(teams) !== JSON.stringify(res.data)) {
-        setTeams(res.data);
-        localStorage.setItem('teams', JSON.stringify(res.data));
-      }
+      setTeams(res.data);
+      localStorage.setItem('teams', JSON.stringify(res.data));
     })().catch(err => {
       displaySimpleNotification('Error', 4, 'bottomRight', `Unable to retrieve teams. (${err})`, 'warning', 'red');
     });

@@ -1,8 +1,23 @@
 .ant-form-item-children {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .ant-form-explain {
-    color: #ff5b64 !important;
+  color: #ff5b64 !important;
+}
+
+.ant-modal-content,
+.ant-modal-mask,
+.ant-modal-wrap {
+  display: block !important;
+}
+
+@media (min-width: 480px) {
+  /* filtering smartphones, Android phones, landscape iPhone */
+  .ant-modal-content,
+  .ant-modal-mask,
+  .ant-modal-wrap {
+    display: none !important;
+  }
 }

@@ -19,8 +19,8 @@ export default class UserPanel extends React.Component {
     this.setState({ userModal: !this.state.userModal });
   };
 
-  handleLogout = () => {
-    axios.post(`${API_ENDPOINT}/logout`).catch();
+  handleLogout = async () => {
+    await axios.post(`${API_ENDPOINT}/logout`).catch();
     localStorage.clear(); // get rid of team caching and other vars
     this.setState({ toHomepage: true });
   };
