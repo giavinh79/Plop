@@ -15,8 +15,8 @@ export default class UserPanel extends React.Component {
     };
   }
 
-  handleUserModal = () => {
-    this.setState({ userModal: !this.state.userModal });
+  displayUserModal = condition => {
+    this.setState({ userModal: condition });
   };
 
   handleLogout = async () => {
@@ -31,7 +31,7 @@ export default class UserPanel extends React.Component {
         <p
           style={{ margin: 0 }}
           onClick={() => {
-            this.handleUserModal();
+            this.displayUserModal(true);
           }}
         >
           Settings
@@ -59,7 +59,7 @@ export default class UserPanel extends React.Component {
       <Redirect push to='/' />
     ) : (
       <>
-        {this.state.userModal && <UserSettings handleUserModal={this.handleUserModal} />}
+        {this.state.userModal && <UserSettings displayUserModal={this.displayUserModal} />}
         <Dropdown overlay={this.menu} trigger={['click']}>
           <UserPanelWrapper>
             <div style={styles.iconWrapper}>

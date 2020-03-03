@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Modal, Button } from 'antd';
 import Avatar from './Avatar';
-import axios from 'axios';
-import 'antd/dist/antd.css';
 import { API_ENDPOINT } from '../../../utility/constants';
+import 'antd/dist/antd.css';
 
-export default function UserSettings({ handleUserModal }) {
+export default function UserSettings({ displayUserModal }) {
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || '1');
 
@@ -24,13 +24,13 @@ export default function UserSettings({ handleUserModal }) {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      handleUserModal();
+      displayUserModal();
     }, 1000);
     await axios.post(`${API_ENDPOINT}/avatar`, { avatar });
   };
 
   const handleCancel = () => {
-    handleUserModal();
+    displayUserModal(false);
   };
 
   return (

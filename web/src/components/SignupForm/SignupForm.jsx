@@ -3,9 +3,14 @@ import axios from 'axios';
 import { Button, Form, Icon, Input, Modal } from 'antd';
 import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../utility/constants';
+import MediaQuery from 'react-responsive';
 import './style.css';
 
 class NormalLoginForm extends React.Component {
+  state = {
+    visible: true,
+  };
+
   compareToFirstPassword = (rule, value, callback) => {
     const { form } = this.props;
     if (value && value !== form.getFieldValue('password')) {
@@ -17,7 +22,7 @@ class NormalLoginForm extends React.Component {
 
   validateToNextPassword = (rule, value, callback) => {
     const { form } = this.props;
-    if (value && this.state.confirmDirty) {
+    if (value) {
       form.validateFields(['confirm'], { force: true });
     }
     callback();
@@ -37,11 +42,8 @@ class NormalLoginForm extends React.Component {
     });
   };
 
-  displayMobileModal = () => {
-    Modal.info({
-      title: 'Mobile use is not supported',
-      content: <p>Plop is not designed for small screens yet, please wait for the mobile app. Thanks! </p>,
-    });
+  hideModal = () => {
+    this.setState({ visible: false });
   };
 
   render() {
@@ -64,7 +66,7 @@ class NormalLoginForm extends React.Component {
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('password', {
-              // rules: [{ validator: this.validateToNextPassword }],
+              rules: [{ validator: this.validateToNextPassword }],
             })(
               <Input
                 prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -77,7 +79,7 @@ class NormalLoginForm extends React.Component {
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('confirm', {
-              // rules: [{ validator: this.compareToFirstPassword }],
+              rules: [{ validator: this.compareToFirstPassword }],
             })(
               <Input
                 prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -88,18 +90,6 @@ class NormalLoginForm extends React.Component {
               />
             )}
           </Form.Item>
-          {/* <Form.Item>
-          {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
-          })(<Checkbox style={{ color: '#ccc' }}>Terms & Conditions</Checkbox>)}
-          <a className='signup-form-forgot' href='/' style={{ color: '#ccc' }}>
-            Forgot password
-          </a>
-        </Form.Item> */}
-          {/* <Form.Item>
-          <div class='g-signin2' data-onsuccess='onSignIn'></div>
-        </Form.Item> */}
           <Form.Item style={{ display: 'flex', justifyContent: 'flex-end' }}>
             {/* button bg color potential #495463 */}
             <Button type='primary' htmlType='submit' className='signup-form-button'>
@@ -107,7 +97,21 @@ class NormalLoginForm extends React.Component {
             </Button>
           </Form.Item>
         </Form>
-        {this.displayMobileModal()}
+        <MediaQuery minDeviceWidth={480} maxWidth={480}>
+          <Modal
+            title='Mobile usage is unsupported'
+            visible={this.state.visible}
+            onCancel={this.hideModal}
+            footer={
+              <Button type='primary' onClick={this.hideModal}>
+                Ok
+              </Button>
+            }
+            width={450}
+          >
+            <p>Plop is not designed for small screens yet, please wait for the mobile app. Thanks!</p>
+          </Modal>
+        </MediaQuery>
       </>
     );
   }

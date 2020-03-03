@@ -34,7 +34,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
     return <Route {...rest} render={props => <Component {...props} />} />;
   } else {
     displaySimpleNotification('Session expired', 2, 'bottomRight', 'You need to login again.', 'warning', '#108ee9');
-    return <Route {...rest} render={props => <Redirect to='/' />} />;
+    return <Route {...rest} render={() => <Redirect to='/' />} />;
   }
 };
 

@@ -127,8 +127,8 @@ export default function Team() {
     <>
       {teamCreation ? (
         <Modal
-          visible={true}
           title='Create a team'
+          visible={true}
           onCancel={handleCancel}
           footer={[
             <Button key='back' onClick={handleCancel}>
