@@ -20,7 +20,7 @@ const styles = {
   },
   form: {
     position: 'absolute',
-    bottom: '20%',
+    top: '19rem',
     height: '28rem',
     left: '0',
     right: '0',
@@ -33,7 +33,7 @@ const styles = {
   formBackground: {
     zIndex: '2',
     position: 'absolute',
-    bottom: '25%',
+    top: '14rem',
     left: '0',
     right: '0',
     marginLeft: 'auto',
