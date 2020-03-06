@@ -28,29 +28,25 @@ export default class UserPanel extends React.Component {
 
   menu = (
     <Menu>
-      <Menu.Item key='0'>
-        <p
-          style={{ margin: 0 }}
-          onClick={() => {
-            this.displayUserModal(true);
-          }}
-        >
-          Settings
-        </p>
+      <Menu.Item
+        key='0'
+        onClick={() => {
+          this.displayUserModal(true);
+        }}
+      >
+        <p style={{ margin: 0 }}>Settings</p>
       </Menu.Item>
       <Menu.Item key='1'>
         <p style={{ margin: 0, color: '#ccc' }}>Themes</p>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key='2'>
-        <p
-          onClick={() => {
-            this.handleLogout();
-          }}
-          style={{ margin: 0 }}
-        >
-          Logout
-        </p>
+      <Menu.Item
+        key='2'
+        onClick={() => {
+          this.handleLogout();
+        }}
+      >
+        <p style={{ margin: 0 }}>Logout</p>
       </Menu.Item>
     </Menu>
   );

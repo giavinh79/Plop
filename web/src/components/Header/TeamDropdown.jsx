@@ -1,28 +1,20 @@
 import React, { useState } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
-import { Badge, Menu, Dropdown, Icon } from 'antd';
+import { Badge, Dropdown, Icon, Menu } from 'antd';
+import { createSession } from '../../utility/restCalls';
 import 'antd/dist/antd.css';
 import './style.css';
-import { createSession } from '../../utility/restCalls';
 
 function TeamDropdown({ history }) {
   const [toTeam, setToTeam] = useState(false);
-  // const [loading, setLoading] = useState(false);
 
   const displayLoading = async event => {
-    // setLoading(true);
-    // setTimeout(function() {
-    //   try {
-    //     setLoading(false);
-    //   } catch (err) {}
-    // }, 1200);
-
     try {
       localStorage.setItem('currentTeam', JSON.parse(localStorage.getItem('teams'))[event.key - 1].id);
       await createSession(event);
       window.location.reload();
       // Works for now but will want to change this to simply refetch data with the new room session
-      // Or put localStorage item as dependency for dashboard
+      // Or put the localStorage item as dependency for dashboard useEffect
     } catch (err) {
       console.log(err);
     }
@@ -69,11 +61,6 @@ function TeamDropdown({ history }) {
     <Redirect push to='/team' />
   ) : (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      {/* <Icon
-        type='loading'
-        style={{ display: loading ? 'block' : 'none', color: 'white', fontSize: '1.4rem', marginLeft: '0.7rem' }}
-        spin
-      /> */}
       <Badge count={0} dot style={{ cursor: 'pointer', backgroundColor: 'red' }}>
         <Icon type='bell' theme='filled' style={{ fontSize: '20px', cursor: 'pointer' }} />
       </Badge>

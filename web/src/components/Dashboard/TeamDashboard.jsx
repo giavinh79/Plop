@@ -3,7 +3,7 @@ import DragDropComponent from './DragDropComponent';
 import { useActiveIssues } from '../../utility/hooks';
 
 export default function TeamDashboard({ changePage, checkSession }) {
-  const [items, setItems, loaded] = useActiveIssues('team', checkSession);
+  const [items, setItems, loading] = useActiveIssues('team', checkSession);
 
-  return <DragDropComponent changePage={changePage} items={items} setItems={setItems} loaded={loaded} />;
+  return <DragDropComponent changePage={changePage} items={items} setItems={setItems} loading={loading} />;
 }

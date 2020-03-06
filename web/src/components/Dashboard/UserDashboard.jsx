@@ -4,7 +4,7 @@ import DragDropComponent from './DragDropComponent';
 import { useActiveIssues } from '../../utility/hooks';
 
 export default function UserDashboard({ changePage, checkSession }) {
-  const [items, setItems, loaded] = useActiveIssues('user', checkSession);
+  const [items, setItems, loading] = useActiveIssues('user', checkSession);
 
   const isEmpty = () => {
     try {
@@ -14,7 +14,7 @@ export default function UserDashboard({ changePage, checkSession }) {
     }
   };
 
-  return isEmpty() && loaded ? (
+  return isEmpty() && !loading ? (
     <div style={styles.emptyWrapper}>
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -23,7 +23,7 @@ export default function UserDashboard({ changePage, checkSession }) {
       />
     </div>
   ) : (
-    <DragDropComponent changePage={changePage} items={items} setItems={setItems} loaded={loaded} source={1} />
+    <DragDropComponent changePage={changePage} items={items} setItems={setItems} loading={loading} source={1} />
   );
 }
 

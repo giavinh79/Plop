@@ -13,8 +13,7 @@ export const HeaderWrapper = styled.div`
 
 export const Logo = styled.img`
   cursor: pointer;
-  width: 6rem;
-  padding: 0 1rem;
+  height: 2.8rem;
 `;
 
 export const UserPanelWrapper = styled.div`

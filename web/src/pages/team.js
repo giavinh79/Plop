@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Button, Card, Icon, Input, Modal, Popconfirm, Row } from 'antd';
+import { Alert, Button, Card, Icon, Input, Popconfirm, Row } from 'antd';
 import { Redirect } from 'react-router-dom';
-import { displayInfoDialog, displaySimpleNotification } from '../utility/services';
+import { displaySimpleNotification } from '../utility/services';
 import { API_ENDPOINT } from '../utility/constants';
 import { retrieveTeams } from '../utility/restCalls';
-
-const { TextArea } = Input;
+import TeamCreationModal from '../components/Team/TeamCreationModal';
 
 // Seperate this JS file into seperate components later
 export default function Team() {
@@ -15,7 +14,7 @@ export default function Team() {
   const [toDashboard, setToDashboard] = useState(false);
   const [teamCreation, setTeamCreation] = useState(false);
   const [teams, setTeams] = useState(teamsObject == null ? [] : teamsObject);
-  const createTeamData = useRef({});
+  const [teamJoinError, setTeamJoinError] = useState(false);
   const joinTeamData = useRef({});
 
   useEffect(() => {
@@ -48,44 +47,20 @@ export default function Team() {
     }
   };
 
-  const handleCreate = async () => {
-    const data = {
-      roomName: createTeamData.current.name,
-      roomDescription: createTeamData.current.description,
-      roomPassword: createTeamData.current.password,
-    };
-
-    try {
-      const res = await axios.put(`${API_ENDPOINT}/room`, data);
-      setTeams([
-        ...teams,
-        { name: res.data.name, description: res.data.description, id: res.data.id, currentMembers: '1' },
-      ]);
-      displayInfoDialog(
-        'Team was successfully created!',
-        'Your team ID is:',
-        res.data.id,
-        "These credentials were emailed to you as a backup and can also be found in your team settings. You may now enter the team's room."
-      );
-    } catch (err) {
-      displaySimpleNotification(
-        'Team was not created',
-        5,
-        'bottomRight',
-        'This may be due to you being at your team limit (3) or exceeding input values (description < 300 characters and title < 100 characters).',
-        'warning',
-        'red'
-      );
-    } finally {
-      setTeamCreation(false);
-    }
-  };
-
   const handleJoin = async () => {
     const data = {
       roomId: joinTeamData.current.id,
       roomPassword: joinTeamData.current.password,
     };
+
+    if (!data.roomId || !data.roomPassword) {
+      setTeamJoinError(true);
+      return;
+    }
+
+    if (teamJoinError) {
+      setTeamJoinError(false);
+    }
 
     try {
       await axios.post(`${API_ENDPOINT}/joinRoom`, data, { withCredentials: true });
@@ -105,10 +80,6 @@ export default function Team() {
     }
   };
 
-  const handleCancel = () => {
-    setTeamCreation(false);
-  };
-
   const handleTeamCreation = e => {
     e.preventDefault();
     setTeamCreation(true);
@@ -125,57 +96,7 @@ export default function Team() {
     <Redirect push to='/dashboard' />
   ) : (
     <>
-      {teamCreation ? (
-        <Modal
-          title='Create a team'
-          visible={true}
-          onCancel={handleCancel}
-          footer={[
-            <Button key='back' onClick={handleCancel}>
-              Return
-            </Button>,
-            <Button key='submit' type='primary' onClick={handleCreate}>
-              Save
-            </Button>,
-          ]}
-        >
-          <p>Team name:</p>
-          <Input
-            style={{ marginBottom: '1rem' }}
-            name='teamName'
-            id='teamName'
-            allowClear={true}
-            maxLength={100}
-            required
-            onChange={e => {
-              createTeamData.current.name = e.currentTarget.value;
-            }}
-          />
-          <p>Team description:</p>
-          <TextArea
-            autosize={{ minRows: 2, maxRows: 6 }}
-            style={{ marginBottom: '1rem' }}
-            name='teamDescription'
-            id='teamDescription'
-            maxLength={250}
-            required
-            onChange={e => {
-              createTeamData.current.description = e.currentTarget.value;
-            }}
-          />
-          <p>Team password:</p>
-          <Input.Password
-            name='teamPassword'
-            id='teamPassword'
-            autoComplete='new-password'
-            allowClear={true}
-            required
-            onChange={e => {
-              createTeamData.current.password = e.currentTarget.value;
-            }}
-          />
-        </Modal>
-      ) : null}
+      {teamCreation && <TeamCreationModal setTeams={setTeams} setTeamCreation={setTeamCreation} teams={teams} />}
       <div style={styles.container}>
         <div style={styles.subcontainer}>
           <Card title='Make a team' style={styles.card}>
@@ -200,6 +121,7 @@ export default function Team() {
               style={{ marginBottom: '2rem' }}
               allowClear={true}
               onChange={e => {
+                if (teamJoinError) setTeamJoinError(false);
                 joinTeamData.current.id = e.currentTarget.value;
               }}
             />
@@ -208,11 +130,20 @@ export default function Team() {
               autoComplete='new-password'
               allowClear={true}
               onChange={e => {
+                if (teamJoinError) setTeamJoinError(false);
                 joinTeamData.current.password = e.currentTarget.value;
               }}
             />
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button type='primary' style={{ marginTop: '1rem' }} onClick={() => handleJoin()}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '3rem' }}>
+              {teamJoinError && (
+                <Alert
+                  message='All fields must be filled in.'
+                  type='error'
+                  showIcon
+                  style={{ margin: '-0.5rem auto 0 0' }}
+                />
+              )}
+              <Button type='primary' onClick={() => handleJoin()}>
                 Join
               </Button>
             </div>

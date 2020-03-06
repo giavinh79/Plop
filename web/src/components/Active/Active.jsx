@@ -140,7 +140,7 @@ export default function Active({ changePage }) {
 
   return (
     <div style={layout}>
-      <p style={subheader}>Active Issues</p>
+      <p style={{ ...subheader, opacity: loading ? 0.3 : 1 }}>Active Issues</p>
       {loading ? (
         <Skeleton active />
       ) : (

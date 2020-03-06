@@ -59,11 +59,42 @@ class RoomController {
     }
   }
 
-  async members({ auth, request, response }) {
+  async getMembers({ auth, request, response }) {
     try {
       const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
+      let membersPayload = [];
+      let count = 1;
+
+      let status = 'offline'; // will need to use web sockets to determine this later on
+
+      let result = await Database.from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+
+      let members = await Database.select('user_id')
+        .from('user_rooms')
+        .where('room_id', decryptedRoomId);
+
+      for (let member of members) {
+        let data = await Database.select('email')
+          .from('users')
+          .where('id', member.user_id);
+        membersPayload.push({
+          key: count,
+          member: data[0].email,
+          role: 'N/A',
+          administration: 'Developer',
+          status: status,
+        });
+        count++;
+      }
+
+      response.status(200).json(membersPayload);
     } catch (err) {
-      console.log(`(room_members) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      console.log(`(room_getMembers) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -286,6 +317,76 @@ class RoomController {
       response.status(200).send();
     } catch (err) {
       console.log(`(room_leave) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async delete({ request, auth, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const { email, password } = request.body;
+
+      await auth.attempt(email, password);
+
+      let result = await Database.from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+
+      let data = await Database.table('rooms')
+        .select('admin')
+        .where('id', decryptedRoomId);
+
+      if (data[0].admin !== user.id) {
+        throw new Error('Can only delete room if user is owner');
+      }
+
+      await Database.transaction(async trx => {
+        /*
+         * in the future delete all logs
+         */
+
+        // Finding all members to reduce their numTeams value by 1
+        let members = await trx
+          .table('user_rooms')
+          .select('user_id')
+          .where('room_id', decryptedRoomId);
+
+        for (let member of members) {
+          let [data] = await trx
+            .table('users')
+            .select('numTeams')
+            .where('id', member.user_id);
+
+          await trx
+            .table('users')
+            .select('numTeams')
+            .update('numTeams', Math.max(0, data.numTeams - 1));
+
+          // Deleting user-room relationship
+          await trx
+            .table('user_rooms')
+            .where('user_id', member.user_id)
+            .where('room_id', decryptedRoomId)
+            .delete();
+        }
+
+        // Deleting all issues related to the room
+        await trx
+          .table('issues')
+          .where('room', decryptedRoomId)
+          .delete();
+
+        // Finally deleting room
+        await trx
+          .table('rooms')
+          .where('id', decryptedRoomId)
+          .delete();
+      });
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(room_delete) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }

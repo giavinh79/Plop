@@ -37,7 +37,7 @@ class SetupSeeder {
     try {
       // Creating the new user, will fail if already exists
       const user = new User();
-      user.fill({ email: 'tester@gmail.com', password: 'test', numTeams: 0, status: 0, avatar: 1 });
+      user.fill({ email: 'tester@gmail.com', password: 'test', numTeams: 1, status: 0, avatar: 1 });
       await user.save();
 
       // Creating a room tied to the user above

@@ -106,22 +106,15 @@ const UserSettings2 = ({ displayUserModal, form }) => {
           </Col>
           <Col span={12}>
             <Form.Item label='Theme'>
-              {getFieldDecorator('theme', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please choose the type',
-                    initialValue: {
-                      defaultValue: 'light',
-                    },
-                  },
-                ],
-              })(
-                <Select placeholder='Please choose the type'>
-                  <Option value='light'>Light Theme</Option>
-                  <Option value='dark'>Dark Theme</Option>
-                </Select>
-              )}
+              <Select placeholder='Please choose the type' defaultValue='light' disabled>
+                <Option value='light'>Light Theme</Option>
+                <Option value='dark'>Dark Theme</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item label='Role'>
+              <Input placeholder='i.e. Frontend Developer' type='text' disabled />
             </Form.Item>
           </Col>
         </Row>

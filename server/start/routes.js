@@ -25,13 +25,14 @@ Route.post('/logout', 'UserController.logout');
 // Teams/Rooms
 Route.get('/room', 'RoomController.get').middleware(jwtMiddleware);
 Route.get('/assignees', 'RoomController.getAssignees').middleware(jwtMiddleware);
+Route.get('/members', 'RoomController.getMembers').middleware(jwtMiddleware);
 Route.put('/room', 'RoomController.create').middleware(jwtMiddleware);
 Route.post('/room', 'RoomController.update').middleware(jwtMiddleware);
 Route.post('/roomInfo', 'RoomController.info').middleware(jwtMiddleware);
 Route.post('/sessionRoom', 'RoomController.session').middleware(jwtMiddleware);
 Route.post('/joinRoom', 'RoomController.join').middleware(jwtMiddleware);
 Route.post('/leaveRoom', 'RoomController.leave').middleware(jwtMiddleware);
-Route.delete('/room', 'RoomController.delete');
+Route.delete('/room', 'RoomController.delete').middleware(jwtMiddleware);
 
 // Issues - begin setting up other endpoints like this (REST)
 Route.get('/teamIssue/:status', 'IssueController.getTeam').middleware(jwtMiddleware);

@@ -10,7 +10,7 @@ import { styles } from './DashboardStyles';
  * Component representing the three drag & drop columns active, progress, and complete
  * Takes inputs from TeamDashboard and UserDashboard components
  */
-export default function DragDropComponent({ changePage, loaded, items, setItems, source }) {
+export default function DragDropComponent({ changePage, loading, items, setItems, source }) {
   const getActiveStyle = (isDragging, draggableStyle) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -105,9 +105,9 @@ export default function DragDropComponent({ changePage, loaded, items, setItems,
         {(provided, snapshot) => (
           <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
             <div style={styles.titleWrapper}>
-              <h5 style={{ ...styles.title, opacity: loaded ? 1 : 0.3 }}>Active</h5>
+              <h5 style={{ ...styles.title, opacity: loading ? 0.3 : 1 }}>Active</h5>
             </div>
-            {!loaded && (
+            {loading && (
               <>
                 <Skeleton active />
                 <Skeleton active />
@@ -136,9 +136,9 @@ export default function DragDropComponent({ changePage, loaded, items, setItems,
         {(provided, snapshot) => (
           <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
             <div style={styles.titleWrapper}>
-              <h5 style={{ ...styles.title, opacity: loaded ? 1 : 0.3 }}>In Progress</h5>
+              <h5 style={{ ...styles.title, opacity: loading ? 0.3 : 1 }}>In Progress</h5>
             </div>
-            {!loaded && (
+            {loading && (
               <>
                 <Skeleton active />
                 <Skeleton active />
@@ -166,9 +166,9 @@ export default function DragDropComponent({ changePage, loaded, items, setItems,
         {(provided, snapshot) => (
           <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
             <div style={styles.titleWrapper}>
-              <h5 style={{ ...styles.title, opacity: loaded ? 1 : 0.3 }}>Completed</h5>
+              <h5 style={{ ...styles.title, opacity: loading ? 0.3 : 1 }}>Completed</h5>
             </div>
-            {!loaded && (
+            {loading && (
               <>
                 <Skeleton active />
                 <Skeleton active />

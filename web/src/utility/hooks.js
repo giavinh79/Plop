@@ -8,7 +8,7 @@ import { API_ENDPOINT } from '../utility/constants';
 
 const useActiveIssues = (type, checkSession) => {
   //  type denotes whether it is for the Team or User dashboard
-  const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [items, setItems] = useState({
     active: [],
     progress: [],
@@ -25,7 +25,7 @@ const useActiveIssues = (type, checkSession) => {
       const { activeItems, progressItems, completedItems } = data;
       if (isMounted.current) {
         setItems({ active: activeItems, progress: progressItems, complete: completedItems });
-        setLoaded(true);
+        setLoading(false);
       }
     })().catch(err => {
       checkSession();
@@ -36,7 +36,7 @@ const useActiveIssues = (type, checkSession) => {
     };
   }, [checkSession, items.complete.length, items.progress.length, items.active.length, type]);
 
-  return [items, setItems, loaded];
+  return [items, setItems, loading];
 };
 
 export { useActiveIssues };

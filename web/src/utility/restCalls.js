@@ -15,9 +15,25 @@ const createSession = async event => {
   }
 };
 
+const deleteRoom = async (email, password) => {
+  try {
+    await axios.delete(`${API_ENDPOINT}/room`, { data: { email: email, password: password } });
+  } catch (err) {
+    throw err;
+  }
+};
+
 const retrieveAssignees = async () => {
   try {
     return await axios.get(`${API_ENDPOINT}/assignees`);
+  } catch (err) {
+    throw err;
+  }
+};
+
+const retrieveMembers = async () => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/members`);
   } catch (err) {
     throw err;
   }
@@ -39,4 +55,4 @@ const deleteIssue = async id => {
   }
 };
 
-export { createSession, deleteIssue, retrieveAssignees, retrieveTeams };
+export { createSession, deleteIssue, deleteRoom, retrieveAssignees, retrieveMembers, retrieveTeams };

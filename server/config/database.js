@@ -8,7 +8,6 @@ const Helpers = use('Helpers');
 
 const url = require('url-parse');
 const DATABASE_URL = new url(Env.get('DATABASE_URL'));
-console.log(DATABASE_URL);
 
 module.exports = {
   /*

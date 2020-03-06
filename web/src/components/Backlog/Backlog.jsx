@@ -120,7 +120,7 @@ export default function Backlog({ changePage }) {
 
   return (
     <div style={layout}>
-      <p style={subheader}>Backlog</p>
+      <p style={{ ...subheader, opacity: loading ? 0.3 : 1 }}>Backlog</p>
       {loading ? (
         <Skeleton active />
       ) : (
