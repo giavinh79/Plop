@@ -72,7 +72,7 @@ export default function Team() {
         'Team was not created',
         5,
         'bottomRight',
-        'This may be due to you being at your team limit or exceeding input values (description < 300 characters and title < 100 characters).',
+        'This may be due to you being at your team limit (3) or exceeding input values (description < 300 characters and title < 100 characters).',
         'warning',
         'red'
       );

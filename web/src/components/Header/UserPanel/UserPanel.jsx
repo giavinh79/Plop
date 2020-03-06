@@ -2,6 +2,7 @@ import React from 'react';
 import { Dropdown, Icon, Menu } from 'antd';
 import { UserPanelWrapper } from '../style';
 import { Redirect } from 'react-router-dom';
+// import UserSettings from './UserSettings-deprecated';
 import UserSettings from './UserSettings';
 import axios from 'axios';
 import { API_ENDPOINT } from '../../../utility/constants';

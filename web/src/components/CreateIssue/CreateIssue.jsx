@@ -216,6 +216,7 @@ export default function CreateIssue({ data, changePage, form, source }) {
                     placeholder='Search by email'
                     onSearch={value => console.log(value)}
                     style={{ width: 200 }}
+                    autoComplete='off'
                   />
                 </AutoComplete>
               )}

@@ -97,7 +97,7 @@ class NormalLoginForm extends React.Component {
             </Button>
           </Form.Item>
         </Form>
-        <MediaQuery minDeviceWidth={480} maxWidth={480}>
+        <MediaQuery maxDeviceWidth={480} maxWidth={480}>
           <Modal
             title='Mobile usage is unsupported'
             visible={this.state.visible}

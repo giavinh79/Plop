@@ -29,7 +29,11 @@ export default function Header() {
 
   return (
     <HeaderWrapper style={{ backgroundColor: location.pathname === '/' ? '#445D66' : '#79B7D4' }}>
-      <Logo src='images/justlogo.png' alt='logo' onClick={handleClick} />
+      <div style={{ display: 'flex', padding: location.pathname === '/team' ? '0 1rem' : '0' }}>
+        {location.pathname === '/team' && <h1 style={{ margin: '0 -0.7rem 0 0', color: 'white' }}>PL</h1>}
+        <Logo src='images/justlogo.png' alt='logo' onClick={handleClick} />
+        {location.pathname === '/team' && <h1 style={{ margin: '0 0 0 -0.7rem', color: 'white' }}>P</h1>}
+      </div>
       {location.pathname === '/dashboard' && (
         <div style={styles.team}>
           <h1 style={{ margin: 0, color: 'white' }}>{getTeamLabel()}</h1>
