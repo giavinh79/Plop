@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Alert, Button, Card, Icon, Input, Popconfirm, Row } from 'antd';
+import { Alert, Avatar, Button, Card, Icon, Input, Popconfirm, Row } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { displaySimpleNotification } from '../utility/services';
 import { API_ENDPOINT } from '../utility/constants';
@@ -11,6 +11,7 @@ import TeamCreationModal from '../components/Team/TeamCreationModal';
 export default function Team() {
   let teamsObject = JSON.parse(localStorage.getItem('teams'));
 
+  const [loading, setLoading] = useState(true);
   const [toDashboard, setToDashboard] = useState(false);
   const [teamCreation, setTeamCreation] = useState(false);
   const [teams, setTeams] = useState(teamsObject == null ? [] : teamsObject);
@@ -22,6 +23,7 @@ export default function Team() {
       const res = await retrieveTeams();
       setTeams(res.data);
       localStorage.setItem('teams', JSON.stringify(res.data));
+      setLoading(false);
     })().catch(err => {
       displaySimpleNotification('Error', 4, 'bottomRight', `Unable to retrieve teams. (${err})`, 'warning', 'red');
     });
@@ -73,7 +75,7 @@ export default function Team() {
         'Unable to join team',
         4,
         'bottomRight',
-        'You may have incorrect credentials or already have a pending request to join this team.',
+        'The team may be private, your credentials may be incorrect, or you may already have a pending request to join the team.',
         'warning',
         '#108ee9'
       );
@@ -150,20 +152,57 @@ export default function Team() {
           </Card>
         </div>
         <div style={{ display: 'flex', width: '100%', flex: '2' }}>
-          <Card title='Teams joined' style={styles.card} extra={teams.length + '/3'}>
+          <Card
+            title={
+              <Row type='flex'>
+                Teams joined
+                <Icon
+                  type='loading'
+                  style={{
+                    display: loading ? 'block' : 'none',
+                    color: '#6ca1d8',
+                    fontSize: '1.4rem',
+                    marginLeft: '0.7rem',
+                  }}
+                  spin
+                />
+              </Row>
+            }
+            style={styles.card}
+            extra={<p style={{ color: teams.length === 3 ? '#d45f5f' : 'black' }}>{teams.length}/3</p>}
+          >
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {teams.map((team, index) => {
                 return (
                   <div style={styles.teams} key={index}>
                     <Card
-                      title={'Team ' + team.name}
+                      title={
+                        <Row type='flex' align='middle' style={{ flexFlow: 'nowrap' }}>
+                          <Avatar
+                            size='large'
+                            icon='team'
+                            style={{ marginRight: '1rem', minWidth: '2.5rem', backgroundColor: '#3d74c7' }}
+                          />
+                          <a href='/dashboard' onClick={e => handleEnterTeam(e, team.id)}>
+                            {team.name}
+                          </a>
+                        </Row>
+                      }
                       extra={team.currentMembers + ' member(s)'}
-                      style={{ minHeight: '20rem' }}
+                      style={{ minHeight: '20rem', height: '100%' }}
                     >
-                      <a href='/dashboard' onClick={e => handleEnterTeam(e, team.id)}>
-                        Enter
-                      </a>
-                      <p>{team.description}</p>
+                      <p>
+                        <strong>ID: </strong>
+                        {team.id}
+                      </p>
+                      <p>
+                        <strong>Notifications: 0</strong>
+                      </p>
+                      <div style={{ height: '6rem', marginBottom: '2rem' }}>
+                        <strong>Description: </strong>
+                        {team.description}
+                      </div>
+
                       <div style={{ display: 'flex', alignItems: 'flex-end' }}>
                         <Popconfirm
                           title='Are you sure you want to leave this team?'
@@ -185,17 +224,22 @@ export default function Team() {
                             />
                           </Row>
                         </Popconfirm>
-                        <Icon
-                          type='right-circle'
-                          style={{
-                            marginLeft: 'auto',
-                            fontSize: '2.5rem',
-                            paddingTop: '9rem',
-                            color: '#848484b5',
-                            cursor: 'pointer',
-                          }}
+                        <Row
+                          type='flex'
+                          align='middle'
+                          style={{ marginLeft: 'auto', cursor: 'pointer' }}
                           onClick={e => handleEnterTeam(e, team.id)}
-                        />
+                        >
+                          <a href='/dashboard'>Enter</a>
+                          <Icon
+                            type='right-circle'
+                            style={{
+                              marginLeft: '0.5rem',
+                              fontSize: '2rem',
+                              color: '#79B7D4',
+                            }}
+                          />
+                        </Row>
                       </div>
                     </Card>
                   </div>
@@ -229,6 +273,7 @@ const styles = {
   },
   teams: {
     flex: 1,
-    margin: '0 1rem',
+    maxWidth: '40%',
+    margin: '0 1rem 1rem 1rem',
   },
 };

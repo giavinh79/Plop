@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { layout, subheader } from '../../globalStyles';
-import { Button, Col, Icon, Input, Modal, Popconfirm, Row, Typography, Tooltip, Skeleton, Switch } from 'antd';
+import { Alert, Button, Col, Icon, Input, Modal, Popconfirm, Row, Typography, Tooltip, Skeleton, Switch } from 'antd';
 import MemberSlider from './MemberSlider';
 import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../utility/constants';
@@ -13,9 +13,8 @@ const { Paragraph } = Typography;
 const { confirm } = Modal;
 
 export default function Settings() {
-  // const [loading, setLoading] = useState(false);
-  const email = useRef('');
-  const password = useRef('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [toTeam, setToTeam] = useState(false);
   const [state, setState] = useState({
     name: '',
@@ -41,16 +40,6 @@ export default function Settings() {
   const showDeleteConfirmMessage = () => {
     confirm({
       title: 'Team Deletion Confirmation',
-      // (
-      // <Row type='flex'>
-      //   <p>Team Deletion Confirmation</p>
-      //   <Icon
-      //     type='loading'
-      //     style={{ display: loading ? 'block' : 'none', color: '#6ca1d8', fontSize: '1.4rem', marginLeft: '0.7rem' }}
-      //     spin
-      //   />
-      // </Row>
-      // ),
       icon: <Icon type='exclamation-circle' />,
       content: (
         <>
@@ -61,15 +50,16 @@ export default function Settings() {
               style={{ margin: '0.5rem 0' }}
               type='email'
               autoComplete='new-password'
-              onChange={e => (email.current = e.target.value)}
+              onChange={e => setEmail(e.target.value)}
             />
             <Input
               placeholder='Password'
               style={{ margin: '0.5rem 0' }}
               type='password'
               autoComplete='new-password'
-              onChange={e => (password.current = e.target.value)}
+              onChange={e => setPassword(e.target.value)}
             />
+            <Alert message='Both fields must be filled in.' type='error' style={{ marginTop: '1rem' }} />
           </Col>
         </>
       ),
@@ -78,9 +68,8 @@ export default function Settings() {
       cancelText: 'Cancel',
       onOk() {
         return new Promise(async resolve => {
-          // setLoading(true);
           try {
-            await deleteRoom(email.current, password.current);
+            await deleteRoom(email, password);
             setToTeam(true);
           } catch (err) {
             displaySimpleNotification(
@@ -91,15 +80,16 @@ export default function Settings() {
               'warning',
               'red'
             );
-            email.current = null;
-            password.current = null;
+            setEmail('');
+            setPassword('');
           } finally {
             resolve();
           }
         });
       },
       onCancel() {
-        console.log('Cancel');
+        setEmail('');
+        setPassword('');
       },
     });
   };

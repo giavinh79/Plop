@@ -114,7 +114,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
           </Col>
           <Col span={24}>
             <Form.Item label='Role'>
-              <Input placeholder='i.e. Frontend Developer' type='text' disabled />
+              <Input placeholder='i.e. Frontend Developer' type='text' disabled maxLength={50} />
             </Form.Item>
           </Col>
         </Row>
