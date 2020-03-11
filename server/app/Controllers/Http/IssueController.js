@@ -13,78 +13,124 @@ cloudinary.config({
 });
 
 class IssueController {
+  /* 
+    Helper Functions 
+  */
+  async isNewAssignee(user, assignee, oldAssignee) {
+    console.log(user);
+    console.log(assignee);
+    if (oldAssignee) {
+      return (!assignee || assignee.length > 0) && assignee !== user && oldAssignee !== assignee;
+    } else {
+      return (!assignee || assignee.length > 0) && assignee !== user;
+    }
+  }
+
+  async handleNotification(type, payload) {
+    // type denotes type of notification (ie. new issue assignee (1), updated issue assignee (2), comment (3)...etc)
+    try {
+      console.log(`wtf ${type}`);
+      if (type <= 2) {
+        const { assignee, issue, issueId, sourceUser, roomId } = payload;
+        let [user_data] = await Database.from('users')
+          .select('id')
+          .where('email', assignee);
+        let [data] = await Database.table('user_rooms')
+          .where('user_id', user_data.id)
+          .where('room_id', roomId)
+          .select('notifications');
+        data.notifications.push({ assignee, date: new Date(), issue, issueId, sourceUser, status: 0, type: 1 });
+        await Database.table('user_rooms')
+          .where('user_id', user_data.id)
+          .where('room_id', roomId)
+          .update('notifications', JSON.stringify(data.notifications));
+
+        // Need to notify previous assignee that another user has been assigned the issue
+        if (type === 2) {
+          const { oldAssignee } = payload;
+          // check for null values
+          // await Database.table('user_rooms')
+          // .where('user_id', user_data.id)
+          // .where('room_id', roomId)
+          // .update('notifications', JSON.stringify(data.notifications));
+        }
+      } else {
+        // notifications for comments ...
+      }
+    } catch (err) {
+      return;
+    }
+  }
+
+  /* 
+    Controller Methods for Endpoints
+  */
+
   async create({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const { title, shortDescription, description, assignee, tag, priority, status, dragger } = request.body;
+      const { assignee, description, dragger, priority, status, shortDescription, tag, title } = request.body;
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
       const result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', Encryption.decrypt(request.cookie('room')));
+        .where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
       const issue = new Issue();
-      if (dragger) {
-        // Enters here if images were attached to the issue
-        const imagePromises = [];
-        const imageIdArray = [];
-        for (let item of dragger) {
-          imagePromises.push(
-            new Promise((resolve, reject) => {
-              cloudinary.v2.uploader.upload(
-                item,
-                {
-                  resource_type: 'auto',
-                },
-                (error, res) => {
-                  console.log(res);
-                  if (error) {
-                    reject(new Error('Cloudinary image upload failed'));
-                  } else {
-                    imageIdArray.push({ id: res.public_id, url: res.url });
-                    resolve();
-                  }
+      const imagePromises = [];
+      const imageIdArray = [];
+      for (let item of dragger) {
+        imagePromises.push(
+          new Promise((resolve, reject) => {
+            cloudinary.v2.uploader.upload(
+              item,
+              {
+                resource_type: 'auto',
+              },
+              (error, res) => {
+                console.log(res);
+                if (error) {
+                  reject(new Error('Cloudinary image upload failed'));
+                } else {
+                  imageIdArray.push({ id: res.public_id, url: res.url });
+                  resolve();
                 }
-              );
-            })
-          );
-        }
-        await Promise.all(imagePromises);
-        issue.fill({
-          title,
-          room: Encryption.decrypt(request.cookie('room')),
-          shortDescription,
-          description,
+              }
+            );
+          })
+        );
+      }
+      await Promise.all(imagePromises);
+      issue.fill({
+        title,
+        room: decryptedRoomId,
+        shortDescription,
+        description,
+        assignee,
+        creator: user.email,
+        priority: priority || 0,
+        status: status || 0,
+        image: JSON.stringify(imageIdArray),
+        tag: JSON.stringify(tag),
+        comments: JSON.stringify([]),
+      });
+      await issue.save();
+
+      // Handle notification for assignee
+      if (this.isNewAssignee(user.email, assignee)) {
+        this.handleNotification(1, {
           assignee,
-          creator: user.email,
-          priority: priority || 0,
-          status: status || 0,
-          image: JSON.stringify(imageIdArray),
-          tag: JSON.stringify(tag),
-          comments: JSON.stringify([]),
-        });
-        await issue.save();
-        response.status(200).json({
-          status: status === 0 ? 'backlog' : 'dashboard',
-        });
-      } else {
-        issue.fill({
-          title,
-          room: Encryption.decrypt(request.cookie('room')),
-          shortDescription,
-          description,
-          assignee,
-          creator: user.email,
-          priority: priority || 0,
-          status: status || 0,
-          tag: JSON.stringify(tag),
-          comments: JSON.stringify([]),
-        });
-        await issue.save();
-        response.status(200).json({
-          status: status === 0 ? 'backlog' : 'dashboard',
+          issue: title,
+          issueId: issue.id,
+          sourceUser: user.email,
+          roomId: decryptedRoomId,
         });
       }
+
+      response.status(200).json({
+        status: status === 0 ? 'backlog' : 'dashboard',
+      });
     } catch (err) {
       console.log(`(issue_create) ${new Date()}: ${err.message}`);
       response.status(404).send();
@@ -302,6 +348,21 @@ class IssueController {
         .where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
       const { title, shortDescription, description, assignee, tag, priority, status, dragger } = request.body;
+
+      // Check here if assignee in DB is different or null for notifications
+      let [dataAssignee] = await Database.table('issues')
+        .select('assignee')
+        .where('id', request.body.id);
+      if (this.isNewAssignee(user.email, assignee, dataAssignee.assignee)) {
+        this.handleNotification(2, {
+          assignee,
+          issue: title,
+          issueId: issue.id,
+          oldAssignee: dataAssignee.assignee,
+          sourceUser: user.email,
+          roomId: decryptedRoomId,
+        });
+      }
 
       if (dragger) {
         // Enters here if images were attached to the issue

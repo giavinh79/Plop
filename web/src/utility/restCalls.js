@@ -15,9 +15,25 @@ const createSession = async event => {
   }
 };
 
+const createTeam = async data => {
+  try {
+    return await axios.put(`${API_ENDPOINT}/room`, data);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const deleteRoom = async (email, password) => {
   try {
     await axios.delete(`${API_ENDPOINT}/room`, { data: { email: email, password: password } });
+  } catch (err) {
+    throw err;
+  }
+};
+
+const joinTeam = async data => {
+  try {
+    await axios.post(`${API_ENDPOINT}/joinRoom`, data);
   } catch (err) {
     throw err;
   }
@@ -39,6 +55,14 @@ const retrieveMembers = async () => {
   }
 };
 
+const retrieveNotifications = async () => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/notifications`);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const retrieveTeams = async () => {
   try {
     return await axios.get(`${API_ENDPOINT}/room`);
@@ -55,4 +79,14 @@ const deleteIssue = async id => {
   }
 };
 
-export { createSession, deleteIssue, deleteRoom, retrieveAssignees, retrieveMembers, retrieveTeams };
+export {
+  createSession,
+  createTeam,
+  deleteIssue,
+  deleteRoom,
+  joinTeam,
+  retrieveAssignees,
+  retrieveMembers,
+  retrieveNotifications,
+  retrieveTeams,
+};

@@ -58,8 +58,8 @@ export default function Active({ changePage }) {
     },
     {
       title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      dataIndex: 'shortDescription',
+      key: 'shortDescription',
     },
     {
       title: 'Date',

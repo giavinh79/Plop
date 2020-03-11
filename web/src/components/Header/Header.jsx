@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Badge, Icon } from 'antd';
 import UserPanel from './UserPanel/UserPanel';
+import Notification from './Notification/Notification';
 import { HeaderWrapper, Logo } from './style.js';
 import { WrappedHorizontalLoginForm } from './LoginForm.jsx';
-import { useHistory } from 'react-router-dom';
+
 import TeamDropdown from './TeamDropdown';
 
 export default function Header() {
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
   let history = useHistory();
   let { location } = history;
 
@@ -50,7 +54,20 @@ export default function Header() {
           <WrappedHorizontalLoginForm />
         ) : (
           <>
-            {location.pathname !== '/team' && <TeamDropdown />}
+            {location.pathname !== '/team' && (
+              <>
+                {showNotificationModal && <Notification setShowNotificationModal={setShowNotificationModal} />}
+                <Badge count={0} dot style={{ cursor: 'pointer', backgroundColor: 'red' }}>
+                  <Icon
+                    type='bell'
+                    theme='filled'
+                    style={{ fontSize: '20px', cursor: 'pointer' }}
+                    onClick={() => setShowNotificationModal(true)}
+                  />
+                </Badge>
+                <TeamDropdown />
+              </>
+            )}
             <UserPanel />
           </>
         )}

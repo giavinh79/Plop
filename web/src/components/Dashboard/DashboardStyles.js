@@ -1,4 +1,6 @@
-export const styles = {
+import styled from 'styled-components';
+
+export const cardStyles = {
   titleWrapper: {
     display: 'flex',
     justifyContent: 'center',
@@ -39,21 +41,43 @@ export const styles = {
   },
 };
 
-// export const skeletonStyles = {
-//   wrapper: {
-//     backgroundRepeat: 'no-repeat',
-//     backgroundImage: `
-//       radial-gradient(circle 16px, yellow 99%, transparent 0),
-//       linear-gradient(black 40px, transparent 0),
-//       linear-gradient(gray 100%, transparent 0)`,
-//     backgroundSize: `
-//       32px 32px,
-//       200px 40px
-//       100% 100%`,
-//     backgroundPosition: `
-//     24px 24px,
-//     24px 200px`,
-//     width: '100%',
-//     height: '100%',
-//   },
-// };
+export const DroppableWrapper = styled.div`
+  width: 50%;
+  @media (max-width: 850px) {
+    width: 100%;
+  }
+`;
+
+export const SearchWrapper = styled.div`
+  display: flex;
+  position: fixed;
+  max-width: 40rem;
+  min-width: 20rem;
+  width: 100%;
+  padding: 2rem;
+  bottom: 0;
+`;
+
+export const Wrapper = styled.div`
+  display: inherit;
+  width: inherit;
+  @media (max-width: 850px) {
+    flex-direction: column;
+  }
+`;
+
+export const getActiveStyle = (isDragging, draggableStyle) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  userSelect: 'none',
+  margin: `0 0 8px 0`,
+  background: isDragging ? '#eaeaea' : 'white',
+  border: '1px solid #ccc',
+  borderRadius: '5px',
+  ...draggableStyle,
+});
+
+export const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? 'lightblue' : 'white',
+  padding: '1rem 2rem',
+});

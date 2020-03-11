@@ -4,7 +4,7 @@ import { Alert, Avatar, Button, Card, Icon, Input, Popconfirm, Row } from 'antd'
 import { Redirect } from 'react-router-dom';
 import { displaySimpleNotification } from '../utility/services';
 import { API_ENDPOINT } from '../utility/constants';
-import { retrieveTeams } from '../utility/restCalls';
+import { joinTeam, retrieveTeams } from '../utility/restCalls';
 import TeamCreationModal from '../components/Team/TeamCreationModal';
 
 // Seperate this JS file into seperate components later
@@ -65,7 +65,7 @@ export default function Team() {
     }
 
     try {
-      await axios.post(`${API_ENDPOINT}/joinRoom`, data, { withCredentials: true });
+      await joinTeam(data);
       const res = await retrieveTeams();
       localStorage.setItem('teams', JSON.stringify(res.data));
       localStorage.setItem('currentTeam', data.roomId);
@@ -174,7 +174,7 @@ export default function Team() {
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {teams.map((team, index) => {
                 return (
-                  <div style={styles.teams} key={index}>
+                  <div style={{ ...styles.teams, maxWidth: teams.length === 1 ? '40%' : 'auto' }} key={index}>
                     <Card
                       title={
                         <Row type='flex' align='middle' style={{ flexFlow: 'nowrap' }}>
@@ -191,12 +191,13 @@ export default function Team() {
                       extra={team.currentMembers + ' member(s)'}
                       style={{ minHeight: '20rem', height: '100%' }}
                     >
-                      <p>
+                      <p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                         <strong>ID: </strong>
                         {team.id}
                       </p>
                       <p>
-                        <strong>Notifications: 0</strong>
+                        <strong>Notifications: </strong>
+                        <span style={{ color: '#CC8181' }}>1</span>
                       </p>
                       <div style={{ height: '6rem', marginBottom: '2rem' }}>
                         <strong>Description: </strong>
@@ -231,14 +232,14 @@ export default function Team() {
                           onClick={e => handleEnterTeam(e, team.id)}
                         >
                           <a href='/dashboard'>Enter</a>
-                          <Icon
+                          {/* <Icon
                             type='right-circle'
                             style={{
                               marginLeft: '0.5rem',
                               fontSize: '2rem',
                               color: '#79B7D4',
                             }}
-                          />
+                          /> */}
                         </Row>
                       </div>
                     </Card>
@@ -273,7 +274,7 @@ const styles = {
   },
   teams: {
     flex: 1,
-    maxWidth: '40%',
     margin: '0 1rem 1rem 1rem',
+    minWidth: '20rem',
   },
 };

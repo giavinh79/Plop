@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
 import { API_ENDPOINT } from '../utility/constants';
+import axios from 'axios';
 
 /*
  * Custom Hooks

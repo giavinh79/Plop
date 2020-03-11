@@ -4,37 +4,21 @@ import { Skeleton } from 'antd';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card } from './Card';
 import { API_ENDPOINT } from '../../utility/constants';
-import { styles } from './DashboardStyles';
+import { cardStyles, DroppableWrapper, getActiveStyle, getListStyle, Wrapper } from './DashboardStyles';
 
 /*
  * Component representing the three drag & drop columns active, progress, and complete
  * Takes inputs from TeamDashboard and UserDashboard components
  */
 export default function DragDropComponent({ changePage, loading, items, setItems, source }) {
-  const getActiveStyle = (isDragging, draggableStyle) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    userSelect: 'none',
-    margin: `0 0 8px 0`,
-    background: isDragging ? '#eaeaea' : 'white',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    ...draggableStyle,
-  });
-
-  const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? 'lightblue' : 'white',
-    padding: '1rem 2rem',
-    width: '50%',
-  });
-
-  const getList = id => items[id2List[id]];
-
+  // const { Search } = Input;
   const id2List = {
     droppable1: 'active',
     droppable2: 'progress',
     droppable3: 'complete',
   };
+
+  const getList = id => items[id2List[id]];
 
   // A little function to help us with reordering the result
   const reorder = (list, startIndex, endIndex) => {
@@ -100,98 +84,120 @@ export default function DragDropComponent({ changePage, loading, items, setItems
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd} style={{ height: '50%' }}>
-      <Droppable droppableId='droppable1'>
-        {(provided, snapshot) => (
-          <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-            <div style={styles.titleWrapper}>
-              <h5 style={{ ...styles.title, opacity: loading ? 0.3 : 1 }}>Active</h5>
-            </div>
-            {loading && (
-              <>
-                <Skeleton active />
-                <Skeleton active />
-              </>
-            )}
+    <Wrapper>
+      <DragDropContext onDragEnd={onDragEnd} style={{ height: '50%' }}>
+        <Droppable droppableId='droppable1'>
+          {(provided, snapshot) => (
+            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+              <div style={cardStyles.titleWrapper}>
+                <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Active</h5>
+              </div>
+              {loading && (
+                <>
+                  <Skeleton active />
+                  <Skeleton active />
+                </>
+              )}
 
-            {items.active.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
-                  >
-                    <Card data={item} changePage={changePage} source={source} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-      <Droppable droppableId='droppable2'>
-        {(provided, snapshot) => (
-          <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-            <div style={styles.titleWrapper}>
-              <h5 style={{ ...styles.title, opacity: loading ? 0.3 : 1 }}>In Progress</h5>
-            </div>
-            {loading && (
-              <>
-                <Skeleton active />
-                <Skeleton active />
-              </>
-            )}
-            {items.progress.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
-                  >
-                    <Card data={item} changePage={changePage} source={source} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-      <Droppable droppableId='droppable3'>
-        {(provided, snapshot) => (
-          <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-            <div style={styles.titleWrapper}>
-              <h5 style={{ ...styles.title, opacity: loading ? 0.3 : 1 }}>Completed</h5>
-            </div>
-            {loading && (
-              <>
-                <Skeleton active />
-                <Skeleton active />
-              </>
-            )}
-            {items.complete.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
-                  >
-                    <Card data={item} changePage={changePage} source={source} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+              {items.active.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
+                    >
+                      <Card data={item} changePage={changePage} source={source} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </DroppableWrapper>
+          )}
+        </Droppable>
+        <Droppable droppableId='droppable2'>
+          {(provided, snapshot) => (
+            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+              <div style={cardStyles.titleWrapper}>
+                <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>In Progress</h5>
+              </div>
+              {loading && (
+                <>
+                  <Skeleton active />
+                  <Skeleton active />
+                </>
+              )}
+              {items.progress.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
+                    >
+                      <Card data={item} changePage={changePage} source={source} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </DroppableWrapper>
+          )}
+        </Droppable>
+        <Droppable droppableId='droppable3'>
+          {(provided, snapshot) => (
+            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+              <div style={cardStyles.titleWrapper}>
+                <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Completed</h5>
+              </div>
+              {loading && (
+                <>
+                  <Skeleton active />
+                  <Skeleton active />
+                </>
+              )}
+              {items.complete.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
+                    >
+                      <Card data={item} changePage={changePage} source={source} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </DroppableWrapper>
+          )}
+        </Droppable>
+      </DragDropContext>
+      {/* <div
+        style={{
+          position: 'fixed',
+          width: '100%',
+          padding: '2rem',
+          display: 'flex',
+          bottom: 0,
+          width: '50%',
+          maxWidth: '40rem',
+          minWidth: '20rem',
+        }}
+      >
+        <Search
+          allowClear
+          size='large'
+          placeholder='Filter issues through data search'
+          onSearch={value => console.log(value)}
+          disabled
+        />
+      </div> */}
+    </Wrapper>
   );
 }

@@ -26,6 +26,7 @@ Route.post('/logout', 'UserController.logout');
 Route.get('/room', 'RoomController.get').middleware(jwtMiddleware);
 Route.get('/assignees', 'RoomController.getAssignees').middleware(jwtMiddleware);
 Route.get('/members', 'RoomController.getMembers').middleware(jwtMiddleware);
+Route.get('/notifications', 'RoomController.getNotifications').middleware(jwtMiddleware);
 Route.put('/room', 'RoomController.create').middleware(jwtMiddleware);
 Route.post('/room', 'RoomController.update').middleware(jwtMiddleware);
 Route.post('/roomInfo', 'RoomController.info').middleware(jwtMiddleware);

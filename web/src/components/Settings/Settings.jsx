@@ -2,19 +2,19 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { layout, subheader } from '../../globalStyles';
-import { Alert, Button, Col, Icon, Input, Modal, Popconfirm, Row, Typography, Tooltip, Skeleton, Switch } from 'antd';
+import { Alert, Button, Col, Icon, Input, Modal, Popconfirm, Typography, Tooltip, Skeleton, Switch } from 'antd';
 import MemberSlider from './MemberSlider';
 import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../utility/constants';
-import 'antd/dist/antd.css';
 import { deleteRoom } from '../../utility/restCalls';
+import 'antd/dist/antd.css';
 
 const { Paragraph } = Typography;
 const { confirm } = Modal;
 
 export default function Settings() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const email = useRef('');
+  const password = useRef('');
   const [toTeam, setToTeam] = useState(false);
   const [state, setState] = useState({
     name: '',
@@ -43,21 +43,21 @@ export default function Settings() {
       icon: <Icon type='exclamation-circle' />,
       content: (
         <>
-          Your changes will be permanent. Please enter your email and password below to confirm.
+          This action will be permanent. Please enter the team owner's email and password below to confirm.
           <Col type='flex' style={{ paddingTop: '2rem' }}>
             <Input
               placeholder='Email'
               style={{ margin: '0.5rem 0' }}
               type='email'
-              autoComplete='new-password'
-              onChange={e => setEmail(e.target.value)}
+              autoComplete='nope'
+              onChange={e => (email.current = e.target.value)}
             />
             <Input
               placeholder='Password'
               style={{ margin: '0.5rem 0' }}
               type='password'
-              autoComplete='new-password'
-              onChange={e => setPassword(e.target.value)}
+              autoComplete='nope'
+              onChange={e => (password.current = e.target.value)}
             />
             <Alert message='Both fields must be filled in.' type='error' style={{ marginTop: '1rem' }} />
           </Col>
@@ -69,7 +69,7 @@ export default function Settings() {
       onOk() {
         return new Promise(async resolve => {
           try {
-            await deleteRoom(email, password);
+            await deleteRoom(email.current, password.current);
             setToTeam(true);
           } catch (err) {
             displaySimpleNotification(
@@ -80,16 +80,16 @@ export default function Settings() {
               'warning',
               'red'
             );
-            setEmail('');
-            setPassword('');
+            email.current = '';
+            password.current = '';
           } finally {
             resolve();
           }
         });
       },
       onCancel() {
-        setEmail('');
-        setPassword('');
+        email.current = '';
+        password.current = '';
       },
     });
   };

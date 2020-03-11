@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react';
-import axios from 'axios';
 import { Alert, Button, Input, Modal } from 'antd';
 import { displayInfoDialog, displaySimpleNotification } from '../../utility/services';
-import { API_ENDPOINT } from '../../utility/constants';
+import { createTeam } from '../../utility/restCalls';
 
 const { TextArea } = Input;
 
@@ -33,7 +32,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
     }
 
     try {
-      const res = await axios.put(`${API_ENDPOINT}/room`, data);
+      const res = await createTeam(data);
       setTeams([
         ...teams,
         { name: res.data.name, description: res.data.description, id: res.data.id, currentMembers: '1' },
@@ -80,7 +79,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         id='teamName'
         allowClear={true}
         maxLength={100}
-        required
+        aria-label='team-name-input'
         onChange={e => {
           createTeamData.current.name = e.currentTarget.value;
         }}
@@ -92,7 +91,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         name='teamDescription'
         id='teamDescription'
         maxLength={250}
-        required
+        aria-label='team-description-input'
         onChange={e => {
           createTeamData.current.description = e.currentTarget.value;
         }}
@@ -103,7 +102,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         id='teamPassword'
         autoComplete='new-password'
         allowClear={true}
-        required
+        aria-label='team-password-input'
         onChange={e => {
           createTeamData.current.password = e.currentTarget.value;
         }}

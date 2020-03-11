@@ -15,6 +15,7 @@ class RoomSchema extends Schema {
       table.string('name', [100]).notNullable();
       table.string('description', [300]).notNullable();
       table.string('password', 60).notNullable();
+      table.string('repository', 100);
       table.integer('maxMembers');
       table.integer('status');
       table.integer('currentMembers');

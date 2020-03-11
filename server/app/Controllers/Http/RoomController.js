@@ -85,8 +85,8 @@ class RoomController {
         membersPayload.push({
           key: count,
           member: data[0].email,
-          role: 'N/A',
-          administration: 'Developer',
+          role: 'Developer',
+          administration: '1',
           status: status,
         });
         count++;
@@ -95,6 +95,28 @@ class RoomController {
       response.status(200).json(membersPayload);
     } catch (err) {
       console.log(`(room_getMembers) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async getNotifications({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
+      let result = await Database.from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+
+      let [data] = await Database.select('notifications')
+        .from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+
+      response.status(200).json(data.notifications);
+    } catch (err) {
+      console.log(`(room_getNotifications) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -190,7 +212,9 @@ class RoomController {
           .where('id', user.id)
           .update({ numTeams: user.numTeams + 1 });
         await room.save();
-        await trx.table('user_rooms').insert({ user_id: user.id, room_id: room.id });
+        await trx
+          .table('user_rooms')
+          .insert({ user_id: user.id, room_id: room.id, role: null, notifications: JSON.stringify([]) });
       });
 
       const encryptedRoomId = Encryption.encrypt(room.id);
@@ -199,7 +223,7 @@ class RoomController {
         from: Env.get('EMAIL_USER'),
         to: user.email,
         subject: 'Team Credentials',
-        html: `<p>Your team ID is <strong>${encryptedRoomId}</strong> and your password is <strong>${roomPassword}</strong></p>.`,
+        html: `<p>Your team ID is <strong>${encryptedRoomId}</strong> and your password is <strong>${roomPassword}</strong>.</p>`,
       };
 
       let transport = nodemailer.createTransport({
@@ -250,7 +274,9 @@ class RoomController {
         .update({ numTeams: user.numTeams + 1 });
 
       await Database.transaction(async trx => {
-        await trx.table('user_rooms').insert({ user_id: user.id, room_id: decryptedRoomId });
+        await trx
+          .table('user_rooms')
+          .insert({ user_id: user.id, room_id: decryptedRoomId, role: null, notifications: JSON.stringify([]) });
         const data = await trx
           .table('rooms')
           .select('currentMembers')

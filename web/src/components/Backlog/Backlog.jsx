@@ -63,8 +63,8 @@ export default function Backlog({ changePage }) {
     },
     {
       title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      dataIndex: 'shortDescription',
+      key: 'shortDescription',
     },
     {
       title: 'Date',

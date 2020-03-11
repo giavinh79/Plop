@@ -57,7 +57,12 @@ class SetupSeeder {
       await room.save();
 
       // Adding row to link room/team with user
-      await Database.table('user_rooms').insert({ user_id: user.id, room_id: room.id });
+      await Database.table('user_rooms').insert({
+        user_id: user.id,
+        room_id: room.id,
+        role: null,
+        notifications: JSON.stringify([]),
+      });
 
       // Creating issues for the room/team's dashboard and backlog
       let issue = new Issue();
@@ -71,6 +76,7 @@ class SetupSeeder {
         priority: 0,
         status: 1,
         tag: JSON.stringify(['Backend', 'Frontend']),
+        image: JSON.stringify([]),
         comments: JSON.stringify([]),
       });
       await issue.save();
@@ -86,6 +92,7 @@ class SetupSeeder {
         priority: 1,
         status: 0,
         tag: JSON.stringify([]),
+        image: JSON.stringify([]),
         comments: JSON.stringify([]),
       });
       await issue.save();
@@ -101,6 +108,7 @@ class SetupSeeder {
         priority: 0,
         status: 1,
         tag: JSON.stringify(['Backend']),
+        image: JSON.stringify([]),
         comments: JSON.stringify([]),
       });
       await issue.save();

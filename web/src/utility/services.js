@@ -35,7 +35,7 @@ const displaySimpleNotification = (message, duration, placement, description, ic
 const displaySessionExpired = () => {
   notification.open({
     message: 'Session expired',
-    duration: 2,
+    duration: 3,
     placement: 'bottomRight',
     description: 'You need to login again.',
     icon: <Icon type='warning' style={{ color: '#108ee9' }} />,

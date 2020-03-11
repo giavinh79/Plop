@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
-import { Badge, Dropdown, Icon, Menu } from 'antd';
+import { Dropdown, Icon, Menu } from 'antd';
 import { createSession } from '../../utility/restCalls';
 import 'antd/dist/antd.css';
 import './style.css';
@@ -57,13 +57,11 @@ function TeamDropdown({ history }) {
         })}
     </Menu>
   );
+
   return toTeam ? (
     <Redirect push to='/team' />
   ) : (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <Badge count={0} dot style={{ cursor: 'pointer', backgroundColor: 'red' }}>
-        <Icon type='bell' theme='filled' style={{ fontSize: '20px', cursor: 'pointer' }} />
-      </Badge>
       <Dropdown.Button
         overlay={menu}
         style={{ margin: '0 1.3rem 0 1.3rem' }}

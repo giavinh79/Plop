@@ -9,13 +9,11 @@ Current deployed on https://www.plop.team/ as version 0.7. Backend is deployed o
 
 ## To Do
 
-Immediate: JWT token refresh, add notification icon design (notified when someone comments on an issue assigned to you or someone comments on something you commented on), refactoring routes, more informative landing page
+Immediate: JWT token refresh, refactoring routes, more informative landing page and help page, refactor all css
 
-Longterm: Make functionality for room settings work (room deletion, add pending invitations table...), themes and changing password, administration levels, mobile responsiveness (or alert to download mobile app)
+Longterm: More functionality for room settings work (add pending invitations table...), themes and changing password, administration levels, mobile responsiveness, Web Sockets to be implemented to allow chat, track member statuses, and show live changes on the dashboard
 
 Very longterm:
-
-Web Sockets to be implemented to allow chat, track member statuses, and show live changes on the dashboard
 
 Add Rate Limiter to server-side stuff
 
