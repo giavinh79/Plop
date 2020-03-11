@@ -90,7 +90,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         style={{ marginBottom: '1rem' }}
         name='teamDescription'
         id='teamDescription'
-        maxLength={250}
+        maxLength={220}
         aria-label='team-description-input'
         onChange={e => {
           createTeamData.current.description = e.currentTarget.value;

@@ -71,6 +71,14 @@ const retrieveTeams = async () => {
   }
 };
 
+const sendNotificationsRead = async data => {
+  try {
+    await axios.post(`${API_ENDPOINT}/notifications`, data);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const deleteIssue = async id => {
   try {
     await axios.delete(`${API_ENDPOINT}/issue/${id}`);
@@ -89,4 +97,5 @@ export {
   retrieveMembers,
   retrieveNotifications,
   retrieveTeams,
+  sendNotificationsRead,
 };

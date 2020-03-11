@@ -2,88 +2,110 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Modal, Button, Popconfirm, Row, Icon, List, message, Avatar, Spin, Skeleton } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import 'antd/dist/antd.css';
-import { retrieveNotifications } from '../../../utility/restCalls';
+import { sendNotificationsRead } from '../../../utility/restCalls';
 import { displaySimpleNotification } from '../../../utility/services';
 
 // Message component for when sockets are implemented
 // Color for new notifications: #d4bb40
 
-const data = [
-  // {
-  //   id: '1',
-  //   description: "user1@gmail.com has assigned you 'Work on the frontend'.",
-  //   event: 'You have been assigned to an issue.',
-  //   type: 1,
-  // },
-  // {
-  //   id: '2',
-  //   description: "user2@gmail.com has assigned you 'Work on bugs'.",
-  //   event: 'You have been assigned to an issue.',
-  //   type: 1,
-  // },
-  // {
-  //   id: '3',
-  //   description: "user3@gmail.com has commented on 'SEO'.",
-  //   email: 'fakeemail@gmail.com',
-  //   event: 'There are new comments on your issue.',
-  //   type: 2,
-  // },
-  // {
-  //   id: '4',
-  //   description: "user3@gmail.com has commented on 'SEO'.",
-  //   email: 'fakeemail@gmail.com',
-  //   event: 'There are new comments on your issue.',
-  //   type: 2,
-  // },
-  // {
-  //   id: '5',
-  //   description: "user3@gmail.com has commented on 'SEO'.",
-  //   email: 'fakeemail@gmail.com',
-  //   event: 'There are new comments on your issue.',
-  //   type: 2,
-  // },
-];
+// const data = [
+// {
+//   id: '1',
+//   description: "user1@gmail.com has assigned you 'Work on the frontend'.",
+//   event: 'You have been assigned to an issue.',
+//   type: 1,
+// },
+// {
+//   id: '2',
+//   description: "user2@gmail.com has assigned you 'Work on bugs'.",
+//   event: 'You have been assigned to an issue.',
+//   type: 1,
+// },
+// {
+//   id: '3',
+//   description: "user3@gmail.com has commented on 'SEO'.",
+//   email: 'fakeemail@gmail.com',
+//   event: 'There are new comments on your issue.',
+//   type: 2,
+// },
+// {
+//   id: '4',
+//   description: "user3@gmail.com has commented on 'SEO'.",
+//   email: 'fakeemail@gmail.com',
+//   event: 'There are new comments on your issue.',
+//   type: 2,
+// },
+// {
+//   id: '5',
+//   description: "user3@gmail.com has commented on 'SEO'.",
+//   email: 'fakeemail@gmail.com',
+//   event: 'There are new comments on your issue.',
+//   type: 2,
+// },
+// ];
 
-export default function Notification({ setShowNotificationModal }) {
+export default function Notification({ data, setShowNotificationModal }) {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [toBeRemoved, setToBeRemoved] = useState([]);
-  const id = useRef(data.length);
+  const id = useRef(0);
 
   useEffect(() => {
     (async () => {
-      let { data } = await retrieveNotifications();
-      for (let item of data) {
-        id.current = id.current + 1;
-        if (item.type === 1) {
-          setNotifications(notifications => [
-            {
-              id: id.current,
-              description: `${item.sourceUser} has assigned you task '${item.issue}'.`,
-              event: 'You have been assigned to an issue',
-              status: item.status,
-              type: item.type,
-            },
-            ...notifications,
-          ]);
-        } else if (item.type === 2) {
-          setNotifications([
-            {
-              id: id.current,
-              description: `${item.sourceUser} has commented on task '${item.issue}'.`,
-              event: 'There are new comments on your issue.',
-              status: item.status,
-              type: item.type,
-            },
-            ...notifications,
-          ]);
+      if (data) {
+        for (let item of data) {
+          handleNotification(item, id.current++);
         }
+        setLoading(false);
+        if (data.length > 0) await sendNotificationsRead({ notifications: data });
       }
-      setLoading(false);
     })().catch(err => {
-      displaySimpleNotification('Error', 2, 'bottomRight', 'Unable to retrieve notifications.', 'warning', 'red');
+      displaySimpleNotification('Error', 2, 'bottomRight', `Unable to update notifications ${err}.`, 'warning', 'red');
     });
   }, []);
+
+  const handleNotification = (item, id) => {
+    switch (item.type) {
+      case 1:
+        setNotifications(notifications => [
+          {
+            id,
+            description: `${item.sourceUser} has assigned you task '${item.issue}'.`,
+            event: 'You have been assigned to an issue',
+            status: item.status,
+            type: item.type,
+          },
+          ...notifications,
+        ]);
+        break;
+      case 2:
+        setNotifications(notifications => [
+          {
+            id,
+            description: `Task '${item.issue}' has been re-assigned to user ${item.assignee}.`,
+            event: 'Issue no longer assigned to you',
+            status: item.status,
+            type: item.type,
+          },
+          ...notifications,
+        ]);
+        break;
+      case 3:
+        setNotifications([
+          {
+            id: id,
+            description: `${item.sourceUser} has commented on task '${item.issue}'.`,
+            event: 'There are new comments on your issue.',
+            status: item.status,
+            type: item.type,
+          },
+          ...notifications,
+        ]);
+        break;
+      default:
+        break;
+    }
+  };
 
   const handleInfiniteOnLoad = () => {
     let { data } = this.state;
@@ -116,17 +138,25 @@ export default function Notification({ setShowNotificationModal }) {
         <Button key='back' onClick={() => setShowNotificationModal(false)}>
           Return
         </Button>,
-        <Button
-          key='clear'
-          style={{
-            color: notifications.length === 0 ? 'rgba(0, 0, 0, 0.25)' : 'white',
-            backgroundColor: notifications.length === 0 ? '#f5f5f5' : '#af5357',
-          }}
-          onClick={() => setShowNotificationModal(false)}
-          disabled={notifications.length === 0 ? true : false}
+        <Popconfirm
+          key='clearConfirm'
+          title='Are you sure you want remove all notifications?'
+          onConfirm={() => console.log('Cleared')}
+          okText='Yes'
+          cancelText='No'
         >
-          Clear All
-        </Button>,
+          <Button
+            key='clear'
+            style={{
+              color: notifications.length === 0 ? 'rgba(0, 0, 0, 0.25)' : 'white',
+              backgroundColor: notifications.length === 0 ? '#f5f5f5' : '#af5357',
+            }}
+            // onClick={() => setShowNotificationModal(false)}
+            disabled={notifications.length === 0 ? true : false}
+          >
+            Clear All
+          </Button>
+        </Popconfirm>,
         <Button
           key='save'
           type='primary'
@@ -188,9 +218,9 @@ export default function Notification({ setShowNotificationModal }) {
                   >
                     {toBeRemoved.includes(item.id) ? 'Cancel removal' : 'Remove'}
                   </a>
-                  <a href='/dashboard' disabled={toBeRemoved.includes(item.id) ? true : false}>
+                  {/* <a href='/dashboard' disabled={toBeRemoved.includes(item.id) ? true : false}>
                     Go to issue
-                  </a>
+                  </a> */}
                 </Row>
               </List.Item>
             )}

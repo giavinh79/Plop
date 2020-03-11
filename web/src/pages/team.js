@@ -66,9 +66,9 @@ export default function Team() {
 
     try {
       await joinTeam(data);
+      localStorage.setItem('currentTeam', data.roomId);
       const res = await retrieveTeams();
       localStorage.setItem('teams', JSON.stringify(res.data));
-      localStorage.setItem('currentTeam', data.roomId);
       setToDashboard(true);
     } catch (err) {
       displaySimpleNotification(
@@ -214,7 +214,7 @@ export default function Team() {
                           <Row type='flex' align='middle' style={{ cursor: 'pointer' }}>
                             <p style={{ margin: 0 }}>Leave</p>
                             <img
-                              src='images/exit.svg'
+                              src='/images/exit.svg'
                               alt='exit icon'
                               style={{
                                 margin: '0 0.5rem',

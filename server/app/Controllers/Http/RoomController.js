@@ -121,6 +121,42 @@ class RoomController {
     }
   }
 
+  async readNotifications({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
+      let result = await Database.from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+
+      const { notifications } = request.body; // notifications read by user on FE
+      let [data] = await Database.select('notifications')
+        .from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+
+      data.notifications = data.notifications.map(item => {
+        // As long as date of item in DB is less or equal recency to newest item read by user, we can change it
+        if (item.status === 0 && item.date <= notifications[notifications.length - 1].date) {
+          item.status = 1;
+        }
+        return item;
+      });
+
+      await Database.table('user_rooms')
+        .update('notifications', JSON.stringify(data.notifications))
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(room_readNotifications) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
   async info({ request, auth, response }) {
     try {
       const user = await auth.getUser();

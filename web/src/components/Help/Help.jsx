@@ -57,7 +57,7 @@ export default function Help() {
           </div>
           <div style={{ margin: '1rem' }}>
             <img
-              src='images/plopdark.png'
+              src='/images/plopdark.png'
               style={{ maxWidth: '100%', borderRadius: '10px', height: 'auto' }}
               alt='plop dark mode web app'
             />

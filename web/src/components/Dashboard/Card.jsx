@@ -27,6 +27,8 @@ const styles = {
   cardBody: {
     display: 'flex',
     padding: '16px',
+    minHeight: '5rem',
+    wordBreak: 'break-word',
   },
   cardIcon: {
     color: '#6b7080',

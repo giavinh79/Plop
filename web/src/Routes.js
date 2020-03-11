@@ -47,6 +47,7 @@ export default function Routes() {
           <Route exact path='/' component={Homepage} />
           <ProtectedRoute path='/team' component={Team} />
           <ProtectedRoute path='/dashboard' component={Panel} />
+          <ProtectedRoute path='/dashboard/issue:id' component={Panel} />
           <Redirect to='/' />
         </Switch>
       </BodyWrapper>

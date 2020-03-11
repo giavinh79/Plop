@@ -1,17 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Badge, Icon } from 'antd';
 import UserPanel from './UserPanel/UserPanel';
 import Notification from './Notification/Notification';
 import { HeaderWrapper, Logo } from './style.js';
+import { displaySimpleNotification } from '../../utility/services';
 import { WrappedHorizontalLoginForm } from './LoginForm.jsx';
-
+import { retrieveNotifications } from '../../utility/restCalls';
 import TeamDropdown from './TeamDropdown';
 
 export default function Header() {
   const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   let history = useHistory();
   let { location } = history;
+
+  useEffect(() => {
+    if (location.pathname === '/dashboard') {
+      (async () => {
+        let { data } = await retrieveNotifications();
+        setNotifications(data);
+      })().catch(err => {
+        displaySimpleNotification(
+          'Error',
+          2,
+          'bottomRight',
+          `Unable to retrieve notifications ${err}.`,
+          'warning',
+          'red'
+        );
+      });
+    }
+  }, [localStorage.getItem('currentTeam')]);
+
+  const isNewNotifications = () => {
+    for (let item of notifications) {
+      if (item.status === 0) return true;
+    }
+    return false;
+  };
 
   const handleClick = () => {
     if (location.pathname !== '/') {
@@ -36,7 +63,7 @@ export default function Header() {
       <div style={{ display: 'flex', padding: location.pathname === '/team' ? '0 1rem' : '0' }}>
         {location.pathname === '/team' && <h1 style={{ color: 'white', margin: 0 }}>PL</h1>}
         <Logo
-          src='images/justlogo.png'
+          src='/images/justlogo.png'
           alt='logo'
           onClick={handleClick}
           style={{ padding: location.pathname === '/team' ? 0 : '0 1rem' }}
@@ -56,8 +83,10 @@ export default function Header() {
           <>
             {location.pathname !== '/team' && (
               <>
-                {showNotificationModal && <Notification setShowNotificationModal={setShowNotificationModal} />}
-                <Badge count={0} dot style={{ cursor: 'pointer', backgroundColor: 'red' }}>
+                {showNotificationModal && (
+                  <Notification setShowNotificationModal={setShowNotificationModal} data={notifications} />
+                )}
+                <Badge count={isNewNotifications() ? 1 : 0} dot style={{ cursor: 'pointer', backgroundColor: 'red' }}>
                   <Icon
                     type='bell'
                     theme='filled'

@@ -11,9 +11,11 @@ Current deployed on https://www.plop.team/ as version 0.7. Backend is deployed o
 
 Immediate: JWT token refresh, refactoring routes, more informative landing page and help page, refactor all css
 
-Longterm: More functionality for room settings work (add pending invitations table...), themes and changing password, administration levels, mobile responsiveness, Web Sockets to be implemented to allow chat, track member statuses, and show live changes on the dashboard
+Longterm: More functionality for room settings work (restyling, member approval), themes and changing password, administration levels, mobile responsiveness, Web Sockets to be implemented to allow chat, track member statuses, and show live changes on the dashboard
 
 Very longterm:
+
+Offload some request code to message queue to shorten response time of certain more frequent calls (i.e. can offload/delay setting notifications and logs)
 
 Add Rate Limiter to server-side stuff
 
