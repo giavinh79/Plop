@@ -16,36 +16,38 @@ class IssueController {
   /* 
     Helper Functions 
   */
-  async isNewAssignee(user, assignee, oldAssignee) {
-    if (oldAssignee) {
-      return assignee && assignee.length > 0 && assignee !== user && oldAssignee !== assignee;
-    } else {
-      return assignee && assignee.length > 0 && assignee !== user;
-    }
-  }
-
   async handleNotification(type, payload) {
     // type denotes type of notification (ie. new issue assignee (1), updated issue assignee (2), comment (3)...etc)
     try {
       const { assignee, issue, issueId, sourceUser, roomId } = payload;
       if (type <= 2) {
-        let [user_data] = await Database.from('users')
-          .select('id')
-          .where('email', assignee);
-        let [data] = await Database.table('user_rooms')
-          .where('user_id', user_data.id)
-          .where('room_id', roomId)
-          .select('notifications');
-        data.notifications.push({ assignee, date: new Date(), issue, issueId, sourceUser, status: 0, type: 1 });
-        await Database.table('user_rooms')
-          .where('user_id', user_data.id)
-          .where('room_id', roomId)
-          .update('notifications', JSON.stringify(data.notifications));
-
+        if (assignee && assignee.length > 0 && assignee !== sourceUser) {
+          let [user_data] = await Database.from('users')
+            .select('id')
+            .where('email', assignee);
+          let [data] = await Database.table('user_rooms')
+            .where('user_id', user_data.id)
+            .where('room_id', roomId)
+            .select('notifications');
+          data.notifications.push({
+            assignee,
+            date: new Date(),
+            issue,
+            issueId,
+            notificationId: data.notifications.length,
+            sourceUser,
+            status: 0,
+            type: 1,
+          });
+          await Database.table('user_rooms')
+            .where('user_id', user_data.id)
+            .where('room_id', roomId)
+            .update('notifications', JSON.stringify(data.notifications));
+        }
         // Need to notify previous assignee that another user has been assigned the issue
         if (type === 2) {
           const { oldAssignee } = payload;
-          if (oldAssignee != null) {
+          if (assignee && assignee.length > 0 && oldAssignee != null && oldAssignee != sourceUser) {
             const [idObj] = await Database.table('users')
               .select('id')
               .where('email', oldAssignee);
@@ -54,7 +56,15 @@ class IssueController {
               .where('user_id', idObj.id)
               .where('room_id', roomId)
               .select('notifications');
-            data.notifications.push({ assignee, date: new Date(), issue, issueId, status: 0, type: 2 });
+            data.notifications.push({
+              assignee,
+              date: new Date(),
+              issue,
+              issueId,
+              notificationId: data.notifications.length,
+              status: 0,
+              type: 2,
+            });
 
             await Database.table('user_rooms')
               .where('user_id', idObj.id)
@@ -70,7 +80,16 @@ class IssueController {
           .where('user_id', user_data.id)
           .where('room_id', roomId)
           .select('notifications');
-        data.notifications.push({ assignee, date: new Date(), issue, issueId, sourceUser, status: 0, type: 3 });
+        data.notifications.push({
+          assignee,
+          date: new Date(),
+          issue,
+          issueId,
+          notificationId: data.notifications.length,
+          sourceUser,
+          status: 0,
+          type: 3,
+        });
         await Database.table('user_rooms')
           .where('user_id', user_data.id)
           .where('room_id', roomId)
@@ -138,8 +157,8 @@ class IssueController {
       await issue.save();
 
       // Handle notification for assignee
-      if (await this.isNewAssignee(user.email, assignee)) {
-        this.handleNotification(1, {
+      if (assignee) {
+        await this.handleNotification(1, {
           assignee,
           issue: title,
           issueId: issue.id,
@@ -364,11 +383,11 @@ class IssueController {
         }
       }
 
-      if (await this.isNewAssignee(data[0].assignee, user.email)) watchers.add(data[0].assignee);
-      if (await this.isNewAssignee(data[0].creator, user.email)) watchers.add(data[0].creator);
+      if (data[0].assignee && data[0].assignee !== user.email) watchers.add(data[0].assignee);
+      if (data[0].creator !== user.email) watchers.add(data[0].creator);
 
       for (let watcher of watchers) {
-        this.handleNotification(3, {
+        await this.handleNotification(3, {
           issue: data[0].title,
           issueId: data[0].id,
           sourceUser: user.email,
@@ -399,8 +418,8 @@ class IssueController {
         .select('assignee')
         .where('id', request.body.id);
 
-      if (await this.isNewAssignee(user.email, assignee, dataAssignee.assignee)) {
-        this.handleNotification(2, {
+      if (dataAssignee.assignee) {
+        await this.handleNotification(2, {
           assignee,
           issue: title,
           issueId: request.body.id,

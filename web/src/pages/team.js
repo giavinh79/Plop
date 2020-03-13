@@ -197,7 +197,9 @@ export default function Team() {
                       </p>
                       <p>
                         <strong>Notifications: </strong>
-                        <span style={{ color: '#CC8181' }}>1</span>
+                        <span style={{ color: team.notifications !== 0 ? '#CC8181' : '#595959' }}>
+                          {team.notifications}
+                        </span>
                       </p>
                       <div style={{ height: '6rem', marginBottom: '2rem' }}>
                         <strong>Description: </strong>

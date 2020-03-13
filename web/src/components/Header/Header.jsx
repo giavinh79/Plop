@@ -12,6 +12,7 @@ import TeamDropdown from './TeamDropdown';
 export default function Header() {
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   let history = useHistory();
   let { location } = history;
 
@@ -31,7 +32,7 @@ export default function Header() {
         );
       });
     }
-  }, [localStorage.getItem('currentTeam')]);
+  }, [location.pathname, refresh]);
 
   const isNewNotifications = () => {
     for (let item of notifications) {
@@ -84,7 +85,13 @@ export default function Header() {
             {location.pathname !== '/team' && (
               <>
                 {showNotificationModal && (
-                  <Notification setShowNotificationModal={setShowNotificationModal} data={notifications} />
+                  <Notification
+                    data={notifications}
+                    setNotificationData={setNotifications}
+                    setShowNotificationModal={setShowNotificationModal}
+                    setRefresh={setRefresh}
+                    refresh={refresh}
+                  />
                 )}
                 <Badge count={isNewNotifications() ? 1 : 0} dot style={{ cursor: 'pointer', backgroundColor: 'red' }}>
                   <Icon

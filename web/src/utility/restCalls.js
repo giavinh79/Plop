@@ -5,6 +5,14 @@
 import axios from 'axios';
 import { API_ENDPOINT } from './constants';
 
+const clearNotifications = async notifications => {
+  try {
+    await axios.post(`${API_ENDPOINT}/clearNotifications`, { notifications });
+  } catch (err) {
+    throw err;
+  }
+};
+
 const createSession = async event => {
   try {
     await axios.post(`${API_ENDPOINT}/sessionRoom`, {
@@ -88,6 +96,7 @@ const deleteIssue = async id => {
 };
 
 export {
+  clearNotifications,
   createSession,
   createTeam,
   deleteIssue,

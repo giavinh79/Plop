@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Modal, Button, Popconfirm, Row, Icon, List, message, Avatar, Spin, Skeleton } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Button, Popconfirm, Row, List, Avatar, Skeleton } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
-import 'antd/dist/antd.css';
-import { sendNotificationsRead } from '../../../utility/restCalls';
+import { clearNotifications, sendNotificationsRead } from '../../../utility/restCalls';
 import { displaySimpleNotification } from '../../../utility/services';
+import 'antd/dist/antd.css';
 
 // Message component for when sockets are implemented
-// Color for new notifications: #d4bb40
 
-// const data = [
+// const sampleData = [
 // {
 //   id: '1',
 //   description: "user1@gmail.com has assigned you 'Work on the frontend'.",
@@ -44,17 +43,16 @@ import { displaySimpleNotification } from '../../../utility/services';
 // },
 // ];
 
-export default function Notification({ data, setShowNotificationModal }) {
+export default function Notification({ data, setNotificationData, setShowNotificationModal, setRefresh, refresh }) {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [toBeRemoved, setToBeRemoved] = useState([]);
-  const id = useRef(0);
 
   useEffect(() => {
     (async () => {
       if (data) {
         for (let item of data) {
-          handleNotification(item, id.current++);
+          handleNotification(item);
         }
         setLoading(false);
         if (data.length > 0) await sendNotificationsRead({ notifications: data });
@@ -62,18 +60,19 @@ export default function Notification({ data, setShowNotificationModal }) {
     })().catch(err => {
       displaySimpleNotification('Error', 2, 'bottomRight', `Unable to update notifications ${err}.`, 'warning', 'red');
     });
-  }, []);
+  }, [data]);
 
-  const handleNotification = (item, id) => {
+  const handleNotification = item => {
     switch (item.type) {
       case 1:
         setNotifications(notifications => [
           {
-            id,
+            id: item.notificationId,
             description: `${item.sourceUser} has assigned you task '${item.issue}'.`,
             event: 'You have been assigned to an issue',
             status: item.status,
             type: item.type,
+            date: item.date,
           },
           ...notifications,
         ]);
@@ -81,11 +80,12 @@ export default function Notification({ data, setShowNotificationModal }) {
       case 2:
         setNotifications(notifications => [
           {
-            id,
+            id: item.notificationId,
             description: `Task '${item.issue}' has been re-assigned to user ${item.assignee}.`,
             event: 'Issue no longer assigned to you',
             status: item.status,
             type: item.type,
+            date: item.date,
           },
           ...notifications,
         ]);
@@ -93,7 +93,7 @@ export default function Notification({ data, setShowNotificationModal }) {
       case 3:
         setNotifications([
           {
-            id: id,
+            id: item.notificationId,
             description: `${item.sourceUser} has commented on task '${item.issue}'.`,
             event: 'There are new comments on your issue.',
             status: item.status,
@@ -105,6 +105,33 @@ export default function Notification({ data, setShowNotificationModal }) {
       default:
         break;
     }
+  };
+
+  const handleClearAll = async () => {
+    await clearNotifications(data);
+    handleCloseModal();
+  };
+
+  const handleSave = async () => {
+    let removedNotifications = notifications.filter(item => {
+      return toBeRemoved.includes(item.id);
+    });
+
+    let removedData = data.filter(item => {
+      for (let notification of removedNotifications) {
+        if (notification.id === item.notificationId) {
+          return true;
+        }
+      }
+      return false;
+    });
+    await clearNotifications(removedData);
+    handleCloseModal();
+  };
+
+  const handleCloseModal = () => {
+    setRefresh(!refresh);
+    setShowNotificationModal(false);
   };
 
   const handleInfiniteOnLoad = () => {
@@ -132,16 +159,16 @@ export default function Notification({ data, setShowNotificationModal }) {
     <Modal
       visible={true}
       title='Notifications'
-      onOk={() => setShowNotificationModal(false)}
-      onCancel={() => setShowNotificationModal(false)}
+      onOk={handleCloseModal}
+      onCancel={handleCloseModal}
       footer={[
-        <Button key='back' onClick={() => setShowNotificationModal(false)}>
+        <Button key='back' onClick={handleCloseModal}>
           Return
         </Button>,
         <Popconfirm
           key='clearConfirm'
           title='Are you sure you want remove all notifications?'
-          onConfirm={() => console.log('Cleared')}
+          onConfirm={handleClearAll}
           okText='Yes'
           cancelText='No'
         >
@@ -150,20 +177,15 @@ export default function Notification({ data, setShowNotificationModal }) {
             style={{
               color: notifications.length === 0 ? 'rgba(0, 0, 0, 0.25)' : 'white',
               backgroundColor: notifications.length === 0 ? '#f5f5f5' : '#af5357',
+              margin: '0 0.5rem',
             }}
-            // onClick={() => setShowNotificationModal(false)}
             disabled={notifications.length === 0 ? true : false}
           >
-            Clear All
+            Remove All
           </Button>
         </Popconfirm>,
-        <Button
-          key='save'
-          type='primary'
-          onClick={() => setShowNotificationModal(false)}
-          disabled={notifications.length === 0 ? true : false}
-        >
-          Save
+        <Button key='save' type='primary' onClick={handleSave} disabled={notifications.length === 0 ? true : false}>
+          Remove Selected
         </Button>,
       ]}
       width={800}

@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { displaySimpleNotification } from './utility/services';
 import { API_ENDPOINT } from './utility/constants';
+import IssuePage from './pages/issuepage';
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -46,8 +47,8 @@ export default function Routes() {
         <Switch>
           <Route exact path='/' component={Homepage} />
           <ProtectedRoute path='/team' component={Team} />
+          {/* <ProtectedRoute path='/dashboard/issue:id' component={IssuePage} /> */}
           <ProtectedRoute path='/dashboard' component={Panel} />
-          <ProtectedRoute path='/dashboard/issue:id' component={Panel} />
           <Redirect to='/' />
         </Switch>
       </BodyWrapper>
