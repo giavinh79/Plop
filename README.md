@@ -9,7 +9,7 @@ Current deployed on https://www.plop.team/ as version 0.8. Backend is deployed o
 
 ## To Do
 
-Immediate: Refactor all css and implement dark mode, web sockets for real time notifications, chat, live dashboard changes, and online member statuses, JWT token refresh, refactoring routes, more informative landing page and help page, 
+Immediate: Refactor all css and implement dark mode, refactor routing to improve rendering performance, split big components into smaller ones, refactor all class components to hooks, web sockets for real time notifications, chat, live dashboard changes, and online member statuses, JWT token refresh, refactoring routes, more informative landing page and help page, 
 
 Longterm: More functionality for room settings work (restyling, member approval), changing password/email, administration levels, mobile responsiveness
 
