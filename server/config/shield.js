@@ -136,7 +136,7 @@ module.exports = {
     filterUris: [],
     cookieOptions: {
       httpOnly: false,
-      sameSite: true,
+      sameSite: 'none',
       secure: true,
       path: '/',
       maxAge: 7200,
