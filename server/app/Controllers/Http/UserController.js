@@ -61,7 +61,7 @@ class UserController {
       const { token } = jwt; // add secure attribute when deployed(?)
       response.cookie('XSStoken', token, {
         httpOnly: true,
-        secure: Env.get('DEVELOPMENT') === 'true' ? false : true,
+        secure: Env.get('DEVELOPMENT') === 'true' ? false : 'none',
         sameSite: false,
       });
       response.status(200).send();

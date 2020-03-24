@@ -370,7 +370,7 @@ class RoomController {
 
       response.cookie('room', roomId, {
         httpOnly: true,
-        secure: Env.get('DEVELOPMENT') === 'true' ? false : true,
+        secure: Env.get('DEVELOPMENT') === 'true' ? false : 'none',
         sameSite: false,
       });
       response.status(200).json({ id: roomId, name: result[0].name });
@@ -514,7 +514,7 @@ class RoomController {
       if (result.length === 0) throw new Error('Unauthorized Access');
       response.cookie('room', request.body.id, {
         httpOnly: true,
-        secure: Env.get('DEVELOPMENT') === 'true' ? false : true,
+        secure: Env.get('DEVELOPMENT') === 'true' ? false : 'none',
         sameSite: false,
       });
       response.status(200).send();
