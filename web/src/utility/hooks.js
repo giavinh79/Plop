@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { API_ENDPOINT } from '../utility/constants';
+import { API_ENDPOINT } from '../constants';
 import axios from 'axios';
 
 /*

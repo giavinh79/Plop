@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Skeleton } from 'antd';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card } from './Card';
-import { API_ENDPOINT } from '../../utility/constants';
+import { API_ENDPOINT } from '../../constants';
 import { cardStyles, DroppableWrapper, getActiveStyle, getListStyle, Wrapper } from './DashboardStyles';
 
 /*

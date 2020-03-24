@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Col, Form, Input, Icon } from 'antd';
 import { Redirect } from 'react-router-dom';
-import { API_ENDPOINT } from '../../utility/constants';
+import { API_ENDPOINT } from '../../constants';
 import { displaySimpleNotification } from '../../utility/services';
 import 'antd/dist/antd.css';
 import './style.css';
@@ -29,6 +29,7 @@ function HorizontalLoginForm({ form }) {
       } = await axios.post(`${API_ENDPOINT}/session`);
       setLoggedInEmail(email);
     } catch (err) {
+      localStorage.clear();
       setLoggedInEmail(null);
     }
   };
@@ -46,7 +47,7 @@ function HorizontalLoginForm({ form }) {
   };
 
   const handleLogout = async () => {
-    await axios.post(`${API_ENDPOINT}/logout`).catch();
+    await axios.post(`${API_ENDPOINT}/logout`).catch(err => console.log(err));
     localStorage.clear(); // get rid of team caching and other vars
     setLoggedInEmail(false);
   };
@@ -72,6 +73,7 @@ function HorizontalLoginForm({ form }) {
               id='loginEmail'
               onChange={e => setEmail(e.target.value)}
               value={email}
+              autoComplete='username'
               required
             />
           </Form.Item>
@@ -84,6 +86,7 @@ function HorizontalLoginForm({ form }) {
               placeholder='Password'
               onChange={e => setPassword(e.target.value)}
               value={password}
+              autoComplete='current-password'
               required
             />
           </Form.Item>

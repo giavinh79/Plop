@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Form, Icon, Input, Modal } from 'antd';
 import { displaySimpleNotification } from '../../utility/services';
-import { API_ENDPOINT } from '../../utility/constants';
+import { API_ENDPOINT } from '../../constants';
 import MediaQuery from 'react-responsive';
 import './style.css';
 import { Redirect } from 'react-router-dom';
@@ -60,6 +60,7 @@ function NormalLoginForm({ form }) {
               prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder='Email'
               type='email'
+              autoComplete='nope'
               required
             />
           )}

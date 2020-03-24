@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Drawer, Form, Button, Col, Row, Input, Select } from 'antd';
-import { API_ENDPOINT } from '../../../utility/constants';
+import { API_ENDPOINT } from '../../../constants';
 
 const { Option } = Select;
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Badge, Icon } from 'antd';
 import UserPanel from './UserPanel/UserPanel';
@@ -8,11 +8,15 @@ import { displaySimpleNotification } from '../../utility/services';
 import { WrappedHorizontalLoginForm } from './LoginForm.jsx';
 import { retrieveNotifications } from '../../utility/restCalls';
 import TeamDropdown from './TeamDropdown';
+import ThemeContext from '../../Theme';
+import { LogoText } from './HeaderStyles';
 
 export default function Header() {
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [refresh, setRefresh] = useState(false);
+
+  const theme = useContext(ThemeContext);
   let history = useHistory();
   let { location } = history;
 
@@ -60,16 +64,19 @@ export default function Header() {
   };
 
   return (
-    <HeaderWrapper style={{ backgroundColor: location.pathname === '/' ? '#445D66' : '#79B7D4' }}>
+    <HeaderWrapper
+      lightmode={theme.isLightMode ? 1 : 0}
+      style={location.pathname === '/' ? { backgroundColor: '#445D66' } : {}}
+    >
       <div style={{ display: 'flex', padding: location.pathname === '/team' ? '0 1rem' : '0' }}>
-        {location.pathname === '/team' && <h1 style={{ color: 'white', margin: 0 }}>PL</h1>}
+        {location.pathname === '/team' && <LogoText>PL</LogoText>}
         <Logo
           src='/images/justlogo.png'
           alt='logo'
           onClick={handleClick}
           style={{ padding: location.pathname === '/team' ? 0 : '0 1rem' }}
         />
-        {location.pathname === '/team' && <h1 style={{ color: 'white', margin: 0 }}>P</h1>}
+        {location.pathname === '/team' && <LogoText>P</LogoText>}
       </div>
       {location.pathname === '/dashboard' && (
         <div style={styles.team}>

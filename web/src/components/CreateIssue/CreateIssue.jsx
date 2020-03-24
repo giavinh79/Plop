@@ -3,7 +3,7 @@ import axios from 'axios';
 import { AutoComplete, Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon } from 'antd';
 import { displaySimpleNotification } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
-import { API_ENDPOINT } from '../../utility/constants';
+import { API_ENDPOINT } from '../../constants';
 import { retrieveAssignees, deleteIssue } from '../../utility/restCalls.js';
 import './style.css';
 

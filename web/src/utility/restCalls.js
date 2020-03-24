@@ -3,7 +3,7 @@
  */
 
 import axios from 'axios';
-import { API_ENDPOINT } from './constants';
+import { API_ENDPOINT } from '../constants';
 
 const clearNotifications = async notifications => {
   try {

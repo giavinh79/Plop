@@ -16,7 +16,6 @@ export const tagMap = {
   research: 'gray',
 };
 
-// Max pages for issues tables
 export const pagination = {
   pageSize: 8,
   hideOnSinglePage: true,

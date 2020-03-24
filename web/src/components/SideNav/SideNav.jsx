@@ -1,10 +1,10 @@
 import React from 'react';
-import 'antd/dist/antd.css';
 import { Menu, Icon, Tooltip } from 'antd';
+import 'antd/dist/antd.css';
 import './style.css';
 
 const { SubMenu } = Menu;
-export default function SideNav({ handlePageChange }) {
+function SideNav({ handlePageChange }) {
   return (
     <Menu
       style={{ width: 256, minHeight: '100%' }}
@@ -108,3 +108,5 @@ export default function SideNav({ handlePageChange }) {
     </Menu>
   );
 }
+
+export default React.memo(SideNav);

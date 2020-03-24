@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 // import UserSettings from './UserSettings-deprecated';
 import UserSettings from './UserSettings';
 import axios from 'axios';
-import { API_ENDPOINT } from '../../../utility/constants';
+import { API_ENDPOINT } from '../../../constants';
 
 export default class UserPanel extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ export default class UserPanel extends React.Component {
   };
 
   handleLogout = async () => {
-    await axios.post(`${API_ENDPOINT}/logout`).catch();
+    await axios.post(`${API_ENDPOINT}/logout`).catch(err => console.log(err));
     localStorage.clear(); // get rid of team caching and other vars
     this.setState({ toHomepage: true });
   };

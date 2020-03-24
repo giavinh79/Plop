@@ -1,16 +1,20 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Alert, Avatar, Button, Card, Icon, Input, Popconfirm, Row } from 'antd';
+import { Alert, Button, Icon, Input, Row } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { displaySimpleNotification } from '../utility/services';
-import { API_ENDPOINT } from '../utility/constants';
+import { API_ENDPOINT } from '../constants';
 import { joinTeam, retrieveTeams } from '../utility/restCalls';
+import { Container, TeamCard } from './TeamPageStyles';
 import TeamCreationModal from '../components/Team/TeamCreationModal';
+import TeamsJoined from '../components/Team/TeamsJoined';
+import ThemeContext from '../Theme';
 
 // Seperate this JS file into seperate components later
 export default function Team() {
   let teamsObject = JSON.parse(localStorage.getItem('teams'));
 
+  const theme = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
   const [toDashboard, setToDashboard] = useState(false);
   const [teamCreation, setTeamCreation] = useState(false);
@@ -99,9 +103,14 @@ export default function Team() {
   ) : (
     <>
       {teamCreation && <TeamCreationModal setTeams={setTeams} setTeamCreation={setTeamCreation} teams={teams} />}
-      <div style={styles.container}>
+      <Container lightmode={theme.isLightMode}>
         <div style={styles.subcontainer}>
-          <Card title='Make a team' style={styles.card}>
+          <TeamCard
+            title='Make a team'
+            lightmode={theme.isLightMode ? 1 : 0}
+            bordered={theme.isLightMode ? 0 : 1}
+            headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
+          >
             <p>
               <a href='/' onClick={e => handleTeamCreation(e)}>
                 Create
@@ -116,8 +125,13 @@ export default function Team() {
                 onClick={e => handleTeamCreation(e)}
               />
             </div>
-          </Card>
-          <Card title='Join a team' style={styles.card}>
+          </TeamCard>
+          <TeamCard
+            title='Join a team'
+            lightmode={theme.isLightMode ? 1 : 0}
+            bordered={theme.isLightMode ? 0 : 1}
+            headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
+          >
             <Input
               placeholder='Team ID'
               style={{ marginBottom: '2rem' }}
@@ -149,109 +163,34 @@ export default function Team() {
                 Join
               </Button>
             </div>
-          </Card>
+          </TeamCard>
         </div>
         <div style={{ display: 'flex', width: '100%', flex: '2' }}>
-          <Card
+          <TeamCard
             title={
               <Row type='flex'>
                 Teams joined
                 <Icon
                   type='loading'
+                  spin
                   style={{
                     display: loading ? 'block' : 'none',
                     color: '#6ca1d8',
                     fontSize: '1.4rem',
                     marginLeft: '0.7rem',
                   }}
-                  spin
                 />
               </Row>
             }
-            style={styles.card}
+            lightmode={theme.isLightMode ? 1 : 0}
+            bordered={theme.isLightMode ? 0 : 1}
+            headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
             extra={<p style={{ color: teams.length === 3 ? '#d45f5f' : 'black' }}>{teams.length}/3</p>}
           >
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {teams.map((team, index) => {
-                return (
-                  <div style={{ ...styles.teams, maxWidth: teams.length === 1 ? '40%' : 'auto' }} key={index}>
-                    <Card
-                      title={
-                        <Row type='flex' align='middle' style={{ flexFlow: 'nowrap' }}>
-                          <Avatar
-                            size='large'
-                            icon='team'
-                            style={{ marginRight: '1rem', minWidth: '2.5rem', backgroundColor: '#3d74c7' }}
-                          />
-                          <a href='/dashboard' onClick={e => handleEnterTeam(e, team.id)}>
-                            {team.name}
-                          </a>
-                        </Row>
-                      }
-                      extra={team.currentMembers + ' member(s)'}
-                      style={{ minHeight: '20rem', height: '100%' }}
-                    >
-                      <p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                        <strong>ID: </strong>
-                        {team.id}
-                      </p>
-                      <p>
-                        <strong>Notifications: </strong>
-                        <span style={{ color: team.notifications !== 0 ? '#CC8181' : '#595959' }}>
-                          {team.notifications}
-                        </span>
-                      </p>
-                      <div style={{ height: '6rem', marginBottom: '2rem' }}>
-                        <strong>Description: </strong>
-                        {team.description}
-                      </div>
-
-                      <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <Popconfirm
-                          title='Are you sure you want to leave this team?'
-                          onConfirm={() => handleLeaveTeam(team.id)}
-                          okText='Yes'
-                          cancelText='No'
-                        >
-                          <Row type='flex' align='middle' style={{ cursor: 'pointer' }}>
-                            <p style={{ margin: 0 }}>Leave</p>
-                            <img
-                              src='/images/exit.svg'
-                              alt='exit icon'
-                              style={{
-                                margin: '0 0.5rem',
-                                width: '2rem',
-                                transform: 'scaleX(-1)',
-                                color: 'rgb(144, 181, 208)',
-                              }}
-                            />
-                          </Row>
-                        </Popconfirm>
-                        <Row
-                          type='flex'
-                          align='middle'
-                          style={{ marginLeft: 'auto', cursor: 'pointer' }}
-                          onClick={e => handleEnterTeam(e, team.id)}
-                        >
-                          <a href='/dashboard'>Enter</a>
-                          {/* <Icon
-                            type='right-circle'
-                            style={{
-                              marginLeft: '0.5rem',
-                              fontSize: '2rem',
-                              color: '#79B7D4',
-                            }}
-                          /> */}
-                        </Row>
-                      </div>
-                    </Card>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+            <TeamsJoined teams={teams} handleEnterTeam={handleEnterTeam} handleLeaveTeam={handleLeaveTeam} />
+          </TeamCard>
         </div>
-      </div>
+      </Container>
     </>
   );
 }
@@ -273,10 +212,5 @@ const styles = {
     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
     margin: '1rem',
     flex: 1,
-  },
-  teams: {
-    flex: 1,
-    margin: '0 1rem 1rem 1rem',
-    minWidth: '20rem',
   },
 };

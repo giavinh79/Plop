@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Row, Skeleton, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
-import { API_ENDPOINT, tagMap, pagination, progressMap } from '../../utility/constants';
+import { API_ENDPOINT, tagMap, pagination, progressMap } from '../../constants';
 import { ActionText } from './ActiveStyles';
 import { deleteIssue } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';

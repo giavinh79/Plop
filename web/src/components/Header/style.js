@@ -8,7 +8,8 @@ export const HeaderWrapper = styled.div`
   font-family: 'Montserrat';
   height: 9%;
   min-height: 4rem;
-  background-color: #445d66;
+  /* Possible header color #2d3848 */
+  background-color: ${props => (props.lightmode ? '#79B7D4' : 'rgb(26,27,27)')};
 `;
 
 export const Logo = styled.img`

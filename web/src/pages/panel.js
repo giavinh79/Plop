@@ -13,7 +13,7 @@ import Active from '../components/Active/Active';
 import Schedule from '../components/Schedule/Schedule';
 import Help from '../components/Help/Help';
 import { displaySessionExpired } from '../utility/services';
-import { API_ENDPOINT } from '../utility/constants';
+import { API_ENDPOINT } from '../constants';
 
 export default class Panel extends React.Component {
   constructor(props) {

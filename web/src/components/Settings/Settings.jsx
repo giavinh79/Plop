@@ -5,7 +5,7 @@ import { layout, subheader } from '../../globalStyles';
 import { Alert, Button, Col, Icon, Input, Modal, Popconfirm, Typography, Tooltip, Skeleton, Switch } from 'antd';
 import MemberSlider from './MemberSlider';
 import { displaySimpleNotification } from '../../utility/services';
-import { API_ENDPOINT } from '../../utility/constants';
+import { API_ENDPOINT } from '../../constants';
 import { deleteRoom } from '../../utility/restCalls';
 import 'antd/dist/antd.css';
 

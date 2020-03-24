@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
 import { Skeleton, Table } from 'antd';
 import { layout, subheader } from '../../globalStyles';
-import { pagination } from '../../utility/constants';
+import { pagination } from '../../constants';
 import { retrieveMembers } from '../../utility/restCalls';
 
 // Tiers of administration: 5

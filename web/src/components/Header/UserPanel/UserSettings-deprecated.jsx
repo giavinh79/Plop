@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'antd';
 import Avatar from './Avatar-deprecated';
-import { API_ENDPOINT } from '../../../utility/constants';
+import { API_ENDPOINT } from '../../../constants';
 import 'antd/dist/antd.css';
 
 export default function UserSettings({ displayUserModal }) {

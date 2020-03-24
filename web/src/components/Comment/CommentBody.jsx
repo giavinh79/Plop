@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Comment, Icon, Input, List, Skeleton, Spin, Tooltip } from 'antd';
 import moment from 'moment';
 import axios from 'axios';
-import { API_ENDPOINT } from '../../utility/constants';
+import { API_ENDPOINT } from '../../constants';
 import { displaySimpleNotification } from '../../utility/services';
 
 export default function CommentBody({ id }) {
