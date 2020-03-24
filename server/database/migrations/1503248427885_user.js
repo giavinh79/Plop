@@ -16,6 +16,7 @@ class UserSchema extends Schema {
       table.integer('avatar');
       table.date('expiry');
       table.integer('numTeams');
+      table.integer('darkMode');
       table.timestamps();
     });
   }

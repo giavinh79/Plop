@@ -24,7 +24,7 @@ class UserController {
       try {
         const user = new User();
         const { email, password } = request.body;
-        user.fill({ email: email, password: password, numTeams: 0, status: 0, avatar: 1 });
+        user.fill({ email: email, password: password, numTeams: 0, darkMode: 0, status: 0, avatar: 1 });
         await user.save();
 
         const mailOptions = {
@@ -59,13 +59,9 @@ class UserController {
     try {
       const jwt = await auth.attempt(email, password);
       const { token } = jwt; // add secure attribute when deployed(?)
-      response.cookie('XSStoken', token, {
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-        path: '/',
-        maxAge: 7200,
-      });
+      console.log('hm');
+      console.log(token);
+      response.cookie('XSStoken', token);
       response.status(200).send();
     } catch (err) {
       console.log(`(user_login) ${new Date()}: ${err.message}`);
@@ -124,6 +120,7 @@ class UserController {
       const user = await auth.getUser();
       response.status(200).send({ email: user.email });
     } catch (err) {
+      console.log(err);
       response.status(404).send();
     }
   }
@@ -133,6 +130,7 @@ class UserController {
     try {
       response.clearCookie('XSStoken');
       response.clearCookie('room');
+      // response.cookie('XSStoken', null);
       response.status(200).send();
     } catch (err) {
       console.log(`(user_logout) ${new Date()}: ${err.message}`);
