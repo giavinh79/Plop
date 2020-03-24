@@ -29,6 +29,7 @@
     "@adonisjs/validator": "^5.0.6",
     "cloudinary": "^1.14.0",
     "mysql": "^2.17.1",
+    "node-cookie": "^2.1.2",
     "nodemailer": "^6.3.0",
     "nodemon": "^1.19.1",
     "pg": "^7.12.1",

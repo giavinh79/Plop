@@ -232,9 +232,10 @@ module.exports = {
   | seperate settings for cookies inside `config/session.js`.
   |
   */
+
   cookie: {
     httpOnly: true,
-    sameSite: false,
+    sameSite: 'none',
     path: '/',
     maxAge: 86400,
   },
