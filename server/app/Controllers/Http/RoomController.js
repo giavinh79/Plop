@@ -372,6 +372,8 @@ class RoomController {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
+        path: '/',
+        maxAge: 7200,
       });
       response.status(200).json({ id: roomId, name: result[0].name });
     } catch (err) {
@@ -516,6 +518,8 @@ class RoomController {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
+        path: '/',
+        maxAge: 7200,
       });
       response.status(200).send();
     } catch (err) {

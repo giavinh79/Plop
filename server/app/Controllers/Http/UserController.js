@@ -63,6 +63,8 @@ class UserController {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
+        path: '/',
+        maxAge: 7200,
       });
       response.status(200).send();
     } catch (err) {
@@ -127,12 +129,11 @@ class UserController {
   }
 
   // JWT stored in httpOnly token to prevent XSS and CSRF
-  async logout({ request, response }) {
+  async logout({ response }) {
     try {
-      request.clearCookie('XSStoken');
-      request.clearCookie('room');
       response.clearCookie('XSStoken');
       response.clearCookie('room');
+      response.status(200).send();
     } catch (err) {
       console.log(`(user_logout) ${new Date()}: ${err.message}`);
       response.status(404).send('Error');
