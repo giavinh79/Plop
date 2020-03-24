@@ -59,8 +59,6 @@ class UserController {
     try {
       const jwt = await auth.attempt(email, password);
       const { token } = jwt; // add secure attribute when deployed(?)
-      console.log('hm');
-      console.log(token);
       response.cookie('XSStoken', token);
       response.status(200).send();
     } catch (err) {
@@ -130,7 +128,7 @@ class UserController {
     try {
       response.clearCookie('XSStoken');
       response.clearCookie('room');
-      // response.cookie('XSStoken', null);
+      response.cookie('XSStoken', null);
       response.status(200).send();
     } catch (err) {
       console.log(`(user_logout) ${new Date()}: ${err.message}`);
