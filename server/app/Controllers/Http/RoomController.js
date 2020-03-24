@@ -368,7 +368,11 @@ class RoomController {
           });
       });
 
-      response.cookie('room', roomId);
+      response.cookie('room', roomId, {
+        httpOnly: true,
+        secure: Env.get('DEVELOPMENT') === 'true' ? false : true,
+        sameSite: false,
+      });
       response.status(200).json({ id: roomId, name: result[0].name });
     } catch (err) {
       console.log(`(room_join) ${new Date()}: ${err.message}`);
@@ -508,7 +512,11 @@ class RoomController {
         .where('room_id', decryptedRoomId);
 
       if (result.length === 0) throw new Error('Unauthorized Access');
-      response.cookie('room', request.body.id);
+      response.cookie('room', request.body.id, {
+        httpOnly: true,
+        secure: Env.get('DEVELOPMENT') === 'true' ? false : true,
+        sameSite: false,
+      });
       response.status(200).send();
     } catch (err) {
       console.log(`(room_session) ${new Date()}: ${err.message}`);
