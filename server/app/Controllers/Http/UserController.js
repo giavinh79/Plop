@@ -59,11 +59,20 @@ class UserController {
     try {
       const jwt = await auth.attempt(email, password);
       const { token } = jwt; // add secure attribute when deployed(?)
-      response.cookie('XSStoken', token, {
-        httpOnly: true,
-        secure: Env.get('DEVELOPMENT') === 'true' ? false : 'none',
-        sameSite: false,
-      });
+      response.cookie(
+        'XSStoken',
+        token,
+        Env.get('DEVELOPMENT') === 'true'
+          ? {
+              httpOnly: true,
+            }
+          : {
+              httpOnly: true,
+              secure: true,
+              sameSite: 'none',
+            }
+      );
+
       response.status(200).send();
     } catch (err) {
       console.log(`(user_login) ${new Date()}: ${err.message}`);
