@@ -139,10 +139,23 @@ class UserController {
   // JWT stored in httpOnly token to prevent XSS and CSRF
   async logout({ response }) {
     try {
-      response.cookie('room', '', { overwrite: true });
-      response.cookie('XSStoken', '', { overwrite: true });
       response.clearCookie('XSStoken');
       response.clearCookie('room');
+
+      response.cookie('room', '', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        overwrite: true,
+        path: '/',
+      });
+      response.cookie('XSStoken', '', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        overwrite: true,
+        path: '/',
+      });
       response.status(200).send();
     } catch (err) {
       console.log(`(user_logout) ${new Date()}: ${err.message}`);
