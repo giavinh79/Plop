@@ -374,11 +374,13 @@ class RoomController {
         Env.get('DEVELOPMENT') === 'true'
           ? {
               httpOnly: true,
+              path: '/',
             }
           : {
               httpOnly: true,
               secure: true,
               sameSite: 'none',
+              path: '/',
             }
       );
       response.status(200).json({ id: roomId, name: result[0].name });

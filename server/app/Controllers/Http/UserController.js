@@ -4,9 +4,7 @@ const nodemailer = require('nodemailer');
 const Database = use('Database');
 const Env = use('Env');
 const User = use('App/Models/User');
-const Hash = use('Hash');
 const { validate } = use('Validator');
-
 // Add new columns for user and room (temp) for potential upgrades in the future
 // Example - level, expiry date
 // Encrypt room IDs and pass that to client, decrypt on return
@@ -65,11 +63,13 @@ class UserController {
         Env.get('DEVELOPMENT') === 'true'
           ? {
               httpOnly: true,
+              path: '/',
             }
           : {
               httpOnly: true,
               secure: true,
               sameSite: 'none',
+              path: '/',
             }
       );
 
@@ -139,8 +139,8 @@ class UserController {
   // JWT stored in httpOnly token to prevent XSS and CSRF
   async logout({ response }) {
     try {
-      response.clearCookie('XSStoken');
-      response.clearCookie('room');
+      response.clearCookie('XSStoken', { path: '/' });
+      response.clearCookie('room', { path: '/' });
       response.status(200).send();
     } catch (err) {
       console.log(`(user_logout) ${new Date()}: ${err.message}`);
