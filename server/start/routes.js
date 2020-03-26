@@ -20,7 +20,7 @@ Route.post('/avatar', 'UserController.setAvatar').middleware(jwtMiddleware);
 Route.post('/login', 'UserController.login');
 Route.post('/signup', 'UserController.addNewUser');
 Route.post('/session', 'UserController.checkSession').middleware(jwtMiddleware);
-Route.post('/logout', 'UserController.logout');
+Route.post('/logout', 'UserController.logout').middleware(jwtMiddleware);
 
 // Teams/Rooms
 Route.get('/room', 'RoomController.get').middleware(jwtMiddleware);

@@ -141,8 +141,8 @@ class UserController {
     try {
       response.cookie('room', '', { overwrite: true });
       response.cookie('XSStoken', '', { overwrite: true });
-      // response.clearCookie('XSStoken');
-      // response.clearCookie('room');
+      response.clearCookie('XSStoken');
+      response.clearCookie('room');
       response.status(200).send();
     } catch (err) {
       console.log(`(user_logout) ${new Date()}: ${err.message}`);
