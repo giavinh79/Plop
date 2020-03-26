@@ -139,8 +139,8 @@ class UserController {
   // JWT stored in httpOnly token to prevent XSS and CSRF
   async logout({ response }) {
     try {
-      response.clearCookie('XSStoken', { path: '/' });
-      response.clearCookie('room', { path: '/' });
+      response.clearCookie('XSStoken', { domain: 'plopwebapp.herokuapp.com', path: '/' });
+      response.clearCookie('room', { domain: 'plopwebapp.herokuapp.com', path: '/' });
       response.status(200).send();
     } catch (err) {
       console.log(`(user_logout) ${new Date()}: ${err.message}`);
