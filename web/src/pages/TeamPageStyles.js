@@ -17,5 +17,12 @@ export const TeamCard = styled(Card)`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   margin: ${props => (props.nomargin ? 0 : '1rem !important')};
   flex: 1;
-  /* bodyStyle={{ backgroundColor: theme.isLightMode ? 'white' : '#24344C' }} */
+`;
+
+export const JoinedTeamCard = styled(TeamCard)`
+  background-color: ${props => (props.lightmode ? 'white' : '#00000040')} !important;
+  box-shadow: ${props =>
+    props.lightmode ? 'none' : '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'};
+  height: 100%;
+  min-height: 20rem;
 `;

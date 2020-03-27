@@ -1,17 +1,17 @@
 import React, { useContext } from 'react';
-import { Avatar, Card, Popconfirm, Row } from 'antd';
-import ThemeContext from '../../Theme';
-import { TeamCard } from '../../pages/TeamPageStyles';
+import { ThemeContext } from '../../Theme';
+import { Avatar, Popconfirm, Row } from 'antd';
+import { JoinedTeamCard } from '../../pages/TeamPageStyles';
 
 export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams }) {
-  const theme = useContext(ThemeContext);
+  const [theme] = useContext(ThemeContext);
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       {teams.map((team, index) => {
         return (
           <div style={{ ...styles.teams, maxWidth: teams.length === 1 ? '40%' : 'auto' }} key={index}>
-            <TeamCard
+            <JoinedTeamCard
               title={
                 <Row type='flex' align='middle' style={{ flexFlow: 'nowrap' }}>
                   <Avatar
@@ -24,16 +24,13 @@ export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams })
                   </a>
                 </Row>
               }
-              extra={team.currentMembers + ' member(s)'}
+              extra={
+                <span style={{ color: theme.isLightMode ? 'rgba(255, 255, 255, 0.65)' : '#595959' }}>
+                  {team.currentMembers} member(s)
+                </span>
+              }
               lightmode={theme.isLightMode ? 1 : 0}
-              style={{
-                backgroundColor: '#ffffff1c !important',
-                minHeight: '20rem',
-                height: '100%',
-                boxShadow: 'none',
-              }}
               nomargin={1}
-              //   bordered={!theme.isLightMode}
               headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
             >
               <p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
@@ -87,7 +84,7 @@ export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams })
                 /> */}
                 </Row>
               </div>
-            </TeamCard>
+            </JoinedTeamCard>
           </div>
         );
       })}

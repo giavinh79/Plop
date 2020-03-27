@@ -6,7 +6,7 @@ import { Homepage, Panel, Team } from './pages';
 import Header from './components/Header/Header';
 import { displaySimpleNotification } from './utility/services';
 import { API_ENDPOINT } from './constants';
-import ThemeContext from './Theme';
+import { ThemeProvider } from './Theme';
 // import IssuePage from './pages/IssuePage';
 
 const BodyWrapper = styled.div`
@@ -40,11 +40,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
 
 export default function Routes() {
   return (
-    <ThemeContext.Provider
-      value={{
-        isLightMode: true,
-      }}
-    >
+    <ThemeProvider>
       <Router>
         <Header />
         <BodyWrapper>
@@ -57,6 +53,6 @@ export default function Routes() {
           </Switch>
         </BodyWrapper>
       </Router>
-    </ThemeContext.Provider>
+    </ThemeProvider>
   );
 }

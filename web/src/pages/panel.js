@@ -14,6 +14,7 @@ import Schedule from '../components/Schedule/Schedule';
 import Help from '../components/Help/Help';
 import { displaySessionExpired } from '../utility/services';
 import { API_ENDPOINT } from '../constants';
+import ChatIcon from '../components/Chat/ChatIcon';
 
 export default class Panel extends React.Component {
   constructor(props) {
@@ -79,6 +80,16 @@ export default class Panel extends React.Component {
       <>
         <SideNav handlePageChange={page => this.changePage(page)} />
         <div style={{ display: 'flex', width: '100%' }}>{this.returnPage(this.state.currentPage)}</div>
+        {/* <Dropdown overlay={menu} placement='topRight' trigger={['click']}>
+          <Button>topCenter</Button>
+        </Dropdown> */}
+        {/* <ChatIconWrapper> */}
+        <ChatIcon />
+
+        {/* <Dropdown overlay={menu} placement='topRight' trigger={['click']}> */}
+        {/* <Button>topCenter</Button> */}
+        {/* </Dropdown> */}
+        {/* </ChatIconWrapper> */}
       </>
     );
   }

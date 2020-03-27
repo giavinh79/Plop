@@ -8,13 +8,13 @@ import { joinTeam, retrieveTeams } from '../utility/restCalls';
 import { Container, TeamCard } from './TeamPageStyles';
 import TeamCreationModal from '../components/Team/TeamCreationModal';
 import TeamsJoined from '../components/Team/TeamsJoined';
-import ThemeContext from '../Theme';
+import { ThemeContext } from '../Theme';
 
 // Seperate this JS file into seperate components later
 export default function Team() {
   let teamsObject = JSON.parse(localStorage.getItem('teams'));
 
-  const theme = useContext(ThemeContext);
+  const [theme] = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
   const [toDashboard, setToDashboard] = useState(false);
   const [teamCreation, setTeamCreation] = useState(false);

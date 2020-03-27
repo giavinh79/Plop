@@ -9,7 +9,8 @@ export const HeaderWrapper = styled.div`
   height: 9%;
   min-height: 4rem;
   /* Possible header color #2d3848 */
-  background-color: ${props => (props.lightmode ? '#79B7D4' : 'rgb(26,27,27)')};
+  /* rgb(26,27,27) */
+  background-color: ${props => (props.lightmode ? '#79B7D4' : '#2d3848')};
 `;
 
 export const Logo = styled.img`

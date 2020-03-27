@@ -8,7 +8,7 @@ import { displaySimpleNotification } from '../../utility/services';
 import { WrappedHorizontalLoginForm } from './LoginForm.jsx';
 import { retrieveNotifications } from '../../utility/restCalls';
 import TeamDropdown from './TeamDropdown';
-import ThemeContext from '../../Theme';
+import { ThemeContext } from '../../Theme';
 import { LogoText } from './HeaderStyles';
 
 export default function Header() {
@@ -16,7 +16,7 @@ export default function Header() {
   const [notifications, setNotifications] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
-  const theme = useContext(ThemeContext);
+  const [theme] = useContext(ThemeContext);
   let history = useHistory();
   let { location } = history;
 
@@ -104,7 +104,7 @@ export default function Header() {
                   <Icon
                     type='bell'
                     theme='filled'
-                    style={{ fontSize: '20px', cursor: 'pointer' }}
+                    style={{ fontSize: '20px', marginLeft: '1rem' }}
                     onClick={() => setShowNotificationModal(true)}
                   />
                 </Badge>

@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Drawer, Form, Button, Col, Row, Input, Select } from 'antd';
 import { API_ENDPOINT } from '../../../constants';
+import { ThemeContext } from '../../../Theme';
 
 const { Option } = Select;
 
 const UserSettings2 = ({ displayUserModal, form }) => {
+  const [theme, setTheme] = useContext(ThemeContext);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('Please enter email');
   const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || '1');
@@ -108,9 +110,13 @@ const UserSettings2 = ({ displayUserModal, form }) => {
           </Col>
           <Col span={12}>
             <Form.Item label='Theme'>
-              <Select placeholder='Please choose the type' defaultValue='light' disabled>
-                <Option value='light'>Light Theme</Option>
-                <Option value='dark'>Dark Theme</Option>
+              <Select placeholder='Please choose the type' defaultValue={theme.isLightMode ? 'light' : 'dark'}>
+                <Option value='light' onClick={() => setTheme({ isLightMode: true })}>
+                  Light Theme
+                </Option>
+                <Option value='dark' onClick={() => setTheme({ isLightMode: false })}>
+                  Dark Theme
+                </Option>
               </Select>
             </Form.Item>
           </Col>
