@@ -13,4 +13,5 @@ export const ChatIconWrapper = styled(Dropdown)`
   padding: 0.7rem 1.2rem !important;
   border: 1px solid #ccc;
   border-bottom: none;
+  background-color: white;
 `;

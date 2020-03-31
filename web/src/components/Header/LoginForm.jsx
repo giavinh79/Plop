@@ -4,6 +4,7 @@ import { Button, Col, Form, Input, Icon } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { API_ENDPOINT } from '../../constants';
 import { displaySimpleNotification } from '../../utility/services';
+import { checkAuth, logout } from '../../utility/restCalls';
 import 'antd/dist/antd.css';
 import './style.css';
 
@@ -26,7 +27,7 @@ function HorizontalLoginForm({ form }) {
     try {
       const {
         data: { email },
-      } = await axios.post(`${API_ENDPOINT}/session`);
+      } = await checkAuth();
       setLoggedInEmail(email);
     } catch (err) {
       localStorage.clear();
@@ -47,7 +48,9 @@ function HorizontalLoginForm({ form }) {
   };
 
   const handleLogout = async () => {
-    await axios.post(`${API_ENDPOINT}/logout`).catch(err => console.log(err));
+    await logout().catch(err => {
+      displaySimpleNotification('Error', 5, 'bottomRight', `Log out was unsuccessful. ${err}`, 'warning', 'red');
+    });
     localStorage.clear(); // get rid of team caching and other vars
     setLoggedInEmail(false);
   };

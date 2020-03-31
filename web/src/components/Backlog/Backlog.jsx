@@ -4,7 +4,7 @@ import { Divider, Popconfirm, Row, Table as BacklogTable, Skeleton, Tag } from '
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT, tagMap, pagination } from '../../constants';
 import { displaySimpleNotification } from '../../utility/services';
-import { deleteIssue } from '../../utility/restCalls';
+import { deleteIssue, updateIssue } from '../../utility/restCalls';
 import { ActionText } from '../Active/ActiveStyles';
 import './style.css';
 
@@ -42,7 +42,7 @@ export default function Backlog({ changePage }) {
   const handleProgressUpdate = async (id, status) => {
     try {
       if (status === 3) throw new Error('Issue completed, can only delete');
-      await axios.post(`${API_ENDPOINT}/issueProgress`, { id, status: status + 1 });
+      await updateIssue(id, status + 1);
       setRefresh(!refresh);
     } catch (err) {
       displaySimpleNotification('Error', 3, 'bottomRight', 'Issue could not be progressed.', 'warning', 'red');

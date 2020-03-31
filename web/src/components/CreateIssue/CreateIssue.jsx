@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { AutoComplete, Popconfirm, Input, Form, Radio, Button, Divider, Select, Upload, Icon } from 'antd';
 import { displaySimpleNotification } from '../../utility/services.js';
@@ -16,10 +16,17 @@ const formItemLayout = {
 
 // Divide this up into two components and make a HoC (maybe)
 export default function CreateIssue({ data, changePage, form, source }) {
+  const titleRef = useRef();
   const [defaultFileList, setDefaultFileList] = useState([]);
   const [assignees, setAssignees] = useState([]);
 
   useEffect(() => {
+    try {
+      titleRef.current.focus();
+    } catch (err) {
+      console.log('ERROR: Unable to focus element');
+    }
+
     if (data && data.image) {
       setDefaultFileList(
         data.image.map((item, key) => {
@@ -76,6 +83,10 @@ export default function CreateIssue({ data, changePage, form, source }) {
 
         if (!err) {
           try {
+            // Should remove this condition once adding directly to progress and complete is implemented in FE
+            if (values.status === 1 && data.status >= 1) {
+              values.status = data.status;
+            }
             if (data) {
               await axios.post(`${API_ENDPOINT}/issue`, { ...values, id: data.id });
               displaySimpleNotification(
@@ -176,7 +187,7 @@ export default function CreateIssue({ data, changePage, form, source }) {
                 },
               ],
               initialValue: data == null ? '' : data.title,
-            })(<Input maxLength={100} />)}
+            })(<Input maxLength={100} ref={titleRef} />)}
           </Form.Item>
 
           <Form.Item label='Short Description'>

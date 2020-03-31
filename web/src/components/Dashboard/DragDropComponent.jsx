@@ -1,10 +1,9 @@
 import React from 'react';
-import axios from 'axios';
 import { Skeleton } from 'antd';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card } from './Card';
-import { API_ENDPOINT } from '../../constants';
 import { cardStyles, DroppableWrapper, getActiveStyle, getListStyle, Wrapper } from './DashboardStyles';
+import { updateIssue } from '../../utility/restCalls';
 
 /*
  * Component representing the three drag & drop columns active, progress, and complete
@@ -70,7 +69,7 @@ export default function DragDropComponent({ changePage, loading, items, setItems
     } else {
       const result = move(getList(source.droppableId), getList(destination.droppableId), source, destination);
 
-      axios.post(`${API_ENDPOINT}/issueProgress`, { id: result.id, status: result.status }).catch(() => {
+      updateIssue(result.id, result.status).catch(() => {
         console.log(`ERROR - Was not able to update issue ${result.id}`);
       });
 
@@ -182,9 +181,9 @@ export default function DragDropComponent({ changePage, loading, items, setItems
         style={{
           position: 'fixed',
           width: '100%',
-          padding: '2rem',
           display: 'flex',
           bottom: 0,
+          right: '7rem',
           width: '50%',
           maxWidth: '40rem',
           minWidth: '20rem',
@@ -196,6 +195,10 @@ export default function DragDropComponent({ changePage, loading, items, setItems
           placeholder='Filter issues through data search'
           onSearch={value => console.log(value)}
           disabled
+          style={{
+            height: '2.7rem',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.3)',
+          }}
         />
       </div> */}
     </Wrapper>

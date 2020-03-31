@@ -53,6 +53,7 @@ class SetupSeeder {
         adminApproval: false,
         status: 0,
         currentMembers: 1,
+        chat: JSON.stringify([]),
       });
       await room.save();
 

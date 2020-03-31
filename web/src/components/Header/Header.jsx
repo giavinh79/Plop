@@ -128,5 +128,6 @@ const styles = {
     width: '20rem',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
+    whiteSpace: 'nowrap',
   },
 };

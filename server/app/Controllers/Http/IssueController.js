@@ -17,10 +17,17 @@ class IssueController {
     Helper Functions 
   */
   async handleNotification(type, payload) {
-    // type denotes type of notification (ie. new issue assignee (1), updated issue assignee (2), comment (3)...etc)
+    /*
+     * Type denotes notification type
+     * 1: New issue assignee
+     * 2: Updated issue assignee
+     * 3: Comments on a task
+     * 4: New user joined team (only shown to owner)
+     */
     try {
-      const { assignee, issue, issueId, sourceUser, roomId } = payload;
+      const { assignee, issue, issueId, oldAssignee, sourceUser, roomId } = payload;
       if (type <= 2) {
+        if (assignee === oldAssignee) return; // does this cause issues?
         if (assignee && assignee.length > 0 && assignee !== sourceUser) {
           let [user_data] = await Database.from('users')
             .select('id')
@@ -44,9 +51,9 @@ class IssueController {
             .where('room_id', roomId)
             .update('notifications', JSON.stringify(data.notifications));
         }
+
         // Need to notify previous assignee that another user has been assigned the issue
         if (type === 2) {
-          const { oldAssignee } = payload;
           if (assignee && assignee.length > 0 && oldAssignee != null && oldAssignee != sourceUser) {
             const [idObj] = await Database.table('users')
               .select('id')
@@ -514,6 +521,7 @@ class IssueController {
             tag: JSON.stringify(tag),
             image: JSON.stringify(imageIdArray),
             priority,
+            status,
           });
       } else {
         await Database.table('issues')
@@ -525,6 +533,7 @@ class IssueController {
             assignee,
             tag: JSON.stringify(tag),
             priority,
+            status,
           });
       }
       response.status(200).send();

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Button, Input, Modal } from 'antd';
 import { displayInfoDialog, displaySimpleNotification } from '../../utility/services';
 import { createTeam, retrieveTeams } from '../../utility/restCalls';
@@ -7,7 +7,16 @@ const { TextArea } = Input;
 
 export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) {
   const [teamCreateError, setTeamCreateError] = useState(false);
+  const createInput = useRef();
   const createTeamData = useRef({});
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (createInput.current) {
+        createInput.current.focus();
+      }
+    }, 600);
+  }, []);
 
   const handleCancel = () => {
     setTeamCreation(false);
@@ -37,8 +46,10 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         ...teams,
         { name: res.data.name, description: res.data.description, id: res.data.id, currentMembers: '1' },
       ]);
+
       const currentTeams = await retrieveTeams();
       localStorage.setItem('teams', JSON.stringify(currentTeams.data));
+
       displayInfoDialog(
         'Team was successfully created!',
         'Your team ID is:',
@@ -85,6 +96,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         onChange={e => {
           createTeamData.current.name = e.currentTarget.value;
         }}
+        ref={createInput}
       />
       <p>Team description:</p>
       <TextArea

@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import TeamDashboard from '../components/Dashboard/TeamDashboard';
 import UserDashboard from '../components/Dashboard/UserDashboard';
@@ -13,8 +12,8 @@ import Active from '../components/Active/Active';
 import Schedule from '../components/Schedule/Schedule';
 import Help from '../components/Help/Help';
 import { displaySessionExpired } from '../utility/services';
-import { API_ENDPOINT } from '../constants';
 import ChatIcon from '../components/Chat/ChatIcon';
+import { checkAuth } from '../utility/restCalls';
 
 export default class Panel extends React.Component {
   constructor(props) {
@@ -33,7 +32,7 @@ export default class Panel extends React.Component {
 
   async checkSession() {
     try {
-      await axios.post(`${API_ENDPOINT}/session`);
+      await checkAuth();
     } catch (err) {
       this.setState({ toHomepage: true });
       displaySessionExpired();

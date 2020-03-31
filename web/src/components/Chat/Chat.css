@@ -1,0 +1,7 @@
+.ant-dropdown-placement-topRight {
+  position: fixed !important;
+}
+
+.chat-input > .ant-input {
+  border-radius: 0;
+}

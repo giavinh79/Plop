@@ -282,6 +282,7 @@ class RoomController {
         private: false,
         adminApproval: false,
         status: 0,
+        chat: JSON.stringify([]),
       });
 
       // Use transactions to safely commit all required changes (if one fails, all get reverted)

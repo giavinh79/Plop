@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
 import { Homepage, Panel, Team } from './pages';
 import Header from './components/Header/Header';
 import { displaySimpleNotification } from './utility/services';
-import { API_ENDPOINT } from './constants';
 import { ThemeProvider } from './Theme';
+import { checkAuth } from './utility/restCalls';
 // import IssuePage from './pages/IssuePage';
 
 const BodyWrapper = styled.div`
@@ -19,7 +18,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   useEffect(() => {
     async function getToken() {
       try {
-        await axios.post(`${API_ENDPOINT}/session`);
+        await checkAuth();
         setAuthenticated(true);
       } catch (err) {
         setAuthenticated(false);

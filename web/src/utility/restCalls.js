@@ -5,6 +5,15 @@
 import axios from 'axios';
 import { API_ENDPOINT } from '../constants';
 
+// Confirm user is logged in
+const checkAuth = async () => {
+  try {
+    return await axios.post(`${API_ENDPOINT}/session`);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const clearNotifications = async notifications => {
   try {
     await axios.post(`${API_ENDPOINT}/clearNotifications`, { notifications });
@@ -31,6 +40,14 @@ const createTeam = async data => {
   }
 };
 
+const deleteIssue = async id => {
+  try {
+    await axios.delete(`${API_ENDPOINT}/issue/${id}`);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const deleteRoom = async (email, password) => {
   try {
     await axios.delete(`${API_ENDPOINT}/room`, { data: { email: email, password: password } });
@@ -42,6 +59,14 @@ const deleteRoom = async (email, password) => {
 const joinTeam = async data => {
   try {
     await axios.post(`${API_ENDPOINT}/joinRoom`, data);
+  } catch (err) {
+    throw err;
+  }
+};
+
+const logout = async () => {
+  try {
+    await axios.post(`${API_ENDPOINT}/logout`);
   } catch (err) {
     throw err;
   }
@@ -87,24 +112,27 @@ const sendNotificationsRead = async data => {
   }
 };
 
-const deleteIssue = async id => {
+const updateIssue = async (id, status) => {
   try {
-    await axios.delete(`${API_ENDPOINT}/issue/${id}`);
+    await axios.post(`${API_ENDPOINT}/issueProgress`, { id: id, status: status });
   } catch (err) {
     throw err;
   }
 };
 
 export {
+  checkAuth,
   clearNotifications,
   createSession,
   createTeam,
   deleteIssue,
   deleteRoom,
   joinTeam,
+  logout,
   retrieveAssignees,
   retrieveMembers,
   retrieveNotifications,
   retrieveTeams,
   sendNotificationsRead,
+  updateIssue,
 };

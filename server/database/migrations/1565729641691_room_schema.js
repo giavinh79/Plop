@@ -21,6 +21,7 @@ class RoomSchema extends Schema {
       table.integer('currentMembers');
       table.boolean('private');
       table.boolean('adminApproval');
+      table.json('chat');
       table.timestamps();
     });
   }
