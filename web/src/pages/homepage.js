@@ -1,35 +1,35 @@
 import React from 'react';
-import { WrappedNormalLoginForm } from '../components/SignupForm/SignupForm';
+import { WrappedNormalLoginForm as SignupForm } from '../components/SignupForm/SignupForm';
+import { Body, FormWrapper } from './HomepageStyles';
 
 export default function Homepage() {
   return (
-    <div style={styles.formContainer}>
-      <div style={styles.form}>
-        <WrappedNormalLoginForm />
+    <div style={{ width: '100%' }}>
+      <div style={{ height: '35rem', borderBottom: '1px solid #ccc', flexDirection: 'row' }}>
+        <div
+          style={{
+            height: '100%',
+            backgroundImage: "url('images/coder.jpg')",
+            bakcgroundPosition: 'center top',
+            backgroundSize: 'cover',
+            overflow: 'hidden',
+          }}
+        >
+          f
+        </div>
+        <div></div>
       </div>
-      <div style={styles.formBackground} />
     </div>
+    // <Body>
+    //   <FormWrapper>
+    //     <SignupForm />
+    //   </FormWrapper>
+    //   <div style={styles.formBackground} />
+    // </Body>
   );
 }
 
 const styles = {
-  formContainer: {
-    width: '100%',
-    backgroundImage: "url('images/wallpaper.png')",
-    backgroundSize: 'cover',
-  },
-  form: {
-    position: 'absolute',
-    top: '19rem',
-    height: '28rem',
-    left: '0',
-    right: '0',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '30rem',
-    maxWidth: '20rem',
-    zIndex: '3',
-  },
   formBackground: {
     zIndex: '2',
     position: 'absolute',
