@@ -6,12 +6,15 @@ A relational database is used which is managed using the Lucid ORM to take advan
 
 Current deployed on https://www.plop.team/ as version 0.8. Backend is deployed on https://plopwebapp.herokuapp.com/.
 
+## Example Image
+
+![Plop Dark Mode Preview](https://github.com/GV79/Plop/blob/master/readme-plop.png)
 
 ## To Do
 
 Immediate: Refactor all css and implement dark mode, refactor routing to improve rendering performance, split big components into smaller ones, refactor all remaining class components to hooks, web sockets for real time notifications, chat, live dashboard changes, and online member statuses, JWT token refresh, refactoring routes, more informative landing page and help page, store JWT tokens so upon logout/change password previous token is blacklisted for 24h, user convenient functions (ie. filtering and search for issue tables and dashboard)
 
-Longterm: More functionality for room settings (restyling, member approval), changing password/email, administration levels, mobile responsiveness, with QuillJS implement file editor that allows users to drop text/XML/JSON files to save with an issue, minimizable side navigation
+Longterm: More functionality for room settings (restyling, member approval), changing password/email, administration levels, mobile responsiveness, with QuillJS implement file editor that allows users to drop text/XML/JSON files to save with an issue, minimizable side navigation, replace nodemailer functionality with SendGrid API system
 
 Very longterm:
 
