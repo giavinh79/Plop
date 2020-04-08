@@ -24,12 +24,12 @@ export default function Active({ changePage }) {
       });
       setLoading(false);
       setData(activeIssues);
-    })().catch(err => {
+    })().catch((err) => {
       console.log(err);
     });
   }, [refresh]);
 
-  const handleDeletion = async id => {
+  const handleDeletion = async (id) => {
     try {
       await deleteIssue(id);
       setRefresh(!refresh);
@@ -54,7 +54,7 @@ export default function Active({ changePage }) {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: text => <ActionText style={{ color: '#5185bb' }}>{text}</ActionText>,
+      render: (text) => <ActionText style={{ color: '#5185bb' }}>{text}</ActionText>,
     },
     {
       title: 'Description',
@@ -70,9 +70,9 @@ export default function Active({ changePage }) {
       title: 'Tags',
       dataIndex: 'tag',
       key: 'tag',
-      render: tag => (
+      render: (tag) => (
         <span>
-          {tag.map(item => {
+          {tag.map((item) => {
             let color = tagMap[item.toLowerCase()] || 'geekblue';
             return (
               <Tag color={color} key={item} style={{ margin: '4px 8px 4px 0' }}>
@@ -87,14 +87,14 @@ export default function Active({ changePage }) {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: status => {
+      render: (status) => {
         return <p style={{ margin: 0 }}>{progressMap[status]}</p>;
       },
     },
     {
       title: 'Action',
       key: 'action',
-      render: item => (
+      render: (item) => (
         <Row type='flex' align='middle'>
           <ActionText onClick={() => changePage(11, item, 6)}>Edit</ActionText>
           <Divider type='vertical' />
@@ -122,7 +122,7 @@ export default function Active({ changePage }) {
       title: '',
       key: 'priority',
       dataIndex: 'priority',
-      render: priority => {
+      render: (priority) => {
         return (
           <div style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
             <Tooltip title={priority ? 'Major Priority' : 'Minor Priority'} mouseEnterDelay={0.8}>

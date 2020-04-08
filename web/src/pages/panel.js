@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import TeamDashboard from '../components/Dashboard/TeamDashboard';
 import UserDashboard from '../components/Dashboard/UserDashboard';
@@ -14,37 +14,87 @@ import Help from '../components/Help/Help';
 import { displaySessionExpired } from '../utility/services';
 import ChatIcon from '../components/Chat/ChatIcon';
 import { checkAuth } from '../utility/restCalls';
+import Ws from '@adonisjs/websocket-client';
+import { WEB_SOCKET } from '../constants';
 
-export default class Panel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      toHomepage: false,
-      currentPage: 0,
-      data: {},
-      source: null,
+export default function Panel() {
+  const [toHomepage, setToHomepage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [data, setData] = useState({});
+  const [source, setSource] = useState(null);
+  const ws = useRef(Ws(WEB_SOCKET));
+  const [chat, setChat] = useState(null);
+  const [chatData, setChatData] = useState({
+    messages: [],
+    count: 0,
+  });
+
+  useEffect(() => {
+    if (chat == null) {
+      ws.current.connect(); // connect to the server
+
+      ws.current.on('open', () => {
+        let chat = ws.current.subscribe('room:1');
+        setChat(chat);
+
+        // chat.on('ready', () => {
+        //   // chat.emit('message', 'hello');
+        // });
+
+        chat.on('message', (data) => {
+          console.log(data);
+          switch (data.type) {
+            case 0:
+              console.log(data);
+              setChatData((chatData) => {
+                return { ...chatData, count: data.count };
+              });
+              break;
+            default:
+              setChatData((chatData) => {
+                return { ...chatData, messages: [...chatData.messages, data] };
+              });
+              break;
+          }
+        });
+
+        chat.on('error', (error) => {
+          alert('wack');
+          console.log(error);
+        });
+      });
+
+      ws.current.on('close', () => {
+        console.log('WS connection closed');
+      });
+    }
+
+    return () => {
+      ws.current.close();
     };
-  }
+  }, []);
 
-  changePage = (page, params, source) => {
-    this.setState({ currentPage: page, data: params, source: source });
+  const changePage = (page, params, source) => {
+    setCurrentPage(page);
+    setData(params);
+    setSource(source);
   };
 
-  async checkSession() {
+  const checkSession = async () => {
     try {
       await checkAuth();
     } catch (err) {
-      this.setState({ toHomepage: true });
+      setToHomepage(true);
       displaySessionExpired();
     }
-  }
+  };
 
-  returnPage = page => {
+  const returnPage = (page) => {
     switch (page) {
       case 0:
-        return <TeamDashboard changePage={this.changePage} checkSession={this.checkSession} />;
+        return <TeamDashboard changePage={changePage} checkSession={checkSession} />;
       case 1:
-        return <UserDashboard changePage={this.changePage} checkSession={this.checkSession} />;
+        return <UserDashboard changePage={changePage} checkSession={checkSession} />;
       case 2:
         return <Schedule />;
       case 3:
@@ -52,11 +102,11 @@ export default class Panel extends React.Component {
       case 4:
         return <MembersView />;
       case 5:
-        return <WrappedCreateIssueForm changePage={this.changePage} />;
+        return <WrappedCreateIssueForm changePage={changePage} />;
       case 6:
-        return <Active changePage={this.changePage} />;
+        return <Active changePage={changePage} />;
       case 7:
-        return <Backlog changePage={this.changePage} />;
+        return <Backlog changePage={changePage} />;
       case 8:
         return <Schedule />;
       case 9:
@@ -64,7 +114,7 @@ export default class Panel extends React.Component {
       case 10:
         return <Settings />;
       case 11:
-        return <Issue changePage={this.changePage} data={this.state.data} source={this.state.source} />; // issue information
+        return <Issue changePage={changePage} data={data} source={source} />; // issue information
       case 12:
         return <Help />;
       default:
@@ -72,24 +122,19 @@ export default class Panel extends React.Component {
     }
   };
 
-  render() {
-    return this.state.toHomepage ? (
-      <Redirect push to='/' />
-    ) : (
-      <>
-        <SideNav handlePageChange={page => this.changePage(page)} />
-        <div style={{ display: 'flex', width: '100%' }}>{this.returnPage(this.state.currentPage)}</div>
-        {/* <Dropdown overlay={menu} placement='topRight' trigger={['click']}>
-          <Button>topCenter</Button>
-        </Dropdown> */}
-        {/* <ChatIconWrapper> */}
-        <ChatIcon />
-
-        {/* <Dropdown overlay={menu} placement='topRight' trigger={['click']}> */}
-        {/* <Button>topCenter</Button> */}
-        {/* </Dropdown> */}
-        {/* </ChatIconWrapper> */}
-      </>
-    );
-  }
+  return toHomepage ? (
+    <Redirect push to='/' />
+  ) : (
+    <>
+      <SideNav handlePageChange={(page) => changePage(page)} />
+      <div style={{ display: 'flex', width: '100%' }}>{returnPage(currentPage)}</div>
+      <ChatIcon
+        ws={ws}
+        chat={chat}
+        chatCount={chatData.count}
+        chatMessages={chatData.messages || []}
+        setChatData={setChatData}
+      />
+    </>
+  );
 }

@@ -5,6 +5,17 @@
 import axios from 'axios';
 import { API_ENDPOINT } from '../constants';
 
+// This function catches errors thrown from axios calls and handles the response object to the frontend
+const handleErrorResponse = (err) => {
+  // switch (err.message) {
+  //   case ERROR_SESSION_INVALID:
+  //     throw SESSION_INVALID_MESSAGE; // i.e. String constant containing "User is not authenticated."
+  //     break;
+  //   default:
+  //     throw err(UNKNOWN_ERROR);
+  // }
+};
+
 // Confirm user is logged in
 const checkAuth = async () => {
   try {
@@ -14,7 +25,7 @@ const checkAuth = async () => {
   }
 };
 
-const clearNotifications = async notifications => {
+const clearNotifications = async (notifications) => {
   try {
     await axios.post(`${API_ENDPOINT}/clearNotifications`, { notifications });
   } catch (err) {
@@ -22,7 +33,7 @@ const clearNotifications = async notifications => {
   }
 };
 
-const createSession = async event => {
+const createSession = async (event) => {
   try {
     await axios.post(`${API_ENDPOINT}/sessionRoom`, {
       id: JSON.parse(localStorage.getItem('teams'))[event.key - 1].id,
@@ -32,7 +43,7 @@ const createSession = async event => {
   }
 };
 
-const createTeam = async data => {
+const createTeam = async (data) => {
   try {
     return await axios.put(`${API_ENDPOINT}/room`, data);
   } catch (err) {
@@ -40,7 +51,7 @@ const createTeam = async data => {
   }
 };
 
-const deleteIssue = async id => {
+const deleteIssue = async (id) => {
   try {
     await axios.delete(`${API_ENDPOINT}/issue/${id}`);
   } catch (err) {
@@ -56,7 +67,7 @@ const deleteRoom = async (email, password) => {
   }
 };
 
-const joinTeam = async data => {
+const joinTeam = async (data) => {
   try {
     await axios.post(`${API_ENDPOINT}/joinRoom`, data);
   } catch (err) {
@@ -104,7 +115,7 @@ const retrieveTeams = async () => {
   }
 };
 
-const sendNotificationsRead = async data => {
+const sendNotificationsRead = async (data) => {
   try {
     await axios.post(`${API_ENDPOINT}/notifications`, data);
   } catch (err) {

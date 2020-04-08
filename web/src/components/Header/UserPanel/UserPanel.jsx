@@ -1,8 +1,7 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { Dropdown, Icon, Menu } from 'antd';
 import { UserPanelWrapper } from '../style';
-import { Redirect } from 'react-router-dom';
-// import UserSettings from './UserSettings-deprecated';
 import UserSettings from './UserSettings';
 import { logout } from '../../../utility/restCalls';
 import { displaySimpleNotification } from '../../../utility/services';
@@ -16,12 +15,12 @@ export default class UserPanel extends React.Component {
     };
   }
 
-  displayUserModal = condition => {
+  displayUserModal = (condition) => {
     this.setState({ userModal: condition });
   };
 
   handleLogout = async () => {
-    await logout().catch(err => {
+    await logout().catch((err) => {
       displaySimpleNotification('Error', 5, 'bottomRight', `Log out was unsuccessful. ${err}`, 'warning', 'red');
     });
     localStorage.clear(); // get rid of team caching and other vars
@@ -38,8 +37,8 @@ export default class UserPanel extends React.Component {
       >
         <p style={{ margin: 0 }}>Settings</p>
       </Menu.Item>
-      <Menu.Item key='1'>
-        <p style={{ margin: 0, color: '#ccc' }}>Themes</p>
+      <Menu.Item key='1' disabled>
+        <p style={{ margin: 0, color: '#ccc' }}>Help</p>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
@@ -64,7 +63,6 @@ export default class UserPanel extends React.Component {
             <div style={styles.iconWrapper}>
               <Icon type='user' style={{ fontSize: '1.3rem', color: '#506271' }} />
             </div>
-            {/* <p style={styles.text}>exampleuser@gmail.com</p> */}
             <Icon type='caret-down' style={{ color: '#3e3e3e' }} />
           </UserPanelWrapper>
         </Dropdown>

@@ -2,11 +2,15 @@ import React, { createContext, useState } from 'react';
 
 // Constants used for dark mode
 export const DARK_TEXT_COLOR = '#somehexvalue';
-export const DARK_HEADER_COLOR = '#';
-export const DARK_SIDE_NAV_COLOR = '#192028';
-export const DARK_BACKGROUND_COLOR = '#';
+export const DARK_HEADER_COLOR = '#somehexvalue';
+export const DARK_SIDE_NAV_COLOR = '#somehexvalue';
+export const DARK_BACKGROUND_COLOR = '#somehexvalue';
 
 // Constants used for light mode
+export const LIGHT_TEXT_COLOR = '#somehexvalue';
+export const LIGHT_HEADER_COLOR = '#somehexvalue';
+export const LIGHT_SIDE_NAV_COLOR = '#somehexvalue';
+export const LIGHT_BACKGROUND_COLOR = '#somehexvalue';
 
 // ThemeContext
 
@@ -17,7 +21,7 @@ const ThemeContext = createContext({
 });
 
 // Maybe memoize however since nearly all components depend on this context, re-rendering is necessary
-const ThemeProvider = props => {
+const ThemeProvider = (props) => {
   const [theme, setTheme] = useState({
     isLightMode: defaultLightTheme,
   });

@@ -9,7 +9,7 @@ import { WrappedHorizontalLoginForm } from './LoginForm.jsx';
 import { retrieveNotifications } from '../../utility/restCalls';
 import TeamDropdown from './TeamDropdown';
 import { ThemeContext } from '../../Theme';
-import { LogoText } from './HeaderStyles';
+import { LogoText, TeamWrapper } from './HeaderStyles';
 
 export default function Header() {
   const [showNotificationModal, setShowNotificationModal] = useState(false);
@@ -25,7 +25,7 @@ export default function Header() {
       (async () => {
         let { data } = await retrieveNotifications();
         setNotifications(data);
-      })().catch(err => {
+      })().catch((err) => {
         displaySimpleNotification(
           'Error',
           2,
@@ -79,9 +79,9 @@ export default function Header() {
         {location.pathname === '/team' && <LogoText>P</LogoText>}
       </div>
       {location.pathname === '/dashboard' && (
-        <div style={styles.team}>
+        <TeamWrapper>
           <h1 style={{ margin: 0, color: 'white' }}>{getTeamLabel()}</h1>
-        </div>
+        </TeamWrapper>
       )}
 
       <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
@@ -118,16 +118,3 @@ export default function Header() {
     </HeaderWrapper>
   );
 }
-
-const styles = {
-  team: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    color: 'white',
-    width: '20rem',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-  },
-};

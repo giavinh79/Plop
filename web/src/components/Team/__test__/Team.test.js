@@ -1,5 +1,6 @@
 import React from 'react';
-import Team from '../../../pages/team';
+import { Team } from '../../../pages';
+import { ThemeProvider } from '../../../Theme';
 import * as rest from '../../../utility/restCalls';
 
 // import react-testing methods
@@ -26,7 +27,11 @@ let getByLabelText, getByText, queryByText;
 describe('Team page test suite', () => {
   beforeEach(async () => {
     await act(async () => {
-      let testFunctions = render(<Team />);
+      let testFunctions = render(
+        <ThemeProvider>
+          <Team />
+        </ThemeProvider>
+      );
       getByText = testFunctions.getByText;
       queryByText = testFunctions.queryByText;
       getByLabelText = testFunctions.getByLabelText;

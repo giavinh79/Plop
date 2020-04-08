@@ -32,7 +32,7 @@ Better server-side logging
 
 Testing Lighthouse via Chrome Dev Tools for fixing any optimization or accessibility problems
 
-Creating more seeds for fast queries and factories for creating dummy data (which the tests will use)
+Creating more seeds for fast queries and factories for creating dummy data (which the tests can use)
 
 ## Development
 
@@ -52,8 +52,7 @@ Databases - postgreSQL (for development purposes, a mySQL remote database can be
 
 ## Testing
 
-For tests to pass successfully, will need to have server running along with 'adonis seed' data already implemented.
-Will use Jest + React Testing Library
+First, make sure adonis seed has been run prior to doing this. Use 'npm test' to execute tests on the React application and use 'npm run coverage' to analyze test coverage. Uses Jest and React Testing Library for unit testing.
 
 
 ## Practices

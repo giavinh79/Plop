@@ -4,28 +4,28 @@ import { Body, FormWrapper } from './HomepageStyles';
 
 export default function Homepage() {
   return (
-    <div style={{ width: '100%' }}>
-      <div style={{ height: '35rem', borderBottom: '1px solid #ccc', flexDirection: 'row' }}>
-        <div
-          style={{
-            height: '100%',
-            backgroundImage: "url('images/coder.jpg')",
-            bakcgroundPosition: 'center top',
-            backgroundSize: 'cover',
-            overflow: 'hidden',
-          }}
-        >
-          f
-        </div>
-        <div></div>
-      </div>
-    </div>
-    // <Body>
-    //   <FormWrapper>
-    //     <SignupForm />
-    //   </FormWrapper>
-    //   <div style={styles.formBackground} />
-    // </Body>
+    // <div style={{ width: '100%' }}>
+    //   <div style={{ height: '35rem', borderBottom: '1px solid #ccc', flexDirection: 'row' }}>
+    //     <div
+    //       style={{
+    //         height: '100%',
+    //         backgroundImage: "url('images/coder.jpg')",
+    //         bakcgroundPosition: 'center top',
+    //         backgroundSize: 'cover',
+    //         overflow: 'hidden',
+    //       }}
+    //     >
+    //       f
+    //     </div>
+    //     <div></div>
+    //   </div>
+    // </div>
+    <Body>
+      <FormWrapper>
+        <SignupForm />
+      </FormWrapper>
+      <div style={styles.formBackground} />
+    </Body>
   );
 }
 

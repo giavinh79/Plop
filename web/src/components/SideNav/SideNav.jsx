@@ -7,7 +7,6 @@ import { ThemeContext } from '../../Theme';
 const { SubMenu } = Menu;
 function SideNav({ handlePageChange }) {
   const [theme] = useContext(ThemeContext);
-  console.log(theme.isLightMode);
 
   return (
     <Menu
