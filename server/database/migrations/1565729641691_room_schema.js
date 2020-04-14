@@ -5,13 +5,9 @@ const Schema = use('Schema');
 
 class RoomSchema extends Schema {
   up() {
-    this.create('rooms', table => {
+    this.create('rooms', (table) => {
       table.increments();
-      table
-        .integer('admin')
-        .unsigned()
-        .references('id')
-        .inTable('users');
+      table.integer('admin').unsigned().references('id').inTable('users');
       table.string('name', [100]).notNullable();
       table.string('description', [300]).notNullable();
       table.string('password', 60).notNullable();
@@ -22,6 +18,7 @@ class RoomSchema extends Schema {
       table.boolean('private');
       table.boolean('adminApproval');
       table.json('chat');
+      table.string('websocketId', 50).notNullable();
       table.timestamps();
     });
   }

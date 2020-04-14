@@ -29,9 +29,7 @@ class IssueController {
       if (type <= 2) {
         if (assignee === oldAssignee) return; // does this cause issues?
         if (assignee && assignee.length > 0 && assignee !== sourceUser) {
-          let [user_data] = await Database.from('users')
-            .select('id')
-            .where('email', assignee);
+          let [user_data] = await Database.from('users').select('id').where('email', assignee);
           let [data] = await Database.table('user_rooms')
             .where('user_id', user_data.id)
             .where('room_id', roomId)
@@ -55,9 +53,7 @@ class IssueController {
         // Need to notify previous assignee that another user has been assigned the issue
         if (type === 2) {
           if (assignee && assignee.length > 0 && oldAssignee != null && oldAssignee != sourceUser) {
-            const [idObj] = await Database.table('users')
-              .select('id')
-              .where('email', oldAssignee);
+            const [idObj] = await Database.table('users').select('id').where('email', oldAssignee);
 
             let [data] = await Database.table('user_rooms')
               .where('user_id', idObj.id)
@@ -80,9 +76,7 @@ class IssueController {
           }
         }
       } else {
-        let [user_data] = await Database.from('users')
-          .select('id')
-          .where('email', assignee);
+        let [user_data] = await Database.from('users').select('id').where('email', assignee);
         let [data] = await Database.table('user_rooms')
           .where('user_id', user_data.id)
           .where('room_id', roomId)
@@ -118,9 +112,7 @@ class IssueController {
       const { assignee, description, dragger, priority, status, shortDescription, tag, title } = request.body;
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      const result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
       const issue = new Issue();
@@ -194,9 +186,7 @@ class IssueController {
       if (result.length === 0) throw new Error('User not in this room');
 
       // Cloudinary image deletion code
-      const issue = await Database.table('issues')
-        .where('id', request.params.id)
-        .select('image');
+      const issue = await Database.table('issues').where('id', request.params.id).select('image');
 
       const imagePromises = [];
       // need to JSON.parse(issue[0].image) if mySQL
@@ -222,9 +212,7 @@ class IssueController {
         await Promise.all(imagePromises);
       }
 
-      const deletions = await Database.table('issues')
-        .where('id', request.params.id)
-        .delete();
+      const deletions = await Database.table('issues').where('id', request.params.id).delete();
 
       if (deletions == null) throw new Error('Issue could not be deleted as it was not found');
       else response.status(200).send();
@@ -240,38 +228,28 @@ class IssueController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      const result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
       if (request.params.status === '0') {
-        const issues = await Database.table('issues')
-          .select('*')
-          .where({
-            room: decryptedRoomId,
-            status: 0,
-          });
+        const issues = await Database.table('issues').select('*').where({
+          room: decryptedRoomId,
+          status: 0,
+        });
         response.status(200).send(issues);
       } else {
-        const activeItems = await Database.table('issues')
-          .select('*')
-          .where({
-            room: decryptedRoomId,
-            status: 1,
-          });
-        const progressItems = await Database.table('issues')
-          .select('*')
-          .where({
-            room: decryptedRoomId,
-            status: 2,
-          });
-        const completedItems = await Database.table('issues')
-          .select('*')
-          .where({
-            room: decryptedRoomId,
-            status: 3,
-          });
+        const activeItems = await Database.table('issues').select('*').where({
+          room: decryptedRoomId,
+          status: 1,
+        });
+        const progressItems = await Database.table('issues').select('*').where({
+          room: decryptedRoomId,
+          status: 2,
+        });
+        const completedItems = await Database.table('issues').select('*').where({
+          room: decryptedRoomId,
+          status: 3,
+        });
 
         response.status(200).send({
           activeItems,
@@ -290,41 +268,31 @@ class IssueController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      const result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
       if (request.params.status === 0) {
-        const issues = await Database.table('issues')
-          .select('*')
-          .where({
-            room: decryptedRoomId,
-            assignee: user.email,
-          });
+        const issues = await Database.table('issues').select('*').where({
+          room: decryptedRoomId,
+          assignee: user.email,
+        });
         response.status(200).send(issues);
       } else {
-        const activeItems = await Database.table('issues')
-          .select('*')
-          .where({
-            room: decryptedRoomId,
-            status: 1,
-            assignee: user.email,
-          });
-        const progressItems = await Database.table('issues')
-          .select('*')
-          .where({
-            room: decryptedRoomId,
-            status: 2,
-            assignee: user.email,
-          });
-        const completedItems = await Database.table('issues')
-          .select('*')
-          .where({
-            room: decryptedRoomId,
-            status: 3,
-            assignee: user.email,
-          });
+        const activeItems = await Database.table('issues').select('*').where({
+          room: decryptedRoomId,
+          status: 1,
+          assignee: user.email,
+        });
+        const progressItems = await Database.table('issues').select('*').where({
+          room: decryptedRoomId,
+          status: 2,
+          assignee: user.email,
+        });
+        const completedItems = await Database.table('issues').select('*').where({
+          room: decryptedRoomId,
+          status: 3,
+          assignee: user.email,
+        });
         response.status(200).send({
           activeItems,
           progressItems,
@@ -342,14 +310,10 @@ class IssueController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      const result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
-      const data = await Database.table('issues')
-        .select('comments')
-        .where('id', request.params.id);
+      const data = await Database.table('issues').select('comments').where('id', request.params.id);
       response.status(200).json(data[0].comments);
     } catch (err) {
       console.log(`(issue_getComments) ${new Date()}: ${err.message}`);
@@ -362,9 +326,7 @@ class IssueController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      const result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
       let data = await Database.table('issues')
@@ -379,9 +341,7 @@ class IssueController {
         });
 
       // Should just revamp so that comments include user IDs (?)
-      let comments = await Database.from('issues')
-        .select('comments')
-        .where('id', request.body.id);
+      let comments = await Database.from('issues').select('comments').where('id', request.body.id);
 
       let watchers = new Set();
       for (let item of comments[0].comments) {
@@ -414,16 +374,12 @@ class IssueController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      const result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
       const { title, shortDescription, description, assignee, tag, priority, status, dragger } = request.body;
 
       // Check here if assignee in DB is different or null for notifications
-      let [dataAssignee] = await Database.table('issues')
-        .select('assignee')
-        .where('id', request.body.id);
+      let [dataAssignee] = await Database.table('issues').select('assignee').where('id', request.body.id);
 
       if (dataAssignee.assignee) {
         await this.handleNotification(2, {
@@ -442,9 +398,7 @@ class IssueController {
         const imageIdArray = [];
 
         // This block of code determines if there's a missing image reference - means that user wants it deleted
-        const imageData = await Database.table('issues')
-          .select('image')
-          .where('id', request.body.id);
+        const imageData = await Database.table('issues').select('image').where('id', request.body.id);
 
         const previousImages = dragger.reduce((accumulator, item) => {
           if (item.id != null) {
@@ -456,7 +410,7 @@ class IssueController {
 
         let imagesToDelete = [];
         if (imageData[0].image && Array.isArray(imageData[0].image)) {
-          imagesToDelete = imageData[0].image.filter(item => {
+          imagesToDelete = imageData[0].image.filter((item) => {
             return !previousImages.includes(item.id);
           });
         }
@@ -548,9 +502,7 @@ class IssueController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      const result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
       await Database.table('issues')

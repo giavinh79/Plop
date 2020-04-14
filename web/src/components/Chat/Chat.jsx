@@ -11,6 +11,7 @@ export default function Chat({ chat, chatCount, chatMessages, setChatData, ws })
   const [userCount, setUserCount] = useState(0);
   useEffect(() => {
     setUserCount(chatCount || 0);
+    inputRef.current.focus();
   }, [chat, chatCount, chatMessages]);
 
   const handleLoadMore = () => {
@@ -22,7 +23,6 @@ export default function Chat({ chat, chatCount, chatMessages, setChatData, ws })
       chat.emit('message', {
         type: 1,
         message: inputRef.current.input.value,
-        user: 'tester@gmail.com',
       });
       inputRef.current.state.value = '';
     }

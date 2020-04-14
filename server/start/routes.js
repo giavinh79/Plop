@@ -12,11 +12,12 @@ const jwtMiddleware = async ({ request }, next) => {
 
 Route.on('/').render('welcome');
 
-// Authentication and Users
+// User Info
 Route.get('/userInfo', 'UserController.getUserInfo').middleware(jwtMiddleware);
 Route.get('/avatar', 'UserController.getAvatar').middleware(jwtMiddleware);
 Route.post('/avatar', 'UserController.setAvatar').middleware(jwtMiddleware);
 
+// Authentication
 Route.post('/login', 'UserController.login');
 Route.post('/signup', 'UserController.addNewUser');
 Route.post('/session', 'UserController.checkSession').middleware(jwtMiddleware);
@@ -51,3 +52,8 @@ Route.delete('/issue/:id', 'IssueController.delete').middleware(jwtMiddleware);
 Route.post('/image', 'ImageController.create').middleware(jwtMiddleware);
 Route.get('/image/:id', 'ImageController.get').middleware(jwtMiddleware);
 Route.delete('/image/:id', 'ImageController.delete').middleware(jwtMiddleware);
+
+// Chat
+Route.get('/chats', 'ChatController.get').middleware(jwtMiddleware);
+Route.get('/lastReadChat', 'ChatController.getLastReadChat').middleware(jwtMiddleware);
+Route.post('/lastReadChat', 'ChatController.updatelastReadChat').middleware(jwtMiddleware);

@@ -28,21 +28,29 @@ export default function Panel() {
     messages: [],
     count: 0,
   });
+  const [chatNotification, setChatNotification] = useState(false);
 
   useEffect(() => {
     if (chat == null) {
       ws.current.connect(); // connect to the server
 
       ws.current.on('open', () => {
-        let chat = ws.current.subscribe('room:1');
+        // let chat = ws.current.subscribe(`room:${localStorage.getItem('currentTeam')}`);
+        let chat = ws.current.subscribe('room:1'); // might need to generate random ID on serverside and just link it to room as WS id
         setChat(chat);
 
-        // chat.on('ready', () => {
-        //   // chat.emit('message', 'hello');
-        // });
+        chat.on('ready', () => {
+          // call chat endpoint with GET request to get array of current messages to fill the state
+          // add to chatData and sort by date from oldest to newest
+          // call lastCheckedChat endpoint, if the date is < most recent chat message, show red symbol
+          // when user clicks chat, send a request to lastCheckedChat endpoint to refresh date and manually turn off state
+        });
 
+        /* On socket message event handler
+         * 0 - members online count update, 1 - chat message, 2 - notification for user, 3 - comment made, 4 - new user joined, 5 - member left
+         */
         chat.on('message', (data) => {
-          console.log(data);
+          // console.log(data);
           switch (data.type) {
             case 0:
               console.log(data);
@@ -50,16 +58,18 @@ export default function Panel() {
                 return { ...chatData, count: data.count };
               });
               break;
-            default:
+            case 1:
               setChatData((chatData) => {
                 return { ...chatData, messages: [...chatData.messages, data] };
               });
+              break;
+            default:
               break;
           }
         });
 
         chat.on('error', (error) => {
-          alert('wack');
+          // alert('wack');
           console.log(error);
         });
       });
@@ -70,7 +80,9 @@ export default function Panel() {
     }
 
     return () => {
-      ws.current.close();
+      try {
+        ws.current.close();
+      } catch (err) {}
     };
   }, []);
 

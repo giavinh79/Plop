@@ -17,7 +17,7 @@ export default function DragDropComponent({ changePage, loading, items, setItems
     droppable3: 'complete',
   };
 
-  const getList = id => items[id2List[id]];
+  const getList = (id) => items[id2List[id]];
 
   // A little function to help us with reordering the result
   const reorder = (list, startIndex, endIndex) => {
@@ -46,7 +46,7 @@ export default function DragDropComponent({ changePage, loading, items, setItems
     return result;
   };
 
-  const onDragEnd = result => {
+  const onDragEnd = (result) => {
     const { source, destination } = result;
 
     // dropped outside the list

@@ -41,7 +41,7 @@ class UserController {
           },
         });
 
-        transport.sendMail(mailOptions, res => {
+        transport.sendMail(mailOptions, (res) => {
           if (res) console.log(`MAIL_ERROR ${res}`);
         });
         response.status(200).send('User created successfully');
@@ -84,9 +84,7 @@ class UserController {
     try {
       const user = await auth.getUser();
 
-      let res = await Database.select('email', 'avatar')
-        .from('users')
-        .where('id', user.id);
+      let res = await Database.select('email', 'avatar').from('users').where('id', user.id);
 
       const date = new Date();
       response.status(200).json({ avatar: res[0].avatar, email: res[0].email, date });
@@ -101,9 +99,7 @@ class UserController {
       const user = await auth.getUser();
       const { avatar } = request.body;
 
-      await Database.table('users')
-        .where('id', user.id)
-        .update('avatar', avatar);
+      await Database.table('users').where('id', user.id).update('avatar', avatar);
       response.status(200).send();
     } catch (err) {
       console.log(`(user_avatar_set) ${new Date()}: ${err.message}`);
@@ -114,9 +110,7 @@ class UserController {
   async getAvatar({ auth, response }) {
     try {
       const user = await auth.getUser();
-      const data = await Database.table('users')
-        .select('avatar')
-        .where('id', user.id);
+      const data = await Database.table('users').select('avatar').where('id', user.id);
       response.status(200).json({ avatar: data[0].avatar });
     } catch (err) {
       console.log(`(user_avatar_get) ${new Date()}: ${err.message}`);

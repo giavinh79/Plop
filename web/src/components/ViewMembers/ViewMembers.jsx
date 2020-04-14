@@ -6,7 +6,7 @@ import { pagination } from '../../constants';
 import { retrieveMembers } from '../../utility/restCalls';
 
 // Tiers of administration: 5
-// 4 - cann't delete members
+// 4 - can't delete members
 // 3 - can't invite new members
 // 2 - can't create issues but can move issues
 // 1 - can't manipulate any issues
@@ -21,7 +21,7 @@ export default function ViewMembers() {
       const { data } = await retrieveMembers();
       setLoading(false);
       setMemberData(data);
-    })().catch(err => {
+    })().catch((err) => {
       // display simple notification
     });
 
@@ -48,7 +48,7 @@ export default function ViewMembers() {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: text =>
+      render: (text) =>
         text !== 'Online' ? (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div

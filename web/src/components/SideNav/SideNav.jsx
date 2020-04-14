@@ -10,7 +10,7 @@ function SideNav({ handlePageChange }) {
 
   return (
     <Menu
-      theme={theme.isLightMode ? 'light' : 'dark'}
+      theme={theme.isLightMode ? 'light' : 'light'} // change second option to dark once theme design completed
       style={{ width: 256, minHeight: '100%' }}
       defaultSelectedKeys={['1']}
       defaultOpenKeys={['sub1']}

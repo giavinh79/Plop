@@ -41,15 +41,15 @@ export default function CreateIssue({ data, changePage, form, source }) {
       );
     }
 
-    (async function() {
+    (async function () {
       const { data } = await retrieveAssignees();
       setAssignees(data);
-    })().catch(err => {
+    })().catch((err) => {
       console.log(err);
     });
   }, [data]);
 
-  const handleDeletion = async id => {
+  const handleDeletion = async (id) => {
     try {
       await deleteIssue(id);
       displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
@@ -59,16 +59,16 @@ export default function CreateIssue({ data, changePage, form, source }) {
     }
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     form.validateFields((err, values) => {
-      const toBase64 = file =>
+      const toBase64 = (file) =>
         new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.readAsDataURL(file);
           reader.onload = () => resolve(reader.result);
-          reader.onerror = error => reject(error);
+          reader.onerror = (error) => reject(error);
         });
 
       (async function getEncodedImageValues(values, resetForm) {
@@ -83,10 +83,6 @@ export default function CreateIssue({ data, changePage, form, source }) {
 
         if (!err) {
           try {
-            // Should remove this condition once adding directly to progress and complete is implemented in FE
-            if (values.status === 1 && data.status >= 1) {
-              values.status = data.status;
-            }
             if (data) {
               await axios.post(`${API_ENDPOINT}/issue`, { ...values, id: data.id });
               displaySimpleNotification(
@@ -126,7 +122,7 @@ export default function CreateIssue({ data, changePage, form, source }) {
     });
   };
 
-  const normFile = e => {
+  const normFile = (e) => {
     if (e.fileList.length >= 6) {
       while (e.fileList.length >= 6) e.fileList.pop();
       displaySimpleNotification('Error', 6, 'bottomRight', 'Image uploads are limited to five.', 'warning', 'red');
@@ -225,7 +221,7 @@ export default function CreateIssue({ data, changePage, form, source }) {
                 >
                   <Input.Search
                     placeholder='Search by email'
-                    onSearch={value => console.log(value)}
+                    onSearch={(value) => console.log(value)}
                     style={{ width: 200 }}
                     autoComplete='off'
                   />
@@ -270,12 +266,14 @@ export default function CreateIssue({ data, changePage, form, source }) {
               }}
             >
               {getFieldDecorator('status', {
-                initialValue: data == null ? 1 : data.status / data.status || 0,
+                initialValue: data == null ? 1 : data.status || 1,
               })(
-                <Radio.Group>
-                  <Radio value={0}>Backlog</Radio>
-                  <Radio value={1}>Active</Radio>
-                </Radio.Group>
+                <Select>
+                  <Select.Option value={0}>Backlog</Select.Option>
+                  <Select.Option value={1}>Active</Select.Option>
+                  <Select.Option value={2}>In Progress</Select.Option>
+                  <Select.Option value={3}>Complete</Select.Option>
+                </Select>
               )}
             </Form.Item>
           </div>

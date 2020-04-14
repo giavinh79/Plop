@@ -28,16 +28,16 @@ export default function Team() {
       setTeams(res.data);
       localStorage.setItem('teams', JSON.stringify(res.data));
       setLoading(false);
-    })().catch(err => {
+    })().catch((err) => {
       displaySimpleNotification('Error', 4, 'bottomRight', `Unable to retrieve teams. (${err})`, 'warning', 'red');
     });
   }, []);
 
-  const handleLeaveTeam = async teamId => {
+  const handleLeaveTeam = async (teamId) => {
     try {
       await axios.post('/leaveRoom', { teamId });
       setTeams(
-        teams.filter(item => {
+        teams.filter((item) => {
           return item.id !== teamId;
         })
       );
@@ -86,7 +86,7 @@ export default function Team() {
     }
   };
 
-  const handleTeamCreation = e => {
+  const handleTeamCreation = (e) => {
     e.preventDefault();
     setTeamCreation(true);
   };
@@ -112,7 +112,7 @@ export default function Team() {
             headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
           >
             <p>
-              <a href='/' onClick={e => handleTeamCreation(e)}>
+              <a href='/' onClick={(e) => handleTeamCreation(e)}>
                 Create
               </a>{' '}
               a new team in order to begin managing your project!
@@ -122,7 +122,7 @@ export default function Team() {
               <Icon
                 type='plus-circle'
                 style={{ fontSize: '2.5rem', paddingTop: '4rem', color: 'rgb(144, 181, 208)', cursor: 'pointer' }}
-                onClick={e => handleTeamCreation(e)}
+                onClick={(e) => handleTeamCreation(e)}
               />
             </div>
           </TeamCard>
@@ -136,7 +136,7 @@ export default function Team() {
               placeholder='Team ID'
               style={{ marginBottom: '2rem' }}
               allowClear={true}
-              onChange={e => {
+              onChange={(e) => {
                 if (teamJoinError) setTeamJoinError(false);
                 joinTeamData.current.id = e.currentTarget.value;
               }}
@@ -145,7 +145,7 @@ export default function Team() {
               placeholder='Team Password'
               autoComplete='new-password'
               allowClear={true}
-              onChange={e => {
+              onChange={(e) => {
                 if (teamJoinError) setTeamJoinError(false);
                 joinTeamData.current.password = e.currentTarget.value;
               }}

@@ -1,5 +1,6 @@
 'use strict';
 
+const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const Env = use('Env');
 const Encryption = use('Encryption');
@@ -11,20 +12,18 @@ class RoomController {
     try {
       let roomsInfo = [];
       const user = await auth.getUser();
-      const rooms = await Database.table('user_rooms')
-        .select('room_id')
-        .where('user_id', user.id);
+      const rooms = await Database.table('user_rooms').select('room_id').where('user_id', user.id);
 
       for (let room of rooms) {
         const roomInfo = await Database.table('rooms')
-          .select('name', 'description', 'currentMembers')
+          .select('name', 'description', 'currentMembers', 'websocketId')
           .where('id', room.room_id);
         const roomObject = JSON.parse(JSON.stringify(roomInfo[0]));
         const [notificationData] = await Database.table('user_rooms')
           .select('notifications')
           .where({ user_id: user.id, room_id: room.room_id });
         roomObject.id = Encryption.encrypt(room.room_id);
-        roomObject.notifications = notificationData.notifications.filter(item => item.status === 0).length;
+        roomObject.notifications = notificationData.notifications.filter((item) => item.status === 0).length;
         roomsInfo.push(roomObject);
       }
       response.status(200).json(roomsInfo);
@@ -39,20 +38,14 @@ class RoomController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
-      let assignees = await Database.select('user_id')
-        .from('user_rooms')
-        .where('room_id', decryptedRoomId);
+      let assignees = await Database.select('user_id').from('user_rooms').where('room_id', decryptedRoomId);
 
       let assigneesEmails = [];
       for (let assignee of assignees) {
-        let emails = await Database.select('email')
-          .from('users')
-          .where('id', assignee.user_id);
+        let emails = await Database.select('email').from('users').where('id', assignee.user_id);
         assigneesEmails.push(emails[0].email);
       }
 
@@ -73,19 +66,13 @@ class RoomController {
 
       let status = 'offline'; // will need to use web sockets to determine this later on
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
-      let members = await Database.select('user_id')
-        .from('user_rooms')
-        .where('room_id', decryptedRoomId);
+      let members = await Database.select('user_id').from('user_rooms').where('room_id', decryptedRoomId);
 
       for (let member of members) {
-        let data = await Database.select('email')
-          .from('users')
-          .where('id', member.user_id);
+        let data = await Database.select('email').from('users').where('id', member.user_id);
         membersPayload.push({
           key: count,
           member: data[0].email,
@@ -108,9 +95,7 @@ class RoomController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
       let [data] = await Database.select('notifications')
@@ -130,9 +115,7 @@ class RoomController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
       const { notifications } = request.body; // notifications read by user on FE
@@ -141,7 +124,7 @@ class RoomController {
         .where('user_id', user.id)
         .where('room_id', decryptedRoomId);
 
-      data.notifications = data.notifications.map(item => {
+      data.notifications = data.notifications.map((item) => {
         // As long as date of item in DB is less or equal recency to newest item read by user, we can change it
         if (item.status === 0 && item.date <= notifications[notifications.length - 1].date) {
           item.status = 1;
@@ -166,9 +149,7 @@ class RoomController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
       const { notifications } = request.body; // notifications user wishes to clear
@@ -179,7 +160,7 @@ class RoomController {
         .where('room_id', decryptedRoomId);
 
       // should instead have an id for every notification generated serverside to make this easier
-      data.notifications = data.notifications.filter(item => {
+      data.notifications = data.notifications.filter((item) => {
         for (let notification of notifications) {
           if (notification.notificationId === item.notificationId) {
             return false;
@@ -205,14 +186,10 @@ class RoomController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
-      const roomInfo = await Database.table('rooms')
-        .select('*')
-        .where('id', decryptedRoomId);
+      const roomInfo = await Database.table('rooms').select('*').where('id', decryptedRoomId);
       const decryptPass = Encryption.decrypt(roomInfo[0].password);
       const { name, description, maxMembers, adminApproval } = roomInfo[0];
       const id = Encryption.encrypt(roomInfo[0].id);
@@ -230,14 +207,10 @@ class RoomController {
     try {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
 
       if (result.length === 0) throw new Error('User not in room');
-      let data = await Database.table('rooms')
-        .select('admin')
-        .where('id', decryptedRoomId);
+      let data = await Database.table('rooms').select('admin').where('id', decryptedRoomId);
       if (data[0].admin !== user.id) {
         throw new Error('User changing room settings must be the owner');
       }
@@ -282,11 +255,12 @@ class RoomController {
         private: false,
         adminApproval: false,
         status: 0,
+        websocketId: uuidv4(),
         chat: JSON.stringify([]),
       });
 
       // Use transactions to safely commit all required changes (if one fails, all get reverted)
-      await Database.transaction(async trx => {
+      await Database.transaction(async (trx) => {
         await trx
           .table('users')
           .where('id', user.id)
@@ -315,7 +289,7 @@ class RoomController {
         },
       });
 
-      transport.sendMail(mailOptions, res => {
+      transport.sendMail(mailOptions, (res) => {
         if (res) console.log(`MAIL_ERROR ${res}`);
       });
 
@@ -332,14 +306,10 @@ class RoomController {
       let { roomId, roomPassword } = request.body;
       const decryptedRoomId = Encryption.decrypt(roomId);
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length !== 0) throw new Error('User already in room');
 
-      result = await Database.from('rooms')
-        .select('password', 'adminApproval', 'private')
-        .where('id', decryptedRoomId);
+      result = await Database.from('rooms').select('password', 'adminApproval', 'private').where('id', decryptedRoomId);
 
       if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('Wrong password');
       if (result[0].private) throw new Error('Private room');
@@ -353,14 +323,11 @@ class RoomController {
         .where('id', user.id)
         .update({ numTeams: user.numTeams + 1 });
 
-      await Database.transaction(async trx => {
+      await Database.transaction(async (trx) => {
         await trx
           .table('user_rooms')
           .insert({ user_id: user.id, room_id: decryptedRoomId, role: null, notifications: JSON.stringify([]) });
-        const data = await trx
-          .table('rooms')
-          .select('currentMembers')
-          .where('id', decryptedRoomId);
+        const data = await trx.table('rooms').select('currentMembers').where('id', decryptedRoomId);
         await trx
           .table('rooms')
           .where('id', decryptedRoomId)
@@ -397,24 +364,17 @@ class RoomController {
       const { teamId } = request.body;
       const decryptedRoomId = Encryption.decrypt(teamId);
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
-      let data = await Database.table('rooms')
-        .select('admin')
-        .where('id', decryptedRoomId);
+      let data = await Database.table('rooms').select('admin').where('id', decryptedRoomId);
 
       if (data[0].admin === user.id) {
         throw new Error('Must delete room if user is the owner');
       }
 
-      await Database.transaction(async trx => {
-        let data = await trx
-          .table('rooms')
-          .select('currentMembers')
-          .where('id', decryptedRoomId);
+      await Database.transaction(async (trx) => {
+        let data = await trx.table('rooms').select('currentMembers').where('id', decryptedRoomId);
 
         await trx
           .table('rooms')
@@ -428,11 +388,7 @@ class RoomController {
           .where('id', user.id)
           .update({ numTeams: user.numTeams - 1 });
 
-        await trx
-          .table('user_rooms')
-          .where('user_id', user.id)
-          .where('room_id', decryptedRoomId)
-          .delete();
+        await trx.table('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId).delete();
       });
       response.status(200).send();
     } catch (err) {
@@ -449,35 +405,25 @@ class RoomController {
 
       await auth.attempt(email, password);
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
-      let data = await Database.table('rooms')
-        .select('admin')
-        .where('id', decryptedRoomId);
+      let data = await Database.table('rooms').select('admin').where('id', decryptedRoomId);
 
       if (data[0].admin !== user.id) {
         throw new Error('Can only delete room if user is owner');
       }
 
-      await Database.transaction(async trx => {
+      await Database.transaction(async (trx) => {
         /*
          * in the future delete all logs
          */
 
         // Finding all members to reduce their numTeams value by 1
-        let members = await trx
-          .table('user_rooms')
-          .select('user_id')
-          .where('room_id', decryptedRoomId);
+        let members = await trx.table('user_rooms').select('user_id').where('room_id', decryptedRoomId);
 
         for (let member of members) {
-          let [data] = await trx
-            .table('users')
-            .select('numTeams')
-            .where('id', member.user_id);
+          let [data] = await trx.table('users').select('numTeams').where('id', member.user_id);
 
           await trx
             .table('users')
@@ -485,24 +431,14 @@ class RoomController {
             .update('numTeams', Math.max(0, data.numTeams - 1));
 
           // Deleting user-room relationship
-          await trx
-            .table('user_rooms')
-            .where('user_id', member.user_id)
-            .where('room_id', decryptedRoomId)
-            .delete();
+          await trx.table('user_rooms').where('user_id', member.user_id).where('room_id', decryptedRoomId).delete();
         }
 
         // Deleting all issues related to the room
-        await trx
-          .table('issues')
-          .where('room', decryptedRoomId)
-          .delete();
+        await trx.table('issues').where('room', decryptedRoomId).delete();
 
         // Finally deleting room
-        await trx
-          .table('rooms')
-          .where('id', decryptedRoomId)
-          .delete();
+        await trx.table('rooms').where('id', decryptedRoomId).delete();
       });
       response.status(200).send();
     } catch (err) {
@@ -518,9 +454,7 @@ class RoomController {
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.body.id);
 
-      let result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
 
       if (result.length === 0) throw new Error('Unauthorized Access');
       response.cookie(
