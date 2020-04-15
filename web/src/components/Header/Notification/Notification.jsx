@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Popconfirm, Row, List, Avatar, Skeleton } from 'antd';
+import { useHistory } from 'react-router-dom';
+import { Modal, Button, Icon, Popconfirm, Row, List, Avatar, Skeleton } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { clearNotifications, sendNotificationsRead } from '../../../utility/restCalls';
 import { displaySimpleNotification } from '../../../utility/services';
@@ -20,31 +21,12 @@ import 'antd/dist/antd.css';
 //   event: 'You have been assigned to an issue.',
 //   type: 1,
 // },
-// {
-//   id: '3',
-//   description: "user3@gmail.com has commented on 'SEO'.",
-//   email: 'fakeemail@gmail.com',
-//   event: 'There are new comments on your issue.',
-//   type: 2,
-// },
-// {
-//   id: '4',
-//   description: "user3@gmail.com has commented on 'SEO'.",
-//   email: 'fakeemail@gmail.com',
-//   event: 'There are new comments on your issue.',
-//   type: 2,
-// },
-// {
-//   id: '5',
-//   description: "user3@gmail.com has commented on 'SEO'.",
-//   email: 'fakeemail@gmail.com',
-//   event: 'There are new comments on your issue.',
-//   type: 2,
-// },
 // ];
 
 export default function Notification({ data, setNotificationData, setShowNotificationModal, setRefresh, refresh }) {
+  const history = useHistory();
   const [loading, setLoading] = useState(true);
+  const [loadingIssue, setLoadingIssue] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [toBeRemoved, setToBeRemoved] = useState([]);
 
@@ -57,17 +39,29 @@ export default function Notification({ data, setNotificationData, setShowNotific
         setLoading(false);
         if (data.length > 0) await sendNotificationsRead({ notifications: data });
       }
-    })().catch(err => {
+    })().catch((err) => {
       displaySimpleNotification('Error', 2, 'bottomRight', `Unable to update notifications ${err}.`, 'warning', 'red');
     });
   }, [data]);
 
-  const handleNotification = item => {
+  // const handleIssue = (e, { issueId }) => {
+  //   e.preventDefault();
+  //   // setLoadingIssue(true);
+  //   // history.push(`/dashboard/issue/${issueId}`);
+  //   // setLoadingIssue(false);
+  //   // handleCloseModal();
+  // };
+
+  const handleNotification = (item) => {
+    // Create notification object here and add unique properties after (DRY)
+    let notificationObject = {};
+
     switch (item.type) {
       case 1:
-        setNotifications(notifications => [
+        setNotifications((notifications) => [
           {
             id: item.notificationId,
+            issueId: item.issueId,
             description: `${item.sourceUser} has assigned you task '${item.issue}'.`,
             event: 'You have been assigned to an issue',
             status: item.status,
@@ -78,9 +72,10 @@ export default function Notification({ data, setNotificationData, setShowNotific
         ]);
         break;
       case 2:
-        setNotifications(notifications => [
+        setNotifications((notifications) => [
           {
             id: item.notificationId,
+            issueId: item.issueId,
             description: `Task '${item.issue}' has been re-assigned to user ${item.assignee}.`,
             event: 'Issue no longer assigned to you',
             status: item.status,
@@ -91,9 +86,10 @@ export default function Notification({ data, setNotificationData, setShowNotific
         ]);
         break;
       case 3:
-        setNotifications([
+        setNotifications((notifications) => [
           {
             id: item.notificationId,
+            issueId: item.issueId,
             description: `${item.sourceUser} has commented on task '${item.issue}'.`,
             event: 'There are new comments on your issue.',
             status: item.status,
@@ -113,11 +109,11 @@ export default function Notification({ data, setNotificationData, setShowNotific
   };
 
   const handleSave = async () => {
-    let removedNotifications = notifications.filter(item => {
+    let removedNotifications = notifications.filter((item) => {
       return toBeRemoved.includes(item.id);
     });
 
-    let removedData = data.filter(item => {
+    let removedData = data.filter((item) => {
       for (let notification of removedNotifications) {
         if (notification.id === item.notificationId) {
           return true;
@@ -146,7 +142,7 @@ export default function Notification({ data, setNotificationData, setShowNotific
       });
       return;
     }
-    this.fetchData(res => {
+    this.fetchData((res) => {
       data = data.concat(res.results);
       this.setState({
         data,
@@ -184,7 +180,7 @@ export default function Notification({ data, setNotificationData, setShowNotific
             Remove All
           </Button>
         </Popconfirm>,
-        <Button key='save' type='primary' onClick={handleSave} disabled={notifications.length === 0 ? true : false}>
+        <Button key='save' type='primary' onClick={handleSave} disabled={toBeRemoved.length === 0 ? true : false}>
           Remove Selected
         </Button>,
       ]}
@@ -207,7 +203,7 @@ export default function Notification({ data, setNotificationData, setShowNotific
         ) : (
           <List
             dataSource={notifications}
-            renderItem={item => (
+            renderItem={(item) => (
               <List.Item key={item.id} style={{ opacity: toBeRemoved.includes(item.id) ? 0.5 : 1 }}>
                 <List.Item.Meta
                   avatar={
@@ -232,7 +228,7 @@ export default function Notification({ data, setNotificationData, setShowNotific
                     style={{ color: '#7a858e' }}
                     onClick={() => {
                       if (toBeRemoved.includes(item.id)) {
-                        setToBeRemoved(toBeRemoved.filter(removedItem => removedItem !== item.id));
+                        setToBeRemoved(toBeRemoved.filter((removedItem) => removedItem !== item.id));
                       } else {
                         setToBeRemoved([...toBeRemoved, item.id]);
                       }
@@ -240,9 +236,25 @@ export default function Notification({ data, setNotificationData, setShowNotific
                   >
                     {toBeRemoved.includes(item.id) ? 'Cancel removal' : 'Remove'}
                   </a>
-                  {/* <a href='/dashboard' disabled={toBeRemoved.includes(item.id) ? true : false}>
-                    Go to issue
-                  </a> */}
+                  <Row type='flex'>
+                    <Icon
+                      type='loading'
+                      spin
+                      style={{
+                        display: loadingIssue ? 'block' : 'none',
+                        color: '#6ca1d8',
+                        fontSize: '1.4rem',
+                        marginRight: '0.7rem',
+                      }}
+                    />
+                    {/* <a
+                      href='/dashboard'
+                      disabled={toBeRemoved.includes(item.id) ? true : false}
+                      onClick={(e) => handleIssue(e, item)}
+                    >
+                      Go to issue
+                    </a> */}
+                  </Row>
                 </Row>
               </List.Item>
             )}

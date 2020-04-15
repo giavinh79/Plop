@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Homepage, Panel, Team } from './pages';
 import Header from './components/Header/Header';
 import { displaySimpleNotification } from './utility/services';
-import { ThemeProvider } from './Theme';
+import { ThemeProvider } from './colors/theme';
 import { checkAuth } from './utility/restCalls';
 // import IssuePage from './pages/IssuePage';
 
@@ -30,7 +30,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   if (authenticated == null) {
     return <></>;
   } else if (authenticated) {
-    return <Route {...rest} render={props => <Component {...props} />} />;
+    return <Route {...rest} render={(props) => <Component {...props} />} />;
   } else {
     displaySimpleNotification('Session expired', 2, 'bottomRight', 'You need to login again.', 'warning', '#108ee9');
     return <Route {...rest} render={() => <Redirect to='/' />} />;
@@ -46,7 +46,7 @@ export default function Routes() {
           <Switch>
             <Route exact path='/' component={Homepage} />
             <ProtectedRoute path='/team' component={Team} />
-            {/* <ProtectedRoute path='/dashboard/issue:id' component={IssuePage} /> */}
+            <ProtectedRoute path='/dashboard/issue/:id' component={() => <Panel navigateToIssue={true} />} />
             <ProtectedRoute path='/dashboard' component={Panel} />
             <Redirect to='/' />
           </Switch>

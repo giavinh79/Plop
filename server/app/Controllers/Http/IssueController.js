@@ -222,6 +222,26 @@ class IssueController {
     }
   }
 
+  /* Controller handler function for getting specific issue data
+   *
+   */
+  async get({ auth, request, response }) {
+    try {
+      console.log(request.params.id);
+      const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in this room');
+
+      console.log(request.params.id);
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(issue_get) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
   async getTeam({ auth, request, response }) {
     try {
       // type of issue trying to be requested given by request.params.status (0 - backlog, 1 - active, 2 - )

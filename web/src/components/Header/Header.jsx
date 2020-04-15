@@ -8,7 +8,7 @@ import { displaySimpleNotification } from '../../utility/services';
 import { WrappedHorizontalLoginForm } from './LoginForm.jsx';
 import { retrieveNotifications } from '../../utility/restCalls';
 import TeamDropdown from './TeamDropdown';
-import { ThemeContext } from '../../Theme';
+import { ThemeContext } from '../../colors/theme';
 import { LogoText, TeamWrapper } from './HeaderStyles';
 
 export default function Header() {
@@ -54,7 +54,7 @@ export default function Header() {
   const getTeamLabel = () => {
     try {
       for (let item of JSON.parse(localStorage.getItem('teams'))) {
-        if (item.id.toString() === localStorage.getItem('currentTeam')) {
+        if (item.id.toString() === JSON.parse(localStorage.getItem('currentTeam')).id) {
           return item.name;
         }
       }

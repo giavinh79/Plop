@@ -1,5 +1,6 @@
 /*
  * File for containing all the different HTTP calls to the backend service
+ * Export statement at the bottom for summary of calls
  */
 
 import axios from 'axios';
@@ -67,9 +68,33 @@ const deleteRoom = async (email, password) => {
   }
 };
 
+const getAvatar = async () => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/avatar`);
+  } catch (err) {
+    throw new err();
+  }
+};
+
+const getIssueById = async (issue) => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/issue/${issue}`);
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getChat = async (issue) => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/chats`);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const joinTeam = async (data) => {
   try {
-    await axios.post(`${API_ENDPOINT}/joinRoom`, data);
+    return await axios.post(`${API_ENDPOINT}/joinRoom`, data);
   } catch (err) {
     throw err;
   }
@@ -138,6 +163,9 @@ export {
   createTeam,
   deleteIssue,
   deleteRoom,
+  getAvatar,
+  getChat,
+  getIssueById,
   joinTeam,
   logout,
   retrieveAssignees,

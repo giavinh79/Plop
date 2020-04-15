@@ -20,7 +20,7 @@ export default function CommentBody({ id }) {
         dataSource.unshift({
           // actions: [<span key='comment-list-reply-to-0'>Reply</span>],
           author: item.author,
-          avatar: `images/avatars/monster${item.avatar}.svg`,
+          avatar: `/images/avatars/monster${item.avatar}.svg`,
           content: <p>{item.content}</p>,
           datetime: (
             <Tooltip title={moment(item.time).format('YYYY-MM-DD HH:mm:ss')}>
@@ -30,7 +30,7 @@ export default function CommentBody({ id }) {
         });
       }
       setComments(dataSource);
-    })().catch(err => {
+    })().catch((err) => {
       console.log(err);
     });
   }, [id]);
@@ -48,7 +48,7 @@ export default function CommentBody({ id }) {
       const commentObject = {
         // actions: [<span key='comment-list-reply-to-0'>Reply</span>],
         author: email,
-        avatar: `images/avatars/monster${avatar}.svg`,
+        avatar: `/images/avatars/monster${avatar}.svg`,
         content: <p>{comment}</p>,
         datetime: (
           <Tooltip title={moment(date).format('YYYY-MM-DD HH:mm:ss')}>
@@ -74,7 +74,7 @@ export default function CommentBody({ id }) {
         <h3 style={{ margin: 0 }}>Comment here</h3>
         <Input
           style={{ maxWidth: '50rem', margin: '1rem' }}
-          onChange={e => setComment(e.target.value)}
+          onChange={(e) => setComment(e.target.value)}
           value={comment}
         />
         <Icon type='enter' style={{ cursor: 'pointer', paddingRight: '1rem' }} onClick={handleComment} />
@@ -88,7 +88,7 @@ export default function CommentBody({ id }) {
           className='comment-list'
           itemLayout='horizontal'
           dataSource={comments}
-          renderItem={item => (
+          renderItem={(item) => (
             <li>
               <Comment
                 actions={item.actions}

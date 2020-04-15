@@ -2,6 +2,17 @@
   position: fixed !important;
 }
 
+.chat-wrapper {
+  width: 500 !important;
+  max-height: 500 !important;
+  box-shadow: 0 5px 10px rgba(154, 160, 185, 0.05), 0 15px 40px rgba(166, 173, 201, 0.2);
+}
+
+.chat-wrapper .ant-card-body {
+  overflow: auto;
+  height: 452px;
+}
+
 .chat-input > .ant-input {
   border-radius: 0;
 }

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Menu, Icon, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import './style.css';
-import { ThemeContext } from '../../Theme';
+import { ThemeContext } from '../../colors/theme';
 
 const { SubMenu } = Menu;
 function SideNav({ handlePageChange }) {

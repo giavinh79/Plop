@@ -8,10 +8,7 @@ let users = new Set();
 
 const jwtMiddleware = async ({ request }, next) => {
   try {
-    // console.log(request.headers());
     request.headers().authorization = `Bearer ${request.cookie('XSStoken')}`;
-    // console.log(request.headers()['sec-websocket-key']);
-    // console.log(Encryption.decrypt(request.headers()['sec-websocket-key']));
   } catch (err) {
     console.log(`${new Date()} : ${err.message}`);
   } finally {
@@ -25,13 +22,11 @@ const jwtMiddleware = async ({ request }, next) => {
 Ws.channel('room:*', async ({ auth, socket, request }) => {
   try {
     let user = await auth.getUser();
-    const result = await Database.from('user_rooms')
-      .where('user_id', user.id)
-      .where('room_id', Encryption.decrypt(request.cookie('room')));
+    const [room] = await Database.from('rooms').where('websocketId', socket.topic.substring(5, socket.topic.length));
+    const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', room.id);
     if (result.length === 0) socket.close();
 
     console.log(`User connected with socket id - ${socket.id}`);
-    // console.log(socket.topic);
 
     if (!users.has(socket.id)) {
       users.add(socket.id);
@@ -45,9 +40,16 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
     }
 
     socket.on('message', async (data) => {
-      socket.broadcastToAll('message', { ...data, user: user.email, read: false });
+      let date = new Date();
+      socket.broadcast('message', { ...data, user: user.email, read: false, date });
       if (data.type === 1) {
-        await Database.table('chats').insert({ user: user.email, message: data.message, dateCreated: new Date() });
+        await Database.table('chats').insert({
+          user: user.email,
+          user_id: user.id,
+          room_id: Encryption.decrypt(request.cookie('room')),
+          message: data.message,
+          dateCreated: date,
+        });
       }
     });
 
@@ -59,7 +61,7 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
       socket.broadcast('message', { type: 0, count: userCount.get(socket.topic) });
     });
   } catch (err) {
-    console.log('wtf');
+    console.log('Socket Error');
     socket.close();
   }
 })

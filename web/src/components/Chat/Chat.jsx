@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Card, Icon, Input } from 'antd';
 import { MembersOnlineWrapper } from './ChatStyles';
 import ChatMessage from './ChatMessage';
@@ -6,13 +6,74 @@ import UserChatMessage from './UserChatMessage';
 import InfiniteScroll from 'react-infinite-scroller';
 import './Chat.css'; // to override ant design
 
-export default function Chat({ chat, chatCount, chatMessages, setChatData, ws }) {
+export default function Chat({ chat, chatCount, chatMessages, setChatData }) {
+  // const scrollRef = useRef([]);
   const inputRef = useRef();
   const [userCount, setUserCount] = useState(0);
+
   useEffect(() => {
     setUserCount(chatCount || 0);
     inputRef.current.focus();
   }, [chat, chatCount, chatMessages]);
+
+  const loadMessages = () => {
+    let chatDOM = [];
+
+    for (let key = 0; key < chatMessages.length; key++) {
+      if (chatMessages[key].userMessage) {
+        chatDOM.push(
+          <UserChatMessage
+            message={chatMessages[key].message}
+            key={key}
+            date={chatMessages[key].dateCreated}
+            id={key === chatMessages.length - 1 ? 'last-chat-element' : null}
+          />
+        );
+      } else {
+        chatDOM.push(
+          <ChatMessage
+            user={chatMessages[key].user}
+            message={chatMessages[key].message}
+            key={key}
+            date={chatMessages[key].dateCreated}
+            avatar={chatMessages[key].avatar}
+            id={key === chatMessages.length - 1 ? 'last-chat-element' : null}
+          />
+        );
+      }
+    }
+
+    let parent = React.createElement(
+      'div',
+      [],
+      [
+        chatDOM,
+        // chatMessages.map((item, key) => {
+        //   return item.userMessage ? (
+        //     <UserChatMessage message={item.message} key={key} date={item.dateCreated} ref={scrollRef} />
+        //   ) : (
+        //     <ChatMessage
+        //       user={item.user}
+        //       message={item.message}
+        //       key={key}
+        //       date={item.dateCreated}
+        //       avatar={item.avatar}
+        //       ref={scrollRef}
+        //     />
+        //   );
+        // }),
+      ]
+    );
+
+    try {
+      setTimeout(() => {
+        document.getElementById('last-chat-element').scrollIntoView();
+      }, 200);
+    } catch (err) {
+      console.log(err);
+    }
+    return parent;
+  };
 
   const handleLoadMore = () => {
     // make more API calls
@@ -20,11 +81,25 @@ export default function Chat({ chat, chatCount, chatMessages, setChatData, ws })
 
   const handleMessage = () => {
     if (inputRef.current.input.value.trim().length > 0) {
-      chat.emit('message', {
-        type: 1,
-        message: inputRef.current.input.value,
-      });
-      inputRef.current.state.value = '';
+      try {
+        chat.emit('message', {
+          type: 1,
+          message: inputRef.current.input.value,
+          avatar: localStorage.getItem('avatar') || null,
+        });
+        inputRef.current.state.value = '';
+        setChatData((chatData) => {
+          return {
+            ...chatData,
+            messages: [
+              ...chatData.messages,
+              { userMessage: true, message: inputRef.current.input.value, date: new Date() },
+            ],
+          };
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
@@ -37,27 +112,34 @@ export default function Chat({ chat, chatCount, chatMessages, setChatData, ws })
         style={{
           width: 500,
           maxHeight: 500,
-          overflow: 'auto',
-          boxShadow: '0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2)',
         }}
+        className='chat-wrapper'
       >
         <InfiniteScroll
-          pageStart={0}
+          // pageStart={1}
           loadMore={handleLoadMore}
-          hasMore={true || false}
+          // hasMore={true || false}
           useWindow={false}
-          style={{ minHeight: '15rem' }}
+          isReverse={true}
         >
-          {/* <ChatMessage user='tester123@gmail.com' message='Hello everybody, make sure you finish your work!' />
-          <ChatMessage user='tester1234@gmail.com' message='No' />
-          <ChatMessage user='tester123@gmail.com' message=':(' />
-          <ChatMessage user='tester123@gmail.com' message=':(' />
-          <UserChatMessage message='Random words to tes' /> */}
-          {chatMessages.map((item, key) => {
-            return <ChatMessage user={item.user} message={item.message} key={key} />;
-          })}
+          {loadMessages()}
+          {/* {chatMessages.map((item, key) => {
+            return item.userMessage ? (
+              <UserChatMessage message={item.message} key={key} date={item.dateCreated} ref={scrollRef} />
+            ) : (
+              <ChatMessage
+                user={item.user}
+                message={item.message}
+                key={key}
+                date={item.dateCreated}
+                avatar={item.avatar}
+                ref={scrollRef}
+              />
+            );
+          })} */}
         </InfiniteScroll>
       </Card>
+
       <Input
         allowClear
         style={{ height: '2rem', width: '100%', marginTop: '-2rem', borderRadius: 0 }}

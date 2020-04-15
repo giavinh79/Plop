@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import TeamDashboard from '../components/Dashboard/TeamDashboard';
 import UserDashboard from '../components/Dashboard/UserDashboard';
@@ -13,35 +14,63 @@ import Schedule from '../components/Schedule/Schedule';
 import Help from '../components/Help/Help';
 import { displaySessionExpired } from '../utility/services';
 import ChatIcon from '../components/Chat/ChatIcon';
-import { checkAuth } from '../utility/restCalls';
+import { checkAuth, getIssueById, getChat, getAvatar } from '../utility/restCalls';
 import Ws from '@adonisjs/websocket-client';
 import { WEB_SOCKET } from '../constants';
 
-export default function Panel() {
+export default function Panel({ navigateToIssue }) {
+  let params = useParams();
   const [toHomepage, setToHomepage] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [data, setData] = useState({});
   const [source, setSource] = useState(null);
+
+  // Chat state
   const ws = useRef(Ws(WEB_SOCKET));
   const [chat, setChat] = useState(null);
+  const [chatNotification, setChatNotification] = useState(false);
+  const [chatLoading, setChatLoading] = useState(true);
   const [chatData, setChatData] = useState({
     messages: [],
     count: 0,
   });
-  const [chatNotification, setChatNotification] = useState(false);
 
   useEffect(() => {
+    (async () => {
+      let avatarData = await getAvatar();
+      localStorage.setItem('avatar', avatarData.data.avatar);
+      if (navigateToIssue) {
+        let issueId = params.id;
+        console.log(await getIssueById(issueId));
+        // send request to issue with id as param and use this data to pass into changePage
+        // console.log(id);
+        // changePage(11, {}, 0);
+      }
+    })().catch((err) => {
+      console.log(err);
+    });
+
     if (chat == null) {
       ws.current.connect(); // connect to the server
 
       ws.current.on('open', () => {
-        // let chat = ws.current.subscribe(`room:${localStorage.getItem('currentTeam')}`);
-        let chat = ws.current.subscribe('room:1'); // might need to generate random ID on serverside and just link it to room as WS id
+        let chat = ws.current.subscribe(`room:${JSON.parse(localStorage.getItem('currentTeam')).ws_id}`);
         setChat(chat);
 
-        chat.on('ready', () => {
-          // call chat endpoint with GET request to get array of current messages to fill the state
-          // add to chatData and sort by date from oldest to newest
+        chat.on('ready', async () => {
+          let { data } = await getChat();
+          let messages = [...chatData.messages, ...data];
+          messages.sort((item, itemTwo) => {
+            if (item.dateCreated <= itemTwo.dateCreated) {
+              return -1;
+            } else {
+              return 1;
+            }
+          });
+          setChatData((chatData) => {
+            return { ...chatData, messages };
+          });
+          setChatLoading(false);
           // call lastCheckedChat endpoint, if the date is < most recent chat message, show red symbol
           // when user clicks chat, send a request to lastCheckedChat endpoint to refresh date and manually turn off state
         });
@@ -50,7 +79,6 @@ export default function Panel() {
          * 0 - members online count update, 1 - chat message, 2 - notification for user, 3 - comment made, 4 - new user joined, 5 - member left
          */
         chat.on('message', (data) => {
-          // console.log(data);
           switch (data.type) {
             case 0:
               console.log(data);
@@ -59,6 +87,7 @@ export default function Panel() {
               });
               break;
             case 1:
+              setChatNotification(true);
               setChatData((chatData) => {
                 return { ...chatData, messages: [...chatData.messages, data] };
               });
@@ -69,7 +98,6 @@ export default function Panel() {
         });
 
         chat.on('error', (error) => {
-          // alert('wack');
           console.log(error);
         });
       });
@@ -86,6 +114,11 @@ export default function Panel() {
     };
   }, []);
 
+  /* Function for switching to different pages in the dashboard
+   * page - page to navigate to
+   * params - data that has been passed in
+   * source - page user navigated from
+   */
   const changePage = (page, params, source) => {
     setCurrentPage(page);
     setData(params);
@@ -140,11 +173,14 @@ export default function Panel() {
     <>
       <SideNav handlePageChange={(page) => changePage(page)} />
       <div style={{ display: 'flex', width: '100%' }}>{returnPage(currentPage)}</div>
+      {/* Maybe create a new context provider for these props */}
       <ChatIcon
-        ws={ws}
         chat={chat}
         chatCount={chatData.count}
+        chatLoading={chatLoading}
         chatMessages={chatData.messages || []}
+        chatNotification={chatNotification}
+        setChatNotification={setChatNotification}
         setChatData={setChatData}
       />
     </>

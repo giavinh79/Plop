@@ -37,9 +37,12 @@ export const MembersOnlineWrapper = styled.span`
 export const UserChatBubble = styled.div`
   width: fit-content;
   max-width: 80%;
-  border-radius: 7px;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
   padding: 0.4rem 0.7rem;
-  border: 1px solid #ccc;
+  margin-bottom: 1rem;
   color: white;
-  background-color: #79b7d4;
+  background-color: #477084;
 `;

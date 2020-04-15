@@ -8,9 +8,15 @@ import './style.css';
 function TeamDropdown({ history }) {
   const [toTeam, setToTeam] = useState(false);
 
-  const displayLoading = async event => {
+  const displayLoading = async (event) => {
     try {
-      localStorage.setItem('currentTeam', JSON.parse(localStorage.getItem('teams'))[event.key - 1].id);
+      localStorage.setItem(
+        'currentTeam',
+        JSON.stringify({
+          id: JSON.parse(localStorage.getItem('teams'))[event.key - 1].id,
+          ws_id: JSON.parse(localStorage.getItem('teams'))[event.key - 1].websocketId,
+        })
+      );
       await createSession(event);
       window.location.reload();
       // Works for now but will want to change this to simply refetch data with the new room session
@@ -20,7 +26,7 @@ function TeamDropdown({ history }) {
     }
   };
 
-  const verifyTeamsValue = teams => {
+  const verifyTeamsValue = (teams) => {
     try {
       if (teams == null) return false;
       JSON.parse(teams);
@@ -46,7 +52,7 @@ function TeamDropdown({ history }) {
           return (
             <Menu.Item
               key={index + 1}
-              onClick={event => {
+              onClick={(event) => {
                 displayLoading(event);
               }}
             >

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ThemeContext } from '../../Theme';
+import { ThemeContext } from '../../colors/theme';
 import { Avatar, Popconfirm, Row } from 'antd';
 import { JoinedTeamCard } from '../../pages/TeamPageStyles';
 
@@ -19,7 +19,7 @@ export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams })
                     icon='team'
                     style={{ marginRight: '1rem', minWidth: '2.5rem', backgroundColor: '#3d74c7' }}
                   />
-                  <a href='/dashboard' onClick={e => handleEnterTeam(e, team.id)}>
+                  <a href='/dashboard' onClick={(e) => handleEnterTeam(e, team)}>
                     {team.name}
                   </a>
                 </Row>
@@ -71,7 +71,7 @@ export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams })
                   type='flex'
                   align='middle'
                   style={{ marginLeft: 'auto', cursor: 'pointer' }}
-                  onClick={e => handleEnterTeam(e, team.id)}
+                  onClick={(e) => handleEnterTeam(e, team)}
                 >
                   <a href='/dashboard'>Enter</a>
                   {/* <Icon

@@ -1,26 +1,28 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Drawer, Form, Button, Col, Row, Input, Select } from 'antd';
+import { Button, Col, Drawer, Form, Icon, Input, Row, Select, Tooltip } from 'antd';
 import { API_ENDPOINT } from '../../../constants';
-import { ThemeContext } from '../../../Theme';
+import { ThemeContext } from '../../../colors/theme';
 
 const { Option } = Select;
 
 const UserSettings2 = ({ displayUserModal, form }) => {
   const [theme, setTheme] = useContext(ThemeContext);
-  const [loading, setLoading] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
   const [email, setEmail] = useState('Please enter email');
   const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || '1');
   const { getFieldDecorator } = form;
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       const { data } = await axios.get(`${API_ENDPOINT}/userInfo`);
+      setLoadingData(false);
       let avatarIndex = data.avatar.toString();
       setEmail(data.email);
       setAvatar(avatarIndex);
       localStorage.setItem('avatar', avatarIndex);
-    })().catch(err => {
+    })().catch((err) => {
       console.log(err);
     });
   }, []);
@@ -30,21 +32,41 @@ const UserSettings2 = ({ displayUserModal, form }) => {
   };
 
   const handleSave = async () => {
-    setLoading(true);
+    setLoadingSave(true);
     await axios.post(`${API_ENDPOINT}/avatar`, { avatar });
     localStorage.setItem('avatar', avatar);
     setTimeout(() => {
-      setLoading(false);
+      setLoadingSave(false);
       handleClose();
     }, 1000);
   };
 
-  const handleAvatar = e => {
+  const handleAvatar = (e) => {
     setAvatar(e);
   };
 
   return (
-    <Drawer title='Settings' width={360} onClose={handleClose} visible={true} bodyStyle={{ paddingBottom: 80 }}>
+    <Drawer
+      title={
+        <Row type='flex'>
+          Settings{' '}
+          <Icon
+            type='loading'
+            spin
+            style={{
+              display: loadingData ? 'block' : 'none',
+              color: '#6ca1d8',
+              fontSize: '1.4rem',
+              marginLeft: '0.7rem',
+            }}
+          />
+        </Row>
+      }
+      width={360}
+      onClose={handleClose}
+      visible={true}
+      bodyStyle={{ paddingBottom: 80 }}
+    >
       <Form layout='vertical' hideRequiredMark>
         <Row gutter={16}>
           <Col span={24}>
@@ -62,12 +84,21 @@ const UserSettings2 = ({ displayUserModal, form }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label='Avatar'>
+            <Form.Item
+              label={
+                <div>
+                  Avatar{' '}
+                  <Tooltip title='Displays only for comments or chat'>
+                    <Icon type='question-circle-o' style={{ paddingRight: '0.3rem' }} />
+                  </Tooltip>
+                </div>
+              }
+            >
               <Select
                 placeholder='Please choose the type'
                 optionLabelProp='label'
                 defaultValue={avatar || '1'}
-                onChange={e => handleAvatar(e)}
+                onChange={(e) => handleAvatar(e)}
               >
                 <Option value='1' label='Avatar 1'>
                   <img src='/images/avatars/monster1.svg' alt='avatar 1' />
@@ -174,7 +205,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
         <Button onClick={handleClose} style={{ marginRight: 8 }}>
           Cancel
         </Button>
-        <Button type='primary' loading={loading} onClick={handleSave}>
+        <Button type='primary' loading={loadingSave} onClick={handleSave}>
           Save
         </Button>
       </div>

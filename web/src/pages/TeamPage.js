@@ -8,7 +8,7 @@ import { joinTeam, retrieveTeams } from '../utility/restCalls';
 import { Container, TeamCard } from './TeamPageStyles';
 import TeamCreationModal from '../components/Team/TeamCreationModal';
 import TeamsJoined from '../components/Team/TeamsJoined';
-import { ThemeContext } from '../Theme';
+import { ThemeContext } from '../colors/theme';
 
 // Seperate this JS file into seperate components later
 export default function Team() {
@@ -36,6 +36,11 @@ export default function Team() {
   const handleLeaveTeam = async (teamId) => {
     try {
       await axios.post('/leaveRoom', { teamId });
+      let cachedTeams = JSON.parse(localStorage.getItem('teams'));
+      cachedTeams = cachedTeams.filter((item) => {
+        return item.id !== teamId;
+      });
+      localStorage.setItem('teams', JSON.stringify(cachedTeams));
       setTeams(
         teams.filter((item) => {
           return item.id !== teamId;
@@ -69,8 +74,10 @@ export default function Team() {
     }
 
     try {
-      await joinTeam(data);
-      localStorage.setItem('currentTeam', data.roomId);
+      const {
+        data: { ws_id },
+      } = await joinTeam(data);
+      localStorage.setItem('currentTeam', JSON.stringify({ id: data.roomId, ws_id }));
       const res = await retrieveTeams();
       localStorage.setItem('teams', JSON.stringify(res.data));
       setToDashboard(true);
@@ -79,7 +86,7 @@ export default function Team() {
         'Unable to join team',
         4,
         'bottomRight',
-        'The team may be private, your credentials may be incorrect, or you may already have a pending request to join the team.',
+        `The team may be private, your credentials may be incorrect, or you may already have a pending request to join the team. ${err}`,
         'warning',
         '#108ee9'
       );
@@ -93,8 +100,8 @@ export default function Team() {
 
   const handleEnterTeam = async (e, team) => {
     e.preventDefault();
-    localStorage.setItem('currentTeam', team);
-    await axios.post(`${API_ENDPOINT}/sessionRoom`, { id: team });
+    localStorage.setItem('currentTeam', JSON.stringify({ id: team.id, ws_id: team.websocketId }));
+    await axios.post(`${API_ENDPOINT}/sessionRoom`, { id: team.id });
     setToDashboard(true);
   };
 

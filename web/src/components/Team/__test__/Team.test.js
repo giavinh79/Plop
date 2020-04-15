@@ -1,6 +1,6 @@
 import React from 'react';
 import { Team } from '../../../pages';
-import { ThemeProvider } from '../../../Theme';
+import { ThemeProvider } from '../../../colors/theme';
 import * as rest from '../../../utility/restCalls';
 
 // import react-testing methods

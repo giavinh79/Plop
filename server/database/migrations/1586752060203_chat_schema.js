@@ -8,6 +8,7 @@ class ChatSchema extends Schema {
     this.create('chats', (table) => {
       table.increments();
       table.timestamps();
+      table.integer('user_id').unsigned().references('id').inTable('users');
       table.integer('room_id').unsigned().references('id').inTable('rooms');
       table.string('message', 500);
       table.string('user', 200);

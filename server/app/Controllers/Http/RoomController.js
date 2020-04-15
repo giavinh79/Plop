@@ -351,7 +351,9 @@ class RoomController {
               path: '/',
             }
       );
-      response.status(200).json({ id: roomId, name: result[0].name });
+
+      let [roomData] = await Database.table('rooms').select('websocketId').where('id', decryptedRoomId);
+      response.status(200).json({ id: roomId, ws_id: roomData.websocketId, name: result[0].name });
     } catch (err) {
       console.log(`(room_join) ${new Date()}: ${err.message}`);
       response.status(404).send();
