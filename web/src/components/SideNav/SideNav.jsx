@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Menu, Icon, Tooltip } from 'antd';
-import 'antd/dist/antd.css';
-import './style.css';
 import { ThemeContext } from '../../colors/theme';
+import 'antd/dist/antd.css';
+import './SideNav.css';
 
 const { SubMenu } = Menu;
 function SideNav({ handlePageChange }) {
@@ -10,8 +10,8 @@ function SideNav({ handlePageChange }) {
 
   return (
     <Menu
-      theme={theme.isLightMode ? 'light' : 'light'} // change second option to dark once theme design completed
-      style={{ width: 256, minHeight: '100%' }}
+      theme={theme.isLightMode ? 'light' : 'dark'} // change second option to dark once theme design completed
+      style={{ width: 256, minHeight: '100%', backgroundColor: theme.isLightMode ? 'white' : '#1A2330' }}
       defaultSelectedKeys={['1']}
       defaultOpenKeys={['sub1']}
       mode='inline'

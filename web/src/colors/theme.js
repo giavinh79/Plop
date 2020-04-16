@@ -14,7 +14,7 @@ export const LIGHT_BACKGROUND_COLOR = '#somehexvalue';
 
 // ThemeContext
 
-const defaultLightTheme = true;
+const defaultLightTheme = localStorage.getItem('theme') === 'dark' ? false : true;
 
 const ThemeContext = createContext({
   isLightMode: defaultLightTheme,

@@ -1,0 +1,10 @@
+.ant-menu-item,
+.ant-menu-submenu {
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+}
+
+.ant-menu-dark .ant-menu-sub {
+  background-color: #24344c !important;
+}

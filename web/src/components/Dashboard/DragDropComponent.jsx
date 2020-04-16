@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Skeleton } from 'antd';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card } from './Card';
 import { cardStyles, DroppableWrapper, getActiveStyle, getListStyle, Wrapper } from './DashboardStyles';
+import { ThemeContext } from '../../colors/theme';
 import { updateIssue } from '../../utility/restCalls';
 
 /*
@@ -11,6 +12,8 @@ import { updateIssue } from '../../utility/restCalls';
  */
 export default function DragDropComponent({ changePage, loading, items, setItems, source }) {
   // const { Search } = Input;
+  const [theme] = useContext(ThemeContext);
+
   const id2List = {
     droppable1: 'active',
     droppable2: 'progress',
@@ -87,7 +90,7 @@ export default function DragDropComponent({ changePage, loading, items, setItems
       <DragDropContext onDragEnd={onDragEnd} style={{ height: '50%' }}>
         <Droppable droppableId='droppable1'>
           {(provided, snapshot) => (
-            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}>
               <div style={cardStyles.titleWrapper}>
                 <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Active</h5>
               </div>
@@ -118,7 +121,7 @@ export default function DragDropComponent({ changePage, loading, items, setItems
         </Droppable>
         <Droppable droppableId='droppable2'>
           {(provided, snapshot) => (
-            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}>
               <div style={cardStyles.titleWrapper}>
                 <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>In Progress</h5>
               </div>
@@ -148,7 +151,7 @@ export default function DragDropComponent({ changePage, loading, items, setItems
         </Droppable>
         <Droppable droppableId='droppable3'>
           {(provided, snapshot) => (
-            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}>
               <div style={cardStyles.titleWrapper}>
                 <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Completed</h5>
               </div>

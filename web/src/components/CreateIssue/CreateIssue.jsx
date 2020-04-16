@@ -179,7 +179,7 @@ export default function CreateIssue({ data, changePage, form, source }) {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your title!',
+                  message: 'Please input the task title',
                 },
               ],
               initialValue: data == null ? '' : data.title,

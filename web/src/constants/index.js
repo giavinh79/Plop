@@ -27,7 +27,7 @@ export const pagination = {
  */
 
 export const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT ? '' : 'https://plopwebapp.herokuapp.com';
-export const WEB_SOCKET = 'ws://localhost:3333';
+export const WEB_SOCKET = process.env.REACT_APP_WS_ENDPOINT || 'wss://plopwebapp.herokuapp.com';
 
 /* String Constants
  * Variables mapped to various hardcoded messages and text seen by client

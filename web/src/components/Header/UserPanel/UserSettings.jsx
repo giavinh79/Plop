@@ -142,10 +142,22 @@ const UserSettings2 = ({ displayUserModal, form }) => {
           <Col span={12}>
             <Form.Item label='Theme'>
               <Select placeholder='Please choose the type' defaultValue={theme.isLightMode ? 'light' : 'dark'}>
-                <Option value='light' onClick={() => setTheme({ isLightMode: true })}>
+                <Option
+                  value='light'
+                  onClick={() => {
+                    localStorage.setItem('theme', 'light');
+                    setTheme({ isLightMode: true });
+                  }}
+                >
                   Light Theme
                 </Option>
-                <Option value='dark' onClick={() => setTheme({ isLightMode: false })}>
+                <Option
+                  value='dark'
+                  onClick={() => {
+                    localStorage.setItem('theme', 'dark');
+                    setTheme({ isLightMode: false });
+                  }}
+                >
                   Dark Theme
                 </Option>
               </Select>

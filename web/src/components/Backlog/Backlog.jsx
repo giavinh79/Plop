@@ -24,12 +24,12 @@ export default function Backlog({ changePage }) {
       });
       setLoading(false);
       setData(data);
-    })().catch(err => {
+    })().catch((err) => {
       console.log(err);
     });
   }, [refresh]);
 
-  const handleDeletion = async id => {
+  const handleDeletion = async (id) => {
     try {
       await deleteIssue(id);
       displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
@@ -54,7 +54,7 @@ export default function Backlog({ changePage }) {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: text => <ActionText style={{ color: '#5185bb' }}>{text}</ActionText>,
+      render: (text) => <ActionText style={{ color: '#5185bb' }}>{text}</ActionText>,
     },
     {
       title: 'Id',
@@ -75,9 +75,9 @@ export default function Backlog({ changePage }) {
       title: 'Tags',
       dataIndex: 'tag',
       key: 'tag',
-      render: tag => (
+      render: (tag) => (
         <span>
-          {tag.map(tag => {
+          {tag.map((tag) => {
             let color = tagMap[tag.toLowerCase()];
             if (color == null) color = 'geekblue';
             return (
@@ -92,7 +92,7 @@ export default function Backlog({ changePage }) {
     {
       title: 'Action',
       key: 'action',
-      render: item => (
+      render: (item) => (
         <Row type='flex' align='middle'>
           <ActionText onClick={() => changePage(11, item, 7)}>Edit</ActionText>
           <Divider type='vertical' />

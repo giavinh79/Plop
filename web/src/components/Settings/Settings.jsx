@@ -27,12 +27,12 @@ export default function Settings() {
   });
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       const res = await axios.post(`${API_ENDPOINT}/roomInfo`);
       res.data.private = !!res.data.private;
       res.data.adminApproval = !!res.data.adaminApproval;
       setState(res.data);
-    })().catch(err => {
+    })().catch((err) => {
       displaySimpleNotification('Error', 4, 'bottomRight', `Unable to retrieve team info. (${err})`, 'warning', 'red');
     });
   }, []);
@@ -50,14 +50,14 @@ export default function Settings() {
               style={{ margin: '0.5rem 0' }}
               type='email'
               autoComplete='nope'
-              onChange={e => (email.current = e.target.value)}
+              onChange={(e) => (email.current = e.target.value)}
             />
             <Input
               placeholder='Password'
               style={{ margin: '0.5rem 0' }}
               type='password'
               autoComplete='nope'
-              onChange={e => (password.current = e.target.value)}
+              onChange={(e) => (password.current = e.target.value)}
             />
             <Alert message='Both fields must be filled in.' type='error' style={{ marginTop: '1rem' }} />
           </Col>
@@ -67,7 +67,7 @@ export default function Settings() {
       okType: 'danger',
       cancelText: 'Cancel',
       onOk() {
-        return new Promise(async resolve => {
+        return new Promise(async (resolve) => {
           try {
             await deleteRoom(email.current, password.current);
             setToTeam(true);
@@ -139,7 +139,7 @@ export default function Settings() {
                   <Input
                     type='text'
                     defaultValue={state.name}
-                    onChange={e => setState({ ...state, name: e.target.value })}
+                    onChange={(e) => setState({ ...state, name: e.target.value })}
                   />
                 </div>
                 <div style={styles.wrapper}>
@@ -148,7 +148,7 @@ export default function Settings() {
                     type='text'
                     defaultValue={state.description}
                     autosize={{ minRows: 10 }}
-                    onChange={e => setState({ ...state, description: e.target.value })}
+                    onChange={(e) => setState({ ...state, description: e.target.value })}
                   />
                 </div>
               </>
@@ -176,7 +176,7 @@ export default function Settings() {
                     defaultValue={state.decryptPass}
                     autoComplete='new-password'
                     type='password'
-                    onChange={e => setState({ ...state, decryptPass: e.target.value })}
+                    onChange={(e) => setState({ ...state, decryptPass: e.target.value })}
                   />
                 </div>
                 <div style={styles.wrapper}>

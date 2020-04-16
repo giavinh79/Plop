@@ -81,7 +81,6 @@ export default function Panel({ navigateToIssue }) {
         chat.on('message', (data) => {
           switch (data.type) {
             case 0:
-              console.log(data);
               setChatData((chatData) => {
                 return { ...chatData, count: data.count };
               });

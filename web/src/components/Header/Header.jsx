@@ -104,7 +104,7 @@ export default function Header() {
                   <Icon
                     type='bell'
                     theme='filled'
-                    style={{ fontSize: '20px', marginLeft: '1rem' }}
+                    style={{ fontSize: '20px', marginLeft: '1rem', color: theme.isLightMode ? '' : '#cfecfd' }}
                     onClick={() => setShowNotificationModal(true)}
                   />
                 </Badge>
