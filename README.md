@@ -14,7 +14,7 @@ Current deployed on https://www.plop.team/ as version 0.8. Backend is deployed o
 
 Immediate: Refactor all css and implement dark mode, refactor routing to improve rendering performance, split big components into smaller ones, refactor all remaining class components to hooks, web sockets for real time notifications, chat, live dashboard changes, and online member statuses, JWT token refresh, more informative and designed landing page and help page, store JWT tokens so upon logout/change password previous token is blacklisted for 24h, user convenient functions (ie. filtering and search for issue tables and dashboard), encrypt image links, user emails, team names, and issue descriptions 
 
-Longterm: More functionality for room settings (restyling, member approval), changing password/email, administration levels, mobile responsiveness, with QuillJS implement file editor that allows users to drop text/XML/JSON files to save with an issue, minimizable side navigation, replace nodemailer functionality with SendGrid API system
+Longterm: More functionality for room settings (restyling, member approval), changing password/email, administration levels, mobile responsiveness, place to just write team notes/ideas/random things (empty page with + button that generates cards), saving non-image files, minimizable side navigation, replace nodemailer functionality with SendGrid API system
 
 Very longterm:
 

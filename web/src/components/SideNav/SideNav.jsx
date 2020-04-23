@@ -109,6 +109,10 @@ function SideNav({ handlePageChange }) {
         <Icon type='question-circle' />
         Help
       </Menu.Item>
+      <Menu.Item key='sub9' onClick={() => handlePageChange(13)}>
+        <Icon type='container' />
+        Notes
+      </Menu.Item>
     </Menu>
   );
 }

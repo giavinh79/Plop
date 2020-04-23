@@ -4,6 +4,7 @@ import { Skeleton, Table } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { pagination } from '../../constants';
 import { retrieveMembers } from '../../utility/restCalls';
+import { displaySimpleNotification } from '../../utility/services';
 
 // Tiers of administration: 5
 // 4 - can't delete members
@@ -22,7 +23,7 @@ export default function ViewMembers() {
       setLoading(false);
       setMemberData(data);
     })().catch((err) => {
-      // display simple notification
+      displaySimpleNotification('Error', 5, 'bottomRight', `Unable to retrieve members: ${err}`, 'warning', 'red');
     });
 
     // make api call

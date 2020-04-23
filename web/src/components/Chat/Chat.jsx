@@ -65,13 +65,12 @@ export default function Chat({ chat, chatCount, chatMessages, setChatData }) {
       ]
     );
 
-    try {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (document.getElementById('last-chat-element')) {
         document.getElementById('last-chat-element').scrollIntoView();
-      }, 200);
-    } catch (err) {
-      console.log(err);
-    }
+      }
+    }, 200);
+
     return parent;
   };
 

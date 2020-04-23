@@ -18,6 +18,7 @@ class RoomSchema extends Schema {
       table.boolean('private');
       table.boolean('adminApproval');
       table.json('chat');
+      table.json('notes');
       table.string('websocketId', 50).notNullable();
       table.timestamps();
     });

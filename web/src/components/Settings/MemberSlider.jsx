@@ -5,7 +5,7 @@ import 'antd/dist/antd.css';
 export default function MemberSlider() {
   const [value, setValue] = useState(12);
 
-  const onChange = value => {
+  const onChange = (value) => {
     setValue(value);
   };
 

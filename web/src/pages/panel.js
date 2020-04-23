@@ -7,16 +7,19 @@ import Issue from '../components/Issue/Issue';
 import SideNav from '../components/SideNav/SideNav';
 import Backlog from '../components/Backlog/Backlog';
 import MembersView from '../components/ViewMembers/ViewMembers';
-import { WrappedCreateIssueForm } from '../components/CreateIssue/CreateIssue';
+import Overview from '../components/ProjectOverview/Overview';
 import Settings from '../components/Settings/Settings';
 import Active from '../components/Active/Active';
 import Schedule from '../components/Schedule/Schedule';
 import Help from '../components/Help/Help';
+import { WrappedCreateIssueForm } from '../components/CreateIssue/CreateIssue';
 import { displaySessionExpired } from '../utility/services';
 import ChatIcon from '../components/Chat/ChatIcon';
 import { checkAuth, getIssueById, getChat, getAvatar } from '../utility/restCalls';
 import Ws from '@adonisjs/websocket-client';
 import { WEB_SOCKET } from '../constants';
+import Logs from '../components/Logs/Logs';
+import Notes from '../components/Notes/Notes';
 
 export default function Panel({ navigateToIssue }) {
   let params = useParams();
@@ -140,7 +143,7 @@ export default function Panel({ navigateToIssue }) {
       case 1:
         return <UserDashboard changePage={changePage} checkSession={checkSession} />;
       case 2:
-        return <Schedule />;
+        return <Overview />;
       case 3:
         return <Schedule />;
       case 4:
@@ -154,13 +157,15 @@ export default function Panel({ navigateToIssue }) {
       case 8:
         return <Schedule />;
       case 9:
-        return <Schedule />;
+        return <Logs />;
       case 10:
         return <Settings />;
       case 11:
         return <Issue changePage={changePage} data={data} source={source} />; // issue information
       case 12:
         return <Help />;
+      case 13:
+        return <Notes />;
       default:
         return <TeamDashboard />;
     }

@@ -2,15 +2,38 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { layout, subheader } from '../../globalStyles';
-import { Alert, Button, Col, Icon, Input, Modal, Popconfirm, Typography, Tooltip, Skeleton, Switch } from 'antd';
+import {
+  Alert,
+  Button,
+  Col,
+  Icon,
+  Input,
+  Modal,
+  Popconfirm,
+  Typography,
+  Tooltip,
+  Row,
+  Skeleton,
+  Select,
+  Switch,
+} from 'antd';
 import MemberSlider from './MemberSlider';
 import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../constants';
 import { deleteRoom } from '../../utility/restCalls';
 import 'antd/dist/antd.css';
+import { SettingsWrapper, Text } from './SettingStyles';
 
 const { Paragraph } = Typography;
 const { confirm } = Modal;
+const { Option } = Select;
+
+// // Tiers of administration: 5
+// 4 - can't delete members
+// 3 - can't invite new members
+// 2 - can't create issues but can move issues
+// 1 - can't manipulate any issues
+// 0 - can only see issues assigned to them
 
 export default function Settings() {
   const email = useRef('');
@@ -105,26 +128,43 @@ export default function Settings() {
 
   return (
     <>
-      {toTeam && <Redirect push to='/team' />}
       <div style={layout}>
         <p style={{ ...subheader, opacity: state.id === 'default' ? 0.3 : 1 }}>Team Settings</p>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            width: '100%',
-            border: '1px solid #ccc',
-            borderRadius: '10px',
-            color: '#757575',
-          }}
-        >
+        <SettingsWrapper>
+          <div style={{ width: '100%' }}>
+            <div style={styles.wrapper}>
+              {state.id === 'default' ? (
+                <>
+                  <Skeleton active />
+                </>
+              ) : (
+                <div style={{ flex: 1, paddingRight: '1rem' }}>
+                  <Text>Team ID: </Text>
+                  <Paragraph
+                    copyable={{ text: state.id || 'default' }}
+                    style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', minWidth: '30rem' }}
+                  >
+                    {state.id}
+                  </Paragraph>
+                </div>
+              )}
+              {state.id === 'default' ? (
+                <></>
+              ) : (
+                <div style={{ flex: 1 }}>
+                  <Text>Repository Link: </Text>
+                  <Input defaultValue={'https://github.com'} autoComplete='new-password' type='text' disabled />
+                </div>
+              )}
+            </div>
+          </div>
           <div
             style={{
               backgroundColor: 'white',
               flex: '1',
               borderBottomLeftRadius: '10px',
               borderTopLeftRadius: '10px',
-              padding: '1rem',
+              paddingRight: '1rem',
             }}
           >
             {state.id === 'default' ? (
@@ -160,7 +200,6 @@ export default function Settings() {
               flex: '1',
               borderTopRightRadius: '10px',
               borderBottomRightRadius: '10px',
-              padding: '1rem',
             }}
           >
             {state.id === 'default' ? (
@@ -181,7 +220,7 @@ export default function Settings() {
                 </div>
                 <div style={styles.wrapper}>
                   <div style={{ flex: 1, padding: '0.5rem 0' }}>
-                    <div style={styles.wrapperC}>
+                    {/* <div style={styles.wrapperC}>
                       <p style={styles.text}>Team ID: </p>
                       <Paragraph
                         copyable={{ text: state.id || 'default' }}
@@ -189,19 +228,54 @@ export default function Settings() {
                       >
                         {state.id}
                       </Paragraph>
-                    </div>
+                    </div> */}
                     <div>
-                      <p style={styles.text}>Limit max members: </p>
+                      <p style={styles.text}>Limit max members </p>
                       <MemberSlider style={{ marginRight: '1rem' }} />
                     </div>
                     <div>
+                      <Row type='flex' style={{ alignItems: 'center' }}>
+                        <p style={styles.text}>Default administration level </p>
+                        <Tooltip
+                          title={
+                            <span>
+                              Tiers of Administration: <br />0 - can only see and edit issues assigned to them <br />1 -
+                              can see all issues but not edit all <br />2 - can edit any issue <br />3 - can invite new
+                              members <br />4 - can manage members but no access to team settings <br />5 - all
+                              privileges
+                            </span>
+                          }
+                        >
+                          <Icon type='question-circle-o' style={{ paddingRight: '0.3rem' }} />
+                        </Tooltip>
+                      </Row>
+
+                      <Select defaultValue='1' style={{ width: 120 }} disabled>
+                        <Option value='0'>0</Option>
+                        <Option value='1'>1</Option>
+                        <Option value='2'>2</Option>
+                        <Option value='3'>3</Option>
+                        <Option value='4'>4</Option>
+                        <Option value='5'>5</Option>
+                      </Select>
+                    </div>
+                    {/* <div>
                       <p style={styles.text}>Repository Link: </p>
                       <a href='https://github.com' target='_blank' rel='noopener noreferrer'>
                         https://github.com
                       </a>
-                    </div>
+                    </div> */}
                   </div>
-                  <div style={{ flex: 1, padding: '0.5rem 0' }}>
+                  <div
+                    style={{
+                      flex: 1,
+                      padding: '1rem',
+                      color: 'white',
+                      borderRadius: '20px',
+                      marginTop: '1.5rem',
+                      backgroundColor: '#6c879c',
+                    }}
+                  >
                     <div style={styles.wrapperC}>
                       <Switch defaultChecked={state.private} />
                       <p style={styles.textC}>
@@ -240,7 +314,7 @@ export default function Settings() {
               </>
             )}
           </div>
-        </div>
+        </SettingsWrapper>
         <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '1rem 0 1rem 1rem' }}>
           <Button
             key='submit'
@@ -266,6 +340,7 @@ export default function Settings() {
           </Popconfirm>
         </div>
       </div>
+      {toTeam && <Redirect push to='/team' />}
     </>
   );
 }
@@ -281,6 +356,7 @@ const styles = {
     flexWrap: 'wrap',
     alignItems: 'center',
     paddingBottom: '0.5rem',
+    minWidth: '15rem',
   },
   text: {
     margin: '0.5rem 1rem 0.5rem 0',
