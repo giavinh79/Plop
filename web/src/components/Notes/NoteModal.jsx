@@ -103,17 +103,17 @@ export default function NoteModal({ setDisplayModal }) {
       />
       <p>Note description:</p>
       <TextArea
-        autosize={{ minRows: 2, maxRows: 6 }}
+        autosize={{ minRows: 4, maxRows: 12 }}
         style={{ marginBottom: '1rem' }}
         name='teamDescription'
         id='teamDescription'
-        maxLength={220}
+        maxLength={800}
         aria-label='team-description-input'
         onChange={(e) => {
           createTeamData.current.description = e.currentTarget.value;
         }}
       />
-      <p>Note image link:</p>
+      {/* <p>Note image link:</p>
       <Input
         name='teamPassword'
         id='teamPassword'
@@ -122,7 +122,7 @@ export default function NoteModal({ setDisplayModal }) {
         onChange={(e) => {
           createTeamData.current.password = e.currentTarget.value;
         }}
-      />
+      /> */}
     </Modal>
   );
 }
