@@ -57,7 +57,9 @@ function SideNav({ handlePageChange }) {
           View
         </Menu.Item>
         <SubMenu key='sub3' title='Admin Panel'>
-          <Menu.Item key='6'>Manage Members</Menu.Item>
+          <Menu.Item key='6' onClick={() => handlePageChange(14)}>
+            Manage Members
+          </Menu.Item>
         </SubMenu>
       </SubMenu>
       <SubMenu

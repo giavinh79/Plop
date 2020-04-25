@@ -5,7 +5,8 @@ import { createTeam, retrieveTeams } from '../../utility/restCalls';
 
 const { TextArea } = Input;
 
-export default function NoteModal() {
+export default function NoteModal({ setDisplayModal }) {
+  const [visible, setVisible] = useState(true);
   const [teamCreateError, setTeamCreateError] = useState(false);
   const createInput = useRef();
   const createTeamData = useRef({});
@@ -19,9 +20,10 @@ export default function NoteModal() {
   }, []);
 
   const handleCancel = () => {
-    // setTeamCreation(false);
-    // setTeamCreateError(false);
-    // createTeamData.current = {};
+    setVisible(false);
+    setTimeout(() => {
+      setDisplayModal(false);
+    }, 200);
   };
 
   const handleCreate = async () => {
@@ -74,14 +76,14 @@ export default function NoteModal() {
   return (
     <Modal
       title='Create a note'
-      visible={true}
+      visible={visible}
       onCancel={handleCancel}
       maskClosable={true}
       footer={[
         // <Button key='back' onClick={handleCancel}>
         //   Return
         // </Button>,
-        <Button key='submit' type='primary' onClick={handleCreate}>
+        <Button key='submit' type='primary' onClick={handleCreate} disabled>
           Save
         </Button>,
       ]}

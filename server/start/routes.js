@@ -58,3 +58,8 @@ Route.delete('/image/:id', 'ImageController.delete').middleware(jwtMiddleware);
 Route.get('/chats', 'ChatController.get').middleware(jwtMiddleware);
 Route.get('/lastReadChat', 'ChatController.getLastReadChat').middleware(jwtMiddleware);
 Route.post('/lastReadChat', 'ChatController.updatelastReadChat').middleware(jwtMiddleware);
+
+// Notes
+Route.post('/notes', 'NotesController.create').middleware(jwtMiddleware);
+Route.get('/notes', 'NotesController.get').middleware(jwtMiddleware);
+Route.delete('/notes/:id', 'ImageController.delete').middleware(jwtMiddleware);

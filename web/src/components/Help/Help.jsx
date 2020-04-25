@@ -55,13 +55,13 @@ export default function Help() {
               </a>
             </div>
           </div>
-          <div style={{ margin: '1rem' }}>
+          {/* <div style={{ margin: '1rem' }}>
             <img
               src='/images/plopdark.png'
               style={{ maxWidth: '100%', borderRadius: '10px', height: 'auto' }}
               alt='plop dark mode web app'
             />
-          </div>
+          </div> */}
         </Row>
       </div>
       <Row style={{ padding: '2rem', height: '40rem', backgroundColor: 'rgba(204, 214, 232, 0.62)' }}>

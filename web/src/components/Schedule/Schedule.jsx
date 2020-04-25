@@ -66,7 +66,7 @@ function monthCellRender(value) {
 export default function Schedule() {
   return (
     <div style={layout}>
-      <p style={subheader}>Project Timeline (placeholder)</p>
+      <p style={subheader}>Project Timeline (incomplete)</p>
       <Calendar
       // dateCellRender={dateCellRender}
       // monthCellRender={monthCellRender}

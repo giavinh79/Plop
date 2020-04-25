@@ -166,6 +166,8 @@ export default function Panel({ navigateToIssue }) {
         return <Help />;
       case 13:
         return <Notes />;
+      case 14:
+        return <MembersView />;
       default:
         return <TeamDashboard />;
     }

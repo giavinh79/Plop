@@ -36,7 +36,7 @@ export default function Logs() {
 
   return (
     <div style={layout}>
-      <p style={subheader}>Project Logs (placeholder)</p>
+      <p style={subheader}>Project Logs (incomplete)</p>
       <Search
         allowClear
         size='large'
