@@ -10,7 +10,7 @@ import { updateIssue } from '../../utility/restCalls';
  * Component representing the three drag & drop columns active, progress, and complete
  * Takes inputs from TeamDashboard and UserDashboard components
  */
-export default function DragDropComponent({ changePage, loading, items, setItems, source }) {
+export default function DragDropComponent({ loading, items, setItems, source }) {
   // const { Search } = Input;
   const [theme] = useContext(ThemeContext);
 
@@ -110,7 +110,7 @@ export default function DragDropComponent({ changePage, loading, items, setItems
                       {...provided.dragHandleProps}
                       style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
                     >
-                      <Card data={item} changePage={changePage} source={source} />
+                      <Card data={item} source={source} />
                     </div>
                   )}
                 </Draggable>
@@ -140,7 +140,7 @@ export default function DragDropComponent({ changePage, loading, items, setItems
                       {...provided.dragHandleProps}
                       style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
                     >
-                      <Card data={item} changePage={changePage} source={source} />
+                      <Card data={item} source={source} />
                     </div>
                   )}
                 </Draggable>
@@ -170,7 +170,7 @@ export default function DragDropComponent({ changePage, loading, items, setItems
                       {...provided.dragHandleProps}
                       style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
                     >
-                      <Card data={item} changePage={changePage} source={source} />
+                      <Card data={item} source={source} />
                     </div>
                   )}
                 </Draggable>

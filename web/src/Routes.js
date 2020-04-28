@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import styled from 'styled-components';
-import { Homepage, Panel, Team } from './pages';
+import { Homepage, Team } from './pages';
 import Header from './components/Header/Header';
+import SideNav from './components/SideNav/SideNav';
+import TeamDashboard from './components/Dashboard/TeamDashboard';
+import UserDashboard from './components/Dashboard/UserDashboard';
+import Overview from './components/ProjectOverview/Overview';
+import Schedule from './components/Schedule/Schedule';
+import MembersView from './components/ViewMembers/ViewMembers';
+import Notes from './components/Notes/Notes';
+import { WrappedCreateIssueForm } from './components/CreateIssue/CreateIssue';
+import Active from './components/Active/Active';
+import Backlog from './components/Backlog/Backlog';
+import Logs from './components/Logs/Logs';
+import Settings from './components/Settings/Settings';
+import Help from './components/Help/Help';
+import { BodyWrapper, DashboardWrapper } from './globalStyles';
 import { displaySimpleNotification } from './utility/services';
 import { ThemeProvider } from './colors/theme';
 import { checkAuth } from './utility/restCalls';
-// import IssuePage from './pages/IssuePage';
-
-const BodyWrapper = styled.div`
-  display: flex;
-  min-height: 91%;
-`;
+import ChatIcon from './components/Chat/ChatIcon';
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const [authenticated, setAuthenticated] = useState(null);
@@ -46,8 +54,40 @@ export default function Routes() {
           <Switch>
             <Route exact path='/' component={Homepage} />
             <ProtectedRoute path='/team' component={Team} />
-            <ProtectedRoute path='/dashboard/issue/:id' component={() => <Panel navigateToIssue={true} />} />
-            <ProtectedRoute path='/dashboard' component={Panel} />
+
+            <Route
+              path='/dashboard'
+              render={({ match: { url } }) => (
+                <>
+                  <SideNav path={window.location.pathname} />
+                  <DashboardWrapper>
+                    <Switch>
+                      <ProtectedRoute path={`${url}/`} component={TeamDashboard} exact />
+                      <ProtectedRoute
+                        path={`${url}/issue/:id`}
+                        component={(props) => <WrappedCreateIssueForm isManualNavigation={true} {...props} />}
+                      />
+                      <ProtectedRoute path={`${url}/user`} component={UserDashboard} />
+                      <ProtectedRoute path={`${url}/overview`} component={Overview} />
+                      <ProtectedRoute path={`${url}/schedule`} component={Schedule} />
+                      <ProtectedRoute path={`${url}/notes`} component={Notes} />
+                      <ProtectedRoute path={`${url}/members`} component={MembersView} />
+                      <ProtectedRoute path={`${url}/manage-members`} component={MembersView} />
+                      <ProtectedRoute path={`${url}/create-issue`} component={WrappedCreateIssueForm} />
+                      <ProtectedRoute path={`${url}/active-issues`} component={Active} />
+                      <ProtectedRoute path={`${url}/backlog-issues`} component={Backlog} />
+                      <ProtectedRoute path={`${url}/archive-issues`} component={Backlog} />
+                      <ProtectedRoute path={`${url}/logs`} component={Logs} />
+                      <ProtectedRoute path={`${url}/settings`} component={Settings} />
+                      <ProtectedRoute path={`${url}/help`} component={Help} />
+                      <Redirect push to='/' />
+                      {/*  */}
+                    </Switch>
+                  </DashboardWrapper>
+                  <ChatIcon />
+                </>
+              )}
+            />
             <Redirect to='/' />
           </Switch>
         </BodyWrapper>

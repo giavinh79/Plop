@@ -44,13 +44,11 @@ export default function Notification({ data, setNotificationData, setShowNotific
     });
   }, [data]);
 
-  // const handleIssue = (e, { issueId }) => {
-  //   e.preventDefault();
-  //   // setLoadingIssue(true);
-  //   // history.push(`/dashboard/issue/${issueId}`);
-  //   // setLoadingIssue(false);
-  //   // handleCloseModal();
-  // };
+  const handleIssue = (e, { issueId }) => {
+    e.preventDefault();
+    handleCloseModal();
+    history.push(`/dashboard/issue/${issueId}`);
+  };
 
   const handleNotification = (item) => {
     // Create notification object here and add unique properties after (DRY)
@@ -247,13 +245,13 @@ export default function Notification({ data, setNotificationData, setShowNotific
                         marginRight: '0.7rem',
                       }}
                     />
-                    {/* <a
+                    <a
                       href='/dashboard'
                       disabled={toBeRemoved.includes(item.id) ? true : false}
                       onClick={(e) => handleIssue(e, item)}
                     >
                       Go to issue
-                    </a> */}
+                    </a>
                   </Row>
                 </Row>
               </List.Item>

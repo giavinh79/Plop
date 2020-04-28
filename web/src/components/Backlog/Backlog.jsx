@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { Divider, Popconfirm, Row, Table as BacklogTable, Skeleton, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
@@ -8,10 +9,11 @@ import { deleteIssue, updateIssue } from '../../utility/restCalls';
 import { ActionText } from '../Active/ActiveStyles';
 import './style.css';
 
-export default function Backlog({ changePage }) {
+export default function Backlog() {
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [issue, setIssue] = useState(null); // to navigate to
 
   useEffect(() => {
     (async () => {
@@ -94,7 +96,14 @@ export default function Backlog({ changePage }) {
       key: 'action',
       render: (item) => (
         <Row type='flex' align='middle'>
-          <ActionText onClick={() => changePage(11, item, 7)}>Edit</ActionText>
+          <ActionText
+            onClick={() => {
+              console.log(item);
+              setIssue(item);
+            }}
+          >
+            Edit
+          </ActionText>
           <Divider type='vertical' />
           <Popconfirm
             title='Are you sure you want to delete this task?'
@@ -119,19 +128,30 @@ export default function Backlog({ changePage }) {
   ];
 
   return (
-    <div style={layout}>
-      <p style={{ ...subheader, opacity: loading ? 0.3 : 1 }}>Backlog</p>
-      {loading ? (
-        <Skeleton active />
-      ) : (
-        <BacklogTable
-          columns={columns}
-          dataSource={data}
-          pagination={pagination}
-          style={{ border: '1px solid #ccc', borderRadius: '5px' }}
+    <>
+      {issue && (
+        <Redirect
+          push
+          to={{
+            pathname: `/dashboard/issue/${issue.id}`,
+            data: issue,
+          }}
         />
       )}
-    </div>
+      <div style={layout}>
+        <p style={{ ...subheader, opacity: loading ? 0.3 : 1 }}>Backlog</p>
+        {loading ? (
+          <Skeleton active />
+        ) : (
+          <BacklogTable
+            columns={columns}
+            dataSource={data}
+            pagination={pagination}
+            style={{ border: '1px solid #ccc', borderRadius: '5px' }}
+          />
+        )}
+      </div>
+    </>
   );
 }
 

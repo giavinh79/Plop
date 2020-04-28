@@ -35,7 +35,7 @@ function HorizontalLoginForm({ form }) {
     }
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -48,7 +48,7 @@ function HorizontalLoginForm({ form }) {
   };
 
   const handleLogout = async () => {
-    await logout().catch(err => {
+    await logout().catch((err) => {
       displaySimpleNotification('Error', 5, 'bottomRight', `Log out was unsuccessful. ${err}`, 'warning', 'red');
     });
     localStorage.clear(); // get rid of team caching and other vars
@@ -74,7 +74,7 @@ function HorizontalLoginForm({ form }) {
               placeholder='Username'
               name='loginEmail'
               id='loginEmail'
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               value={email}
               autoComplete='username'
               required
@@ -87,7 +87,7 @@ function HorizontalLoginForm({ form }) {
               name='loginPassword'
               id='loginPassword'
               placeholder='Password'
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               value={password}
               autoComplete='current-password'
               required

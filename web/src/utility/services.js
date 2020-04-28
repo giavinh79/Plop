@@ -1,9 +1,20 @@
 import React from 'react';
 import { Icon, notification, Modal } from 'antd';
+import { checkAuth } from './restCalls';
 
 /*
  * Commonly used functions
  */
+
+const isAuthenticated = async () => {
+  try {
+    await checkAuth();
+    return true;
+  } catch (err) {
+    displaySessionExpired();
+    return false;
+  }
+};
 
 const displayInfoDialog = (title, dataLabel, data, content) => {
   Modal.info({
@@ -52,4 +63,4 @@ const displayUnknownError = () => {
   });
 };
 
-export { displayInfoDialog, displaySimpleNotification, displaySessionExpired, displayUnknownError };
+export { isAuthenticated, displayInfoDialog, displaySimpleNotification, displaySessionExpired, displayUnknownError };
