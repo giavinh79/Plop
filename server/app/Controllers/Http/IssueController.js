@@ -227,15 +227,15 @@ class IssueController {
    */
   async get({ auth, request, response }) {
     try {
-      console.log(request.params.id);
       const user = await auth.getUser();
       const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
-      console.log(request.params.id);
-      response.status(200).send();
+      let issueId = request.params.id;
+      let [issue] = await Database.from('issues').where({ id: issueId });
+      response.status(200).json({ issue });
     } catch (err) {
       console.log(`(issue_get) ${new Date()}: ${err.message}`);
       response.status(404).send();

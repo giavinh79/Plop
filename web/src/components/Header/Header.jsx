@@ -21,7 +21,7 @@ export default function Header() {
   let { location } = history;
 
   useEffect(() => {
-    if (location.pathname === '/dashboard') {
+    if (location.pathname.substring(0, 10) === '/dashboard') {
       (async () => {
         let { data } = await retrieveNotifications();
         setNotifications(data);
@@ -78,7 +78,7 @@ export default function Header() {
         />
         {location.pathname === '/team' && <LogoText>P</LogoText>}
       </div>
-      {location.pathname === '/dashboard' && (
+      {location.pathname.substring(0, 10) === '/dashboard' && (
         <TeamWrapper>
           <h1 style={{ margin: 0, color: 'white' }}>{getTeamLabel()}</h1>
         </TeamWrapper>

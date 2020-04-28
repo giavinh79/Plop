@@ -1,12 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import { API_ENDPOINT } from '../constants';
 import axios from 'axios';
+import { isAuthenticated } from './services';
 
 /*
  * Custom Hooks
  */
 
-const useActiveIssues = (type, checkSession) => {
+const useActiveIssues = (type) => {
   //  type denotes whether it is for the Team or User dashboard
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState({
@@ -27,14 +28,14 @@ const useActiveIssues = (type, checkSession) => {
         setItems({ active: activeItems, progress: progressItems, complete: completedItems });
         setLoading(false);
       }
-    })().catch(err => {
-      checkSession();
+    })().catch((err) => {
+      isAuthenticated();
     });
 
     return () => {
       isMounted.current = false;
     };
-  }, [checkSession, items.complete.length, items.progress.length, items.active.length, type]);
+  }, [items.complete.length, items.progress.length, items.active.length, type]);
 
   return [items, setItems, loading];
 };

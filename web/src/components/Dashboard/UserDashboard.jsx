@@ -3,8 +3,8 @@ import { Empty } from 'antd';
 import DragDropComponent from './DragDropComponent';
 import { useActiveIssues } from '../../utility/hooks';
 
-export default function UserDashboard({ changePage, checkSession }) {
-  const [items, setItems, loading] = useActiveIssues('user', checkSession);
+export default function UserDashboard() {
+  const [items, setItems, loading] = useActiveIssues('user');
 
   const isEmpty = () => {
     try {
@@ -23,7 +23,7 @@ export default function UserDashboard({ changePage, checkSession }) {
       />
     </div>
   ) : (
-    <DragDropComponent changePage={changePage} items={items} setItems={setItems} loading={loading} source={1} />
+    <DragDropComponent items={items} setItems={setItems} loading={loading} source={1} />
   );
 }
 

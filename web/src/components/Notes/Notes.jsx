@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Avatar, Card, Icon, Input, Popconfirm, Row, Tooltip } from 'antd';
 import { layout } from '../../globalStyles';
 import GridLayout, { WidthProvider } from 'react-grid-layout';

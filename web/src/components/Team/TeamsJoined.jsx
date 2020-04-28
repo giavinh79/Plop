@@ -25,7 +25,7 @@ export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams })
                 </Row>
               }
               extra={
-                <span style={{ color: theme.isLightMode ? 'rgba(255, 255, 255, 0.65)' : '#595959' }}>
+                <span style={{ color: theme.isLightMode ? '#232323a6' : '#595959' }}>
                   {team.currentMembers} member(s)
                 </span>
               }

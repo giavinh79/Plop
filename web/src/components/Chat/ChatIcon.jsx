@@ -1,20 +1,30 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Icon, Spin } from 'antd';
 import Chat from './Chat';
 import { ChatIconWrapper } from './ChatIconStyles';
+import Ws from '@adonisjs/websocket-client';
+import { WEB_SOCKET } from '../../constants';
+import { subscribeToRoom } from '../../websockets/ws';
 
-export default function ChatIcon({
-  chat,
-  chatCount,
-  chatLoading,
-  chatMessages,
-  chatNotification,
-  setChatData,
-  setChatNotification,
-}) {
+export default function ChatIcon() {
+  const ws = useRef(Ws(WEB_SOCKET));
+  const [chat, setChat] = useState(null);
+  const [chatNotification, setChatNotification] = useState(false);
+  const [chatLoading, setChatLoading] = useState(true);
+  const [chatData, setChatData] = useState({
+    messages: [],
+    count: 0,
+  });
+
+  useEffect(() => {
+    subscribeToRoom(ws.current, chatData, setChat, setChatData, setChatLoading, setChatNotification); // connect to team's chat
+  }, []);
+
   return (
     <ChatIconWrapper
-      overlay={<Chat chat={chat} chatCount={chatCount} chatMessages={chatMessages} setChatData={setChatData} />}
+      overlay={
+        <Chat chat={chat} chatCount={chatData.count} chatMessages={chatData.messages} setChatData={setChatData} />
+      }
       placement='topRight'
       trigger={['click']}
       disabled={chatLoading ? true : false}

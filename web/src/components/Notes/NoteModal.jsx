@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Button, Input, Modal } from 'antd';
+import { Button, Input, Modal } from 'antd';
 import { displayInfoDialog, displaySimpleNotification } from '../../utility/services';
 import { createTeam, retrieveTeams } from '../../utility/restCalls';
 

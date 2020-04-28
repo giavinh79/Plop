@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Badge, Descriptions, Progress, Row } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import axios from 'axios';
@@ -52,6 +52,7 @@ const data = [
 ];
 
 export default function Overview() {
+  const isMounted = useRef(true);
   const [issues, setIssues] = useState({
     activeItems: [],
     progressItems: [],
@@ -61,11 +62,14 @@ export default function Overview() {
   useEffect(() => {
     (async () => {
       let { data } = await axios.get(`${API_ENDPOINT}/TeamIssue/1`);
-      setIssues(data);
-      console.log(data);
+      if (isMounted.current) setIssues(data);
     })().catch((err) => {
       console.log(err);
     });
+
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   return (
