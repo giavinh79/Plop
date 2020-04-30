@@ -1,7 +1,6 @@
 import { getChat } from '../utility/restCalls';
 
 export const subscribeToRoom = (ws, chatData, setChat, setChatData, setChatLoading, setChatNotification) => {
-  console.log(ws);
   ws.connect(); // connect to the server
 
   ws.on('open', () => {
@@ -33,7 +32,7 @@ export const subscribeToRoom = (ws, chatData, setChat, setChatData, setChatLoadi
       switch (data.type) {
         case 0:
           setChatData((chatData) => {
-            return { ...chatData, count: data.count };
+            return { ...chatData, count: data.count, users: data.users };
           });
           break;
         case 1:

@@ -14,8 +14,9 @@ Route.on('/').render('welcome');
 
 // User Info
 Route.get('/userInfo', 'UserController.getUserInfo').middleware(jwtMiddleware);
+Route.get('/userRoomInfo', 'UserController.getUserRoomInfo').middleware(jwtMiddleware);
+Route.post('/userInfo', 'UserController.setUserInfo').middleware(jwtMiddleware);
 Route.get('/avatar', 'UserController.getAvatar').middleware(jwtMiddleware);
-Route.post('/avatar', 'UserController.setAvatar').middleware(jwtMiddleware);
 
 // Authentication
 Route.post('/login', 'UserController.login');
@@ -27,6 +28,7 @@ Route.post('/logout', 'UserController.logout').middleware(jwtMiddleware);
 Route.get('/room', 'RoomController.get').middleware(jwtMiddleware);
 Route.get('/assignees', 'RoomController.getAssignees').middleware(jwtMiddleware);
 Route.get('/members', 'RoomController.getMembers').middleware(jwtMiddleware);
+Route.get('/repository', 'RoomController.getRepository').middleware(jwtMiddleware);
 Route.get('/notifications', 'RoomController.getNotifications').middleware(jwtMiddleware);
 Route.post('/notifications', 'RoomController.readNotifications').middleware(jwtMiddleware);
 Route.post('/clearNotifications', 'RoomController.clearNotifications').middleware(jwtMiddleware);

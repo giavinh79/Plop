@@ -1,26 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import {
-  AutoComplete,
-  Popconfirm,
-  Input,
-  Form,
-  Radio,
-  Button,
-  Divider,
-  Select,
-  Skeleton,
-  Spin,
-  Upload,
-  Icon,
-} from 'antd';
+import { AutoComplete, Popconfirm, Input, Form, Radio, Button, Divider, Select, Row, Spin, Upload, Icon } from 'antd';
 import { displaySimpleNotification } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT } from '../../constants';
 import { retrieveAssignees, deleteIssue, getIssueById } from '../../utility/restCalls.js';
-import './style.css';
 import CommentBody from '../Comment/CommentBody.jsx';
+import ShareIssue from './ShareIssue.jsx';
+import './style.css';
 
 const { TextArea } = Input;
 
@@ -217,6 +205,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                   historyTrack.current ? history.goBack() : history.push('/dashboard');
                 }}
               />
+              <ShareIssue assignees={assignees} />
             </>
           )}
           {/* <div style="justify-content: center;display: flex;border-radius: 50%;height: 2.5rem;width: 2.5rem;margin: 0 1rem;border: 1px solid #ccc;align-items: center;"> */}

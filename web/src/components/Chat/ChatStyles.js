@@ -28,10 +28,23 @@ export const IconWrapper = styled.div`
 `;
 
 export const MembersOnlineWrapper = styled.span`
-  padding: 0.2rem 0.8rem;
+  cursor: pointer;
+  /* padding: 0.2rem 0.8rem;
   background-color: white;
   color: green;
-  border-radius: 8px;
+  border-radius: 8px; */
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+`;
+
+export const MembersOnline = styled.span`
+  font-size: 1rem;
+  font-weight: 500;
+  top: 13px;
+  right: 50px;
+  position: absolute;
+  color: #e2e2e2;
 `;
 
 export const UserChatBubble = styled.div`

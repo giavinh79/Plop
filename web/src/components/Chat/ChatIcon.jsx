@@ -14,16 +14,31 @@ export default function ChatIcon() {
   const [chatData, setChatData] = useState({
     messages: [],
     count: 0,
+    users: [],
   });
 
   useEffect(() => {
     subscribeToRoom(ws.current, chatData, setChat, setChatData, setChatLoading, setChatNotification); // connect to team's chat
+
+    return () => {
+      try {
+        if (ws.current) ws.current.close();
+      } catch (err) {
+        console.log(err);
+      }
+    };
   }, []);
 
   return (
     <ChatIconWrapper
       overlay={
-        <Chat chat={chat} chatCount={chatData.count} chatMessages={chatData.messages} setChatData={setChatData} />
+        <Chat
+          chat={chat}
+          chatCount={chatData.count}
+          chatUsers={chatData.users}
+          chatMessages={chatData.messages}
+          setChatData={setChatData}
+        />
       }
       placement='topRight'
       trigger={['click']}

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
-import { Skeleton, Table } from 'antd';
+import { Icon, Row, Skeleton, Table } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { pagination } from '../../constants';
 import { retrieveMembers } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
+import moment from 'moment';
 
 // Tiers of administration: 5
 // 4 - can't delete members
@@ -46,39 +47,31 @@ export default function ViewMembers() {
       key: 'administration',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (text) =>
-        text !== 'Online' ? (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div
-              style={{
-                height: '1rem',
-                width: '1rem',
-                backgroundColor: '#b23f3f',
-                borderRadius: '50%',
-                marginRight: '0.5rem',
-              }}
-            ></div>
-            Offline
-          </div>
-        ) : (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div
-              style={{
-                height: '1rem',
-                width: '1rem',
-                backgroundColor: '#40b33f',
-                borderRadius: '50%',
-                marginRight: '0.5rem',
-              }}
-            ></div>
-            Online
-          </div>
-        ),
+      title: (
+        <Row type='flex'>
+          Date Joined <Icon type='calendar' style={{ marginLeft: '0.5rem', display: 'flex', alignItems: 'center' }} />
+        </Row>
+      ),
+      dataIndex: 'date',
+      key: 'date',
+      render: (date) => (
+        <div style={{ display: 'flex', alignItems: 'center' }}>{moment(date).format('YYYY-MM-DD HH:mm:ss')}</div>
+      ),
     },
   ];
+
+  //   <div style={{ display: 'flex', alignItems: 'center' }}>
+  //   <div
+  //     style={{
+  //       height: '1rem',
+  //       width: '1rem',
+  //       backgroundColor: '#40b33f',
+  //       borderRadius: '50%',
+  //       marginRight: '0.5rem',
+  //     }}
+  //   ></div>
+  //   Online
+  // </div>
 
   return (
     <div style={layout}>

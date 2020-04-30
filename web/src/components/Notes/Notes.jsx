@@ -95,6 +95,7 @@ export default function Notes() {
   };
 
   const handleLayout = (layout) => {
+    console.log(layout);
     if (layoutData == null) {
       setLayoutData(layout);
     } else {

@@ -64,21 +64,20 @@ class RoomController {
       let membersPayload = [];
       let count = 1;
 
-      let status = 'offline'; // will need to use web sockets to determine this later on
-
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
-      let members = await Database.select('user_id').from('user_rooms').where('room_id', decryptedRoomId);
+      let members = await Database.select('user_id', 'role').from('user_rooms').where('room_id', decryptedRoomId);
 
       for (let member of members) {
-        let data = await Database.select('email').from('users').where('id', member.user_id);
+        let [data] = await Database.select('*').from('users').where('id', member.user_id);
+
         membersPayload.push({
           key: count,
-          member: data[0].email,
-          role: 'Developer',
+          member: data.email,
+          role: member.role || 'N/A',
           administration: '1',
-          status: status,
+          date: data.created_at,
         });
         count++;
       }
@@ -106,6 +105,22 @@ class RoomController {
       response.status(200).json(data.notifications);
     } catch (err) {
       console.log(`(room_getNotifications) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async getRepository({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+
+      let [repository] = await Database.select('repository').from('rooms').where('id', decryptedRoomId);
+      response.status(200).json(repository);
+    } catch (err) {
+      console.log(`(room_getRepository) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -191,12 +206,19 @@ class RoomController {
 
       const roomInfo = await Database.table('rooms').select('*').where('id', decryptedRoomId);
       const decryptPass = Encryption.decrypt(roomInfo[0].password);
-      const { name, description, maxMembers, adminApproval } = roomInfo[0];
+      const { name, description, maxMembers, adminApproval, repository } = roomInfo[0];
       const id = Encryption.encrypt(roomInfo[0].id);
 
-      response
-        .status(200)
-        .json({ name, description, decryptPass, id, maxMembers, private: roomInfo[0].private, adminApproval });
+      response.status(200).json({
+        name,
+        description,
+        decryptPass,
+        id,
+        maxMembers,
+        private: roomInfo[0].private,
+        adminApproval,
+        repository,
+      });
     } catch (err) {
       console.log(`(room_roomInfo) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
@@ -216,7 +238,8 @@ class RoomController {
       }
 
       // Cannot destructure private as it is a keyword
-      let { name, description, decryptPass, maxMembers, adminApproval } = request.body;
+      let { name, description, decryptPass, maxMembers, adminApproval, repository } = request.body;
+      console.log(request.body);
 
       await Database.table('rooms')
         .where('id', decryptedRoomId)
@@ -227,6 +250,7 @@ class RoomController {
           maxMembers: maxMembers,
           private: request.body.private,
           adminApproval: adminApproval,
+          repository: repository,
         });
       response.status(200).send();
     } catch (err) {

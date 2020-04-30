@@ -1,19 +1,26 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Card, Icon, Input } from 'antd';
-import { MembersOnlineWrapper } from './ChatStyles';
+import { Card, Icon, Input, List } from 'antd';
+import { MembersOnlineWrapper, MembersOnline } from './ChatStyles';
 import ChatMessage from './ChatMessage';
 import UserChatMessage from './UserChatMessage';
 import InfiniteScroll from 'react-infinite-scroller';
 import './Chat.css'; // to override ant design
+import ChatMember from './ChatMember';
 
-export default function Chat({ chat, chatCount, chatMessages, setChatData }) {
-  // const scrollRef = useRef([]);
-  const inputRef = useRef();
+export default function Chat({ chat, chatCount, chatMessages, chatUsers, setChatData }) {
   const [userCount, setUserCount] = useState(0);
+  const [usersOnlineView, setUsersOnlineView] = useState(false);
+  const inputRef = useRef();
 
   useEffect(() => {
     setUserCount(chatCount || 0);
-    inputRef.current.focus();
+    try {
+      if (inputRef.current) inputRef.current.focus();
+    } catch (err) {}
+
+    return () => {
+      console.log('dismount');
+    };
   }, [chat, chatCount, chatMessages]);
 
   const loadMessages = () => {
@@ -43,27 +50,7 @@ export default function Chat({ chat, chatCount, chatMessages, setChatData }) {
       }
     }
 
-    let parent = React.createElement(
-      'div',
-      [],
-      [
-        chatDOM,
-        // chatMessages.map((item, key) => {
-        //   return item.userMessage ? (
-        //     <UserChatMessage message={item.message} key={key} date={item.dateCreated} ref={scrollRef} />
-        //   ) : (
-        //     <ChatMessage
-        //       user={item.user}
-        //       message={item.message}
-        //       key={key}
-        //       date={item.dateCreated}
-        //       avatar={item.avatar}
-        //       ref={scrollRef}
-        //     />
-        //   );
-        // }),
-      ]
-    );
+    let parent = React.createElement('div', [], [chatDOM]);
 
     setTimeout(() => {
       if (document.getElementById('last-chat-element')) {
@@ -105,8 +92,36 @@ export default function Chat({ chat, chatCount, chatMessages, setChatData }) {
   return (
     <>
       <Card
-        title={<span style={{ marginBottom: '-2rem', marginRight: '0.3rem', fontSize: '1.3rem' }}>Team Chat</span>}
-        extra={<MembersOnlineWrapper>{userCount} online</MembersOnlineWrapper>}
+        title={
+          <span style={{ marginBottom: '-2rem', marginRight: '0.3rem', fontSize: '1.3rem' }}>
+            {usersOnlineView ? 'Online Users' : 'Team Chat'}
+          </span>
+        }
+        extra={
+          usersOnlineView ? (
+            <div
+              style={{ cursor: 'pointer', color: 'white', marginTop: '-20px' }}
+              onClick={() => setUsersOnlineView(false)}
+            >
+              <Icon type='arrow-left' /> Back
+            </div>
+          ) : (
+            <MembersOnlineWrapper onClick={() => setUsersOnlineView(true)}>
+              <MembersOnline>Online Users: {userCount}</MembersOnline>
+              <Icon
+                type='info-circle'
+                theme='filled'
+                style={{
+                  fontSize: '1.5rem',
+                  top: '13px',
+                  right: '13px',
+                  color: 'white',
+                  position: 'absolute',
+                }}
+              />
+            </MembersOnlineWrapper>
+          )
+        }
         headStyle={{ backgroundColor: '#477084', color: 'white' }}
         style={{
           width: 500,
@@ -114,41 +129,42 @@ export default function Chat({ chat, chatCount, chatMessages, setChatData }) {
         }}
         className='chat-wrapper'
       >
-        <InfiniteScroll
-          // pageStart={1}
-          loadMore={handleLoadMore}
-          // hasMore={true || false}
-          useWindow={false}
-          isReverse={true}
-        >
-          {loadMessages()}
-          {/* {chatMessages.map((item, key) => {
-            return item.userMessage ? (
-              <UserChatMessage message={item.message} key={key} date={item.dateCreated} ref={scrollRef} />
-            ) : (
-              <ChatMessage
-                user={item.user}
-                message={item.message}
-                key={key}
-                date={item.dateCreated}
-                avatar={item.avatar}
-                ref={scrollRef}
-              />
-            );
-          })} */}
-        </InfiniteScroll>
+        {usersOnlineView ? (
+          <List
+            // bordered
+            dataSource={chatUsers || []}
+            renderItem={(item) => <ChatMember member={item} />}
+            style={{
+              maxHeight: '24rem',
+            }}
+          />
+        ) : (
+          <>
+            <InfiniteScroll
+              // pageStart={1}
+              loadMore={handleLoadMore}
+              // hasMore={true || false}
+              useWindow={false}
+              isReverse={true}
+              style={{ height: '408px', overflow: 'auto', padding: '1.2rem' }}
+            >
+              {loadMessages()}
+            </InfiniteScroll>
+            <Input
+              allowClear
+              style={{ height: '2rem', width: '100%', marginTop: '-2rem', borderRadius: 0 }}
+              placeholder='Write your message here'
+              suffix={
+                <Icon type='enter' style={{ cursor: 'pointer', color: 'rgba(0,0,0,.45)' }} onClick={handleMessage} />
+              }
+              className='chat-input'
+              onPressEnter={handleMessage}
+              ref={inputRef}
+              disabled={chat == null}
+            />
+          </>
+        )}
       </Card>
-
-      <Input
-        allowClear
-        style={{ height: '2rem', width: '100%', marginTop: '-2rem', borderRadius: 0 }}
-        placeholder='Write your message here'
-        suffix={<Icon type='enter' style={{ cursor: 'pointer', color: 'rgba(0,0,0,.45)' }} onClick={handleMessage} />}
-        className='chat-input'
-        onPressEnter={handleMessage}
-        ref={inputRef}
-        disabled={chat == null}
-      />
     </>
   );
 }

@@ -3,6 +3,7 @@
 const Ws = use('Ws');
 const Database = use('Database');
 const Encryption = use('Encryption');
+let userEmails = new Set();
 let userCount = new Map();
 let users = new Set();
 
@@ -25,8 +26,10 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
     const [room] = await Database.from('rooms').where('websocketId', socket.topic.substring(5, socket.topic.length));
     const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', room.id);
     if (result.length === 0) socket.close();
+    console.log(`User connected to ${socket.topic} as ${user.email}`);
 
-    console.log(`User connected with socket id - ${socket.id}`);
+    const topic = Ws.getChannel('room:*').topic(socket.topic);
+    userEmails.add(user.email);
 
     if (!users.has(socket.id)) {
       users.add(socket.id);
@@ -35,7 +38,7 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
       } else {
         let count = userCount.get(socket.topic);
         userCount.set(socket.topic, count + 1);
-        socket.broadcastToAll('message', { type: 0, count: count + 1 });
+        socket.broadcastToAll('message', { type: 0, count: count + 1, users: [...userEmails] });
       }
     }
 
@@ -55,13 +58,14 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
 
     socket.on('close', () => {
       console.log('user disconnected');
+      userEmails.delete(user.email);
       users.delete(socket.id);
       let count = userCount.get(socket.topic);
       userCount.set(socket.topic, count - 1);
-      socket.broadcast('message', { type: 0, count: userCount.get(socket.topic) });
+      topic.broadcast('message', { type: 0, count: userCount.get(socket.topic), users: [...userEmails] });
     });
   } catch (err) {
-    console.log('Socket Error');
+    console.log(`Socket Error ${err}`);
     socket.close();
   }
 })

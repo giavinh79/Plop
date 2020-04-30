@@ -47,6 +47,7 @@ export default function Settings() {
     maxMembers: '4',
     adminApproval: false,
     private: false,
+    repository: null,
   });
 
   useEffect(() => {
@@ -153,7 +154,12 @@ export default function Settings() {
               ) : (
                 <div style={{ flex: 1 }}>
                   <Text>Repository Link: </Text>
-                  <Input defaultValue={'https://github.com'} autoComplete='new-password' type='text' disabled />
+                  <Input
+                    defaultValue={state.repository || 'https://github.com'}
+                    autoComplete='new-password'
+                    type='text'
+                    onChange={(e) => setState({ ...state, repository: e.target.value })}
+                  />
                 </div>
               )}
             </div>
@@ -259,12 +265,6 @@ export default function Settings() {
                         <Option value='5'>5</Option>
                       </Select>
                     </div>
-                    {/* <div>
-                      <p style={styles.text}>Repository Link: </p>
-                      <a href='https://github.com' target='_blank' rel='noopener noreferrer'>
-                        https://github.com
-                      </a>
-                    </div> */}
                   </div>
                   <div
                     style={{

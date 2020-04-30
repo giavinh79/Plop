@@ -10,18 +10,25 @@ const UserSettings2 = ({ displayUserModal, form }) => {
   const [theme, setTheme] = useContext(ThemeContext);
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
+
   const [email, setEmail] = useState('Please enter email');
   const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || '1');
+  const [role, setRole] = useState(null);
   const { getFieldDecorator } = form;
 
   useEffect(() => {
     (async function () {
-      const { data } = await axios.get(`${API_ENDPOINT}/userInfo`);
-      setLoadingData(false);
+      // Retrieving independent user information
+      let { data } = await axios.get(`${API_ENDPOINT}/userInfo`);
       let avatarIndex = data.avatar.toString();
       setEmail(data.email);
       setAvatar(avatarIndex);
       localStorage.setItem('avatar', avatarIndex);
+
+      // Retrieving user information linked to room
+      let res = await axios.get(`${API_ENDPOINT}/userRoomInfo`);
+      setRole(res.data.role);
+      setLoadingData(false);
     })().catch((err) => {
       console.log(err);
     });
@@ -33,7 +40,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
 
   const handleSave = async () => {
     setLoadingSave(true);
-    await axios.post(`${API_ENDPOINT}/avatar`, { avatar });
+    await axios.post(`${API_ENDPOINT}/userInfo`, { avatar, role });
     localStorage.setItem('avatar', avatar);
     setTimeout(() => {
       setLoadingSave(false);
@@ -65,7 +72,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
       width={360}
       onClose={handleClose}
       visible={true}
-      bodyStyle={{ paddingBottom: 80 }}
+      bodyStyle={{ paddingBottom: 80, opacity: loadingData ? 0.5 : 1, pointerEvents: loadingData ? 'none' : 'auto' }}
     >
       <Form layout='vertical' hideRequiredMark>
         <Row gutter={16}>
@@ -87,9 +94,9 @@ const UserSettings2 = ({ displayUserModal, form }) => {
             <Form.Item
               label={
                 <div>
-                  Avatar{' '}
+                  Avatar
                   <Tooltip title='Displays only for comments or chat'>
-                    <Icon type='question-circle-o' style={{ paddingRight: '0.3rem' }} />
+                    <Icon type='question-circle-o' style={{ padding: '0 0.3rem' }} />
                   </Tooltip>
                 </div>
               }
@@ -183,13 +190,22 @@ const UserSettings2 = ({ displayUserModal, form }) => {
           </Col>
           <Col span={24}>
             <Form.Item label='Role'>
-              <Input placeholder='i.e. Frontend Developer' type='text' disabled maxLength={50} />
+              <Input type='text' maxLength={50} onChange={(e) => setRole(e.target.value)} value={role || ''} />
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col span={24}>
-            <Form.Item label='Activity Overview'>
+            <Form.Item
+              label={
+                <div>
+                  Activity Overview
+                  <Tooltip title='Team specific logs for user'>
+                    <Icon type='question-circle-o' style={{ padding: '0 0.3rem' }} />
+                  </Tooltip>
+                </div>
+              }
+            >
               {getFieldDecorator('description', {
                 rules: [
                   {

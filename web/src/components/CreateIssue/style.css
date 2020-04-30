@@ -4,6 +4,28 @@
   padding: 1rem;
 }
 
+.ant-popover-title {
+  padding-top: 1rem;
+  border-bottom: none;
+  font-size: 17px;
+  color: rgba(80, 80, 80, 0.85);
+  line-height: 24px;
+  text-align: center;
+}
+
+.shareButton {
+  display: flex;
+  cursor: pointer;
+  height: 2rem;
+  align-items: center;
+  padding: 1.2rem 0.5rem;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  border: 1px solid #ccc;
+  margin-left: auto;
+}
+
 .createIssue .ant-form-item-label {
   text-align: left;
 }

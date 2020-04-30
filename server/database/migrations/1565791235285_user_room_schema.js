@@ -10,6 +10,7 @@ class UserRoomSchema extends Schema {
       table.integer('user_id').unsigned().references('id').inTable('users');
       table.integer('room_id').unsigned().references('id').inTable('rooms');
       table.string('role', 50);
+      table.json('activity');
       table.json('notifications');
       table.integer('last_checked_chat');
       table.integer('administration_level');

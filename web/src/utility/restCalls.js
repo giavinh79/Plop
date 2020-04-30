@@ -92,6 +92,14 @@ const getChat = async (issue) => {
   }
 };
 
+const getRepository = async () => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/repository`);
+  } catch (err) {
+    throw new err();
+  }
+};
+
 const joinTeam = async (data) => {
   try {
     return await axios.post(`${API_ENDPOINT}/joinRoom`, data);
@@ -166,6 +174,7 @@ export {
   getAvatar,
   getChat,
   getIssueById,
+  getRepository,
   joinTeam,
   logout,
   retrieveAssignees,

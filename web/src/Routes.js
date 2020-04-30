@@ -81,7 +81,6 @@ export default function Routes() {
                       <ProtectedRoute path={`${url}/settings`} component={Settings} />
                       <ProtectedRoute path={`${url}/help`} component={Help} />
                       <Redirect push to='/' />
-                      {/*  */}
                     </Switch>
                   </DashboardWrapper>
                   <ChatIcon />

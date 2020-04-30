@@ -11,8 +11,67 @@
 .chat-wrapper .ant-card-body {
   overflow: auto;
   height: 452px;
+  padding: 0;
 }
 
 .chat-input > .ant-input {
   border-radius: 0;
+}
+
+.ring-container {
+  margin-left: auto;
+}
+
+.circle {
+  width: 15px;
+  height: 15px;
+  background-color: #62bd19;
+  border-radius: 50%;
+  position: relative;
+  top: -26px;
+  left: 8px;
+}
+
+.ringring {
+  border: 3px solid #62bd19;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  height: 25px;
+  width: 25px;
+  position: relative;
+  top: -6px;
+  left: 3px;
+  animation: pulsate 1s ease-out;
+  animation-iteration-count: infinite;
+  -webkit-animation: pulsate 1s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  opacity: 0;
+}
+
+@keyframes pulsate {
+  0% {
+    -webkit-transform: scale(0.1, 0.1);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1.2, 1.2);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes pulsate {
+  0% {
+    -webkit-transform: scale(0.1, 0.1);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1.2, 1.2);
+    opacity: 0;
+  }
 }

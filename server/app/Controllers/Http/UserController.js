@@ -1,6 +1,7 @@
 'use strict';
 
 const nodemailer = require('nodemailer');
+const Encryption = use('Encryption');
 const Database = use('Database');
 const Env = use('Env');
 const User = use('App/Models/User');
@@ -83,23 +84,49 @@ class UserController {
   async getUserInfo({ auth, response }) {
     try {
       const user = await auth.getUser();
-
       let res = await Database.select('email', 'avatar').from('users').where('id', user.id);
 
       const date = new Date();
       response.status(200).json({ avatar: res[0].avatar, email: res[0].email, date });
     } catch (err) {
-      console.log(`(user_avatar_get) ${new Date()}: ${err.message}`);
+      console.log(`(user_info_get) ${new Date()}: ${err.message}`);
       response.status(404).send('Error');
     }
   }
 
-  async setAvatar({ request, auth, response }) {
+  async getUserRoomInfo({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const { avatar } = request.body;
+      let [data] = await Database.select('role')
+        .from('user_rooms')
+        .where({
+          room_id: Encryption.decrypt(request.cookie('room')),
+          user_id: user.id,
+        });
+      response.status(200).json(data);
+    } catch (err) {
+      console.log(`(user_roomInfo_get) ${new Date()}: ${err.message}`);
+      response.status(404).send('Error');
+    }
+  }
 
-      await Database.table('users').where('id', user.id).update('avatar', avatar);
+  // Pertains to both user and user-room data
+  async setUserInfo({ request, auth, response }) {
+    try {
+      const user = await auth.getUser();
+      const { avatar, role } = request.body;
+
+      await Database.table('users').where('id', user.id).update({ avatar: avatar });
+
+      if (role != null) {
+        await Database.table('user_rooms')
+          .where({
+            room_id: Encryption.decrypt(request.cookie('room')),
+            user_id: user.id,
+          })
+          .update({ role: role });
+      }
+
       response.status(200).send();
     } catch (err) {
       console.log(`(user_avatar_set) ${new Date()}: ${err.message}`);

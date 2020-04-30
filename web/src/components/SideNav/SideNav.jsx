@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Menu, Icon, Tooltip } from 'antd';
 import { ThemeContext } from '../../colors/theme';
 import { withRouter, useHistory } from 'react-router-dom';
+import { getRepository } from '../../utility/restCalls';
 import 'antd/dist/antd.css';
 import './SideNav.css';
 
@@ -26,9 +27,19 @@ let navigationMap = {
 // If no route exists from JSON map, may be dynamic issue route
 
 function SideNav({ path }) {
+  const [repository, setRepository] = useState('https://github.com');
   const [theme] = useContext(ThemeContext);
   const history = useHistory();
   let selectedNavigation = navigationMap[path] || ['1'];
+
+  useEffect(() => {
+    (async () => {
+      let { data } = await getRepository();
+      setRepository(data.repository || 'https://github.com');
+    })().catch((err) => {
+      console.log(err);
+    });
+  }, []);
 
   return (
     <Menu
@@ -119,7 +130,7 @@ function SideNav({ path }) {
       <Menu.Item
         key='sub6'
         onClick={() => {
-          window.open('https://github.com', '_blank');
+          window.open(repository, '_blank');
         }}
       >
         <Icon type='github' />
