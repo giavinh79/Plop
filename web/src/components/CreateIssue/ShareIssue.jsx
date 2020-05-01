@@ -53,7 +53,12 @@ export default function ShareIssue({ assignees }) {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
-          <Button type='primary' style={{ width: '100%', marginTop: '1rem' }} onClick={handleSubmit}>
+          <Button
+            type='primary'
+            style={{ width: '100%', marginTop: '1rem' }}
+            onClick={handleSubmit}
+            disabled={users.length === 0 || message == null || message.length === 0}
+          >
             Share
           </Button>
         </div>

@@ -3,8 +3,9 @@ import { getChat } from '../utility/restCalls';
 export const subscribeToRoom = (ws, chatData, setChat, setChatData, setChatLoading, setChatNotification) => {
   ws.connect(); // connect to the server
 
-  ws.on('open', () => {
+  ws.on('open', async () => {
     let chat = ws.subscribe(`room:${JSON.parse(localStorage.getItem('currentTeam')).ws_id}`);
+    console.log(chat);
     setChat(chat);
 
     chat.on('ready', async () => {
@@ -32,7 +33,7 @@ export const subscribeToRoom = (ws, chatData, setChat, setChatData, setChatLoadi
       switch (data.type) {
         case 0:
           setChatData((chatData) => {
-            return { ...chatData, count: data.count, users: data.users };
+            return { ...chatData, users: data.users };
           });
           break;
         case 1:

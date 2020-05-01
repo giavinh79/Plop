@@ -10,6 +10,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
   const [theme, setTheme] = useContext(ThemeContext);
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
+  const [visible, setVisible] = useState(true);
 
   const [email, setEmail] = useState('Please enter email');
   const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || '1');
@@ -35,7 +36,10 @@ const UserSettings2 = ({ displayUserModal, form }) => {
   }, []);
 
   const handleClose = () => {
-    displayUserModal(false);
+    setVisible(false);
+    setTimeout(() => {
+      displayUserModal(false);
+    }, 300);
   };
 
   const handleSave = async () => {
@@ -71,7 +75,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
       }
       width={360}
       onClose={handleClose}
-      visible={true}
+      visible={visible}
       bodyStyle={{ paddingBottom: 80, opacity: loadingData ? 0.5 : 1, pointerEvents: loadingData ? 'none' : 'auto' }}
     >
       <Form layout='vertical' hideRequiredMark>

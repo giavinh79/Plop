@@ -62,3 +62,12 @@
 .ant-upload-drag {
   height: 15rem !important;
 }
+
+.ant-popover-inner {
+  background-color: #40a9ff;
+}
+
+.ant-popover-inner > div {
+  clip-path: polygon(9% 0, 100% 0, 100% 100%, 0 100%, 0 15%);
+  background-color: white;
+}

@@ -3,9 +3,8 @@
 const Ws = use('Ws');
 const Database = use('Database');
 const Encryption = use('Encryption');
-let userEmails = new Set();
-let userCount = new Map();
-let users = new Set();
+let usersInfo = new Set(); // info to send back to client side regarding a user
+// let users = new Set(); // track users currently connected by their socket id
 
 const jwtMiddleware = async ({ request }, next) => {
   try {
@@ -25,22 +24,26 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
     let user = await auth.getUser();
     const [room] = await Database.from('rooms').where('websocketId', socket.topic.substring(5, socket.topic.length));
     const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', room.id);
+
     if (result.length === 0) socket.close();
     console.log(`User connected to ${socket.topic} as ${user.email}`);
 
+    // after all requests, stop loading of chat!
     const topic = Ws.getChannel('room:*').topic(socket.topic);
-    userEmails.add(user.email);
-
-    if (!users.has(socket.id)) {
-      users.add(socket.id);
-      if (!userCount.has(socket.topic)) {
-        userCount.set(socket.topic, 1);
-      } else {
-        let count = userCount.get(socket.topic);
-        userCount.set(socket.topic, count + 1);
-        socket.broadcastToAll('message', { type: 0, count: count + 1, users: [...userEmails] });
+    for (let item of usersInfo) {
+      if (item.email === user.email) {
+        usersInfo.delete(item);
       }
     }
+    usersInfo.add({ email: user.email, role: result[0].role, avatar: user.avatar, topic: socket.topic });
+    socket.broadcastToAll('message', {
+      type: 0,
+      users: [...usersInfo].filter((item) => {
+        console.log(socket.topic);
+        console.log(item);
+        return item.topic === socket.topic;
+      }),
+    });
 
     socket.on('message', async (data) => {
       let date = new Date();
@@ -57,12 +60,21 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
     });
 
     socket.on('close', () => {
-      console.log('user disconnected');
-      userEmails.delete(user.email);
-      users.delete(socket.id);
-      let count = userCount.get(socket.topic);
-      userCount.set(socket.topic, count - 1);
-      topic.broadcast('message', { type: 0, count: userCount.get(socket.topic), users: [...userEmails] });
+      console.log(`User ${user.email} has disconnected`);
+      for (let item of usersInfo) {
+        if (item.email === user.email) {
+          usersInfo.delete(item);
+        }
+      }
+
+      try {
+        topic.broadcastToAll('message', { type: 0, users: [...usersInfo] });
+      } catch (err) {
+        console.log(`Socket disconnect error : ${err}`);
+        Ws.getChannel('room:*')
+          .topic(socket.topic)
+          .broadcastToAll('message', { type: 0, users: [...usersInfo] });
+      }
     });
   } catch (err) {
     console.log(`Socket Error ${err}`);

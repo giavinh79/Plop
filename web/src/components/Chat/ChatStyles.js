@@ -29,10 +29,6 @@ export const IconWrapper = styled.div`
 
 export const MembersOnlineWrapper = styled.span`
   cursor: pointer;
-  /* padding: 0.2rem 0.8rem;
-  background-color: white;
-  color: green;
-  border-radius: 8px; */
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */

@@ -24,8 +24,6 @@ let navigationMap = {
   '/dashboard/help': ['14'],
 };
 
-// If no route exists from JSON map, may be dynamic issue route
-
 function SideNav({ path }) {
   const [repository, setRepository] = useState('https://github.com');
   const [theme] = useContext(ThemeContext);
@@ -60,6 +58,7 @@ function SideNav({ path }) {
       >
         <Menu.ItemGroup key='g1' title='Filter'>
           <Menu.Item key='1' onClick={() => history.push('/dashboard')}>
+            {/* <a href='/dashboard/' style={{ color: 'rgba(0, 0, 0, 0.65)' }} onClick={(e) => e.preventDefault()}></a> */}
             All
           </Menu.Item>
           <Menu.Item key='2' onClick={() => history.push('/dashboard/user')}>

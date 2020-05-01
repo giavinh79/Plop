@@ -64,7 +64,7 @@ export default function Help() {
           </div> */}
         </Row>
       </div>
-      <Row style={{ padding: '2rem', height: '40rem', backgroundColor: 'rgba(204, 214, 232, 0.62)' }}>
+      {/* <Row style={{ padding: '2rem', height: '40rem', backgroundColor: 'rgba(204, 214, 232, 0.62)' }}>
         <h1 style={styles.sectionHeader}>Introduction</h1>
       </Row>
       <Row style={{ padding: '2rem', height: '40rem' }}>
@@ -72,7 +72,7 @@ export default function Help() {
       </Row>
       <Row style={{ padding: '2rem', height: '40rem', backgroundColor: '#c9dfec' }}>
         <h1 style={styles.sectionHeader}>Settings</h1>
-      </Row>
+      </Row> */}
     </Col>
   );
 }

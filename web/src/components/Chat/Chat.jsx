@@ -7,21 +7,15 @@ import InfiniteScroll from 'react-infinite-scroller';
 import './Chat.css'; // to override ant design
 import ChatMember from './ChatMember';
 
-export default function Chat({ chat, chatCount, chatMessages, chatUsers, setChatData }) {
-  const [userCount, setUserCount] = useState(0);
+export default function Chat({ chat, chatMessages, chatUsers, setChatData }) {
   const [usersOnlineView, setUsersOnlineView] = useState(false);
   const inputRef = useRef();
 
   useEffect(() => {
-    setUserCount(chatCount || 0);
     try {
       if (inputRef.current) inputRef.current.focus();
     } catch (err) {}
-
-    return () => {
-      console.log('dismount');
-    };
-  }, [chat, chatCount, chatMessages]);
+  }, [chat, chatMessages]);
 
   const loadMessages = () => {
     let chatDOM = [];
@@ -107,7 +101,7 @@ export default function Chat({ chat, chatCount, chatMessages, chatUsers, setChat
             </div>
           ) : (
             <MembersOnlineWrapper onClick={() => setUsersOnlineView(true)}>
-              <MembersOnline>Online Users: {userCount}</MembersOnline>
+              <MembersOnline>Online Users: {Array.isArray(chatUsers) ? chatUsers.length : 0}</MembersOnline>
               <Icon
                 type='info-circle'
                 theme='filled'
@@ -122,7 +116,11 @@ export default function Chat({ chat, chatCount, chatMessages, chatUsers, setChat
             </MembersOnlineWrapper>
           )
         }
-        headStyle={{ backgroundColor: '#477084', color: 'white' }}
+        headStyle={{
+          // backgroundColor: '#477084',
+          color: 'white',
+          background: 'linear-gradient(to right, rgb(112, 145, 177) 0%, rgb(81, 125, 146) 100%)',
+        }}
         style={{
           width: 500,
           maxHeight: 500,

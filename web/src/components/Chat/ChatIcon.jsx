@@ -13,7 +13,6 @@ export default function ChatIcon() {
   const [chatLoading, setChatLoading] = useState(true);
   const [chatData, setChatData] = useState({
     messages: [],
-    count: 0,
     users: [],
   });
 
@@ -21,24 +20,14 @@ export default function ChatIcon() {
     subscribeToRoom(ws.current, chatData, setChat, setChatData, setChatLoading, setChatNotification); // connect to team's chat
 
     return () => {
-      try {
-        if (ws.current) ws.current.close();
-      } catch (err) {
-        console.log(err);
-      }
+      if (ws.current) ws.current.close();
     };
   }, []);
 
   return (
     <ChatIconWrapper
       overlay={
-        <Chat
-          chat={chat}
-          chatCount={chatData.count}
-          chatUsers={chatData.users}
-          chatMessages={chatData.messages}
-          setChatData={setChatData}
-        />
+        <Chat chat={chat} chatUsers={chatData.users} chatMessages={chatData.messages} setChatData={setChatData} />
       }
       placement='topRight'
       trigger={['click']}
