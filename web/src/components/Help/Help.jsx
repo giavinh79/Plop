@@ -1,17 +1,30 @@
 import React from 'react';
 import { layout, subheader } from '../../globalStyles';
-import { Col, Divider, Row } from 'antd';
+import { Breadcrumb, Col, Icon, Divider, Row } from 'antd';
 
 export default function Help() {
   return (
     <Col type='flex'>
       <div style={layout}>
-        <p style={subheader}>Help</p>
-        <div>
-          Plop is an application that allows users to collaborate and manage projects within a small team. For any
-          questions, concerns, or feedback please email plopwebapp@gmail.com.
-        </div>
-        <Row type='flex' style={{ flexWrap: 'nowrap' }}>
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            {/* <Icon type='smile' /> */}
+            <span>Help</span>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <a href=''>Issues</a>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <a href=''>Description</a>
+          </Breadcrumb.Item>
+        </Breadcrumb>
+        <p style={{ fontSize: '2.4rem', margin: '1rem 0', textAlign: 'center' }}>Introduction</p>
+
+        <Row type='flex' style={{ flexWrap: 'nowrap', justifyContent: 'flex-end', padding: '1rem 0' }}>
+          <div>
+            Plop is an application that allows users to collaborate and manage projects within a small team. For any
+            questions, concerns, or feedback please email plopwebapp@gmail.com.
+          </div>
           <div style={styles.table}>
             <h2 style={{ marginTop: '1rem' }}>Table of Contents</h2>
             <div>
@@ -81,7 +94,7 @@ const styles = {
   table: {
     border: '1px solid #ccc',
     padding: '0.5rem 1rem',
-    margin: '1rem 1rem 1rem 0',
+    margin: '0 1rem 1rem 0',
     minWidth: '15rem',
     borderRadius: '10px',
   },
