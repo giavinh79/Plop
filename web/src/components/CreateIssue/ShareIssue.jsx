@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Popover, Input, Select } from 'antd';
+import { Button, message as Message, Popover, Input, Select } from 'antd';
+import { sendShareIssueNotification } from '../../utility/restCalls';
 import './style.css';
 
 const { Option } = Select;
 
-export default function ShareIssue({ assignees }) {
+export default function ShareIssue({ assignees, issue, issueId }) {
+  const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState('');
   const [visible, setVisible] = useState(false);
@@ -21,9 +23,19 @@ export default function ShareIssue({ assignees }) {
     }
   };
 
-  const handleSubmit = () => {
-    setVisible(false);
-    handleUnmount(false);
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      await sendShareIssueNotification(issue, issueId, message, users);
+      Message.success('Issue successfully shared!');
+    } catch (err) {
+      Message.error(`Issue could not be shared. ${err}`);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+        handleUnmount(false);
+      }, 500);
+    }
   };
 
   return (
@@ -52,12 +64,14 @@ export default function ShareIssue({ assignees }) {
             style={{ marginTop: '1rem' }}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            maxLength={100}
           />
           <Button
             type='primary'
             style={{ width: '100%', marginTop: '1rem' }}
             onClick={handleSubmit}
             disabled={users.length === 0 || message == null || message.length === 0}
+            loading={loading}
           >
             Share
           </Button>

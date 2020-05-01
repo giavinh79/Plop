@@ -48,6 +48,7 @@ Route.get('/comments/:id', 'IssueController.getComments').middleware(jwtMiddlewa
 Route.post('/comment', 'IssueController.setComments').middleware(jwtMiddleware);
 Route.post('/issueProgress', 'IssueController.updateProgress').middleware(jwtMiddleware);
 Route.post('/issue', 'IssueController.update').middleware(jwtMiddleware);
+Route.post('/shareIssue', 'IssueController.shareIssue').middleware(jwtMiddleware);
 Route.put('/issue', 'IssueController.create').middleware(jwtMiddleware);
 Route.delete('/issue/:id', 'IssueController.delete').middleware(jwtMiddleware);
 

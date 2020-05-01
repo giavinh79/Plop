@@ -205,7 +205,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                   historyTrack.current ? history.goBack() : history.push('/dashboard');
                 }}
               />
-              <ShareIssue assignees={assignees} />
+              <ShareIssue assignees={assignees} issue={data.title} issueId={data.id} />
             </>
           )}
           {/* <div style="justify-content: center;display: flex;border-radius: 50%;height: 2.5rem;width: 2.5rem;margin: 0 1rem;border: 1px solid #ccc;align-items: center;"> */}

@@ -75,7 +75,7 @@ class IssueController {
               .update('notifications', JSON.stringify(data.notifications));
           }
         }
-      } else {
+      } else if (type === 3) {
         let [user_data] = await Database.from('users').select('id').where('email', assignee);
         let [data] = await Database.table('user_rooms')
           .where('user_id', user_data.id)
@@ -531,6 +531,55 @@ class IssueController {
       response.status(200).send();
     } catch (err) {
       console.log(`(issue_updateProgress) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async shareIssue({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in this room');
+
+      const { issue, issueId, message, users } = request.body;
+      let promiseArray = [];
+
+      for (let email of users) {
+        promiseArray.push(
+          new Promise(async (resolve, reject) => {
+            try {
+              let [user_data] = await Database.from('users').select('id').where('email', email);
+              let [data] = await Database.table('user_rooms')
+                .where('user_id', user_data.id)
+                .where('room_id', decryptedRoomId)
+                .select('notifications');
+              data.notifications.push({
+                date: new Date(),
+                issue,
+                issueId,
+                notificationId: data.notifications.length,
+                sourceUser: user.email,
+                message,
+                status: 0,
+                type: 4,
+              });
+              await Database.table('user_rooms')
+                .where('user_id', user_data.id)
+                .where('room_id', decryptedRoomId)
+                .update('notifications', JSON.stringify(data.notifications));
+              resolve();
+            } catch (err) {
+              reject(err);
+            }
+          })
+        );
+      }
+      await Promise.all(promiseArray);
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(issue_share) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }

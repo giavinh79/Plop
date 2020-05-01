@@ -156,6 +156,14 @@ const sendNotificationsRead = async (data) => {
   }
 };
 
+const sendShareIssueNotification = async (issue, issueId, message, users) => {
+  try {
+    await axios.post(`${API_ENDPOINT}/shareIssue`, { issue, issueId, message, users });
+  } catch (err) {
+    throw err;
+  }
+};
+
 const updateIssue = async (id, status) => {
   try {
     await axios.post(`${API_ENDPOINT}/issueProgress`, { id: id, status: status });
@@ -181,6 +189,7 @@ export {
   retrieveMembers,
   retrieveNotifications,
   retrieveTeams,
+  sendShareIssueNotification,
   sendNotificationsRead,
   updateIssue,
 };

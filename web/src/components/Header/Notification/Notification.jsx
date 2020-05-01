@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Modal, Button, Icon, Popconfirm, Row, List, Avatar, Skeleton } from 'antd';
+import { Avatar, Modal, Button, Icon, Popconfirm, Row, Typography, List, Skeleton } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { clearNotifications, sendNotificationsRead } from '../../../utility/restCalls';
 import { displaySimpleNotification } from '../../../utility/services';
 import 'antd/dist/antd.css';
+
+const { Text } = Typography;
 
 // Message component for when sockets are implemented
 
@@ -90,6 +92,23 @@ export default function Notification({ data, setNotificationData, setShowNotific
             issueId: item.issueId,
             description: `${item.sourceUser} has commented on task '${item.issue}'.`,
             event: 'There are new comments on your issue.',
+            status: item.status,
+            type: item.type,
+          },
+          ...notifications,
+        ]);
+        break;
+      case 4:
+        setNotifications((notifications) => [
+          {
+            id: item.notificationId,
+            issueId: item.issueId,
+            description: (
+              <span>
+                {item.sourceUser}: <Text code>{item.message}</Text>
+              </span>
+            ),
+            event: `Issue '${item.issue}' has been shared with you.`,
             status: item.status,
             type: item.type,
           },

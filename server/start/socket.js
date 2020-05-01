@@ -39,8 +39,6 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
     socket.broadcastToAll('message', {
       type: 0,
       users: [...usersInfo].filter((item) => {
-        console.log(socket.topic);
-        console.log(item);
         return item.topic === socket.topic;
       }),
     });
@@ -70,7 +68,6 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
       try {
         topic.broadcastToAll('message', { type: 0, users: [...usersInfo] });
       } catch (err) {
-        console.log(`Socket disconnect error : ${err}`);
         Ws.getChannel('room:*')
           .topic(socket.topic)
           .broadcastToAll('message', { type: 0, users: [...usersInfo] });
