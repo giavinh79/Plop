@@ -4,6 +4,7 @@ export const ChatBubble = styled.div`
   border-radius: 7px;
   padding: 0.3rem 0.7rem;
   border: 1px solid #ccc;
+  border-bottom-left-radius: 0;
   width: fit-content;
 `;
 
@@ -47,7 +48,7 @@ export const UserChatBubble = styled.div`
   width: fit-content;
   max-width: 80%;
   border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+  border-bottom-right-radius: 0;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
   padding: 0.4rem 0.7rem;

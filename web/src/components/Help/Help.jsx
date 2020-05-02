@@ -1,10 +1,10 @@
 import React from 'react';
-import { layout, subheader } from '../../globalStyles';
-import { Breadcrumb, Col, Icon, Divider, Row } from 'antd';
+import { layout } from '../../globalStyles';
+import { Breadcrumb, Divider, Row } from 'antd';
 
 export default function Help() {
   return (
-    <Col type='flex'>
+    <div style={{ width: '100%' }}>
       <div style={layout}>
         <Breadcrumb>
           <Breadcrumb.Item>
@@ -18,10 +18,10 @@ export default function Help() {
             <a href=''>Description</a>
           </Breadcrumb.Item>
         </Breadcrumb>
-        <p style={{ fontSize: '2.4rem', margin: '1rem 0', textAlign: 'center' }}>Introduction</p>
+        <p style={{ fontSize: '2.4rem', margin: '1rem 0', textAlign: 'center' }}>Introduction (incomplete)</p>
 
         <Row type='flex' style={{ flexWrap: 'nowrap', justifyContent: 'flex-end', padding: '1rem 0' }}>
-          <div>
+          <div style={{ paddingRight: '1rem' }}>
             Plop is an application that allows users to collaborate and manage projects within a small team. For any
             questions, concerns, or feedback please email plopwebapp@gmail.com.
           </div>
@@ -86,7 +86,7 @@ export default function Help() {
       <Row style={{ padding: '2rem', height: '40rem', backgroundColor: '#c9dfec' }}>
         <h1 style={styles.sectionHeader}>Settings</h1>
       </Row> */}
-    </Col>
+    </div>
   );
 }
 
@@ -94,7 +94,7 @@ const styles = {
   table: {
     border: '1px solid #ccc',
     padding: '0.5rem 1rem',
-    margin: '0 1rem 1rem 0',
+    margin: '0 1rem',
     minWidth: '15rem',
     borderRadius: '10px',
   },

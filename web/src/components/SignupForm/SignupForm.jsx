@@ -3,12 +3,10 @@ import axios from 'axios';
 import { Button, Form, Icon, Input, Modal } from 'antd';
 import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../constants';
-import MediaQuery from 'react-responsive';
 import './style.css';
 import { Redirect } from 'react-router-dom';
 
 function NormalLoginForm({ form }) {
-  const [visible, setVisible] = useState(true);
   const [toTeam, setToTeam] = useState(false);
   const { getFieldDecorator } = form;
 
@@ -27,7 +25,7 @@ function NormalLoginForm({ form }) {
     callback();
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     form.validateFields(async (err, values) => {
       if (!err) {
@@ -41,10 +39,6 @@ function NormalLoginForm({ form }) {
         }
       }
     });
-  };
-
-  const hideModal = () => {
-    setVisible(false);
   };
 
   return (
@@ -91,28 +85,19 @@ function NormalLoginForm({ form }) {
             />
           )}
         </Form.Item>
-        <Form.Item style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Form.Item>
           {/* button bg color potential #495463 */}
-          <Button type='primary' htmlType='submit' className='signup-form-button'>
+          <Button
+            type='primary'
+            htmlType='submit'
+            className='signup-form-button'
+            style={{ width: '100%' }}
+            size='large'
+          >
             Register
           </Button>
         </Form.Item>
       </Form>
-      <MediaQuery maxDeviceWidth={480} maxWidth={480}>
-        <Modal
-          title='Mobile usage is unsupported'
-          visible={visible}
-          onCancel={hideModal}
-          footer={
-            <Button type='primary' onClick={hideModal}>
-              Ok
-            </Button>
-          }
-          width={450}
-        >
-          <p>Plop is not designed for small screens yet, please wait for the mobile app. Thanks!</p>
-        </Modal>
-      </MediaQuery>
     </>
   );
 }

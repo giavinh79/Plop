@@ -60,10 +60,12 @@ function HorizontalLoginForm({ form }) {
       {loggedInEmail ? (
         <Col type='flex' align='middle' style={{ textAlign: 'right' }}>
           <p className='loggedInText' onClick={() => setToDashboard(true)}>
-            Continue as {loggedInEmail}
+            Continue as {loggedInEmail} <Icon type='swap-right' />
           </p>
           <p className='loggedInText' onClick={handleLogout}>
-            Sign out
+            <span style={{ color: '#e4d8d8' }}>
+              Sign out <Icon type='swap-left' />
+            </span>
           </p>
         </Col>
       ) : (

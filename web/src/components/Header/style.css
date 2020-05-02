@@ -30,7 +30,7 @@ ant-dropdown-menu-item {
   margin: 0 1rem;
   color: white;
   cursor: pointer;
-  max-width: 12rem;
+  max-width: 20rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

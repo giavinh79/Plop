@@ -1,31 +1,243 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { WrappedNormalLoginForm as SignupForm } from '../components/SignupForm/SignupForm';
 import { Body, FormWrapper } from './HomepageStyles';
+import { Alert, Avatar, Button, BackTop, Card, Icon, Modal, Result } from 'antd';
+import MediaQuery from 'react-responsive';
+import Fade from 'react-reveal/Fade';
+import './Homepage.css';
 
 export default function Homepage() {
+  const [visible, setVisible] = useState(true);
+  const backToTop = useRef();
+  const signupRef = useRef(); // will need to forward refs
+
+  const hideModal = () => {
+    setVisible(false);
+  };
+
   return (
-    // <div style={{ width: '100%' }}>
-    //   <div style={{ height: '35rem', borderBottom: '1px solid #ccc', flexDirection: 'row' }}>
-    //     <div
-    //       style={{
-    //         height: '100%',
-    //         backgroundImage: "url('images/coder.jpg')",
-    //         bakcgroundPosition: 'center top',
-    //         backgroundSize: 'cover',
-    //         overflow: 'hidden',
-    //       }}
-    //     >
-    //       f
-    //     </div>
-    //     <div></div>
-    //   </div>
-    // </div>
-    <Body>
-      <FormWrapper>
-        <SignupForm />
-      </FormWrapper>
-      <div style={styles.formBackground} />
-    </Body>
+    <>
+      <div style={{ width: '100%' }}>
+        <div className='landing-container'>
+          <div className='landing-flex-wrapper'>
+            {/* <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}> */}
+            <div className='landing-container-one'>
+              <p className='landing-header'>
+                Make <span style={{ color: '#5faeff' }}>managing projects</span> organized and <span>efficient</span>.
+              </p>
+              <p className='landing-subheader'>
+                Featuring a simple interface with chat, drag-and-drop dashboards, and more,{' '}
+                <span style={{ color: '#5FAEFF' }}>Plop</span> makes it easy for teams to stay connected and
+                collaborate.
+              </p>
+            </div>
+            <div style={{ display: 'flex', padding: '0 2rem', justifyContent: 'flex-end' }}>
+              {/* <img src='/images/work_svg.svg' /> */}
+              <FormWrapper style={{ position: 'inherit' }}>
+                <SignupForm ref={signupRef} />
+              </FormWrapper>
+            </div>
+          </div>
+          {/* 0 30px 50px 0 rgba(34,43,55,.1) */}
+
+          {/* <div style={{ height: '35rem', borderBottom: '1px solid #ccc', flexDirection: 'row' }}>
+        <div
+          style={{
+            height: '100%',
+            backgroundImage: "url('images/coder.jpg')",
+            bakcgroundPosition: 'center top',
+            backgroundSize: 'cover',
+            overflow: 'hidden',
+          }}
+        >
+          f
+        </div>
+        <div></div>
+      </div> */}
+        </div>
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'>
+          <path
+            fill='#445D66'
+            fillOpacity='1'
+            d='M0,96L60,101.3C120,107,240,117,360,117.3C480,117,600,107,720,112C840,117,960,139,1080,149.3C1200,160,1320,160,1380,160L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z'
+          ></path>
+        </svg>
+
+        {/* <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'>
+        <path
+          fill='#445D66'
+          fillOpacity='1'
+          d='M0,64L60,90.7C120,117,240,171,360,181.3C480,192,600,160,720,144C840,128,960,128,1080,128C1200,128,1320,128,1380,128L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z'
+        ></path>
+      </svg> */}
+        <div style={{ textAlign: 'center', width: '100%', padding: '0 12rem', marginTop: '-4rem' }}>
+          <p style={{ fontSize: '3rem', fontWeight: 500, color: '#0B254B' }}>Why Plop?</p>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            width: '100%',
+            justifyContent: 'center',
+            padding: '0 11rem 1.5rem 11rem',
+          }}
+        >
+          {/* <img src='/images/blob-shape.svg' alt='blob' /> */}
+          {/* Plan Create user stories and issues, plan sprints, and distribute tasks across your software team. */}
+          <div style={{ flex: 1, padding: '1rem' }}>
+            <Alert
+              message={<span style={{ fontWeight: '500' }}>Plan</span>}
+              description='Create project issues and track their progress through the team/user dashboard.'
+              type='info'
+              showIcon
+              style={{ minWidth: '20rem' }}
+            />
+          </div>
+          <div style={{ flex: 1, padding: '1rem' }}>
+            <Alert
+              message={<span style={{ fontWeight: '500' }}>Manage</span>}
+              description='Create teams, invite new members, and establish a team hierarchy with ease.'
+              type='info'
+              showIcon
+              style={{ minWidth: '20rem' }}
+            />
+          </div>
+          <div style={{ flex: 1, padding: '1rem' }}>
+            <Alert
+              message={<span style={{ fontWeight: '500' }}>Communicate</span>}
+              description='Share issues and stay up to date through the notification system and in-built chat.'
+              type='info'
+              showIcon
+              style={{ minWidth: '20rem' }}
+            />
+          </div>
+        </div>
+        <div style={{ textAlign: 'center', width: '100%', padding: '0 12rem 12rem 12rem' }}>
+          <img
+            src='/images/carousel5.PNG'
+            style={{
+              border: '1px solid #e8e8e8',
+              borderRadius: '10px',
+              boxShadow: '0 6px 15px rgba(36, 37, 38, 0.08)',
+              width: '100%',
+              height: 'auto',
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            // backgroundColor: '#F6F8F9',
+            backgroundImage: "url('images/wallpaper.png')",
+            backgroundAttachment: 'fixed',
+            flexDirection: 'column',
+            width: '100%',
+            alignItems: 'center',
+            // alignItems: 'center',
+            height: '100rem',
+            // padding: '2rem 11rem',
+          }}
+        >
+          {/* <div
+            style={{ position: 'absolute', zIndex: '1', width: '100%', height: '100rem', backgroundColor: '#86868659' }}
+          ></div> */}
+          {/* <Fade left>
+            <Card
+              style={{ width: 300, height: '18rem', margin: '5rem' }}
+              cover={<img alt='example' src='https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png' />}
+            >
+              <Card.Meta avatar={<Avatar icon='smile' />} title='Card title' description='This is the description' />
+            </Card>
+          </Fade>
+          <Fade right delay={500}>
+            <Card
+              style={{ width: 300, height: '18rem', margin: '5rem' }}
+              cover={<img alt='example' src='https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png' />}
+            >
+              <Card.Meta avatar={<Avatar icon='smile' />} title='Card title' description='This is the description' />
+            </Card>
+          </Fade> */}
+          {/* <Fade left>
+            <div style={{ width: '50%' }}>
+              <img
+                src='/images/carousel1.PNG'
+                alt='example pic of app'
+                style={{ width: '100%', height: 'auto', borderRadius: '15px' }}
+              />
+            </div>
+          </Fade> */}
+          {/* <img src='/images/blob-shape.svg' alt='blob' /> */}
+        </div>
+        <div style={{ backgroundColor: '#FDFEFF', padding: '4rem 12rem 4rem 12rem' }}>
+          <Result
+            status='success'
+            title='What are you waiting for?'
+            subTitle='Sign up now and leverate this project management platform for free!'
+            extra={[
+              <Button type='primary' key='registration' onClick={() => backToTop.current.scrollToTop()}>
+                Sign Up
+              </Button>,
+              <Button key='contact' onClick={() => (window.location.href = 'mailto:plopwebapp@gmail.com')}>
+                Contact Us
+              </Button>,
+            ]}
+            style={{
+              border: '1px solid #e8e8e8',
+              borderRadius: '10px',
+              boxShadow: 'rgba(36, 37, 38, 0.08) 0px 6px 15px',
+            }}
+          />
+        </div>
+        <BackTop ref={backToTop} />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between  ',
+            alignItems: 'center',
+            width: '100%',
+            height: '6rem',
+            padding: '0 12rem',
+            backgroundColor: '#445D66',
+          }}
+        >
+          <div>
+            <img src='/images/justlogo.png' alt='logo' style={{ cursor: 'pointer', height: '2.8rem' }} />
+          </div>
+          <div>
+            <p style={{ color: 'white', margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>plop &copy; 2020</p>
+          </div>
+          <div>
+            {/* <p style={{ color: '#e8e8e8', margin: 0, fontSize: '2rem' }}>Plop &copy; 2020. Created by GV79</p> */}
+            <Icon type='twitter' style={{ fontSize: '2.5rem', margin: '0 1rem', color: 'white' }} />
+            <a href='https://github.com/gv79/plop' target='_blank' rel='noopener'>
+              <Icon type='github' style={{ fontSize: '2.5rem', color: 'white' }} />
+            </a>
+          </div>
+        </div>
+      </div>
+      <MediaQuery maxDeviceWidth={480} maxWidth={480}>
+        <Modal
+          title='Mobile usage is unsupported'
+          visible={visible}
+          onCancel={hideModal}
+          footer={
+            <Button type='primary' onClick={hideModal}>
+              Ok
+            </Button>
+          }
+          width={450}
+        >
+          <p>Plop is not designed for small screens yet, please wait for the mobile app. Thanks!</p>
+        </Modal>
+      </MediaQuery>
+    </>
+    // <Body>
+    // <FormWrapper>
+    //   <SignupForm />
+    // </FormWrapper>
+    //   <div style={styles.formBackground} />
+    // </Body>
   );
 }
 
