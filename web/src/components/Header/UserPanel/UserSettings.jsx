@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Col, Drawer, Form, Icon, Input, Row, Select, Tooltip } from 'antd';
+import { useHistory } from 'react-router-dom';
+import { Button, Col, Divider, Drawer, Form, Icon, Input, Row, Select, Tooltip } from 'antd';
 import { API_ENDPOINT } from '../../../constants';
 import { ThemeContext } from '../../../colors/theme';
 
 const { Option } = Select;
 
 const UserSettings2 = ({ displayUserModal, form }) => {
+  const { location } = useHistory();
   const [theme, setTheme] = useContext(ThemeContext);
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
@@ -174,6 +176,14 @@ const UserSettings2 = ({ displayUserModal, form }) => {
               </Select>
             </Form.Item>
           </Col>
+          <Col span={24} style={{ marginBottom: '1rem' }}>
+            <Divider>
+              Team Specific Settings{' '}
+              <Tooltip title='Configure by entering a team'>
+                <Icon type='question-circle-o' style={{ padding: '0 0.3rem' }} />
+              </Tooltip>
+            </Divider>
+          </Col>
           <Col span={12}>
             <Form.Item label='Email Alerts'>
               <Select placeholder='All' defaultValue='All' disabled>
@@ -194,7 +204,13 @@ const UserSettings2 = ({ displayUserModal, form }) => {
           </Col>
           <Col span={24}>
             <Form.Item label='Role'>
-              <Input type='text' maxLength={50} onChange={(e) => setRole(e.target.value)} value={role || ''} />
+              <Input
+                type='text'
+                maxLength={50}
+                onChange={(e) => setRole(e.target.value)}
+                value={location.pathname === '/team' ? '' : role}
+                disabled={location.pathname === '/team'}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -204,7 +220,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
               label={
                 <div>
                   Activity Overview
-                  <Tooltip title='Team specific logs for user'>
+                  <Tooltip title='User logs for currently joined team'>
                     <Icon type='question-circle-o' style={{ padding: '0 0.3rem' }} />
                   </Tooltip>
                 </div>

@@ -14,7 +14,7 @@ let navigationMap = {
   '/dashboard/schedule': ['4'],
   '/dashboard/notes': ['5'],
   '/dashboard/members': ['6'],
-  '/dashboard/manage-members': ['7'],
+  '/dashboard/members-overview': ['7'],
   '/dashboard/create-issue': ['8'],
   '/dashboard/active-issues': ['9'],
   '/dashboard/backlog-issues': ['10'],
@@ -92,11 +92,9 @@ function SideNav({ path }) {
         <Menu.Item key='6' onClick={() => history.push('/dashboard/members')}>
           View
         </Menu.Item>
-        <SubMenu key='sub4' title='Admin Panel'>
-          <Menu.Item key='7' onClick={() => history.push('/dashboard/manage-members')}>
-            Manage Members
-          </Menu.Item>
-        </SubMenu>
+        <Menu.Item key='7' onClick={() => history.push('/dashboard/members-overview')}>
+          Analytics
+        </Menu.Item>
       </SubMenu>
       <SubMenu
         key='sub5'

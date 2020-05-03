@@ -23,12 +23,11 @@ export default function Homepage() {
             {/* <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}> */}
             <div className='landing-container-one'>
               <p className='landing-header'>
-                Make <span style={{ color: '#5faeff' }}>managing projects</span> organized and <span>efficient</span>.
+                Make <span style={{ color: '#5faeff' }}>managing projects</span> simple and <span>efficient</span>.
               </p>
               <p className='landing-subheader'>
                 Featuring a simple interface with chat, drag-and-drop dashboards, and more,{' '}
-                <span style={{ color: '#5FAEFF' }}>Plop</span> makes it easy for teams to stay connected and
-                collaborate.
+                <span style={{ color: '#5FAEFF' }}>Plop</span> makes it easy for teams to stay connected and organized.
               </p>
             </div>
             <div style={{ display: 'flex', padding: '0 2rem', justifyContent: 'flex-end' }}>
@@ -105,7 +104,7 @@ export default function Homepage() {
           <div style={{ flex: 1, padding: '1rem' }}>
             <Alert
               message={<span style={{ fontWeight: '500' }}>Communicate</span>}
-              description='Share issues and stay up to date through the notification system and in-built chat.'
+              description='Share issues and collaborate through the notification system and in-built chat.'
               type='info'
               showIcon
               style={{ minWidth: '20rem' }}
@@ -210,7 +209,7 @@ export default function Homepage() {
           <div>
             {/* <p style={{ color: '#e8e8e8', margin: 0, fontSize: '2rem' }}>Plop &copy; 2020. Created by GV79</p> */}
             <Icon type='twitter' style={{ fontSize: '2.5rem', margin: '0 1rem', color: 'white' }} />
-            <a href='https://github.com/gv79/plop' target='_blank' rel='noopener'>
+            <a href='https://github.com/gv79/plop' target='_blank' rel='noopener noreferrer'>
               <Icon type='github' style={{ fontSize: '2.5rem', color: 'white' }} />
             </a>
           </div>

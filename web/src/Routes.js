@@ -7,7 +7,7 @@ import TeamDashboard from './components/Dashboard/TeamDashboard';
 import UserDashboard from './components/Dashboard/UserDashboard';
 import Overview from './components/ProjectOverview/Overview';
 import Schedule from './components/Schedule/Schedule';
-import MembersView from './components/ViewMembers/ViewMembers';
+import ViewMembers from './components/ViewMembers/ViewMembers';
 import Notes from './components/Notes/Notes';
 import { WrappedCreateIssueForm } from './components/CreateIssue/CreateIssue';
 import Active from './components/Active/Active';
@@ -71,8 +71,8 @@ export default function Routes() {
                       <ProtectedRoute path={`${url}/overview`} component={Overview} />
                       <ProtectedRoute path={`${url}/schedule`} component={Schedule} />
                       <ProtectedRoute path={`${url}/notes`} component={Notes} />
-                      <ProtectedRoute path={`${url}/members`} component={MembersView} />
-                      <ProtectedRoute path={`${url}/manage-members`} component={MembersView} />
+                      <ProtectedRoute path={`${url}/members`} component={ViewMembers} />
+                      <ProtectedRoute path={`${url}/members-overview`} component={ViewMembers} />
                       <ProtectedRoute path={`${url}/create-issue`} component={WrappedCreateIssueForm} />
                       <ProtectedRoute path={`${url}/active-issues`} component={Active} />
                       <ProtectedRoute path={`${url}/backlog-issues`} component={Backlog} />

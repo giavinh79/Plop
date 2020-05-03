@@ -192,7 +192,7 @@ export default function Team() {
             lightmode={theme.isLightMode ? 1 : 0}
             bordered={theme.isLightMode ? 0 : 1}
             headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
-            extra={<p style={{ color: teams.length === 3 ? '#d45f5f' : 'black' }}>{teams.length}/3</p>}
+            extra={<p style={{ color: teams.length === 3 ? '#d45f5f' : '#6f6b6b' }}>{teams.length}/3</p>}
           >
             <TeamsJoined teams={teams} handleEnterTeam={handleEnterTeam} handleLeaveTeam={handleLeaveTeam} />
           </TeamCard>

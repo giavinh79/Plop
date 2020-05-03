@@ -42,13 +42,13 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
 
     try {
       const res = await createTeam(data);
+      const currentTeams = await retrieveTeams();
       setTeams([
         ...teams,
         { name: res.data.name, description: res.data.description, id: res.data.id, currentMembers: '1' },
       ]);
-
-      const currentTeams = await retrieveTeams();
       localStorage.setItem('teams', JSON.stringify(currentTeams.data));
+      console.log(localStorage.getItem('teams'));
 
       displayInfoDialog(
         'Team was successfully created!',
@@ -93,7 +93,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         allowClear={true}
         maxLength={100}
         aria-label='team-name-input'
-        onChange={e => {
+        onChange={(e) => {
           createTeamData.current.name = e.currentTarget.value;
         }}
         ref={createInput}
@@ -106,7 +106,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         id='teamDescription'
         maxLength={220}
         aria-label='team-description-input'
-        onChange={e => {
+        onChange={(e) => {
           createTeamData.current.description = e.currentTarget.value;
         }}
       />
@@ -117,7 +117,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         autoComplete='new-password'
         allowClear={true}
         aria-label='team-password-input'
-        onChange={e => {
+        onChange={(e) => {
           createTeamData.current.password = e.currentTarget.value;
         }}
       />

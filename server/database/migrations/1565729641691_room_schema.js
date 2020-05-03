@@ -19,6 +19,7 @@ class RoomSchema extends Schema {
       table.boolean('adminApproval');
       table.json('chat');
       table.json('notes');
+      table.json('banList');
       table.string('websocketId', 50).notNullable();
       table.timestamps();
     });

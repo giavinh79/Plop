@@ -25,15 +25,33 @@ const exampleData = [
     uuid: '2',
     title: 'Backend',
     description:
-      'For GymTrack implement an Express REST API that allows interfacing between the client and the MongoDB database. User authentication and authorization handled by Google FIrebase.',
+      'For GymTrack implement an Express REST API that allows interfacing between the client and the MongoDB database. User authentication and authorization handled by Google Firebase.',
   },
   {
     uuid: '1',
     title: 'Next side project',
     description:
-      'Technologies for next project: React.js, Redux Toolkit, Gatsby.js landing page for SEO and speed, and TypeScript.',
+      'Technologies for next project: React.js, Redux Toolkit, Gatsby.js landing page for SEO and speed, and TypeScript. Link: https://www.gatsbyjs.org/',
   },
 ];
+
+// Function that converts text links into clickable tags
+const parsedDescription = (description) => {
+  let words = description.split(' ');
+
+  return words.map((word, key) => {
+    if (word.startsWith('http://') || word.startsWith('https://') || word.startsWith('www.')) {
+      // descriptionSpan.append(<a href={word}>{word}</a>);
+      return (
+        <a href={word} target='_blank' rel='noopener noreferrer' key={key}>
+          {word}
+        </a>
+      );
+    } else {
+      return word + ' ';
+    }
+  });
+};
 
 export default function Notes() {
   const [data, setData] = useState(exampleData);
@@ -215,7 +233,9 @@ export default function Notes() {
                         }}
                       />
                     ) : (
-                      <span style={(item.highlighted && { color: '#d4d4d4' }) || {}}>{item.description}</span>
+                      <span style={(item.highlighted && { color: '#d4d4d4' }) || {}}>
+                        {parsedDescription(item.description)}
+                      </span>
                     )
                   }
                 />
