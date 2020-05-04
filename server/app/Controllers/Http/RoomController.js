@@ -1,9 +1,10 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const Env = use('Env');
 const Encryption = use('Encryption');
+const Hashids = require('hashids/cjs');
+const hashids = new Hashids('', 9);
 const Database = use('Database');
 const Room = use('App/Models/Room');
 
@@ -16,13 +17,13 @@ class RoomController {
 
       for (let room of rooms) {
         const roomInfo = await Database.table('rooms')
-          .select('name', 'description', 'currentMembers', 'websocketId')
+          .select('name', 'description', 'currentMembers')
           .where('id', room.room_id);
         const roomObject = JSON.parse(JSON.stringify(roomInfo[0]));
         const [notificationData] = await Database.table('user_rooms')
           .select('notifications')
           .where({ user_id: user.id, room_id: room.room_id });
-        roomObject.id = Encryption.encrypt(room.room_id);
+        roomObject.id = hashids.encodeHex(room.room_id.toString());
         roomObject.notifications = notificationData.notifications.filter((item) => item.status === 0).length;
         roomsInfo.push(roomObject);
       }
@@ -36,7 +37,7 @@ class RoomController {
   async getAssignees({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
@@ -59,7 +60,7 @@ class RoomController {
   async getMembers({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       let membersPayload = [];
       let count = 1;
@@ -92,7 +93,7 @@ class RoomController {
   async getNotifications({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
@@ -112,7 +113,7 @@ class RoomController {
   async getRepository({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
@@ -128,7 +129,7 @@ class RoomController {
   async readNotifications({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
@@ -162,7 +163,7 @@ class RoomController {
   async clearNotifications({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
@@ -199,7 +200,7 @@ class RoomController {
   async info({ request, auth, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
@@ -207,7 +208,7 @@ class RoomController {
       const roomInfo = await Database.table('rooms').select('*').where('id', decryptedRoomId);
       const decryptPass = Encryption.decrypt(roomInfo[0].password);
       const { name, description, maxMembers, adminApproval, repository } = roomInfo[0];
-      const id = Encryption.encrypt(roomInfo[0].id);
+      const id = hashids.encodeHex(roomInfo[0].id.toString());
 
       response.status(200).json({
         name,
@@ -228,7 +229,7 @@ class RoomController {
   async update({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
 
       if (result.length === 0) throw new Error('User not in room');
@@ -279,7 +280,6 @@ class RoomController {
         private: false,
         adminApproval: false,
         status: 0,
-        websocketId: uuidv4(),
         chat: JSON.stringify([]),
       });
 
@@ -295,7 +295,7 @@ class RoomController {
           .insert({ user_id: user.id, room_id: room.id, role: null, notifications: JSON.stringify([]) });
       });
 
-      const encryptedRoomId = Encryption.encrypt(room.id);
+      const encryptedRoomId = hashids.encodeHex(room.id.toString());
 
       const mailOptions = {
         from: Env.get('EMAIL_USER'),
@@ -328,7 +328,7 @@ class RoomController {
     try {
       const user = await auth.getUser();
       let { roomId, roomPassword } = request.body;
-      const decryptedRoomId = Encryption.decrypt(roomId);
+      const decryptedRoomId = hashids.decodeHex(roomId);
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length !== 0) throw new Error('User already in room');
@@ -376,8 +376,7 @@ class RoomController {
             }
       );
 
-      let [roomData] = await Database.table('rooms').select('websocketId').where('id', decryptedRoomId);
-      response.status(200).json({ id: roomId, ws_id: roomData.websocketId, name: result[0].name });
+      response.status(200).json({ id: roomId, name: result[0].name });
     } catch (err) {
       console.log(`(room_join) ${new Date()}: ${err.message}`);
       response.status(404).send();
@@ -388,7 +387,7 @@ class RoomController {
     try {
       const user = await auth.getUser();
       const { teamId } = request.body;
-      const decryptedRoomId = Encryption.decrypt(teamId);
+      const decryptedRoomId = hashids.decodeHex(teamId);
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
@@ -426,7 +425,7 @@ class RoomController {
   async delete({ request, auth, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
       const { email, password } = request.body;
 
       await auth.attempt(email, password);
@@ -478,7 +477,7 @@ class RoomController {
   async session({ request, auth, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.body.id);
+      const decryptedRoomId = hashids.decodeHex(request.body.id);
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
 

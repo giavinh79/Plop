@@ -10,7 +10,6 @@
 */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
-const { v4: uuidv4 } = require('uuid');
 const Encryption = use('Encryption');
 const Database = use('Database');
 const User = use('App/Models/User');
@@ -54,7 +53,6 @@ class SetupSeeder {
         adminApproval: false,
         status: 0,
         currentMembers: 1,
-        websocketId: uuidv4(),
         chat: JSON.stringify([]),
       });
       await room.save();

@@ -2,7 +2,8 @@
 
 const cloudinary = require('cloudinary');
 const Database = use('Database');
-const Encryption = use('Encryption');
+const Hashids = require('hashids/cjs');
+const hashids = new Hashids('', 9);
 const Env = use('Env');
 const Issue = use('App/Models/Issue');
 
@@ -110,7 +111,7 @@ class IssueController {
     try {
       const user = await auth.getUser();
       const { assignee, description, dragger, priority, status, shortDescription, tag, title } = request.body;
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
@@ -181,7 +182,7 @@ class IssueController {
       const user = await auth.getUser();
       const result = await Database.from('user_rooms')
         .where('user_id', user.id)
-        .where('room_id', Encryption.decrypt(request.cookie('room')));
+        .where('room_id', hashids.decodeHex(request.cookie('room')));
 
       if (result.length === 0) throw new Error('User not in this room');
 
@@ -228,7 +229,7 @@ class IssueController {
   async get({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
@@ -246,7 +247,7 @@ class IssueController {
     try {
       // type of issue trying to be requested given by request.params.status (0 - backlog, 1 - active, 2 - )
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
@@ -286,7 +287,7 @@ class IssueController {
   async getUser({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
@@ -328,7 +329,7 @@ class IssueController {
   async getComments({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
@@ -344,7 +345,7 @@ class IssueController {
   async setComments({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
@@ -392,7 +393,7 @@ class IssueController {
   async update({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
@@ -520,7 +521,7 @@ class IssueController {
   async updateProgress({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
@@ -538,7 +539,7 @@ class IssueController {
   async shareIssue({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');

@@ -2,6 +2,8 @@
 
 const nodemailer = require('nodemailer');
 const Encryption = use('Encryption');
+const Hashids = require('hashids/cjs');
+const hashids = new Hashids('', 9);
 const Database = use('Database');
 const Env = use('Env');
 const User = use('App/Models/User');
@@ -100,7 +102,7 @@ class UserController {
       let [data] = await Database.select('role')
         .from('user_rooms')
         .where({
-          room_id: Encryption.decrypt(request.cookie('room')),
+          room_id: hashids.decodeHex(request.cookie('room')),
           user_id: user.id,
         });
       response.status(200).json(data);
@@ -121,7 +123,7 @@ class UserController {
       if (role != null) {
         await Database.table('user_rooms')
           .where({
-            room_id: Encryption.decrypt(request.cookie('room')),
+            room_id: hashids.decodeHex(request.cookie('room')),
             user_id: user.id,
           })
           .update({ role: role });

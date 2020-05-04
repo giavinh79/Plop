@@ -3,6 +3,8 @@
 const Ws = use('Ws');
 const Database = use('Database');
 const Encryption = use('Encryption');
+const Hashids = require('hashids/cjs');
+const hashids = new Hashids('', 9);
 let usersInfo = new Set(); // info to send back to client side regarding a user
 // let users = new Set(); // track users currently connected by their socket id
 
@@ -22,8 +24,9 @@ const jwtMiddleware = async ({ request }, next) => {
 Ws.channel('room:*', async ({ auth, socket, request }) => {
   try {
     let user = await auth.getUser();
-    const [room] = await Database.from('rooms').where('websocketId', socket.topic.substring(5, socket.topic.length));
-    const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', room.id);
+    const result = await Database.from('user_rooms')
+      .where('user_id', user.id)
+      .where('room_id', hashids.decodeHex(request.cookie('room')));
 
     if (result.length === 0) socket.close();
     console.log(`User connected to ${socket.topic} as ${user.email}`);
@@ -50,7 +53,7 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
         await Database.table('chats').insert({
           user: user.email,
           user_id: user.id,
-          room_id: Encryption.decrypt(request.cookie('room')),
+          room_id: hashids.decodeHex(request.cookie('room')),
           message: data.message,
           dateCreated: date,
         });

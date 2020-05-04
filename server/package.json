@@ -36,8 +36,7 @@
     "nodemon": "^1.19.1",
     "patch-package": "^6.2.2",
     "pg": "^7.12.1",
-    "url-parse": "^1.4.7",
-    "uuid": "^7.0.3"
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {},
   "autoload": {

@@ -1,13 +1,14 @@
 'use strict';
 
 const Database = use('Database');
-const Encryption = use('Encryption');
+const Hashids = require('hashids/cjs');
+const hashids = new Hashids('', 9);
 
 class ChatController {
   async get({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const decryptedRoomId = Encryption.decrypt(request.cookie('room'));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
