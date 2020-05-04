@@ -133,17 +133,25 @@ export default function Settings() {
         <p style={{ ...subheader, opacity: state.id === 'default' ? 0.3 : 1 }}>Team Settings</p>
         <SettingsWrapper>
           <div style={{ width: '100%' }}>
-            <div style={styles.wrapper}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', paddingTop: '0.5rem' }}>
               {state.id === 'default' ? (
                 <>
                   <Skeleton active />
                 </>
               ) : (
-                <div style={{ flex: 1, paddingRight: '1rem' }}>
+                <div style={{ flex: 1, padding: '0 1rem 1rem 1rem' }}>
                   <Text>Team ID: </Text>
                   <Paragraph
                     copyable={{ text: state.id || 'default' }}
-                    style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', minWidth: '30rem' }}
+                    style={{
+                      margin: 0,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      minWidth: '6rem',
+                      border: '1px solid #d9d9d9',
+                      padding: '4px 11px',
+                      borderRadius: '4px',
+                    }}
                   >
                     {state.id}
                   </Paragraph>
@@ -152,7 +160,7 @@ export default function Settings() {
               {state.id === 'default' ? (
                 <></>
               ) : (
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, padding: '0 1rem 1rem 1rem' }}>
                   <Text>Repository Link: </Text>
                   <Input
                     defaultValue={state.repository || 'https://github.com'}
@@ -170,7 +178,7 @@ export default function Settings() {
               flex: '1',
               borderBottomLeftRadius: '10px',
               borderTopLeftRadius: '10px',
-              paddingRight: '1rem',
+              // paddingRight: '1rem',
             }}
           >
             {state.id === 'default' ? (
@@ -349,7 +357,7 @@ const styles = {
   wrapper: {
     display: 'flex',
     flexWrap: 'wrap',
-    paddingBottom: '1rem',
+    padding: '0 1rem 1rem 1rem',
   },
   wrapperC: {
     display: 'flex',

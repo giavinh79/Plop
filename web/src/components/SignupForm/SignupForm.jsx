@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Form, Icon, Input, Modal } from 'antd';
+import { Button, Form, Icon, Input } from 'antd';
 import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../constants';
 import './style.css';

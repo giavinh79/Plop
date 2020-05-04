@@ -14,7 +14,6 @@ function TeamDropdown({ history }) {
         'currentTeam',
         JSON.stringify({
           id: JSON.parse(localStorage.getItem('teams'))[event.key - 1].id,
-          ws_id: JSON.parse(localStorage.getItem('teams'))[event.key - 1].websocketId,
         })
       );
       await createSession(event);

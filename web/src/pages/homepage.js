@@ -8,8 +8,8 @@ import './Homepage.css';
 
 export default function Homepage() {
   const [visible, setVisible] = useState(true);
-  const backToTop = useRef();
   const signupRef = useRef(); // will need to forward refs
+  const backToTop = useRef();
 
   const hideModal = () => {
     setVisible(false);
@@ -33,7 +33,7 @@ export default function Homepage() {
             <div style={{ display: 'flex', padding: '0 2rem', justifyContent: 'flex-end' }}>
               {/* <img src='/images/work_svg.svg' /> */}
               <FormWrapper style={{ position: 'inherit' }}>
-                <SignupForm ref={signupRef} />
+                <SignupForm />
               </FormWrapper>
             </div>
           </div>

@@ -74,10 +74,8 @@ export default function Team() {
     }
 
     try {
-      const {
-        data: { ws_id },
-      } = await joinTeam(data);
-      localStorage.setItem('currentTeam', JSON.stringify({ id: data.roomId, ws_id }));
+      await joinTeam(data);
+      localStorage.setItem('currentTeam', JSON.stringify({ id: data.roomId }));
       const res = await retrieveTeams();
       localStorage.setItem('teams', JSON.stringify(res.data));
       setToDashboard(true);
@@ -100,7 +98,7 @@ export default function Team() {
 
   const handleEnterTeam = async (e, team) => {
     e.preventDefault();
-    localStorage.setItem('currentTeam', JSON.stringify({ id: team.id, ws_id: team.websocketId }));
+    localStorage.setItem('currentTeam', JSON.stringify({ id: team.id }));
     await axios.post(`${API_ENDPOINT}/sessionRoom`, { id: team.id });
     setToDashboard(true);
   };
