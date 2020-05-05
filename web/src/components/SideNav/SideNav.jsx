@@ -67,7 +67,7 @@ function SideNav({ path }) {
         </Menu.ItemGroup>
         <Menu.ItemGroup key='g2' title='Analytics'>
           <Menu.Item key='3' onClick={() => history.push('/dashboard/overview')}>
-            <Tooltip title='Set of graphs and data for issues' mouseEnterDelay={0.8}>
+            <Tooltip title='Data and graphs for project' mouseEnterDelay={0.8}>
               Project Overview
             </Tooltip>
           </Menu.Item>
@@ -118,7 +118,7 @@ function SideNav({ path }) {
             <span>Backlog</span>
           </Tooltip>
         </Menu.Item>
-        <Menu.Item key='11' onClick={() => history.push('/dashboard/archive-issues')}>
+        <Menu.Item key='11' onClick={() => history.push('/dashboard/archive-issues')} disabled>
           <Tooltip title='Repository for completed tasks' mouseEnterDelay={0.8}>
             <span>Archive</span>
           </Tooltip>

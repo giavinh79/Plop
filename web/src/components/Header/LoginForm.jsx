@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Col, Form, Input, Icon } from 'antd';
-import { Redirect } from 'react-router-dom';
 import { API_ENDPOINT } from '../../constants';
 import { displaySimpleNotification } from '../../utility/services';
 import { checkAuth, logout } from '../../utility/restCalls';

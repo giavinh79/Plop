@@ -210,6 +210,7 @@ const styles = {
   },
   subcontainer: {
     display: 'flex',
+    flexWrap: 'wrap',
     width: '100%',
     marginTop: '1rem',
   },

@@ -121,6 +121,7 @@ export default function Homepage() {
               width: '100%',
               height: 'auto',
             }}
+            alt='plop interface'
           />
         </div>
 

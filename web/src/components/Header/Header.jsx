@@ -66,6 +66,7 @@ export default function Header() {
   return (
     <HeaderWrapper
       lightmode={theme.isLightMode ? 1 : 0}
+      homepage={location.pathname === '/' ? 1 : 0}
       style={location.pathname === '/' ? { backgroundColor: '#445D66', padding: '1rem 13rem 0 13rem' } : {}}
     >
       <div style={{ display: 'flex', padding: location.pathname === '/team' ? '0 1rem' : '0' }}>
@@ -74,9 +75,10 @@ export default function Header() {
           src='/images/justlogo.png'
           alt='logo'
           onClick={handleClick}
+          homepage={location.pathname === '/' ? 1 : 0}
           style={{ padding: location.pathname === '/team' ? 0 : '0 1rem' }}
         />
-        <MobileLogoText>Plop</MobileLogoText>
+        {location.pathname === '/' && <MobileLogoText>Plop</MobileLogoText>}
         {location.pathname === '/team' && <LogoText>P</LogoText>}
       </div>
       {location.pathname.substring(0, 10) === '/dashboard' && (

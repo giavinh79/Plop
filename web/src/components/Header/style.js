@@ -8,18 +8,17 @@ export const HeaderWrapper = styled.div`
   font-family: 'Montserrat';
   height: 9%;
   min-height: 4rem;
+  background-color: ${(props) => (props.lightmode ? '#79B7D4' : '#2d3848')};
 
   @media screen and (max-width: 1090px) {
-    padding: 2rem !important;
+    padding: ${(props) => (props.homepage ? '2rem !important' : '')};
   }
 
   @media screen and (max-width: 870px) {
-    background-color: #303f44 !important;
-    height: auto;
-    flex-direction: column-reverse;
+    background-color: ${(props) => (props.homepage ? '#303f44 !important' : '')};
+    height: ${(props) => (props.homepage ? 'auto' : '')};
+    flex-direction: ${(props) => (props.homepage ? 'column-reverse' : '')};
   }
-
-  background-color: ${(props) => (props.lightmode ? '#79B7D4' : '#2d3848')};
 `;
 
 export const Logo = styled.img`
@@ -27,9 +26,9 @@ export const Logo = styled.img`
   height: 2.8rem;
 
   @media screen and (max-width: 870px) {
-    height: 4rem;
-    margin-top: 3rem;
-    padding: 0 1rem 0 0 !important;
+    height: ${(props) => (props.homepage ? '4rem' : '')};
+    margin-top: ${(props) => (props.homepage ? '3rem' : '')};
+    padding: ${(props) => (props.homepage ? '0 1rem 0 0 !important' : '')};
   }
 `;
 

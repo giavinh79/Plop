@@ -29,11 +29,11 @@ const UserSettings2 = ({ displayUserModal, form }) => {
       localStorage.setItem('avatar', avatarIndex);
 
       // Retrieving user information linked to room
+      setLoadingData(false);
       let {
         data: { role },
       } = await axios.get(`${API_ENDPOINT}/userRoomInfo`);
       setRole(role);
-      setLoadingData(false);
     })().catch((err) => {
       console.log(err);
     });
