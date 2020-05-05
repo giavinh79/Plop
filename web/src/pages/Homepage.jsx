@@ -69,8 +69,8 @@ export default function Homepage() {
           d='M0,64L60,90.7C120,117,240,171,360,181.3C480,192,600,160,720,144C840,128,960,128,1080,128C1200,128,1320,128,1380,128L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z'
         ></path>
       </svg> */}
-        <div style={{ textAlign: 'center', width: '100%', padding: '0 12rem', marginTop: '-4rem' }}>
-          <p style={{ fontSize: '3rem', fontWeight: 500, color: '#0B254B' }}>Why Plop?</p>
+        <div className='landing-section-one'>
+          <p className='landing-section-header-one'>Why Plop?</p>
         </div>
         <div
           style={{
@@ -82,7 +82,7 @@ export default function Homepage() {
           }}
         >
           {/* <img src='/images/blob-shape.svg' alt='blob' /> */}
-          {/* Plan Create user stories and issues, plan sprints, and distribute tasks across your software team. */}
+
           <div style={{ flex: 1, padding: '1rem' }}>
             <Alert
               message={<span style={{ fontWeight: '500' }}>Plan</span>}
@@ -111,7 +111,7 @@ export default function Homepage() {
             />
           </div>
         </div>
-        <div style={{ textAlign: 'center', width: '100%', padding: '0 12rem 12rem 12rem' }}>
+        <div className='landing-plop-image-wrapper'>
           <img
             src='/images/carousel5.PNG'
             style={{
@@ -124,20 +124,7 @@ export default function Homepage() {
           />
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            // backgroundColor: '#F6F8F9',
-            backgroundImage: "url('images/wallpaper.png')",
-            backgroundAttachment: 'fixed',
-            flexDirection: 'column',
-            width: '100%',
-            alignItems: 'center',
-            // alignItems: 'center',
-            height: '100rem',
-            // padding: '2rem 11rem',
-          }}
-        >
+        <div className='landing-cloud-section'>
           {/* <div
             style={{ position: 'absolute', zIndex: '1', width: '100%', height: '100rem', backgroundColor: '#86868659' }}
           ></div> */}
@@ -168,7 +155,7 @@ export default function Homepage() {
           </Fade> */}
           {/* <img src='/images/blob-shape.svg' alt='blob' /> */}
         </div>
-        <div style={{ backgroundColor: '#FDFEFF', padding: '4rem 12rem 4rem 12rem' }}>
+        <div className='landing-last-section'>
           <Result
             status='success'
             title='What are you waiting for?'
@@ -181,33 +168,18 @@ export default function Homepage() {
                 Contact Us
               </Button>,
             ]}
-            style={{
-              border: '1px solid #e8e8e8',
-              borderRadius: '10px',
-              boxShadow: 'rgba(36, 37, 38, 0.08) 0px 6px 15px',
-            }}
+            className='landing-last-section-content'
           />
         </div>
         <BackTop ref={backToTop} />
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between  ',
-            alignItems: 'center',
-            width: '100%',
-            height: '6rem',
-            padding: '0 12rem',
-            backgroundColor: '#445D66',
-          }}
-        >
+        <div className='landing-footer'>
           <div>
             <img src='/images/justlogo.png' alt='logo' style={{ cursor: 'pointer', height: '2.8rem' }} />
           </div>
-          <div>
+          <div className='landing-footer-text'>
             <p style={{ color: 'white', margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>plop &copy; 2020</p>
           </div>
           <div>
-            {/* <p style={{ color: '#e8e8e8', margin: 0, fontSize: '2rem' }}>Plop &copy; 2020. Created by GV79</p> */}
             <Icon type='twitter' style={{ fontSize: '2.5rem', margin: '0 1rem', color: 'white' }} />
             <a href='https://github.com/gv79/plop' target='_blank' rel='noopener noreferrer'>
               <Icon type='github' style={{ fontSize: '2.5rem', color: 'white' }} />

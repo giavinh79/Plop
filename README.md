@@ -1,10 +1,10 @@
 ## Plop
 
-Plop is a web application that uses React.js as its frontend framework and Adonis.js as its server framework (REST API). It is a simple project management tool targeted towards small teams (< 8) however, it can also be used by individuals who want a more complex to-do list.
+Plop is a web application that uses React.js as its frontend framework and Adonis.js (Node.js web framework) as the REST API. It is a simple project management tool targeted towards small teams (< 8) however, it can also be used by individuals who want a more complex to-do list.
 
-A relational database is used which is managed using the Lucid ORM to take advantage of models, controllers, migrations, seeds and factories. This allows us to easily replicate common SQL queries, setup the database with ease, and create dummy data.
+A postgreSQL relational database is used which is managed using the Lucid ORM to take advantage of models, controllers, migrations, seeds and factories. This allows us to easily replicate common SQL queries, setup the database with ease, and create dummy data. Cloudinary is currently used to store images.
 
-Current deployed on https://www.plop.team/ as version 0.8. Backend is deployed on https://plopwebapp.herokuapp.com/.
+Current deployed on https://www.plop.team/ as version 0.8 via Netlify. Backend is deployed on https://plopwebapp.herokuapp.com/ using Heroku.
 
 ## Example Image
 
@@ -12,9 +12,9 @@ Current deployed on https://www.plop.team/ as version 0.8. Backend is deployed o
 
 ## To Do
 
-Immediate: Refactor all css and implement dark mode, refactor routing to improve rendering performance, split big components into smaller ones, refactor all remaining class components to hooks, web sockets for real time notifications, chat, live dashboard changes, and online member statuses, JWT token refresh, more informative and designed landing page and help page, store JWT tokens so upon logout/change password previous token is blacklisted for 24h, user convenient functions (ie. filtering and search for issue tables and dashboard), encrypt image links, user emails, team names, and issue descriptions 
+Immediate: Refactor all css and finish dark mode, split big components into smaller ones, refactor all remaining class components to hooks, web sockets for real time notifications and live dashboard changes, JWT token refresh, encode emails and data, finish landing and help page, administrative levels, SendGrid API for email instead of nodemailer, finish notes
 
-Longterm: More functionality for room settings (restyling, member approval), changing password/email, administration levels, mobile responsiveness, place to just write team notes/ideas/random things (empty page with + button that generates cards), saving non-image files, minimizable side navigation, replace nodemailer functionality with SendGrid API system
+Longterm: More functionality for room settings and redesign (ie. member approval), changing password, mobile responsiveness, saving non-image files, project overview + schedule
 
 Very longterm:
 

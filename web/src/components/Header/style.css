@@ -36,6 +36,6 @@ ant-dropdown-menu-item {
   text-overflow: ellipsis;
 }
 
-.loggedInText:hover {
+.loginForm > .loggedInText:hover {
   color: #ccc;
 }

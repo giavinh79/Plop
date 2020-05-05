@@ -3,8 +3,6 @@ import { Button, message as Message, Popover, Input, Select } from 'antd';
 import { sendShareIssueNotification } from '../../utility/restCalls';
 import './style.css';
 
-const { Option } = Select;
-
 export default function ShareIssue({ assignees, issue, issueId }) {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
@@ -12,7 +10,7 @@ export default function ShareIssue({ assignees, issue, issueId }) {
   const [visible, setVisible] = useState(false);
   let children = [];
   for (let assignee of assignees) {
-    children.push(<Option key={assignee}>{assignee}</Option>);
+    children.push(<Select.Option key={assignee}>{assignee}</Select.Option>);
   }
 
   const handleUnmount = (state) => {
@@ -82,6 +80,7 @@ export default function ShareIssue({ assignees, issue, issueId }) {
       placement='bottomLeft'
       onVisibleChange={(state) => handleUnmount(state)}
       visible={visible}
+      overlayClassName='share-issue'
     >
       <div className='shareButton'>
         <img src='/images/share.svg' alt='share icon' style={{ marginRight: '0.5rem' }} />

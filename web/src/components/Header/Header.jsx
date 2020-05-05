@@ -9,7 +9,7 @@ import { WrappedHorizontalLoginForm } from './LoginForm.jsx';
 import { retrieveNotifications } from '../../utility/restCalls';
 import TeamDropdown from './TeamDropdown';
 import { ThemeContext } from '../../colors/theme';
-import { LogoText, TeamWrapper } from './HeaderStyles';
+import { LogoText, MobileLogoText, TeamWrapper } from './HeaderStyles';
 
 export default function Header() {
   const [showNotificationModal, setShowNotificationModal] = useState(false);
@@ -76,6 +76,7 @@ export default function Header() {
           onClick={handleClick}
           style={{ padding: location.pathname === '/team' ? 0 : '0 1rem' }}
         />
+        <MobileLogoText>Plop</MobileLogoText>
         {location.pathname === '/team' && <LogoText>P</LogoText>}
       </div>
       {location.pathname.substring(0, 10) === '/dashboard' && (
@@ -84,7 +85,7 @@ export default function Header() {
         </TeamWrapper>
       )}
 
-      <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+      <div className='login-form-wrapper'>
         {location.pathname === '/' ? (
           <WrappedHorizontalLoginForm />
         ) : (

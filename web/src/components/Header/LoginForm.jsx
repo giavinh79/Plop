@@ -69,7 +69,7 @@ function HorizontalLoginForm({ form }) {
           </p>
         </Col>
       ) : (
-        <Form layout='inline' onSubmit={handleSubmit}>
+        <Form layout='inline' onSubmit={handleSubmit} className='login-form'>
           <Form.Item>
             <Input
               prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}

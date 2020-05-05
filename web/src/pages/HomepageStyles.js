@@ -15,4 +15,8 @@ export const FormWrapper = styled.div`
   background-color: #1d1e1f4f;
   padding: 2rem;
   border-radius: 20px;
+
+  @media screen and (max-width: 870px) {
+    width: 19rem;
+  }
 `;
