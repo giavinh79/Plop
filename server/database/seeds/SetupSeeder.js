@@ -51,6 +51,7 @@ class SetupSeeder {
         maxMembers: 12,
         private: false,
         adminApproval: false,
+        default_admin_tier: 1,
         status: 0,
         currentMembers: 1,
         chat: JSON.stringify([]),
@@ -63,6 +64,13 @@ class SetupSeeder {
         room_id: room.id,
         role: null,
         notifications: JSON.stringify([]),
+      });
+
+      // Creating log of room creation
+      await Database.table('logs').insert({
+        room_id: room.id,
+        description: `${user.email} created team 'Testing Room'`,
+        date: new Date().toString(),
       });
 
       // Creating issues for the room/team's dashboard and backlog

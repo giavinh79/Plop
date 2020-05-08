@@ -4,7 +4,7 @@ export const SettingsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  padding: 1rem 1.5rem;
+  padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 10px;
   color: #757575;
@@ -16,13 +16,3 @@ export const Text = styled.p`
   min-width: 10rem;
   font-size: 1.1rem;
 `;
-
-/* <div
-style={{
-  backgroundColor: 'white',
-  flex: '1',
-  borderBottomLeftRadius: '10px',
-  borderTopLeftRadius: '10px',
-  padding: '1rem',
-}}
-> */

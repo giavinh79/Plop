@@ -48,7 +48,7 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
 
     socket.on('message', async (data) => {
       let date = new Date();
-      socket.broadcast('message', { ...data, user: user.email, read: false, date });
+      socket.broadcast('message', { ...data, avatar: user.avatar, user: user.email, read: false, date });
       if (data.type === 1) {
         await Database.table('chats').insert({
           user: user.email,

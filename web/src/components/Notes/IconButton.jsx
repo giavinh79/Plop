@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Tooltip } from 'antd';
 
-export default function IconButton({ icon, disabled, functionToExecute, title }) {
+export default function IconButton({ icon, disabled, functionToExecute, nomargin, title }) {
   return (
     <Tooltip title={title}>
       <Button
@@ -10,7 +10,7 @@ export default function IconButton({ icon, disabled, functionToExecute, title })
         icon={icon}
         size={'large'}
         onClick={() => functionToExecute()}
-        style={{ marginLeft: '1rem' }}
+        style={{ marginLeft: nomargin ? 0 : '1rem' }}
         disabled={disabled}
       />
     </Tooltip>

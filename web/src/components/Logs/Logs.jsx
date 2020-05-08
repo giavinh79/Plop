@@ -1,30 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { layout, subheader } from '../../globalStyles';
-import { Avatar, Input, List, Row } from 'antd';
+import { Avatar, Input, List, Row, Skeleton } from 'antd';
+import { getLogs } from '../../utility/restCalls';
+import moment from 'moment';
 
-const { Search } = Input;
-
-const dataExample = [
-  {
-    description: 'wahoo@gmail.com joined the team',
-    date: 'April 20, 2020',
-    time: '5:30 AM',
-  },
-  {
-    description: "tester@gmail.com created the issue 'test'",
-    date: 'February 8, 2019',
-    time: '11:47 PM',
-  },
-];
+// const dataExample = [
+//   {
+//     description: 'wahoo@gmail.com joined the team',
+//     date: 'April 20, 2020',
+//     time: '5:30 AM',
+//   },
+// ];
 
 export default function Logs() {
-  const [data, setData] = useState(dataExample);
-  //   const [searchInput, setSearchInput] = useState();
+  const [backup, setBackup] = useState();
+  const [data, setData] = useState(['1']);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      let { data: logs } = await getLogs();
+      let formattedData = logs.reverse().map((log) => {
+        return {
+          description: log.description,
+          date: moment(log.date).format('MMMM DD, YYYY'),
+          time: moment(log.date).format('hh:mm A'),
+        };
+      });
+      setData(formattedData);
+      setBackup(formattedData);
+      setLoading(false);
+    })().catch((err) => console.log(err));
+  }, []);
 
   const handleFilter = (e) => {
     let userInput = e.target.value.toLowerCase();
     setData(
-      dataExample.filter((item) => {
+      backup.filter((item) => {
         return (
           item.description.toLowerCase().includes(userInput) ||
           item.time.toLowerCase().includes(userInput) ||
@@ -37,15 +49,14 @@ export default function Logs() {
   return (
     <div style={layout}>
       <p style={subheader}>Project Logs (incomplete)</p>
-      <Search
+      <Input.Search
         allowClear
         size='large'
-        placeholder='Filter logs'
+        placeholder='Filter logs by date or description'
         onChange={(e) => handleFilter(e)}
         style={{
           height: '2.7rem',
           marginBottom: '1rem',
-          //   boxShadow: '0 1px 4px rgba(0,0,0,0.3)',
         }}
       />
       <List
@@ -54,16 +65,18 @@ export default function Logs() {
         dataSource={data}
         renderItem={(item, index) => (
           <List.Item style={{ backgroundColor: index % 2 === 0 ? 'white' : '#f9f5f5', padding: '1rem' }}>
-            <List.Item.Meta
-              avatar={<Avatar icon='pushpin' />}
-              title={
-                <Row type='flex'>
-                  <div>{item.date}</div>
-                  <div style={{ marginLeft: 'auto' }}>{item.time}</div>
-                </Row>
-              }
-              description={item.description}
-            />
+            <Skeleton loading={loading} active avatar size='small' paragraph={{ rows: 1 }} avatar={{ size: 'small' }}>
+              <List.Item.Meta
+                avatar={<Avatar icon='pushpin' />}
+                title={
+                  <Row type='flex'>
+                    <div>{item.date}</div>
+                    <div style={{ marginLeft: 'auto' }}>{item.time}</div>
+                  </Row>
+                }
+                description={item.description}
+              />
+            </Skeleton>
           </List.Item>
         )}
       />

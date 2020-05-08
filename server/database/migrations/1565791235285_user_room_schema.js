@@ -14,7 +14,7 @@ class UserRoomSchema extends Schema {
       table.json('notifications');
       table.integer('last_checked_chat');
       table.integer('administration_level');
-      table.timestamps();
+      // table.timestamps();
     });
   }
 

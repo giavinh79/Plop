@@ -1,15 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Input, Modal } from 'antd';
-import { displayInfoDialog, displaySimpleNotification } from '../../utility/services';
-import { createTeam, retrieveTeams } from '../../utility/restCalls';
 
 const { TextArea } = Input;
 
-export default function NoteModal({ setDisplayModal }) {
+export default function NoteModal({ loading, data, handleCreate, setDisplayModal }) {
   const [visible, setVisible] = useState(true);
-  const [teamCreateError, setTeamCreateError] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const createInput = useRef();
-  const createTeamData = useRef({});
 
   useEffect(() => {
     setTimeout(() => {
@@ -19,6 +17,10 @@ export default function NoteModal({ setDisplayModal }) {
     }, 600);
   }, []);
 
+  useEffect(() => {
+    // if
+  }, [loading]);
+
   const handleCancel = () => {
     setVisible(false);
     setTimeout(() => {
@@ -26,51 +28,19 @@ export default function NoteModal({ setDisplayModal }) {
     }, 200);
   };
 
-  const handleCreate = async () => {
-    const data = {
-      roomName: createTeamData.current.name,
-      roomDescription: createTeamData.current.description,
-      roomPassword: createTeamData.current.password,
-    };
-
-    if (!data.roomName || !data.roomDescription || !data.roomPassword) {
-      setTeamCreateError(true);
-      return;
-    }
-
-    if (teamCreateError) {
-      setTeamCreateError(false);
-    }
-
-    try {
-      const res = await createTeam(data);
-      // setTeams([
-      //   ...teams,
-      //   { name: res.data.name, description: res.data.description, id: res.data.id, currentMembers: '1' },
-      // ]);
-
-      const currentTeams = await retrieveTeams();
-      localStorage.setItem('teams', JSON.stringify(currentTeams.data));
-
-      displayInfoDialog(
-        'Team was successfully created!',
-        'Your team ID is:',
-        res.data.id,
-        "These credentials were emailed to you as a backup and can also be found in your team settings. You may now enter the team's room."
-      );
-    } catch (err) {
-      displaySimpleNotification(
-        'Team was not created',
-        5,
-        'bottomRight',
-        'This may be due to you being at your team limit (3) or exceeding input values (description < 300 characters and title < 100 characters).',
-        'warning',
-        'red'
-      );
-    } finally {
-      // setTeamCreation(false);
-      createTeamData.current = {};
-    }
+  const handleSave = async () => {
+    let index = data.length + 1;
+    // setData((data) => [
+    //   ...data,
+    //   {
+    //     uuid: index.toString(),
+    //     title,
+    //     description,
+    //   },
+    // ]);
+    handleCreate({ uuid: index.toString(), title, description });
+    // if loading === false
+    handleCancel();
   };
 
   return (
@@ -80,10 +50,13 @@ export default function NoteModal({ setDisplayModal }) {
       onCancel={handleCancel}
       maskClosable={true}
       footer={[
-        // <Button key='back' onClick={handleCancel}>
-        //   Return
-        // </Button>,
-        <Button key='submit' type='primary' onClick={handleCreate} disabled>
+        <Button
+          key='submit'
+          type='primary'
+          onClick={handleSave}
+          disabled={title.length === 0 || description.length === 0}
+          loading={false}
+        >
           Save
         </Button>,
       ]}
@@ -91,13 +64,13 @@ export default function NoteModal({ setDisplayModal }) {
       <p>Note title:</p>
       <Input
         style={{ marginBottom: '1rem' }}
-        name='teamName'
-        id='teamName'
+        name='noteTitle'
+        id='noteTitle'
         allowClear={true}
         maxLength={100}
-        aria-label='team-name-input'
+        aria-label='note-title-input'
         onChange={(e) => {
-          createTeamData.current.name = e.currentTarget.value;
+          setTitle(e.currentTarget.value);
         }}
         ref={createInput}
       />
@@ -105,24 +78,14 @@ export default function NoteModal({ setDisplayModal }) {
       <TextArea
         autosize={{ minRows: 4, maxRows: 12 }}
         style={{ marginBottom: '1rem' }}
-        name='teamDescription'
-        id='teamDescription'
+        name='noteDescription'
+        id='noteDescription'
         maxLength={800}
-        aria-label='team-description-input'
+        aria-label='note-description-input'
         onChange={(e) => {
-          createTeamData.current.description = e.currentTarget.value;
+          setDescription(e.currentTarget.value);
         }}
       />
-      {/* <p>Note image link:</p>
-      <Input
-        name='teamPassword'
-        id='teamPassword'
-        allowClear={true}
-        aria-label='team-password-input'
-        onChange={(e) => {
-          createTeamData.current.password = e.currentTarget.value;
-        }}
-      /> */}
     </Modal>
   );
 }

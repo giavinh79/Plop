@@ -83,7 +83,7 @@ export default function ViewMembers() {
       title: (
         <>
           Management
-          <Tooltip title='Change the administration tier of members lower than you in rank or kick/ban members if you are tier 4+.'>
+          <Tooltip title='Only eligible for members tier 4 and higher.'>
             <Icon type='question-circle' style={{ marginLeft: '0.5rem' }} />
           </Tooltip>
         </>

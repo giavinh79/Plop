@@ -92,6 +92,22 @@ const getChat = async (issue) => {
   }
 };
 
+const getLogs = async (issue) => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/logs`);
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getNotes = async () => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/notes`);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const getRepository = async () => {
   try {
     return await axios.get(`${API_ENDPOINT}/repository`);
@@ -172,15 +188,26 @@ const updateIssue = async (id, status) => {
   }
 };
 
+const createNote = async (notes, layout) => {
+  try {
+    await axios.post(`${API_ENDPOINT}/notes`, { notes, layout });
+  } catch (err) {
+    throw err;
+  }
+};
+
 export {
   checkAuth,
   clearNotifications,
+  createNote,
   createSession,
   createTeam,
   deleteIssue,
   deleteRoom,
   getAvatar,
   getChat,
+  getLogs,
+  getNotes,
   getIssueById,
   getRepository,
   joinTeam,

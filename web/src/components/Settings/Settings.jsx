@@ -151,6 +151,7 @@ export default function Settings() {
                       border: '1px solid #d9d9d9',
                       padding: '4px 11px',
                       borderRadius: '4px',
+                      backgroundColor: '#f7f7f7',
                     }}
                   >
                     {state.id}
@@ -189,7 +190,7 @@ export default function Settings() {
             ) : (
               <>
                 <div style={styles.wrapper}>
-                  <p style={styles.text}>Team name: </p>
+                  <p style={styles.text}>Team Name: </p>
                   <Input
                     type='text'
                     defaultValue={state.name}
@@ -197,7 +198,7 @@ export default function Settings() {
                   />
                 </div>
                 <div style={styles.wrapper}>
-                  <p style={styles.text}>Team description: </p>
+                  <p style={styles.text}>Team Description: </p>
                   <Input.TextArea
                     type='text'
                     defaultValue={state.description}
@@ -224,7 +225,7 @@ export default function Settings() {
             ) : (
               <>
                 <div style={styles.wrapper}>
-                  <p style={styles.text}>Team password: </p>
+                  <p style={styles.text}>Team Password: </p>
                   <Input.Password
                     defaultValue={state.decryptPass}
                     autoComplete='new-password'
@@ -244,19 +245,21 @@ export default function Settings() {
                       </Paragraph>
                     </div> */}
                     <div>
-                      <p style={styles.text}>Limit max members </p>
+                      <p style={styles.text}>Max Members Limit</p>
                       <MemberSlider style={{ marginRight: '1rem' }} />
                     </div>
                     <div>
                       <Row type='flex' style={{ alignItems: 'center' }}>
-                        <p style={styles.text}>Default administration level </p>
+                        <p style={styles.text}>Default Administration Level </p>
                         <Tooltip
                           title={
                             <span>
-                              Tiers of Administration: <br />0 - can only see and edit issues assigned to them <br />1 -
+                              Default administration tier given to new members (can be 1-5). For more information on the
+                              tiers, please look at the help section below this section.
+                              {/* Tiers of Administration: <br />0 - can only see and edit issues assigned to them <br />1 -
                               can see all issues but not edit all <br />2 - can edit any issue <br />3 - can invite new
                               members <br />4 - can manage members but no access to team settings <br />5 - all
-                              privileges
+                              privileges */}
                             </span>
                           }
                         >

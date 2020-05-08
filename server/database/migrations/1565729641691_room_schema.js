@@ -13,13 +13,14 @@ class RoomSchema extends Schema {
       table.string('password', 60).notNullable();
       table.string('repository', 100);
       table.integer('maxMembers');
+      table.integer('default_admin_tier');
       table.integer('status');
       table.integer('currentMembers');
       table.boolean('private');
       table.boolean('adminApproval');
       table.json('chat');
-      table.json('notes');
-      table.json('banList');
+      table.json('notes_layout');
+      table.json('ban_list');
       table.timestamps();
     });
   }

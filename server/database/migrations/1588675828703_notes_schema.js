@@ -3,22 +3,21 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema');
 
-class LogSchema extends Schema {
+class NotesSchema extends Schema {
   up() {
-    this.create('logs', (table) => {
+    this.create('notes', (table) => {
       table.increments();
       table.integer('room_id').unsigned().references('id').inTable('rooms');
-      table.integer('issue_id').unsigned().references('id').inTable('issues');
+      table.string('title', [100]);
       table.string('description', [1000]);
-      table.string('user', [80]);
-      table.string('date', [80]);
+      table.integer('last_modified_by').unsigned();
       // table.timestamps();
     });
   }
 
   down() {
-    this.drop('logs');
+    this.drop('notes');
   }
 }
 
-module.exports = LogSchema;
+module.exports = NotesSchema;

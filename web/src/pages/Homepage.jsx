@@ -5,9 +5,11 @@ import { Alert, Avatar, Button, BackTop, Card, Icon, Modal, Result } from 'antd'
 import MediaQuery from 'react-responsive';
 import Fade from 'react-reveal/Fade';
 import './Homepage.css';
+import HomepagePrivacyTerms from './HomepagePrivacyTerms';
 
 export default function Homepage() {
   const [visible, setVisible] = useState(true);
+  const [displayModal, setDisplayModal] = useState(false);
   const signupRef = useRef(); // will need to forward refs
   const backToTop = useRef();
 
@@ -17,6 +19,7 @@ export default function Homepage() {
 
   return (
     <>
+      {displayModal && <HomepagePrivacyTerms setDisplayModal={setDisplayModal} />}
       <div style={{ width: '100%' }}>
         <div className='landing-container'>
           <div className='landing-flex-wrapper'>
@@ -160,7 +163,7 @@ export default function Homepage() {
           <Result
             status='success'
             title='What are you waiting for?'
-            subTitle='Sign up now and leverate this project management platform for free!'
+            subTitle='Sign up now and leverate this project management platform for free! Plop will always remain free and open-source.'
             extra={[
               <Button type='primary' key='registration' onClick={() => backToTop.current.scrollToTop()}>
                 Sign Up
@@ -175,16 +178,22 @@ export default function Homepage() {
         <BackTop ref={backToTop} />
         <div className='landing-footer'>
           <div>
-            <img src='/images/justlogo.png' alt='logo' style={{ cursor: 'pointer', height: '2.8rem' }} />
+            <p style={{ color: 'white', margin: 0, fontSize: '1rem', fontWeight: 'bold' }}>&copy; 2020 Plop, Inc. </p>
           </div>
           <div className='landing-footer-text'>
-            <p style={{ color: 'white', margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>plop &copy; 2020</p>
+            <p
+              style={{ color: 'white', cursor: 'pointer', margin: 0, fontSize: '1rem', fontWeight: 'bold' }}
+              onClick={() => setDisplayModal(true)}
+            >
+              Privacy Policy
+            </p>
           </div>
-          <div>
-            <Icon type='twitter' style={{ fontSize: '2.5rem', margin: '0 1rem', color: 'white' }} />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Icon type='twitter' style={{ fontSize: '2rem', color: 'white' }} />
             <a href='https://github.com/gv79/plop' target='_blank' rel='noopener noreferrer'>
-              <Icon type='github' style={{ fontSize: '2.5rem', color: 'white' }} />
+              <Icon type='github' style={{ fontSize: '2rem', color: 'white', margin: '0 1rem' }} />
             </a>
+            <img src='/images/justlogo.png' alt='logo' style={{ cursor: 'pointer', height: '2.1rem' }} />
           </div>
         </div>
       </div>

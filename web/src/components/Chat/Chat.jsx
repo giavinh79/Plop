@@ -65,7 +65,6 @@ export default function Chat({ chat, chatMessages, chatUsers, setChatData }) {
         chat.emit('message', {
           type: 1,
           message: inputRef.current.input.value,
-          avatar: localStorage.getItem('avatar') || null,
         });
         inputRef.current.state.value = '';
         setChatData((chatData) => {

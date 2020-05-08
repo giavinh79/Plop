@@ -76,12 +76,8 @@ export default function Overview() {
     <div style={layout}>
       <p style={subheader}>Project Overview (incomplete)</p>
 
-      <Descriptions
-        // title='Current Development Cycle'
-        bordered
-        style={{ marginBottom: '2rem' }}
-      >
-        <Descriptions.Item label='Project Status' span={3}>
+      <Descriptions bordered style={{ marginBottom: '2rem' }}>
+        <Descriptions.Item label='Project Completion' span={3}>
           <Row type='flex' style={{ flexWrap: 'nowrap', alignItems: 'center' }}>
             <Badge status='processing' text='Running' style={{ minWidth: '5rem' }} />
             <Progress
@@ -89,9 +85,11 @@ export default function Overview() {
                 from: '#108ee9',
                 to: '#87d068',
               }}
-              percent={50}
+              percent={Math.round(
+                (issues.completedItems.length /
+                  (issues.activeItems.length + issues.progressItems.length + issues.completedItems.length) || 0) * 100
+              )}
               status='active'
-              // style={{ marginBottom: '1rem' }}
             />
           </Row>
         </Descriptions.Item>
