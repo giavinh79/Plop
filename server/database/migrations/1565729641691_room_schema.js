@@ -19,7 +19,6 @@ class RoomSchema extends Schema {
       table.boolean('private');
       table.boolean('adminApproval');
       table.json('chat');
-      table.json('notes_layout');
       table.json('ban_list');
       table.timestamps();
     });

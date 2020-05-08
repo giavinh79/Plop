@@ -298,6 +298,11 @@ class RoomController {
           description: `${user.email} created team '${room.name}'`,
           date: new Date().toString(),
         });
+        await Database.table('notes').insert({
+          room_id: room.id,
+          notes_layout: JSON.stringify([]),
+          notes: JSON.stringify([]),
+        });
       });
 
       const encryptedRoomId = hashids.encodeHex(room.id.toString());
@@ -356,7 +361,7 @@ class RoomController {
         await trx
           .table('user_rooms')
           .insert({ user_id: user.id, room_id: decryptedRoomId, role: null, notifications: JSON.stringify([]) });
-        const data = await trx.table('rooms').select('currentMembers', 'name').where('id', decryptedRoomId);
+        const data = await trx.table('rooms').select('currentMembers').where('id', decryptedRoomId);
         await trx
           .table('rooms')
           .where('id', decryptedRoomId)
@@ -365,7 +370,7 @@ class RoomController {
           });
         await Database.table('logs').insert({
           room_id: decryptedRoomId,
-          description: `${user.email} joined team '${data[0].name}'`,
+          description: `${user.email} joined the team`,
           date: new Date().toString(),
         });
       });

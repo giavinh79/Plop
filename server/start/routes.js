@@ -65,7 +65,6 @@ Route.post('/lastReadChat', 'ChatController.updatelastReadChat').middleware(jwtM
 // Notes
 Route.get('/notes', 'NoteController.get').middleware(jwtMiddleware);
 Route.post('/notes', 'NoteController.update').middleware(jwtMiddleware);
-Route.put('/notes', 'NoteController.create').middleware(jwtMiddleware);
 Route.delete('/notes/:id', 'NoteController.delete').middleware(jwtMiddleware);
 
 // Logs

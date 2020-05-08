@@ -188,7 +188,7 @@ const updateIssue = async (id, status) => {
   }
 };
 
-const createNote = async (notes, layout) => {
+const updateLayout = async (notes, layout) => {
   try {
     await axios.post(`${API_ENDPOINT}/notes`, { notes, layout });
   } catch (err) {
@@ -199,7 +199,6 @@ const createNote = async (notes, layout) => {
 export {
   checkAuth,
   clearNotifications,
-  createNote,
   createSession,
   createTeam,
   deleteIssue,
@@ -219,4 +218,5 @@ export {
   sendShareIssueNotification,
   sendNotificationsRead,
   updateIssue,
+  updateLayout,
 };

@@ -3,6 +3,7 @@ import { layout, subheader } from '../../globalStyles';
 import { Avatar, Input, List, Row, Skeleton } from 'antd';
 import { getLogs } from '../../utility/restCalls';
 import moment from 'moment';
+import './style.css';
 
 // const dataExample = [
 //   {
@@ -62,6 +63,7 @@ export default function Logs() {
       <List
         style={{ border: '1px solid #ccc' }}
         itemLayout='horizontal'
+        className='log-list'
         dataSource={data}
         renderItem={(item, index) => (
           <List.Item style={{ backgroundColor: index % 2 === 0 ? 'white' : '#f9f5f5', padding: '1rem' }}>

@@ -3,7 +3,7 @@ import { Button, Input, Modal } from 'antd';
 
 const { TextArea } = Input;
 
-export default function NoteModal({ loading, data, handleCreate, setDisplayModal }) {
+export default function NoteModal({ data, handleCreate, setDisplayModal }) {
   const [visible, setVisible] = useState(true);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -17,10 +17,6 @@ export default function NoteModal({ loading, data, handleCreate, setDisplayModal
     }, 600);
   }, []);
 
-  useEffect(() => {
-    // if
-  }, [loading]);
-
   const handleCancel = () => {
     setVisible(false);
     setTimeout(() => {
@@ -30,16 +26,7 @@ export default function NoteModal({ loading, data, handleCreate, setDisplayModal
 
   const handleSave = async () => {
     let index = data.length + 1;
-    // setData((data) => [
-    //   ...data,
-    //   {
-    //     uuid: index.toString(),
-    //     title,
-    //     description,
-    //   },
-    // ]);
     handleCreate({ uuid: index.toString(), title, description });
-    // if loading === false
     handleCancel();
   };
 

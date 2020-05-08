@@ -7,11 +7,10 @@ class NotesSchema extends Schema {
   up() {
     this.create('notes', (table) => {
       table.increments();
+      table.json('notes'); // contains title, description
+      table.json('notes_layout');
       table.integer('room_id').unsigned().references('id').inTable('rooms');
-      table.string('title', [100]);
-      table.string('description', [1000]);
-      table.integer('last_modified_by').unsigned();
-      // table.timestamps();
+      table.string('last_modified');
     });
   }
 

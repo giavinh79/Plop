@@ -299,7 +299,7 @@ export default function Settings() {
                       </p>
                     </div>
                     <div style={styles.wrapperC}>
-                      <Switch defaultChecked={false} disabled />
+                      <Switch defaultChecked={true} disabled />
                       <p style={styles.textC}>
                         Enable logs{' '}
                         <span>

@@ -73,6 +73,13 @@ class SetupSeeder {
         date: new Date().toString(),
       });
 
+      // Creating note row for room
+      await Database.table('notes').insert({
+        room_id: room.id,
+        notes_layout: JSON.stringify([]),
+        notes: JSON.stringify([]),
+      });
+
       // Creating issues for the room/team's dashboard and backlog
       let issue = new Issue();
       issue.fill({
