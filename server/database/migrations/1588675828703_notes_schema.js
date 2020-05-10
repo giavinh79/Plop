@@ -10,7 +10,8 @@ class NotesSchema extends Schema {
       table.json('notes'); // contains title, description
       table.json('notes_layout');
       table.integer('room_id').unsigned().references('id').inTable('rooms');
-      table.string('last_modified');
+      table.string('last_modified', 100);
+      table.integer('last_modified_by');
     });
   }
 

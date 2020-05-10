@@ -25,13 +25,13 @@ export default function Homepage() {
           <div className='landing-flex-wrapper'>
             {/* <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}> */}
             <div className='landing-container-one'>
-              <p className='landing-header'>
+              <h1 className='landing-header'>
                 Make <span style={{ color: '#5faeff' }}>managing projects</span> simple and <span>efficient</span>.
-              </p>
-              <p className='landing-subheader'>
+              </h1>
+              <h2 className='landing-subheader'>
                 Featuring a simple interface with chat, drag-and-drop dashboards, and more,{' '}
                 <span style={{ color: '#5FAEFF' }}>Plop</span> makes it easy for teams to stay connected and organized.
-              </p>
+              </h2>
             </div>
             <div style={{ display: 'flex', padding: '0 2rem', justifyContent: 'flex-end' }}>
               {/* <img src='/images/work_svg.svg' /> */}
@@ -176,7 +176,7 @@ export default function Homepage() {
           />
         </div>
         <BackTop ref={backToTop} />
-        <div className='landing-footer'>
+        <footer className='landing-footer'>
           <div>
             <p style={{ color: 'white', margin: 0, fontSize: '1rem', fontWeight: 'bold' }}>&copy; 2020 Plop, Inc. </p>
           </div>
@@ -195,7 +195,7 @@ export default function Homepage() {
             </a>
             <img src='/images/justlogo.png' alt='logo' style={{ cursor: 'pointer', height: '2.1rem' }} />
           </div>
-        </div>
+        </footer>
       </div>
       <MediaQuery maxDeviceWidth={480} maxWidth={480}>
         <Modal

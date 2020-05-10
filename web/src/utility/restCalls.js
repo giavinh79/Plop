@@ -116,6 +116,14 @@ const getRepository = async () => {
   }
 };
 
+const getRoomAdminTier = async () => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/roomAdminTier`);
+  } catch (err) {
+    throw new err();
+  }
+};
+
 const joinTeam = async (data) => {
   try {
     return await axios.post(`${API_ENDPOINT}/joinRoom`, data);
@@ -188,9 +196,9 @@ const updateIssue = async (id, status) => {
   }
 };
 
-const updateLayout = async (notes, layout) => {
+const updateLayout = async (notes, layout, date) => {
   try {
-    await axios.post(`${API_ENDPOINT}/notes`, { notes, layout });
+    await axios.post(`${API_ENDPOINT}/notes`, { notes, layout, date });
   } catch (err) {
     throw err;
   }
@@ -209,6 +217,7 @@ export {
   getNotes,
   getIssueById,
   getRepository,
+  getRoomAdminTier,
   joinTeam,
   logout,
   retrieveAssignees,

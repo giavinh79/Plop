@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Icon, Input, Row, Select, Skeleton, Table, Tooltip } from 'antd';
+import { Button, Icon, Input, Row, Select, Skeleton, Table, Tooltip, Popconfirm } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { pagination } from '../../constants';
-import { retrieveMembers } from '../../utility/restCalls';
+import { retrieveMembers, getRoomAdminTier } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
 import moment from 'moment';
 import 'antd/dist/antd.css';
@@ -19,6 +19,7 @@ export default function ViewMembers() {
   const [title, setTitle] = useState('Members List');
   const [memberData, setMemberData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState({ admininistration_level: 1, email: '' });
 
   const handleFilter = (e) => {
     let userInput = e.target.value.toLowerCase();
@@ -39,6 +40,11 @@ export default function ViewMembers() {
   useEffect(() => {
     (async () => {
       const { data } = await retrieveMembers();
+      const {
+        data: { administration_level, user },
+      } = await getRoomAdminTier();
+      setCurrentUser({ administration_level, user });
+
       setLoading(false);
       data.sort((itemOne, itemTwo) => {
         if (itemOne.date >= itemTwo.date) {
@@ -67,7 +73,14 @@ export default function ViewMembers() {
       key: 'role',
     },
     {
-      title: 'Administration Tier',
+      title: (
+        <>
+          Administration Tier
+          <Tooltip title="See 'Help' section for more information">
+            <Icon type='question-circle' style={{ marginLeft: '0.5rem' }} />
+          </Tooltip>
+        </>
+      ),
       dataIndex: 'administration',
       key: 'administration',
     },
@@ -88,21 +101,37 @@ export default function ViewMembers() {
           </Tooltip>
         </>
       ),
-      dataIndex: 'manage',
+      dataIndex: 'member',
       key: 'manage',
-      render: () => {
-        return (
+      render: (member) => {
+        return member === currentUser.user ? (
+          <></>
+        ) : (
           <>
-            <Button type='danger' disabled>
-              Kick
-            </Button>
-            <Button type='danger' style={{ margin: '0 1rem' }} disabled>
-              Ban
-            </Button>
+            <Popconfirm
+              title={`Are you sure you want to kick ${member} from the room`}
+              // onConfirm={() => handleDeletion(item.id)}
+              okText='Yes'
+              cancelText='No'
+            >
+              <Button type='danger' disabled={currentUser.administration_level <= 4}>
+                Kick
+              </Button>
+            </Popconfirm>
+            <Popconfirm
+              title={`Are you sure you want to ban ${member} from the room`}
+              // onConfirm={() => handleDeletion(item.id)}
+              okText='Yes'
+              cancelText='No'
+            >
+              <Button type='danger' style={{ margin: '0 1rem' }} disabled={currentUser.administration_level <= 4}>
+                Ban
+              </Button>
+            </Popconfirm>
             <Select
               defaultValue='1'
               style={{ width: 120, margin: '1rem 0' }}
-              disabled
+              disabled={currentUser.administration_level <= 4}
               // onChange={handleChange}
             >
               <Select.Option value='1'>Admin Tier 1</Select.Option>
@@ -117,37 +146,25 @@ export default function ViewMembers() {
     },
   ];
 
-  //   <div style={{ display: 'flex', alignItems: 'center' }}>
-  //   <div
-  //     style={{
-  //       height: '1rem',
-  //       width: '1rem',
-  //       backgroundColor: '#40b33f',
-  //       borderRadius: '50%',
-  //       marginRight: '0.5rem',
-  //     }}
-  //   ></div>
-  //   Online
-  // </div>
-
   return (
     <div style={layout}>
       <p style={{ ...subheader, opacity: loading ? 0.3 : 1 }}>{title}</p>
+      <div style={{ marginBottom: '1rem' }}>
+        <Input.Search
+          allowClear
+          size='large'
+          placeholder='Filter member by email or role'
+          onChange={(e) => handleFilter(e)}
+          style={{
+            height: '2.7rem',
+          }}
+          disabled={loading}
+        />
+      </div>
       {loading ? (
         <Skeleton active />
       ) : (
         <>
-          <div style={{ marginBottom: '1rem' }}>
-            <Input.Search
-              allowClear
-              size='large'
-              placeholder='Filter member by email or role'
-              onChange={(e) => handleFilter(e)}
-              style={{
-                height: '2.7rem',
-              }}
-            />
-          </div>
           <Table
             columns={columns}
             dataSource={memberData}

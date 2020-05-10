@@ -54,9 +54,12 @@ export default function Backlog() {
   const columns = [
     {
       title: 'Title',
-      dataIndex: 'title',
       key: 'title',
-      render: (text) => <ActionText style={{ color: '#5185bb' }}>{text}</ActionText>,
+      render: (item) => (
+        <ActionText style={{ color: '#5185bb' }} onClick={() => setIssue(item)}>
+          {item.title}
+        </ActionText>
+      ),
     },
     {
       title: 'Id',
@@ -98,7 +101,6 @@ export default function Backlog() {
         <Row type='flex' align='middle'>
           <ActionText
             onClick={() => {
-              console.log(item);
               setIssue(item);
             }}
           >

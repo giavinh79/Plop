@@ -23,7 +23,7 @@ export default function HomepagePrivacyTerms({ setDisplayModal }) {
         <p>
           If you have additional questions or require more information about our Privacy Policy, do not hesitate to
           contact us at <a href='mailto:plopwebapp@gmail.com'>plopwebapp@gmail.com</a>. Overall, any user-obtained data
-          is used only for the application itself. All your data will remain private and never be sold.
+          is used for the application functionality only and will never be sold.
         </p>
         <h2>General Data Protection Regulation (GDPR)</h2>
         <p>We are a Data Controller of your information.</p>

@@ -5,7 +5,19 @@ import { SectionNavHeader, Table } from './HelpStyles';
 
 const { Text } = Typography;
 
-export default function Help() {
+/* Controls rendering of information in help section
+ * No routing needed so instead I just use changePage()
+ */
+export default function HelpPanel() {
+  const changePage = (type) => {
+    switch (type) {
+      case 0:
+        return <div></div>;
+      default:
+        return <div></div>;
+    }
+  };
+
   return (
     <div style={{ width: '100%' }}>
       <div style={layout}>

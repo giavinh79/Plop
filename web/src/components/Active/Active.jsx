@@ -54,9 +54,12 @@ export default function Active() {
   const columns = [
     {
       title: 'Title',
-      dataIndex: 'title',
       key: 'title',
-      render: (text) => <ActionText style={{ color: '#5185bb' }}>{text}</ActionText>,
+      render: (item) => (
+        <ActionText style={{ color: '#5185bb' }} onClick={() => setIssue(item)}>
+          {item.title}
+        </ActionText>
+      ),
     },
     {
       title: 'Description',

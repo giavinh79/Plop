@@ -119,7 +119,7 @@ function SideNav({ path }) {
           </Tooltip>
         </Menu.Item>
         <Menu.Item key='11' onClick={() => history.push('/dashboard/archive-issues')} disabled>
-          <Tooltip title='Repository for completed tasks' mouseEnterDelay={0.8}>
+          <Tooltip title='Deleted tasks organized by sprint' mouseEnterDelay={0.8}>
             <span>Archive</span>
           </Tooltip>
         </Menu.Item>

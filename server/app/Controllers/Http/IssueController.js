@@ -167,6 +167,16 @@ class IssueController {
         });
       }
 
+      await Database.table('logs').insert({
+        room_id: decryptedRoomId,
+        description:
+          status === 0
+            ? `${user.email} created the backlog issue '${title}'`
+            : `${user.email} created the active issue '${title}'`,
+        date: new Date().toString(),
+        type: 0,
+      });
+
       response.status(200).json({
         status: status === 0 ? 'backlog' : 'dashboard',
       });
@@ -190,7 +200,6 @@ class IssueController {
       const issue = await Database.table('issues').where('id', request.params.id).select('image');
 
       const imagePromises = [];
-      // need to JSON.parse(issue[0].image) if mySQL
 
       if (issue[0].image && Array.isArray(issue[0].image)) {
         for (let item of issue[0].image) {
@@ -213,10 +222,20 @@ class IssueController {
         await Promise.all(imagePromises);
       }
 
-      const deletions = await Database.table('issues').where('id', request.params.id).delete();
+      await Database.transaction(async (trx) => {
+        let [title] = await trx.table('issues').select('title').where('id', request.body.id);
 
-      if (deletions == null) throw new Error('Issue could not be deleted as it was not found');
-      else response.status(200).send();
+        await trx.table('logs').insert({
+          room_id: decryptedRoomId,
+          description: `${user.email} deleted issue '${title}'`,
+          date: new Date().toString(),
+          type: 2,
+        });
+
+        const deletions = await trx.table('issues').where('id', request.params.id).delete();
+        if (deletions == null) throw new Error('Issue could not be deleted as it was not found');
+        else response.status(200).send();
+      });
     } catch (err) {
       console.log(`(issue_delete) ${new Date()}: ${err.message}`);
       response.status(404).send();
@@ -360,6 +379,14 @@ class IssueController {
         .update({
           comments: JSON.stringify(data[0].comments),
         });
+
+      await Database.table('logs').insert({
+        room_id: decryptedRoomId,
+        issue_id: data[0].id,
+        description: `${user.email} commented on issue '${data[0].title}'`,
+        date: new Date().toString(),
+        type: 3,
+      });
 
       // Should just revamp so that comments include user IDs (?)
       let comments = await Database.from('issues').select('comments').where('id', request.body.id);
@@ -511,6 +538,12 @@ class IssueController {
             status,
           });
       }
+      await Database.table('logs').insert({
+        room_id: decryptedRoomId,
+        description: `${user.email} updated issue '${title}'`,
+        date: new Date().toString(),
+        type: 1,
+      });
       response.status(200).send();
     } catch (err) {
       console.log(`(issue_update) ${new Date()}: ${err.message}`);
@@ -526,9 +559,22 @@ class IssueController {
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
-      await Database.table('issues')
-        .where({ room: decryptedRoomId, id: request.body.id })
-        .update({ status: request.body.status });
+      await Database.transaction(async (trx) => {
+        await trx
+          .table('issues')
+          .where({ room: decryptedRoomId, id: request.body.id })
+          .update({ status: request.body.status });
+
+        let [title] = await trx.table('issues').select('title').where('id', request.body.id);
+
+        await trx.table('logs').insert({
+          room_id: decryptedRoomId,
+          description: `${user.email} updated issue '${title}'`,
+          date: new Date().toString(),
+          type: 1,
+        });
+      });
+
       response.status(200).send();
     } catch (err) {
       console.log(`(issue_updateProgress) ${new Date()}: ${err.message}`);

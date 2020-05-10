@@ -188,6 +188,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
           </Col>
           <Col span={12}>
             <Form.Item label='Email Alerts'>
+              {/* should be a checklist probably */}
               <Select placeholder='All' defaultValue='All' disabled>
                 <Option value='all'>All</Option>
                 <Option value='some'>Assignments Only</Option>
@@ -197,6 +198,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
           </Col>
           <Col span={12}>
             <Form.Item label='Notifications'>
+              {/* should be a checklist probably - assigning, comments, new member joins, setting changes (if owner) */}
               <Select placeholder='All' defaultValue='All' disabled>
                 <Option value='all'>All</Option>
                 <Option value='some'>Assignments Only</Option>

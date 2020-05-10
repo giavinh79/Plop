@@ -18,13 +18,11 @@ Longterm: More functionality for room settings and redesign (ie. member approval
 
 Very longterm:
 
-Store files/images on Amazon AWS S3 bucket instead for better scaling
+Store files and images on Amazon AWS S3 bucket instead
 
-Offload some request code to message queue to shorten response time of certain more frequent calls (i.e. can offload/delay setting notifications and logs)
+Add Rate Limiter to server-side authentication stuff and limit to # of image uploads
 
-Add Rate Limiter to server-side stuff
-
-Firebase Google Analytics + React Native mobile app (very into the future)
+Firebase Google Analytics + React Native/Flutter mobile app (very into the future)
 
 Node.js and React.js unit testing
 

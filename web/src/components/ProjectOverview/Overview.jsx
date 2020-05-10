@@ -58,11 +58,16 @@ export default function Overview() {
     progressItems: [],
     completedItems: [],
   });
+  const [backlogIssues, setBacklogIssues] = useState([]);
 
   useEffect(() => {
     (async () => {
-      let { data } = await axios.get(`${API_ENDPOINT}/TeamIssue/1`);
-      if (isMounted.current) setIssues(data);
+      let { data: activeData } = await axios.get(`${API_ENDPOINT}/teamIssue/1`);
+      let { data: backlog } = await axios.get(`${API_ENDPOINT}/teamIssue/0`);
+      if (isMounted.current) {
+        setIssues(activeData);
+        setBacklogIssues(backlog);
+      }
     })().catch((err) => {
       console.log(err);
     });
@@ -98,7 +103,7 @@ export default function Overview() {
         <Descriptions.Item label='Completed Tasks'>{issues.completedItems.length}</Descriptions.Item>
         <Descriptions.Item label='Archived Tasks'>0</Descriptions.Item>
         <Descriptions.Item label='Tasks in backlog' span={2}>
-          0
+          {backlogIssues.length}
         </Descriptions.Item>
       </Descriptions>
       <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>

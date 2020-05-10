@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { layout, subheader } from '../../globalStyles';
-import { Avatar, Input, List, Row, Skeleton } from 'antd';
+import { Avatar, Input, List, Row, Skeleton, Icon } from 'antd';
 import { getLogs } from '../../utility/restCalls';
 import moment from 'moment';
 import './style.css';
@@ -12,6 +12,8 @@ import './style.css';
 //     time: '5:30 AM',
 //   },
 // ];
+
+// NICE COLOR FOR OBJECTS : #415ec7
 
 export default function Logs() {
   const [backup, setBackup] = useState();
@@ -49,7 +51,7 @@ export default function Logs() {
 
   return (
     <div style={layout}>
-      <p style={subheader}>Project Logs (incomplete)</p>
+      <p style={subheader}>Project Logs (complete-ish)</p>
       <Input.Search
         allowClear
         size='large'
@@ -76,7 +78,22 @@ export default function Logs() {
                     <div style={{ marginLeft: 'auto' }}>{item.time}</div>
                   </Row>
                 }
-                description={item.description}
+                description={
+                  <Row type='flex'>
+                    <div>{item.description}</div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: '#6989ab',
+                        cursor: 'pointer',
+                        marginLeft: 'auto',
+                      }}
+                    >
+                      Go to <Icon type='arrow-right' style={{ marginLeft: '0.3rem' }} />
+                    </div>
+                  </Row>
+                }
               />
             </Skeleton>
           </List.Item>

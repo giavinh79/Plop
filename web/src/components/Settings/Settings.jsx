@@ -267,7 +267,7 @@ export default function Settings() {
                         </Tooltip>
                       </Row>
 
-                      <Select defaultValue='1' style={{ width: 120 }} disabled>
+                      <Select defaultValue='3' style={{ width: 120 }} disabled>
                         <Option value='0'>0</Option>
                         <Option value='1'>1</Option>
                         <Option value='2'>2</Option>

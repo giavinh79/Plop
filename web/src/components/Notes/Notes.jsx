@@ -6,9 +6,11 @@ import NoteModal from './NoteModal';
 import IconButton from './IconButton';
 import { getNotes, updateLayout } from '../../utility/restCalls';
 import NoteHelpModal from './NoteHelpModal';
+import moment from 'moment';
 import 'antd/dist/antd.css';
 import './grid-styles.css';
 import './resizable-styles.css';
+import { displaySimpleNotification } from '../../utility/services';
 
 const ReactGridLayout = WidthProvider(GridLayout);
 
@@ -48,16 +50,20 @@ export default function Notes() {
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState(false);
   const [layoutData, setLayoutData] = useState([]);
+  const [date, setDate] = useState(null); // date when notes were received
 
   useEffect(() => {
     (async () => {
       const {
-        data: { notes, notes_layout },
+        data: { notes, notes_layout, last_modified },
       } = await getNotes();
+      setDate(moment(last_modified).format('YYYYMMDDhhmmss'));
       setData(notes);
       setLayoutData(notes_layout);
       setLoading(false);
-    })().catch((err) => console.log(err));
+    })().catch((err) => {
+      displaySimpleNotification('Session expired', 5, 'bottomRight', 'You need to login again.', 'warning', '#108ee9');
+    });
   }, []);
 
   const handleCreate = (item) => {
@@ -94,12 +100,13 @@ export default function Notes() {
     );
   };
 
-  const handleDelete = (note) => {
-    setData(
-      data.filter((item) => {
-        return item.uuid !== note.uuid;
-      })
-    );
+  const handleDelete = async (note) => {
+    let updatedData = data.filter((item) => {
+      return item.uuid !== note.uuid;
+    });
+
+    setData(updatedData);
+    if (data.length > 0 && !loading && layoutData.length > 0) await updateLayout(updatedData, layoutData, date);
   };
 
   const handleEdit = (note) => {
@@ -127,7 +134,20 @@ export default function Notes() {
         return item;
       })
     );
-    if (data.length > 0 && !loading && layoutData.length > 0) await updateLayout(data, layoutData);
+    try {
+      if (data.length > 0 && !loading && layoutData.length > 0) await updateLayout(data, layoutData, date);
+    } catch (err) {
+      if (err.response.data === 'ERROR_NEW_NOTE_CHANGES') {
+        displaySimpleNotification(
+          'Error',
+          10,
+          'bottomRight',
+          'There have been new changes and the page must be refreshed to save changes.',
+          'warning',
+          'red'
+        );
+      }
+    }
   };
 
   const handleLayout = async (layout) => {
@@ -141,7 +161,20 @@ export default function Notes() {
       return item;
     });
     setLayoutData(newLayout);
-    if (data.length > 0 && !loading && layout.length > 0) await updateLayout(data, newLayout);
+    try {
+      if (data.length > 0 && !loading && layout.length > 0) await updateLayout(data, newLayout, date);
+    } catch (err) {
+      if (err.response.data === 'ERROR_NEW_NOTE_CHANGES') {
+        displaySimpleNotification(
+          'Error',
+          10,
+          'bottomRight',
+          'There have been new changes and the page must be refreshed to save changes.',
+          'warning',
+          'red'
+        );
+      }
+    }
   };
 
   return (
@@ -252,14 +285,12 @@ export default function Notes() {
                       />
                     ) : (
                       <pre
-                        style={
-                          // item.highlighted && { color: '#d4d4d4' } &&
-                          {
-                            whiteSpace: 'pre-wrap',
-                            fontFamily:
-                              "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica",
-                          }
-                        }
+                        style={{
+                          color: item.highlighted ? '#d4d4d4' : '',
+                          whiteSpace: 'pre-wrap',
+                          fontFamily:
+                            "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica",
+                        }}
                       >
                         {parsedDescription(item.description)}
                       </pre>

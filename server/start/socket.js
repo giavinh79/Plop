@@ -2,7 +2,6 @@
 
 const Ws = use('Ws');
 const Database = use('Database');
-const Encryption = use('Encryption');
 const Hashids = require('hashids/cjs');
 const hashids = new Hashids('', 9);
 let usersInfo = new Set(); // info to send back to client side regarding a user

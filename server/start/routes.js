@@ -40,6 +40,8 @@ Route.post('/leaveRoom', 'RoomController.leave').middleware(jwtMiddleware);
 Route.put('/room', 'RoomController.create').middleware(jwtMiddleware);
 Route.delete('/room', 'RoomController.delete').middleware(jwtMiddleware);
 
+Route.get('/roomAdminTier', 'RoomController.getRoomAdminTier').middleware(jwtMiddleware);
+
 // Issues - begin setting up other endpoints like this (REST)
 Route.get('/issue/:id', 'IssueController.get').middleware(jwtMiddleware);
 Route.get('/teamIssue/:status', 'IssueController.getTeam').middleware(jwtMiddleware);
@@ -65,8 +67,6 @@ Route.post('/lastReadChat', 'ChatController.updatelastReadChat').middleware(jwtM
 // Notes
 Route.get('/notes', 'NoteController.get').middleware(jwtMiddleware);
 Route.post('/notes', 'NoteController.update').middleware(jwtMiddleware);
-Route.delete('/notes/:id', 'NoteController.delete').middleware(jwtMiddleware);
 
 // Logs
 Route.get('/logs', 'LogController.get').middleware(jwtMiddleware);
-Route.put('/logs', 'LogController.create').middleware(jwtMiddleware);

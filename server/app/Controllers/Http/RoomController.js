@@ -68,7 +68,9 @@ class RoomController {
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
 
-      let members = await Database.select('user_id', 'role').from('user_rooms').where('room_id', decryptedRoomId);
+      let members = await Database.select('user_id', 'role', 'administration_level')
+        .from('user_rooms')
+        .where('room_id', decryptedRoomId);
 
       for (let member of members) {
         let [data] = await Database.select('*').from('users').where('id', member.user_id);
@@ -77,7 +79,7 @@ class RoomController {
           key: count,
           member: data.email,
           role: member.role || 'N/A',
-          administration: '1',
+          administration: member.administration_level,
           date: data.created_at,
         });
         count++;
@@ -122,6 +124,26 @@ class RoomController {
       response.status(200).json(repository);
     } catch (err) {
       console.log(`(room_getRepository) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async getRoomAdminTier({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+
+      let [data] = await Database.select('administration_level')
+        .from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+
+      response.status(200).json({ administration_level: data.administration_level, user: user.email });
+    } catch (err) {
+      console.log(`(room_getRoomAdminTier) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -233,26 +255,36 @@ class RoomController {
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
 
       if (result.length === 0) throw new Error('User not in room');
-      let data = await Database.table('rooms').select('admin').where('id', decryptedRoomId);
-      if (data[0].admin !== user.id) {
-        throw new Error('User changing room settings must be the owner');
-      }
+      // let data = await Database.table('rooms').select('admin').where('id', decryptedRoomId);
+      // if (data[0].admin !== user.id) {
+      //   throw new Error('User changing room settings must be the owner');
+      // }
 
       // Cannot destructure private as it is a keyword
       let { name, description, decryptPass, maxMembers, adminApproval, repository } = request.body;
-      console.log(request.body);
+      // console.log(request.body);
+      await Database.transaction(async (trx) => {
+        await trx
+          .table('rooms')
+          .where('id', decryptedRoomId)
+          .update({
+            name: name,
+            description: description,
+            password: Encryption.encrypt(decryptPass),
+            maxMembers: maxMembers,
+            private: request.body.private,
+            adminApproval: adminApproval,
+            repository: repository,
+          });
 
-      await Database.table('rooms')
-        .where('id', decryptedRoomId)
-        .update({
-          name: name,
-          description: description,
-          password: Encryption.encrypt(decryptPass),
-          maxMembers: maxMembers,
-          private: request.body.private,
-          adminApproval: adminApproval,
-          repository: repository,
+        await trx.table('logs').insert({
+          room_id: decryptedRoomId,
+          description: `${user.email} edited the team settings`,
+          date: new Date().toString(),
+          type: 5,
         });
+      });
+
       response.status(200).send();
     } catch (err) {
       console.log(`(room_update) ${new Date()}: ${err.message}`);
@@ -290,18 +322,25 @@ class RoomController {
           .where('id', user.id)
           .update({ numTeams: user.numTeams + 1 });
         await room.save();
-        await trx
-          .table('user_rooms')
-          .insert({ user_id: user.id, room_id: room.id, role: null, notifications: JSON.stringify([]) });
-        await Database.table('logs').insert({
+        await trx.table('user_rooms').insert({
+          user_id: user.id,
+          room_id: room.id,
+          role: null,
+          administration_level: 6,
+          notifications: JSON.stringify([]),
+        });
+        await trx.table('logs').insert({
           room_id: room.id,
           description: `${user.email} created team '${room.name}'`,
           date: new Date().toString(),
+          type: 6,
         });
-        await Database.table('notes').insert({
+        await trx.table('notes').insert({
           room_id: room.id,
           notes_layout: JSON.stringify([]),
           notes: JSON.stringify([]),
+          last_modified: new Date().toString(),
+          last_modified_by: 0,
         });
       });
 
@@ -358,9 +397,13 @@ class RoomController {
         .update({ numTeams: user.numTeams + 1 });
 
       await Database.transaction(async (trx) => {
-        await trx
-          .table('user_rooms')
-          .insert({ user_id: user.id, room_id: decryptedRoomId, role: null, notifications: JSON.stringify([]) });
+        await trx.table('user_rooms').insert({
+          user_id: user.id,
+          room_id: decryptedRoomId,
+          role: null,
+          administration_level: 3,
+          notifications: JSON.stringify([]),
+        });
         const data = await trx.table('rooms').select('currentMembers').where('id', decryptedRoomId);
         await trx
           .table('rooms')
@@ -368,10 +411,11 @@ class RoomController {
           .update({
             currentMembers: data[0].currentMembers + 1,
           });
-        await Database.table('logs').insert({
+        await trx.table('logs').insert({
           room_id: decryptedRoomId,
           description: `${user.email} joined the team`,
           date: new Date().toString(),
+          type: 7,
         });
       });
 
@@ -414,6 +458,13 @@ class RoomController {
       }
 
       await Database.transaction(async (trx) => {
+        await trx.table('logs').insert({
+          room_id: decryptedRoomId,
+          description: `${user.email} left the team`,
+          date: new Date().toString(),
+          type: 8,
+        });
+
         let data = await trx.table('rooms').select('currentMembers').where('id', decryptedRoomId);
 
         await trx
