@@ -169,10 +169,10 @@ class IssueController {
 
       await Database.table('logs').insert({
         room_id: decryptedRoomId,
+        issue_id: issue.id,
         description:
-          status === 0
-            ? `${user.email} created the backlog issue '${title}'`
-            : `${user.email} created the active issue '${title}'`,
+          status === 0 ? `${user.email} created the backlog issue ` : `${user.email} created the active issue `,
+        object: title,
         date: new Date().toString(),
         type: 0,
       });
@@ -190,9 +190,8 @@ class IssueController {
     // will need to add more logic for administration levels
     try {
       const user = await auth.getUser();
-      const result = await Database.from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', hashids.decodeHex(request.cookie('room')));
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
 
       if (result.length === 0) throw new Error('User not in this room');
 
@@ -223,11 +222,12 @@ class IssueController {
       }
 
       await Database.transaction(async (trx) => {
-        let [title] = await trx.table('issues').select('title').where('id', request.body.id);
+        let [data] = await trx.table('issues').select('title').where('id', request.params.id);
 
         await trx.table('logs').insert({
           room_id: decryptedRoomId,
-          description: `${user.email} deleted issue '${title}'`,
+          description: `${user.email} deleted issue `,
+          object: data.title,
           date: new Date().toString(),
           type: 2,
         });
@@ -383,7 +383,8 @@ class IssueController {
       await Database.table('logs').insert({
         room_id: decryptedRoomId,
         issue_id: data[0].id,
-        description: `${user.email} commented on issue '${data[0].title}'`,
+        description: `${user.email} commented on issue `,
+        object: data[0].title,
         date: new Date().toString(),
         type: 3,
       });
@@ -540,7 +541,8 @@ class IssueController {
       }
       await Database.table('logs').insert({
         room_id: decryptedRoomId,
-        description: `${user.email} updated issue '${title}'`,
+        description: `${user.email} updated issue `,
+        object: title,
         date: new Date().toString(),
         type: 1,
       });
@@ -565,11 +567,12 @@ class IssueController {
           .where({ room: decryptedRoomId, id: request.body.id })
           .update({ status: request.body.status });
 
-        let [title] = await trx.table('issues').select('title').where('id', request.body.id);
+        let [data] = await trx.table('issues').select('title').where('id', request.body.id);
 
         await trx.table('logs').insert({
           room_id: decryptedRoomId,
-          description: `${user.email} updated issue '${title}'`,
+          description: `${user.email} updated issue `,
+          object: data.title,
           date: new Date().toString(),
           type: 1,
         });

@@ -55,7 +55,8 @@ class SetupSeeder {
         // Creating log of room creation
         await trx.table('logs').insert({
           room_id: room.id,
-          description: `${user.email} created team 'Testing Room'`,
+          description: `${user.email} created team `,
+          object: 'Testing Room',
           date: new Date().toString(),
           type: 6,
         });

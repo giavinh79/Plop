@@ -26,19 +26,21 @@ Route.post('/logout', 'UserController.logout').middleware(jwtMiddleware);
 
 // Teams/Rooms
 Route.get('/room', 'RoomController.get').middleware(jwtMiddleware);
+Route.put('/room', 'RoomController.create').middleware(jwtMiddleware);
+Route.post('/room', 'RoomController.update').middleware(jwtMiddleware);
+Route.delete('/room', 'RoomController.delete').middleware(jwtMiddleware);
+
 Route.get('/assignees', 'RoomController.getAssignees').middleware(jwtMiddleware);
 Route.get('/members', 'RoomController.getMembers').middleware(jwtMiddleware);
 Route.get('/repository', 'RoomController.getRepository').middleware(jwtMiddleware);
 Route.get('/notifications', 'RoomController.getNotifications').middleware(jwtMiddleware);
 Route.post('/notifications', 'RoomController.readNotifications').middleware(jwtMiddleware);
 Route.post('/clearNotifications', 'RoomController.clearNotifications').middleware(jwtMiddleware);
-Route.post('/room', 'RoomController.update').middleware(jwtMiddleware);
+
 Route.post('/roomInfo', 'RoomController.info').middleware(jwtMiddleware);
 Route.post('/sessionRoom', 'RoomController.session').middleware(jwtMiddleware);
 Route.post('/joinRoom', 'RoomController.join').middleware(jwtMiddleware);
 Route.post('/leaveRoom', 'RoomController.leave').middleware(jwtMiddleware);
-Route.put('/room', 'RoomController.create').middleware(jwtMiddleware);
-Route.delete('/room', 'RoomController.delete').middleware(jwtMiddleware);
 
 Route.get('/roomAdminTier', 'RoomController.getRoomAdminTier').middleware(jwtMiddleware);
 
@@ -54,10 +56,10 @@ Route.post('/shareIssue', 'IssueController.shareIssue').middleware(jwtMiddleware
 Route.put('/issue', 'IssueController.create').middleware(jwtMiddleware);
 Route.delete('/issue/:id', 'IssueController.delete').middleware(jwtMiddleware);
 
-// Images
-Route.post('/image', 'ImageController.create').middleware(jwtMiddleware);
-Route.get('/image/:id', 'ImageController.get').middleware(jwtMiddleware);
-Route.delete('/image/:id', 'ImageController.delete').middleware(jwtMiddleware);
+// Images (unused currently)
+// Route.put('/image', 'ImageController.create').middleware(jwtMiddleware);
+// Route.get('/image/:id', 'ImageController.get').middleware(jwtMiddleware);
+// Route.delete('/image/:id', 'ImageController.delete').middleware(jwtMiddleware);
 
 // Chat
 Route.get('/chats', 'ChatController.get').middleware(jwtMiddleware);

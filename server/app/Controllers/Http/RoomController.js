@@ -279,7 +279,8 @@ class RoomController {
 
         await trx.table('logs').insert({
           room_id: decryptedRoomId,
-          description: `${user.email} edited the team settings`,
+          description: `${user.email} edited the `,
+          object: 'team settings',
           date: new Date().toString(),
           type: 5,
         });
@@ -331,7 +332,8 @@ class RoomController {
         });
         await trx.table('logs').insert({
           room_id: room.id,
-          description: `${user.email} created team '${room.name}'`,
+          description: `${user.email} created team `,
+          object: room.name,
           date: new Date().toString(),
           type: 6,
         });
@@ -413,7 +415,8 @@ class RoomController {
           });
         await trx.table('logs').insert({
           room_id: decryptedRoomId,
-          description: `${user.email} joined the team`,
+          description: `${user.email} joined the `,
+          object: 'team',
           date: new Date().toString(),
           type: 7,
         });
@@ -460,7 +463,8 @@ class RoomController {
       await Database.transaction(async (trx) => {
         await trx.table('logs').insert({
           room_id: decryptedRoomId,
-          description: `${user.email} left the team`,
+          description: `${user.email} left the `,
+          object: 'team',
           date: new Date().toString(),
           type: 8,
         });

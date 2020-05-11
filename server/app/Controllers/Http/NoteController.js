@@ -54,7 +54,8 @@ class NoteController {
         if (user.id !== dateData.last_modified_by) {
           await Database.table('logs').insert({
             room_id: decryptedRoomId,
-            description: `${user.email} updated the team notes`,
+            description: `${user.email} updated the `,
+            object: 'team notes',
             date: new Date().toString(),
             type: 4,
           });

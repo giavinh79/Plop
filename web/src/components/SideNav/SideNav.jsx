@@ -7,24 +7,25 @@ import 'antd/dist/antd.css';
 import './SideNav.css';
 
 const { SubMenu } = Menu;
-let navigationMap = {
-  '/dashboard': ['1'],
-  '/dashboard/user': ['2'],
-  '/dashboard/overview': ['3'],
-  '/dashboard/schedule': ['4'],
-  '/dashboard/notes': ['5'],
-  '/dashboard/members': ['6'],
-  '/dashboard/members-overview': ['7'],
-  '/dashboard/create-issue': ['8'],
-  '/dashboard/active-issues': ['9'],
-  '/dashboard/backlog-issues': ['10'],
-  '/dashboard/archive-issues': ['11'],
-  '/dashboard/logs': ['12'],
-  '/dashboard/settings': ['13'],
-  '/dashboard/help': ['14'],
-};
 
 function SideNav({ path }) {
+  let navigationMap = {
+    '/dashboard': ['1'],
+    '/dashboard/user': ['2'],
+    '/dashboard/overview': ['3'],
+    '/dashboard/schedule': ['4'],
+    '/dashboard/notes': ['5'],
+    '/dashboard/members': ['6'],
+    '/dashboard/members-overview': ['7'],
+    '/dashboard/create-issue': ['8'],
+    '/dashboard/active-issues': ['9'],
+    '/dashboard/backlog-issues': ['10'],
+    '/dashboard/archive-issues': ['11'],
+    '/dashboard/logs': ['12'],
+    '/dashboard/settings': ['13'],
+    '/dashboard/help': ['14'],
+  };
+
   const [repository, setRepository] = useState('https://github.com');
   const [theme] = useContext(ThemeContext);
   const history = useHistory();
@@ -41,11 +42,12 @@ function SideNav({ path }) {
 
   return (
     <Menu
-      theme={theme.isLightMode ? 'light' : 'dark'} // change second option to dark once theme design completed
+      theme={theme.isLightMode ? 'light' : 'dark'}
       style={{ width: 256, minHeight: '100%', backgroundColor: theme.isLightMode ? 'white' : '#1A2330' }}
       defaultOpenKeys={['sub1']}
       mode='inline'
       defaultSelectedKeys={selectedNavigation}
+      selectedKeys={selectedNavigation}
     >
       <SubMenu
         key='sub1'

@@ -25,7 +25,8 @@ class LogSchema extends Schema {
       table.integer('room_id').unsigned().references('id').inTable('rooms');
       table.integer('issue_id').unsigned().references('id').inTable('issues');
       table.integer('type').unsigned();
-      table.string('description', [1000]);
+      table.string('description', 200);
+      table.string('object', 100);
       table.string('user', 80);
       table.string('user_affected', 80);
       table.string('date', 80);

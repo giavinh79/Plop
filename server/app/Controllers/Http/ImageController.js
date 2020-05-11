@@ -1,6 +1,15 @@
 'use strict';
 
 class ImageController {
+  async get({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+    } catch (err) {
+      console.log(`(image_get) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
   async create({ auth, request, response }) {
     try {
       const user = await auth.getUser();
@@ -10,10 +19,11 @@ class ImageController {
     }
   }
 
-  async get({ auth, request, response }) {
+  async delete({ auth, request, response }) {
     try {
+      const user = await auth.getUser();
     } catch (err) {
-      console.log(`(image_get) ${new Date()}: ${err.message}`);
+      console.log(`(image_create) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }

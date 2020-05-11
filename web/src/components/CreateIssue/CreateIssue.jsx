@@ -1,7 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { AutoComplete, Popconfirm, Input, Form, Radio, Button, Divider, Select, Spin, Upload, Icon } from 'antd';
+import {
+  AutoComplete,
+  Popconfirm,
+  Input,
+  Form,
+  Radio,
+  Button,
+  Divider,
+  Select,
+  Spin,
+  Upload,
+  Icon,
+  DatePicker,
+} from 'antd';
 import { displaySimpleNotification } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT } from '../../constants';
@@ -58,11 +71,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
   };
 
   useEffect(() => {
-    try {
-      titleRef.current.focus();
-    } catch (err) {
-      console.log('ERROR: Unable to focus element');
-    }
+    if (titleRef.current) titleRef.current.focus();
 
     (async function () {
       if (isManualNavigation && location.data == null) {
@@ -286,15 +295,16 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
             </div>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-              <Form.Item label='Priority' style={{ flexDirection: 'row' }}>
-                {getFieldDecorator('priority', {
-                  initialValue: data == null ? 0 : +data.priority || 0,
-                })(
-                  <Radio.Group>
-                    <Radio value={0}>Minor</Radio>
-                    <Radio value={1}>Major</Radio>
-                  </Radio.Group>
-                )}
+              <Form.Item
+                label='Deadline'
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                {getFieldDecorator('date', {
+                  // initialValue: data == null ? 1 : data.status,
+                })(<DatePicker disabled />)}
               </Form.Item>
               <Form.Item
                 label='Status'
@@ -312,6 +322,19 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                     <Select.Option value={2}>In Progress</Select.Option>
                     <Select.Option value={3}>Complete</Select.Option>
                   </Select>
+                )}
+              </Form.Item>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+              <Form.Item label='Priority' style={{ flexDirection: 'row', marginLeft: 'auto' }}>
+                {getFieldDecorator('priority', {
+                  initialValue: data == null ? 0 : +data.priority || 0,
+                })(
+                  <Radio.Group>
+                    <Radio value={0}>Minor</Radio>
+                    <Radio value={1}>Major</Radio>
+                  </Radio.Group>
                 )}
               </Form.Item>
             </div>

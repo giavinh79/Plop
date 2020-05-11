@@ -9,44 +9,44 @@ import 'antd/dist/antd.css';
 const data = [
   {
     name: 'January',
-    'total tasks': 5,
+    'tasks created ': 5,
     'tasks completed': 0,
     amt: 2400,
   },
   {
     name: 'February',
-    'total tasks': 6,
-    'tasks completed': 2,
+    'tasks created ': 8,
+    'tasks completed': 4,
     amt: 2210,
   },
   {
     name: 'March',
-    'total tasks': 10,
-    'tasks completed': 6,
+    'tasks created ': 15,
+    'tasks completed': 10,
     amt: 2290,
   },
   {
     name: 'April',
-    'total tasks': 15,
-    'tasks completed': 8,
+    'tasks created ': 2,
+    'tasks completed': 2,
     amt: 2000,
   },
   {
     name: 'May',
-    'total tasks': 20,
-    'tasks completed': 12,
+    'tasks created ': 5,
+    'tasks completed': 7,
     amt: 2181,
   },
   {
     name: 'June',
-    'total tasks': 25,
-    'tasks completed': 15,
+    'tasks created ': 3,
+    'tasks completed': 6,
     amt: 2500,
   },
   {
     name: 'July',
-    'total tasks': 27,
-    'tasks completed': 16,
+    'tasks created ': 7,
+    'tasks completed': 3,
     amt: 2100,
   },
 ];
@@ -82,7 +82,7 @@ export default function Overview() {
       <p style={subheader}>Project Overview (incomplete)</p>
 
       <Descriptions bordered style={{ marginBottom: '2rem' }}>
-        <Descriptions.Item label='Project Completion' span={3}>
+        <Descriptions.Item label='Sprint Completion' span={3}>
           <Row type='flex' style={{ flexWrap: 'nowrap', alignItems: 'center' }}>
             <Badge status='processing' text='Running' style={{ minWidth: '5rem' }} />
             <Progress
@@ -123,7 +123,7 @@ export default function Overview() {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type='monotone' dataKey='total tasks' stroke='#82ca9d' />
+            <Line type='monotone' dataKey='tasks created ' stroke='#82ca9d' />
             <Line type='monotone' dataKey='tasks completed' stroke='#8884d8' activeDot={{ r: 8 }} />
           </LineChart>
         </ResponsiveContainer>

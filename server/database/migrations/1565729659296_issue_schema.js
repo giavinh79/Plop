@@ -7,7 +7,7 @@ const Schema = use('Schema');
 // Status 0 - backlog, 1 - active, 2 - in progress, 3 - completed
 class IssueSchema extends Schema {
   up() {
-    this.create('issues', table => {
+    this.create('issues', (table) => {
       table.increments();
       table.integer('room').unsigned();
       table.string('title', 100);
@@ -15,6 +15,8 @@ class IssueSchema extends Schema {
       table.string('description', 2000);
       table.boolean('priority');
       table.integer('status');
+      table.boolean('overdue');
+      table.string('deadline', 100);
       table.string('assignee', 100);
       table.string('creator', 100);
       table.json('image');
