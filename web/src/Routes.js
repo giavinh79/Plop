@@ -14,12 +14,13 @@ import Active from './components/Active/Active';
 import Backlog from './components/Backlog/Backlog';
 import Logs from './components/Logs/Logs';
 import Settings from './components/Settings/Settings';
-import Help from './components/Help/Help';
 import { BodyWrapper, DashboardWrapper } from './globalStyles';
 import { displaySimpleNotification } from './utility/services';
 import { ThemeProvider } from './colors/theme';
 import { checkAuth } from './utility/restCalls';
 import ChatIcon from './components/Chat/ChatIcon';
+import HelpPanel from './components/Help/HelpPanel';
+import BannedMembers from './components/BannedMembers/BannedMembers';
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const [authenticated, setAuthenticated] = useState(null);
@@ -72,14 +73,14 @@ export default function Routes() {
                       <ProtectedRoute path={`${url}/schedule`} component={Schedule} />
                       <ProtectedRoute path={`${url}/notes`} component={Notes} />
                       <ProtectedRoute path={`${url}/members`} component={ViewMembers} />
-                      <ProtectedRoute path={`${url}/members-overview`} component={ViewMembers} />
+                      <ProtectedRoute path={`${url}/members-banned`} component={BannedMembers} />
                       <ProtectedRoute path={`${url}/create-issue`} component={WrappedCreateIssueForm} />
                       <ProtectedRoute path={`${url}/active-issues`} component={Active} />
                       <ProtectedRoute path={`${url}/backlog-issues`} component={Backlog} />
                       <ProtectedRoute path={`${url}/archive-issues`} component={Backlog} />
                       <ProtectedRoute path={`${url}/logs`} component={Logs} />
                       <ProtectedRoute path={`${url}/settings`} component={Settings} />
-                      <ProtectedRoute path={`${url}/help`} component={Help} />
+                      <ProtectedRoute path={`${url}/help`} component={HelpPanel} />
                       <Redirect push to='/' />
                     </Switch>
                   </DashboardWrapper>

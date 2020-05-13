@@ -28,7 +28,7 @@ const checkAuth = async () => {
 
 const clearNotifications = async (notifications) => {
   try {
-    await axios.post(`${API_ENDPOINT}/clearNotifications`, { notifications });
+    await axios.delete(`${API_ENDPOINT}/notifications`, { data: { notifications } });
   } catch (err) {
     throw err;
   }
@@ -36,7 +36,7 @@ const clearNotifications = async (notifications) => {
 
 const createSession = async (event) => {
   try {
-    await axios.post(`${API_ENDPOINT}/sessionRoom`, {
+    await axios.post(`${API_ENDPOINT}/room/session`, {
       id: JSON.parse(localStorage.getItem('teams'))[event.key - 1].id,
     });
   } catch (err) {
@@ -118,7 +118,7 @@ const getRepository = async () => {
 
 const getRoomAdminTier = async () => {
   try {
-    return await axios.get(`${API_ENDPOINT}/roomAdminTier`);
+    return await axios.get(`${API_ENDPOINT}/user/room/tier`);
   } catch (err) {
     throw new err();
   }
@@ -126,7 +126,7 @@ const getRoomAdminTier = async () => {
 
 const joinTeam = async (data) => {
   try {
-    return await axios.post(`${API_ENDPOINT}/joinRoom`, data);
+    return await axios.post(`${API_ENDPOINT}/member/room`, data);
   } catch (err) {
     throw err;
   }
@@ -135,6 +135,14 @@ const joinTeam = async (data) => {
 const logout = async () => {
   try {
     await axios.post(`${API_ENDPOINT}/logout`);
+  } catch (err) {
+    throw err;
+  }
+};
+
+const removeMember = async (id, type) => {
+  try {
+    return await axios.delete(`${API_ENDPOINT}/room/user/${id}`, { data: { type } });
   } catch (err) {
     throw err;
   }
@@ -182,7 +190,7 @@ const sendNotificationsRead = async (data) => {
 
 const sendShareIssueNotification = async (issue, issueId, message, users) => {
   try {
-    await axios.post(`${API_ENDPOINT}/shareIssue`, { issue, issueId, message, users });
+    await axios.post(`${API_ENDPOINT}/issue/share`, { issue, issueId, message, users });
   } catch (err) {
     throw err;
   }
@@ -190,7 +198,7 @@ const sendShareIssueNotification = async (issue, issueId, message, users) => {
 
 const updateIssue = async (id, status) => {
   try {
-    await axios.post(`${API_ENDPOINT}/issueProgress`, { id: id, status: status });
+    await axios.post(`${API_ENDPOINT}/issue/progress`, { id: id, status: status });
   } catch (err) {
     throw err;
   }
@@ -220,6 +228,7 @@ export {
   getRoomAdminTier,
   joinTeam,
   logout,
+  removeMember,
   retrieveAssignees,
   retrieveMembers,
   retrieveNotifications,

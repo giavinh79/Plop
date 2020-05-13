@@ -42,7 +42,7 @@ export default function CommentBody({ id }) {
       setLoadingUserInfo(true);
       const {
         data: { avatar, email, date },
-      } = await axios.get(`${API_ENDPOINT}/userInfo`);
+      } = await axios.get(`${API_ENDPOINT}/user/info`);
       setLoadingUserInfo(false);
 
       const commentObject = {

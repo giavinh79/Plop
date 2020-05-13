@@ -8,7 +8,7 @@ export const HeaderWrapper = styled.div`
   font-family: 'Montserrat';
   height: 9%;
   min-height: 4rem;
-  background-color: ${(props) => (props.lightmode ? '#79B7D4' : '#2d3848')};
+  background-color: ${(props) => (props.lightmode ? '#5885B1' : '#2d3848')};
 
   @media screen and (max-width: 1090px) {
     padding: ${(props) => (props.homepage ? '2rem !important' : '')};
@@ -22,6 +22,8 @@ export const HeaderWrapper = styled.div`
 `;
 
 export const Logo = styled.img`
+  position: relative;
+  z-index: 2;
   cursor: pointer;
   height: 2.8rem;
 

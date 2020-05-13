@@ -1,11 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { WrappedNormalLoginForm as SignupForm } from '../components/SignupForm/SignupForm';
-import { Body, FormWrapper } from './HomepageStyles';
-import { Alert, Avatar, Button, BackTop, Card, Icon, Modal, Result } from 'antd';
+import { FormWrapper } from './HomepageStyles';
+import { Alert, Button, BackTop, Card, Icon, Modal, Result } from 'antd';
 import MediaQuery from 'react-responsive';
-import Fade from 'react-reveal/Fade';
+// import Fade from 'react-reveal/Fade';
 import './Homepage.css';
 import HomepagePrivacyTerms from './HomepagePrivacyTerms';
+import Particles from 'react-particles-js';
+import { particleParams } from '../constants/particles';
 
 export default function Homepage() {
   const [visible, setVisible] = useState(true);
@@ -20,6 +22,9 @@ export default function Homepage() {
   return (
     <>
       {displayModal && <HomepagePrivacyTerms setDisplayModal={setDisplayModal} />}
+      <div className='particle-wrapper'>
+        <Particles params={particleParams} height='50rem' className='particle-effect' />
+      </div>
       <div style={{ width: '100%' }}>
         <div className='landing-container'>
           <div className='landing-flex-wrapper'>
@@ -213,29 +218,5 @@ export default function Homepage() {
         </Modal>
       </MediaQuery>
     </>
-    // <Body>
-    // <FormWrapper>
-    //   <SignupForm />
-    // </FormWrapper>
-    //   <div style={styles.formBackground} />
-    // </Body>
   );
 }
-
-const styles = {
-  formBackground: {
-    zIndex: '2',
-    position: 'absolute',
-    top: '14rem',
-    left: '0',
-    right: '0',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    height: '30rem',
-    width: '40rem',
-    opacity: 0.6,
-    backgroundColor: 'rgb(31, 42, 53)',
-    maxWidth: '25rem',
-    borderRadius: '10px',
-  },
-};

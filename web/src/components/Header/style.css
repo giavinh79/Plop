@@ -26,7 +26,14 @@ ant-dropdown-menu-item {
   overflow: hidden;
 }
 
+.ant-form-item {
+  position: relative;
+  z-index: 2;
+}
+
 .loggedInText {
+  position: relative;
+  z-index: 2;
   margin: 0 1rem;
   color: white;
   cursor: pointer;

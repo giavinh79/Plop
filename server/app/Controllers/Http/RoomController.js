@@ -77,6 +77,7 @@ class RoomController {
 
         membersPayload.push({
           key: count,
+          id: member.user_id,
           member: data.email,
           role: member.role || 'N/A',
           administration: member.administration_level,
@@ -148,7 +149,63 @@ class RoomController {
     }
   }
 
-  async readNotifications({ auth, request, response }) {
+  async updateRoomAdminTier({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+
+      let [data] = await Database.select('administration_level')
+        .from('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId);
+
+      response.status(200).json({ administration_level: data.administration_level, user: user.email });
+    } catch (err) {
+      console.log(`(room_updateRoomAdminTier) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async removeMember({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+      if (result[0].administration_level < 4) throw new Error('User does not have sufficient privileges');
+
+      let userToKick = request.params.id;
+
+      let { type } = request.body;
+      if (type === 1) {
+        // Ban action
+      } else {
+        console.log(userToKick);
+        await Database.table('user_rooms').where({ user_id: userToKick, room_id: decryptedRoomId }).delete();
+
+        //   .where('user_id', user.id)
+        //   .where('room_id', decryptedRoomId);
+        console.log('kick');
+        // Kick action
+      }
+
+      // let [data] = await Database.select('administration_level')
+      //   .from('user_rooms')
+      //   .where('user_id', user.id)
+      //   .where('room_id', decryptedRoomId);
+
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(room_removeMember) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async updateNotifications({ auth, request, response }) {
     try {
       const user = await auth.getUser();
       const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
@@ -177,7 +234,7 @@ class RoomController {
 
       response.status(200).send();
     } catch (err) {
-      console.log(`(room_readNotifications) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      console.log(`(room_updateNotifications) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -226,10 +283,12 @@ class RoomController {
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
+      if (result[0].administration_level < 3)
+        throw new Error('User does not have sufficient privileges to view settings');
 
       const roomInfo = await Database.table('rooms').select('*').where('id', decryptedRoomId);
       const decryptPass = Encryption.decrypt(roomInfo[0].password);
-      const { name, description, maxMembers, adminApproval, repository } = roomInfo[0];
+      const { name, description, default_admin_tier, maxMembers, adminApproval, repository } = roomInfo[0];
       const id = hashids.encodeHex(roomInfo[0].id.toString());
 
       response.status(200).json({
@@ -240,6 +299,7 @@ class RoomController {
         maxMembers,
         private: roomInfo[0].private,
         adminApproval,
+        default_admin_tier,
         repository,
       });
     } catch (err) {
@@ -255,14 +315,15 @@ class RoomController {
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
 
       if (result.length === 0) throw new Error('User not in room');
+      if (result[0].administration_level < 4)
+        throw new Error('User does not have sufficient privileges to edit settings');
       // let data = await Database.table('rooms').select('admin').where('id', decryptedRoomId);
       // if (data[0].admin !== user.id) {
       //   throw new Error('User changing room settings must be the owner');
       // }
 
       // Cannot destructure private as it is a keyword
-      let { name, description, decryptPass, maxMembers, adminApproval, repository } = request.body;
-      // console.log(request.body);
+      let { name, description, decryptPass, maxMembers, adminApproval, default_admin_tier, repository } = request.body;
       await Database.transaction(async (trx) => {
         await trx
           .table('rooms')
@@ -274,6 +335,7 @@ class RoomController {
             maxMembers: maxMembers,
             private: request.body.private,
             adminApproval: adminApproval,
+            default_admin_tier: default_admin_tier,
             repository: repository,
           });
 
@@ -308,12 +370,14 @@ class RoomController {
         name: roomName,
         description: roomDescription,
         password: Encryption.encrypt(roomPassword),
+        default_admin_tier: 2,
         currentMembers: 1,
         maxMembers: 12,
         private: false,
         adminApproval: false,
         status: 0,
         chat: JSON.stringify([]),
+        ban_list: JSON.stringify([]),
       });
 
       // Use transactions to safely commit all required changes (if one fails, all get reverted)
@@ -399,14 +463,19 @@ class RoomController {
         .update({ numTeams: user.numTeams + 1 });
 
       await Database.transaction(async (trx) => {
+        const data = await trx
+          .table('rooms')
+          .select('currentMembers', 'default_admin_tier')
+          .where('id', decryptedRoomId);
+
         await trx.table('user_rooms').insert({
           user_id: user.id,
           room_id: decryptedRoomId,
           role: null,
-          administration_level: 3,
+          administration_level: data[0].default_admin_tier,
           notifications: JSON.stringify([]),
         });
-        const data = await trx.table('rooms').select('currentMembers').where('id', decryptedRoomId);
+
         await trx
           .table('rooms')
           .where('id', decryptedRoomId)
@@ -511,8 +580,12 @@ class RoomController {
 
       await Database.transaction(async (trx) => {
         /*
-         * in the future delete all logs
+         * in the future delete all logs and notes
          */
+
+        await trx.table('logs').where('room_id', decryptedRoomId).delete();
+        await trx.table('notes').where('room_id', decryptedRoomId).delete();
+        await trx.table('chats').where('room_id', decryptedRoomId).delete();
 
         // Finding all members to reduce their numTeams value by 1
         let members = await trx.table('user_rooms').select('user_id').where('room_id', decryptedRoomId);

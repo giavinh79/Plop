@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Menu, Icon, Tooltip } from 'antd';
 import { ThemeContext } from '../../colors/theme';
 import { withRouter, useHistory } from 'react-router-dom';
-import { getRepository } from '../../utility/restCalls';
+import { getRepository, getRoomAdminTier } from '../../utility/restCalls';
 import 'antd/dist/antd.css';
 import './SideNav.css';
 
@@ -16,7 +16,7 @@ function SideNav({ path }) {
     '/dashboard/schedule': ['4'],
     '/dashboard/notes': ['5'],
     '/dashboard/members': ['6'],
-    '/dashboard/members-overview': ['7'],
+    '/dashboard/members-banned': ['7'],
     '/dashboard/create-issue': ['8'],
     '/dashboard/active-issues': ['9'],
     '/dashboard/backlog-issues': ['10'],
@@ -27,6 +27,7 @@ function SideNav({ path }) {
   };
 
   const [repository, setRepository] = useState('https://github.com');
+  const [adminTier, setAdminTier] = useState(1);
   const [theme] = useContext(ThemeContext);
   const history = useHistory();
   let selectedNavigation = navigationMap[path] || ['1'];
@@ -35,6 +36,10 @@ function SideNav({ path }) {
     (async () => {
       let { data } = await getRepository();
       setRepository(data.repository || 'https://github.com');
+      let {
+        data: { administration_level },
+      } = await getRoomAdminTier();
+      setAdminTier(administration_level);
     })().catch((err) => {
       console.log(err);
     });
@@ -94,8 +99,8 @@ function SideNav({ path }) {
         <Menu.Item key='6' onClick={() => history.push('/dashboard/members')}>
           View
         </Menu.Item>
-        <Menu.Item key='7' onClick={() => history.push('/dashboard/members-overview')} disabled>
-          Analytics
+        <Menu.Item key='7' onClick={() => history.push('/dashboard/members-banned')} disabled={adminTier <= 2}>
+          Banned Members
         </Menu.Item>
       </SubMenu>
       <SubMenu
@@ -139,7 +144,7 @@ function SideNav({ path }) {
         <Icon type='database' />
         Logs
       </Menu.Item>
-      <Menu.Item key='13' onClick={() => history.push('/dashboard/settings')}>
+      <Menu.Item key='13' onClick={() => history.push('/dashboard/settings')} disabled={adminTier <= 2}>
         <Icon type='setting' />
         Settings
       </Menu.Item>

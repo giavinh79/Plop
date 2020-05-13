@@ -22,7 +22,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
   useEffect(() => {
     (async function () {
       // Retrieving independent user information
-      let { data } = await axios.get(`${API_ENDPOINT}/userInfo`);
+      let { data } = await axios.get(`${API_ENDPOINT}/user/info`);
       let avatarIndex = data.avatar.toString();
       setEmail(data.email);
       setAvatar(avatarIndex);
@@ -32,7 +32,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
       setLoadingData(false);
       let {
         data: { role },
-      } = await axios.get(`${API_ENDPOINT}/userRoomInfo`);
+      } = await axios.get(`${API_ENDPOINT}/user/room/info`);
       setRole(role);
     })().catch((err) => {
       console.log(err);
@@ -48,7 +48,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
 
   const handleSave = async () => {
     setLoadingSave(true);
-    await axios.post(`${API_ENDPOINT}/userInfo`, { avatar, role });
+    await axios.post(`${API_ENDPOINT}/user/info`, { avatar, role });
     localStorage.setItem('avatar', avatar);
     setTimeout(() => {
       setLoadingSave(false);

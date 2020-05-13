@@ -35,7 +35,7 @@ export default function Team() {
 
   const handleLeaveTeam = async (teamId) => {
     try {
-      await axios.post('/leaveRoom', { teamId });
+      await axios.delete('/member/room', { data: { teamId } });
       let cachedTeams = JSON.parse(localStorage.getItem('teams'));
       cachedTeams = cachedTeams.filter((item) => {
         return item.id !== teamId;
@@ -99,7 +99,7 @@ export default function Team() {
   const handleEnterTeam = async (e, team) => {
     e.preventDefault();
     localStorage.setItem('currentTeam', JSON.stringify({ id: team.id }));
-    await axios.post(`${API_ENDPOINT}/sessionRoom`, { id: team.id });
+    await axios.post(`${API_ENDPOINT}/room/session`, { id: team.id });
     setToDashboard(true);
   };
 

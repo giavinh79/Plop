@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Button, Icon, Input, Row, Select, Skeleton, Table, Tooltip, Popconfirm } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { pagination } from '../../constants';
-import { retrieveMembers, getRoomAdminTier } from '../../utility/restCalls';
+import { retrieveMembers, getRoomAdminTier, removeMember } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
 import moment from 'moment';
 import 'antd/dist/antd.css';
@@ -16,26 +16,11 @@ import 'antd/dist/antd.css';
 
 export default function ViewMembers() {
   const backupData = useRef();
+  const [refresh, setRefresh] = useState(false); // for refreshing DB calls
   const [title, setTitle] = useState('Members List');
   const [memberData, setMemberData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState({ admininistration_level: 1, email: '' });
-
-  const handleFilter = (e) => {
-    let userInput = e.target.value.toLowerCase();
-    if (userInput.length === 0) {
-      setMemberData(backupData.current);
-      return;
-    }
-    setMemberData(
-      backupData.current.filter((item) => {
-        return (
-          userInput.length > 0 &&
-          (item.member.toLowerCase().includes(userInput) || item.role.toLowerCase().includes(userInput))
-        );
-      })
-    );
-  };
 
   useEffect(() => {
     (async () => {
@@ -60,6 +45,46 @@ export default function ViewMembers() {
       displaySimpleNotification('Error', 5, 'bottomRight', `Unable to retrieve members: ${err}`, 'warning', 'red');
     });
   }, []);
+
+  const handleFilter = (e) => {
+    let userInput = e.target.value.toLowerCase();
+    if (userInput.length === 0) {
+      setMemberData(backupData.current);
+      return;
+    }
+    setMemberData(
+      backupData.current.filter((item) => {
+        return (
+          userInput.length > 0 &&
+          (item.member.toLowerCase().includes(userInput) || item.role.toLowerCase().includes(userInput))
+        );
+      })
+    );
+  };
+
+  const handleMemberRemoval = async (id, type) => {
+    try {
+      await removeMember(id, type);
+      setRefresh(!refresh);
+      displaySimpleNotification(
+        'Success',
+        2,
+        'bottomRight',
+        'Member has been terminated from the team',
+        'smile',
+        '#108ee9'
+      );
+    } catch (err) {
+      displaySimpleNotification(
+        'Error',
+        2,
+        'bottomRight',
+        `Member could not be terminated from the team: ${err}`,
+        'warning',
+        'red'
+      );
+    }
+  };
 
   const columns = [
     {
@@ -96,49 +121,50 @@ export default function ViewMembers() {
       title: (
         <>
           Management
-          <Tooltip title='Only eligible for members tier 4 and higher.'>
+          <Tooltip title='(Tier 4+) Kick, ban, or manage privileges for team members'>
             <Icon type='question-circle' style={{ marginLeft: '0.5rem' }} />
           </Tooltip>
         </>
       ),
-      dataIndex: 'member',
       key: 'manage',
-      render: (member) => {
-        return member === currentUser.user ? (
+      render: (item) => {
+        return item.member === currentUser.user ? (
           <></>
         ) : (
           <>
             <Popconfirm
-              title={`Are you sure you want to kick ${member} from the room`}
-              // onConfirm={() => handleDeletion(item.id)}
+              title={`Are you sure you want to kick ${item.member} from the room?`}
+              onConfirm={() => handleMemberRemoval(item.id, 0)}
               okText='Yes'
               cancelText='No'
+              disabled={currentUser.administration_level <= 4}
             >
               <Button type='danger' disabled={currentUser.administration_level <= 4}>
                 Kick
               </Button>
             </Popconfirm>
             <Popconfirm
-              title={`Are you sure you want to ban ${member} from the room`}
-              // onConfirm={() => handleDeletion(item.id)}
+              title={`Are you sure you want to ban ${item.member} from the room?`}
+              onConfirm={() => handleMemberRemoval(item.id, 1)}
               okText='Yes'
               cancelText='No'
+              disabled={currentUser.administration_level <= 4}
             >
               <Button type='danger' style={{ margin: '0 1rem' }} disabled={currentUser.administration_level <= 4}>
                 Ban
               </Button>
             </Popconfirm>
             <Select
-              defaultValue='1'
+              defaultValue={item.administration}
               style={{ width: 120, margin: '1rem 0' }}
               disabled={currentUser.administration_level <= 4}
               // onChange={handleChange}
             >
-              <Select.Option value='1'>Admin Tier 1</Select.Option>
-              <Select.Option value='2'>Admin Tier 2</Select.Option>
-              <Select.Option value='3'>Admin Tier 3</Select.Option>
-              <Select.Option value='4'>Admin Tier 4</Select.Option>
-              <Select.Option value='5'>Admin Tier 5</Select.Option>
+              <Select.Option value={1}>Admin Tier 1</Select.Option>
+              <Select.Option value={2}>Admin Tier 2</Select.Option>
+              <Select.Option value={3}>Admin Tier 3</Select.Option>
+              <Select.Option value={4}>Admin Tier 4</Select.Option>
+              <Select.Option value={5}>Admin Tier 5</Select.Option>
             </Select>
           </>
         );

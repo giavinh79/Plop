@@ -34,6 +34,8 @@
 }
 
 .landing-header {
+  position: relative;
+  z-index: 2;
   color: white;
   font-size: 3.3rem;
   font-weight: 500;
@@ -42,6 +44,8 @@
 }
 
 .landing-subheader {
+  position: relative;
+  z-index: 2;
   color: #cdd6e4;
   font-size: 1.5rem;
   max-width: 45rem;
@@ -69,6 +73,11 @@
 .landing-last-section {
   padding: 4rem 12rem 4rem 12rem;
   background-color: #fdfeff;
+}
+
+.landing-last-section .ant-result {
+  border-top-color: #52c41a;
+  border-top-width: 8px;
 }
 
 .landing-last-section-content {
@@ -99,6 +108,17 @@
 }
 
 .landing-footer-text {
+  display: block;
+}
+
+.particle-wrapper {
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.particle-effect {
   display: block;
 }
 
@@ -167,5 +187,10 @@
   .landing-cloud-section {
     height: 10rem;
     margin-top: -5rem;
+  }
+
+  .particle-wrapper,
+  .particle-effect {
+    display: none;
   }
 }

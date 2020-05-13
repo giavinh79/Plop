@@ -541,6 +541,7 @@ class IssueController {
       }
       await Database.table('logs').insert({
         room_id: decryptedRoomId,
+        issue_id: request.body.id,
         description: `${user.email} updated issue `,
         object: title,
         date: new Date().toString(),
@@ -571,6 +572,7 @@ class IssueController {
 
         await trx.table('logs').insert({
           room_id: decryptedRoomId,
+          issue_id: request.body.id,
           description: `${user.email} updated issue `,
           object: data.title,
           date: new Date().toString(),

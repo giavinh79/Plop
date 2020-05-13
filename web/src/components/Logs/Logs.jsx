@@ -44,7 +44,6 @@ export default function Logs() {
 
   useEffect(() => {
     document.addEventListener('scroll', trackScrolling);
-
     return () => {
       document.removeEventListener('scroll', trackScrolling);
     };
@@ -53,7 +52,7 @@ export default function Logs() {
   const trackScrolling = () => {
     // Check if user has scrolled to bottom of element
     if (logsContainer.current.getBoundingClientRect().bottom <= window.innerHeight) {
-      if (data.length < backup.length) {
+      if (data && backup && data.length < backup.length) {
         let endIndex = logIndex + 30 > backup.length ? backup.length : logIndex + 30;
         setData((data) => [...data, ...backup.slice(logIndex, endIndex)]);
         setLogIndex((logIndex) => logIndex + 30);
@@ -219,7 +218,7 @@ export default function Logs() {
           }}
         />
         <Select
-          defaultValue='all'
+          defaultValue='0'
           style={{ marginLeft: '1rem', width: '17rem' }}
           size='large'
           onChange={handleTypeFilter}

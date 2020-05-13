@@ -45,6 +45,7 @@ export default function Settings() {
     decryptPass: '',
     id: 'default',
     maxMembers: '4',
+    default_admin_tier: 2,
     adminApproval: false,
     private: false,
     repository: null,
@@ -52,10 +53,10 @@ export default function Settings() {
 
   useEffect(() => {
     (async function () {
-      const res = await axios.post(`${API_ENDPOINT}/roomInfo`);
-      res.data.private = !!res.data.private;
-      res.data.adminApproval = !!res.data.adaminApproval;
-      setState(res.data);
+      let { data } = await axios.get(`${API_ENDPOINT}/room/info`);
+      data.private = !!data.private;
+      data.adminApproval = !!data.adminApproval;
+      setState(data);
     })().catch((err) => {
       displaySimpleNotification('Error', 4, 'bottomRight', `Unable to retrieve team info. (${err})`, 'warning', 'red');
     });
@@ -256,10 +257,6 @@ export default function Settings() {
                             <span>
                               Default administration tier given to new members (can be 1-5). For more information on the
                               tiers, please look at the help section below this section.
-                              {/* Tiers of Administration: <br />0 - can only see and edit issues assigned to them <br />1 -
-                              can see all issues but not edit all <br />2 - can edit any issue <br />3 - can invite new
-                              members <br />4 - can manage members but no access to team settings <br />5 - all
-                              privileges */}
                             </span>
                           }
                         >
@@ -267,13 +264,19 @@ export default function Settings() {
                         </Tooltip>
                       </Row>
 
-                      <Select defaultValue='3' style={{ width: 120 }} disabled>
-                        <Option value='0'>0</Option>
-                        <Option value='1'>1</Option>
-                        <Option value='2'>2</Option>
-                        <Option value='3'>3</Option>
-                        <Option value='4'>4</Option>
-                        <Option value='5'>5</Option>
+                      <Select
+                        defaultValue={state.default_admin_tier}
+                        style={{ width: 120 }}
+                        onChange={(tier) => {
+                          setState({ ...state, default_admin_tier: tier });
+                        }}
+                      >
+                        <Option value={0}>0</Option>
+                        <Option value={1}>1</Option>
+                        <Option value={2}>2</Option>
+                        <Option value={3}>3</Option>
+                        <Option value={4}>4</Option>
+                        <Option value={5}>5</Option>
                       </Select>
                     </div>
                   </div>
@@ -336,6 +339,7 @@ export default function Settings() {
               marginRight: '1rem',
             }}
             onClick={showDeleteConfirmMessage}
+            disabled={state.id === 'default'}
           >
             Delete Team
           </Button>
@@ -345,7 +349,7 @@ export default function Settings() {
             okText='Yes'
             cancelText='No'
           >
-            <Button key='submit' type='primary'>
+            <Button key='submit' type='primary' disabled={state.id === 'default'}>
               Save
             </Button>
           </Popconfirm>
