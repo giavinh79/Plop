@@ -108,7 +108,8 @@
 }
 
 .landing-footer-text {
-  display: block;
+  display: flex;
+  align-items: center;
 }
 
 .particle-wrapper {
@@ -120,6 +121,10 @@
 
 .particle-effect {
   display: block;
+}
+
+.ant-result-subtitle {
+  color: rgba(0, 0, 0, 0.6) !important;
 }
 
 @media only screen and (max-width: 1397px) {

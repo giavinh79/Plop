@@ -110,8 +110,10 @@ class IssueController {
   async create({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const { assignee, description, dragger, priority, status, shortDescription, tag, title } = request.body;
+      const { assignee, deadline, description, dragger, priority, status, shortDescription, tag, title } = request.body;
       const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      console.log(request.body);
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
@@ -145,6 +147,7 @@ class IssueController {
         title,
         room: decryptedRoomId,
         shortDescription,
+        deadline: deadline.toString(),
         description,
         assignee,
         creator: user.email,
@@ -425,10 +428,15 @@ class IssueController {
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
-      const { title, shortDescription, description, assignee, tag, priority, status, dragger } = request.body;
+      const { title, shortDescription, deadline, description, assignee, tag, priority, status, dragger } = request.body;
 
       // Check here if assignee in DB is different or null for notifications
       let [dataAssignee] = await Database.table('issues').select('assignee').where('id', request.body.id);
+
+      // If user is tier 1, can only edit issues assigned to them
+      if (result[0].administration_level === 1 && user.email !== dataAssignee.assignee) {
+        throw new Error('Unable to edit issues not directly assigned to user');
+      }
 
       if (dataAssignee.assignee) {
         await this.handleNotification(2, {
@@ -520,6 +528,7 @@ class IssueController {
             title,
             shortDescription,
             description,
+            deadline: deadline.toString(),
             assignee,
             tag: JSON.stringify(tag),
             image: JSON.stringify(imageIdArray),
@@ -533,6 +542,7 @@ class IssueController {
             title,
             shortDescription,
             description,
+            deadline: deadline.toString(),
             assignee,
             tag: JSON.stringify(tag),
             priority,
@@ -568,7 +578,12 @@ class IssueController {
           .where({ room: decryptedRoomId, id: request.body.id })
           .update({ status: request.body.status });
 
-        let [data] = await trx.table('issues').select('title').where('id', request.body.id);
+        let [data] = await trx.table('issues').select('title', 'assignee').where('id', request.body.id);
+
+        // If user is tier 1, can only edit issues assigned to them
+        if (result[0].administration_level === 1 && user.email !== data.assignee) {
+          throw new Error('Unable to edit issues not directly assigned to user');
+        }
 
         await trx.table('logs').insert({
           room_id: decryptedRoomId,

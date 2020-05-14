@@ -72,9 +72,7 @@ export const getActiveStyle = (isDragging, draggableStyle) => ({
   userSelect: 'none',
   margin: `0 0 8px 0`,
   background: isDragging ? '#eaeaea' : 'white',
-  // border: '1px solid #ccc',
   boxShadow: 'rgba(0, 0, 0, 0.3) 0px 1px 4px',
-  // borderRadius: '5px',
   ...draggableStyle,
 });
 

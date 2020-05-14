@@ -43,9 +43,13 @@ Route.get('/notifications', 'RoomController.getNotifications').middleware(jwtMid
 Route.post('/notifications', 'RoomController.updateNotifications').middleware(jwtMiddleware);
 Route.delete('/notifications', 'RoomController.clearNotifications').middleware(jwtMiddleware);
 
-// Administration
+// Team Administration
 Route.get('/user/room/tier', 'RoomController.getRoomAdminTier').middleware(jwtMiddleware);
-Route.post('/user/room/tier', 'RoomController.updateRoomAdminTier').middleware(jwtMiddleware);
+Route.post('/user/room/tier', 'RoomController.updateUserRoomTier').middleware(jwtMiddleware);
+
+Route.get('/room/ban-list', 'RoomController.getBanList').middleware(jwtMiddleware);
+Route.post('/room/ban-list', 'RoomController.updateBanList').middleware(jwtMiddleware);
+
 Route.delete('/room/user/:id', 'RoomController.removeMember').middleware(jwtMiddleware); // ban or kick member depending on request data
 
 // Issues - begin setting up other endpoints like this (REST)
@@ -54,8 +58,8 @@ Route.post('/issue', 'IssueController.update').middleware(jwtMiddleware);
 Route.put('/issue', 'IssueController.create').middleware(jwtMiddleware);
 Route.delete('/issue/:id', 'IssueController.delete').middleware(jwtMiddleware);
 
-Route.get('/teamIssue/:status', 'IssueController.getTeam').middleware(jwtMiddleware);
-Route.get('/userIssue/:status', 'IssueController.getUser').middleware(jwtMiddleware);
+Route.get('/issue/team/:status', 'IssueController.getTeam').middleware(jwtMiddleware);
+Route.get('/issue/user/:status', 'IssueController.getUser').middleware(jwtMiddleware);
 Route.post('/issue/progress', 'IssueController.updateProgress').middleware(jwtMiddleware);
 
 Route.get('/comments/:id', 'IssueController.getComments').middleware(jwtMiddleware);
@@ -64,8 +68,8 @@ Route.post('/issue/share', 'IssueController.shareIssue').middleware(jwtMiddlewar
 
 // Chat
 Route.get('/chats', 'ChatController.get').middleware(jwtMiddleware);
-Route.get('/lastReadChat', 'ChatController.getLastReadChat').middleware(jwtMiddleware);
-Route.post('/lastReadChat', 'ChatController.updatelastReadChat').middleware(jwtMiddleware);
+Route.get('/chats/last-read', 'ChatController.getLastReadChat').middleware(jwtMiddleware);
+Route.post('/chats/last-read', 'ChatController.updatelastReadChat').middleware(jwtMiddleware);
 
 // Notes
 Route.get('/notes', 'NoteController.get').middleware(jwtMiddleware);

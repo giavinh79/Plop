@@ -20,7 +20,7 @@ function HorizontalLoginForm({ form }) {
   }, [form]);
 
   const handleLoginFail = () => {
-    displaySimpleNotification('Error', 2, 'bottomRight', 'Invalid login.', 'warning', 'red');
+    displaySimpleNotification('Error', 4, 'bottomRight', 'Invalid login.', 'warning', 'red');
   };
 
   const checkSession = async () => {

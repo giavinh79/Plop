@@ -16,6 +16,26 @@ const isAuthenticated = async () => {
   }
 };
 
+// for determining if issues are overdue (ie. 1 day behind)
+const compareDates = (deadline) => {
+  function getMonth(date) {
+    let month = date.getUTCMonth() + 1;
+    return month < 10 ? '0' + month : '' + month;
+  }
+
+  const deadlineObj = new Date(deadline);
+  const deadlineDate = parseInt(
+    deadlineObj.getUTCFullYear().toString() + getMonth(deadlineObj) + deadlineObj.getUTCDate().toString()
+  );
+
+  const todayObj = new Date();
+  const todayDate = parseInt(
+    todayObj.getUTCFullYear().toString() + getMonth(todayObj) + todayObj.getUTCDate().toString()
+  );
+
+  return deadlineDate < todayDate;
+};
+
 const displayInfoDialog = (title, dataLabel, data, content) => {
   Modal.info({
     title: title,
@@ -63,4 +83,11 @@ const displayUnknownError = () => {
   });
 };
 
-export { isAuthenticated, displayInfoDialog, displaySimpleNotification, displaySessionExpired, displayUnknownError };
+export {
+  isAuthenticated,
+  compareDates,
+  displayInfoDialog,
+  displaySimpleNotification,
+  displaySessionExpired,
+  displayUnknownError,
+};

@@ -42,7 +42,7 @@ export default function Notification({ data, setNotificationData, setShowNotific
         if (data.length > 0) await sendNotificationsRead({ notifications: data });
       }
     })().catch((err) => {
-      displaySimpleNotification('Error', 2, 'bottomRight', `Unable to update notifications ${err}.`, 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', `Unable to update notifications ${err}.`, 'warning', 'red');
     });
   }, [data]);
 

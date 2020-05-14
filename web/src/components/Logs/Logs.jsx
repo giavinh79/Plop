@@ -6,16 +6,9 @@ import { getLogs } from '../../utility/restCalls';
 import moment from 'moment';
 import './style.css';
 
-// const dataExample = [
-//   {
-//     description: 'wahoo@gmail.com joined the team',
-//     date: 'April 20, 2020',
-//     time: '5:30 AM',
-//   },
-// ];
-
 export default function Logs() {
   const history = useHistory();
+  const isMounted = useRef(true);
   const [backup, setBackup] = useState();
   const [data, setData] = useState(['1']);
   const [loading, setLoading] = useState(true);
@@ -36,9 +29,15 @@ export default function Logs() {
         };
       });
 
-      setBackup(formattedData);
-      setData(formattedData.slice(0, 30));
-      setLoading(false);
+      if (isMounted.current) {
+        setBackup(formattedData);
+        setData(formattedData.slice(0, 30));
+        setLoading(false);
+      }
+
+      return () => {
+        isMounted.current = false;
+      };
     })().catch((err) => console.log(err));
   }, []);
 
@@ -109,7 +108,7 @@ export default function Logs() {
       case 0:
         return '#7C67F9';
       case 1:
-        return '#FEBF35';
+        return '#51bb66';
       case 2:
         return '#de4545';
       case 3:
@@ -125,7 +124,7 @@ export default function Logs() {
       case 8:
         return '#3bbdbb';
       case 9:
-        return '#51bb66';
+        return '#FEBF35';
       case 10:
         return '#8aa953';
       case 11:

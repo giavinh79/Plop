@@ -31,11 +31,11 @@ function NormalLoginForm({ form }) {
       if (!err) {
         try {
           await axios.post(`${API_ENDPOINT}/signup`, values);
-          displaySimpleNotification('Success!', 2, 'bottomRight', 'Account was created.', 'smile', '#108ee9');
+          displaySimpleNotification('Success!', 4, 'bottomRight', 'Account was created.', 'smile', '#108ee9');
           await axios.post(`${API_ENDPOINT}/login`, values);
           setToTeam(true);
         } catch (err) {
-          displaySimpleNotification('Error!', 2, 'bottomRight', 'Account could not be created.', 'warning', '#108ee9');
+          displaySimpleNotification('Error!', 4, 'bottomRight', 'Account could not be created.', 'warning', '#108ee9');
         }
       }
     });

@@ -36,7 +36,7 @@ class SetupSeeder {
           maxMembers: 12,
           private: false,
           adminApproval: false,
-          default_admin_tier: 2,
+          default_admin_tier: 3,
           status: 0,
           currentMembers: 1,
           chat: JSON.stringify([]),

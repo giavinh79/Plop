@@ -10,7 +10,7 @@ export const HeaderWrapper = styled.div`
   min-height: 4rem;
   background-color: ${(props) => (props.lightmode ? '#5885B1' : '#2d3848')};
 
-  @media screen and (max-width: 1090px) {
+  @media screen and (max-width: 1120px) {
     padding: ${(props) => (props.homepage ? '2rem !important' : '')};
   }
 

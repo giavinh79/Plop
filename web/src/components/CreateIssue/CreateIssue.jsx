@@ -14,13 +14,15 @@ import {
   Upload,
   Icon,
   DatePicker,
+  Tag,
 } from 'antd';
-import { displaySimpleNotification } from '../../utility/services.js';
+import { displaySimpleNotification, compareDates } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT } from '../../constants';
 import { retrieveAssignees, deleteIssue, getIssueById } from '../../utility/restCalls.js';
 import CommentBody from '../Comment/CommentBody.jsx';
 import ShareIssue from './ShareIssue.jsx';
+import moment from 'moment';
 import './style.css';
 
 const { TextArea } = Input;
@@ -97,10 +99,10 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
   const handleDeletion = async (id) => {
     try {
       await deleteIssue(id);
-      displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
+      displaySimpleNotification('Success', 4, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
       historyTrack.current ? history.goBack() : history.push('/dashboard');
     } catch (err) {
-      displaySimpleNotification('Error', 2, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
     }
   };
 
@@ -189,6 +191,10 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
     <Select.Option key='Security'>Security</Select.Option>,
     <Select.Option key='Testing'>Testing</Select.Option>,
   ];
+
+  const disabledDate = (current) => {
+    return current && current.valueOf() < Date.now() - 60 * 60 * 24 * 1000 * 2;
+  };
 
   const { getFieldDecorator } = form;
 
@@ -302,9 +308,9 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                   justifyContent: 'flex-end',
                 }}
               >
-                {getFieldDecorator('date', {
-                  // initialValue: data == null ? 1 : data.status,
-                })(<DatePicker disabled />)}
+                {getFieldDecorator('deadline', {
+                  initialValue: data && data.deadline ? moment(data.deadline) : null,
+                })(<DatePicker disabledDate={disabledDate} />)}
               </Form.Item>
               <Form.Item
                 label='Status'
@@ -341,28 +347,37 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
 
             <Divider />
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex' }}>
               {data && (
-                <Form.Item wrapperCol={{ span: 12, offset: 6 }} style={{ alignItems: 'flex-end' }}>
-                  <Popconfirm
-                    title='Are you sure you want to delete this task?'
-                    onConfirm={() => handleDeletion(data.id)}
-                    // onCancel={cancel}
-                    okText='Yes'
-                    cancelText='No'
+                <>
+                  {data.deadline && compareDates(data.deadline) && (
+                    <Tag color='red' style={{ position: 'relative', bottom: 0, right: 0, maxHeight: '24px' }}>
+                      overdue
+                    </Tag>
+                  )}
+                  <Form.Item
+                    wrapperCol={{ span: 12, offset: 6 }}
+                    style={{ alignItems: 'flex-end', marginLeft: 'auto' }}
                   >
-                    <Button
-                      type='primary'
-                      style={{
-                        backgroundColor: '#cc8181',
-                        borderColor: '#cc8181',
-                        marginRight: '1rem',
-                      }}
+                    <Popconfirm
+                      title='Are you sure you want to delete this task?'
+                      onConfirm={() => handleDeletion(data.id)}
+                      okText='Yes'
+                      cancelText='No'
                     >
-                      Delete
-                    </Button>
-                  </Popconfirm>
-                </Form.Item>
+                      <Button
+                        type='primary'
+                        style={{
+                          backgroundColor: '#cc8181',
+                          borderColor: '#cc8181',
+                          marginRight: '1rem',
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Popconfirm>
+                  </Form.Item>
+                </>
               )}
               <Form.Item wrapperCol={{ span: 12, offset: 6 }} style={{ alignItems: 'flex-end' }}>
                 {data == null ? (

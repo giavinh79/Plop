@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Menu, Icon, Tooltip } from 'antd';
 import { ThemeContext } from '../../colors/theme';
 import { withRouter, useHistory } from 'react-router-dom';
-import { getRepository, getRoomAdminTier } from '../../utility/restCalls';
+import { getRepository, getRoomAdminTiers } from '../../utility/restCalls';
 import 'antd/dist/antd.css';
 import './SideNav.css';
 
@@ -38,7 +38,7 @@ function SideNav({ path }) {
       setRepository(data.repository || 'https://github.com');
       let {
         data: { administration_level },
-      } = await getRoomAdminTier();
+      } = await getRoomAdminTiers();
       setAdminTier(administration_level);
     })().catch((err) => {
       console.log(err);
@@ -65,7 +65,10 @@ function SideNav({ path }) {
       >
         <Menu.ItemGroup key='g1' title='Filter'>
           <Menu.Item key='1' onClick={() => history.push('/dashboard')}>
-            {/* <a href='/dashboard/' style={{ color: 'rgba(0, 0, 0, 0.65)' }} onClick={(e) => e.preventDefault()}></a> */}
+            {/* 
+              If enabling support for right-click in side nav new tab, use Link react-router tags instead
+              <a href='/dashboard/' onClick={(e) => e.preventDefault()}></a> 
+            */}
             All
           </Menu.Item>
           <Menu.Item key='2' onClick={() => history.push('/dashboard/user')}>
@@ -99,7 +102,7 @@ function SideNav({ path }) {
         <Menu.Item key='6' onClick={() => history.push('/dashboard/members')}>
           View
         </Menu.Item>
-        <Menu.Item key='7' onClick={() => history.push('/dashboard/members-banned')} disabled={adminTier <= 2}>
+        <Menu.Item key='7' onClick={() => history.push('/dashboard/members-banned')} disabled={adminTier <= 3}>
           Banned Members
         </Menu.Item>
       </SubMenu>

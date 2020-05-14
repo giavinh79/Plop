@@ -64,7 +64,7 @@ export default function CommentBody({ id }) {
       setComments([commentObject, ...comments]);
       setComment('');
     } catch (err) {
-      displaySimpleNotification('Error', 2, 'bottomRight', `Unable to post comment. (${err})`, 'warning', '#108ee9');
+      displaySimpleNotification('Error', 4, 'bottomRight', `Unable to post comment. (${err})`, 'warning', '#108ee9');
     }
   };
 

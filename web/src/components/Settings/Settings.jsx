@@ -20,12 +20,10 @@ import {
 import MemberSlider from './MemberSlider';
 import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../constants';
-import { deleteRoom } from '../../utility/restCalls';
-import 'antd/dist/antd.css';
+import { deleteRoom, getRoomAdminTiers } from '../../utility/restCalls';
 import { SettingsWrapper, Text } from './SettingStyles';
+import 'antd/dist/antd.css';
 
-const { Paragraph } = Typography;
-const { confirm } = Modal;
 const { Option } = Select;
 
 // // Tiers of administration: 5
@@ -38,14 +36,16 @@ const { Option } = Select;
 export default function Settings() {
   const email = useRef('');
   const password = useRef('');
+  const isMounted = useRef(true);
   const [toTeam, setToTeam] = useState(false);
+  const [adminTier, setAdminTier] = useState(1);
   const [state, setState] = useState({
     name: '',
     description: '',
     decryptPass: '',
     id: 'default',
     maxMembers: '4',
-    default_admin_tier: 2,
+    default_admin_tier: 3,
     adminApproval: false,
     private: false,
     repository: null,
@@ -54,16 +54,26 @@ export default function Settings() {
   useEffect(() => {
     (async function () {
       let { data } = await axios.get(`${API_ENDPOINT}/room/info`);
+      let {
+        data: { administration_level },
+      } = await getRoomAdminTiers();
       data.private = !!data.private;
       data.adminApproval = !!data.adminApproval;
-      setState(data);
+      if (isMounted.current) {
+        setState(data);
+        setAdminTier(administration_level);
+      }
     })().catch((err) => {
       displaySimpleNotification('Error', 4, 'bottomRight', `Unable to retrieve team info. (${err})`, 'warning', 'red');
     });
+
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   const showDeleteConfirmMessage = () => {
-    confirm({
+    Modal.confirm({
       title: 'Team Deletion Confirmation',
       icon: <Icon type='exclamation-circle' />,
       content: (
@@ -122,9 +132,9 @@ export default function Settings() {
   const handleSave = async () => {
     try {
       await axios.post(`${API_ENDPOINT}/room`, state);
-      displaySimpleNotification('Success', 2, 'bottomRight', 'Team was saved', 'smile', '#108ee9');
+      displaySimpleNotification('Success', 4, 'bottomRight', 'Team settings were saved', 'smile', '#108ee9');
     } catch (err) {
-      displaySimpleNotification('Error', 2, 'bottomRight', 'Team could not be saved', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Team settings could not be saved', 'warning', 'red');
     }
   };
 
@@ -142,7 +152,7 @@ export default function Settings() {
               ) : (
                 <div style={{ flex: 1, padding: '0 1rem 1rem 1rem' }}>
                   <Text>Team ID: </Text>
-                  <Paragraph
+                  <Typography.Paragraph
                     copyable={{ text: state.id || 'default' }}
                     style={{
                       margin: 0,
@@ -156,7 +166,7 @@ export default function Settings() {
                     }}
                   >
                     {state.id}
-                  </Paragraph>
+                  </Typography.Paragraph>
                 </div>
               )}
               {state.id === 'default' ? (
@@ -339,7 +349,7 @@ export default function Settings() {
               marginRight: '1rem',
             }}
             onClick={showDeleteConfirmMessage}
-            disabled={state.id === 'default'}
+            disabled={state.id === 'default' || adminTier < 5}
           >
             Delete Team
           </Button>
@@ -348,8 +358,10 @@ export default function Settings() {
             onConfirm={() => handleSave()}
             okText='Yes'
             cancelText='No'
+            disabled={state.id === 'default' || adminTier < 5}
+            placement='topLeft'
           >
-            <Button key='submit' type='primary' disabled={state.id === 'default'}>
+            <Button key='submit' type='primary' disabled={state.id === 'default' || adminTier < 5}>
               Save
             </Button>
           </Popconfirm>

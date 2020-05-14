@@ -17,14 +17,13 @@ export const TeamWrapper = styled.div`
 `;
 
 export const MobileLogoText = styled.h1`
-  margin: 0;
-  margin-top: 3rem;
+  margin: 3rem 0 0 -0.5rem;
   color: white;
   font-size: 2.5rem;
   font-family: 'Montserrat';
   font-weight: bold;
 
   @media only screen and (min-width: 870px) {
-    display: none;
+    margin: 0 0 0 -0.5rem;
   }
 `;

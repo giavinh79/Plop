@@ -20,7 +20,9 @@ export default function ChatIcon() {
     subscribeToRoom(ws.current, chatData, setChat, setChatData, setChatLoading, setChatNotification); // connect to team's chat
 
     return () => {
-      if (ws.current) ws.current.close();
+      try {
+        if (ws.current) ws.current.close();
+      } catch (err) {}
     };
   }, []);
 

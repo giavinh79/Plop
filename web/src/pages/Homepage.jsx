@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { WrappedNormalLoginForm as SignupForm } from '../components/SignupForm/SignupForm';
 import { FormWrapper } from './HomepageStyles';
-import { Alert, Button, BackTop, Card, Icon, Modal, Result } from 'antd';
+import { Alert, Button, BackTop, Card, Icon, Modal, Result, Divider } from 'antd';
 import MediaQuery from 'react-responsive';
 // import Fade from 'react-reveal/Fade';
 import './Homepage.css';
@@ -45,22 +45,6 @@ export default function Homepage() {
               </FormWrapper>
             </div>
           </div>
-          {/* 0 30px 50px 0 rgba(34,43,55,.1) */}
-
-          {/* <div style={{ height: '35rem', borderBottom: '1px solid #ccc', flexDirection: 'row' }}>
-        <div
-          style={{
-            height: '100%',
-            backgroundImage: "url('images/coder.jpg')",
-            bakcgroundPosition: 'center top',
-            backgroundSize: 'cover',
-            overflow: 'hidden',
-          }}
-        >
-          f
-        </div>
-        <div></div>
-      </div> */}
         </div>
         <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'>
           <path
@@ -69,14 +53,6 @@ export default function Homepage() {
             d='M0,96L60,101.3C120,107,240,117,360,117.3C480,117,600,107,720,112C840,117,960,139,1080,149.3C1200,160,1320,160,1380,160L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z'
           ></path>
         </svg>
-
-        {/* <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'>
-        <path
-          fill='#445D66'
-          fillOpacity='1'
-          d='M0,64L60,90.7C120,117,240,171,360,181.3C480,192,600,160,720,144C840,128,960,128,1080,128C1200,128,1320,128,1380,128L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z'
-        ></path>
-      </svg> */}
         <div className='landing-section-one'>
           <p className='landing-section-header-one'>Why Plop?</p>
         </div>
@@ -89,8 +65,6 @@ export default function Homepage() {
             padding: '0 11rem 1.5rem 11rem',
           }}
         >
-          {/* <img src='/images/blob-shape.svg' alt='blob' /> */}
-
           <div style={{ flex: 1, padding: '1rem' }}>
             <Alert
               message={<span style={{ fontWeight: '500' }}>Plan</span>}
@@ -192,6 +166,13 @@ export default function Homepage() {
             >
               Privacy Policy
             </p>
+            {/* <Divider type='vertical' style={{ margin: '0 0.5rem' }} />
+            <p
+              style={{ color: 'white', cursor: 'pointer', margin: 0, fontSize: '1rem', fontWeight: 'bold' }}
+              onClick={() => setDisplayModal(true)}
+            >
+              Terms
+            </p> */}
           </div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Icon type='twitter' style={{ fontSize: '2rem', color: 'white' }} />

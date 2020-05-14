@@ -149,20 +149,46 @@ class RoomController {
     }
   }
 
-  async updateRoomAdminTier({ auth, request, response }) {
+  async updateUserRoomTier({ auth, request, response }) {
     try {
       const user = await auth.getUser();
       const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
+      if (result[0].administration_level < 4)
+        throw new Error('User does not have sufficient privileges to update admin tiers');
 
-      let [data] = await Database.select('administration_level')
-        .from('user_rooms')
-        .where('user_id', user.id)
-        .where('room_id', decryptedRoomId);
+      const { name, id, tier } = request.body;
+      if (tier > result[0].administration_level || tier >= 6 || id === user.id)
+        throw new Error(`This privilege tier cannot be given to ${name} by ${user.email}`);
 
-      response.status(200).json({ administration_level: data.administration_level, user: user.email });
+      await Database.transaction(async (trx) => {
+        let [data] = await trx
+          .select('administration_level')
+          .from('user_rooms')
+          .where('user_id', id)
+          .where('room_id', decryptedRoomId);
+
+        if (data.administration_level > result[0].administration_level) {
+          throw new Error(`Cannot modify privilege tiers of users higher ranked`);
+        }
+
+        await trx
+          .table('user_rooms')
+          .where('user_id', id)
+          .where('room_id', decryptedRoomId)
+          .update({ administration_level: tier });
+        await trx.table('logs').insert({
+          room_id: decryptedRoomId,
+          description: `${user.email} updated the administration tier of `,
+          object: name,
+          date: new Date().toString(),
+          type: 11,
+        });
+      });
+
+      response.status(200).send();
     } catch (err) {
       console.log(`(room_updateRoomAdminTier) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
@@ -179,28 +205,100 @@ class RoomController {
       if (result[0].administration_level < 4) throw new Error('User does not have sufficient privileges');
 
       let userToKick = request.params.id;
+      let { name, type } = request.body;
+      await Database.transaction(async (trx) => {
+        let [userToBeKicked] = await trx
+          .table('user_rooms')
+          .where({ user_id: userToKick, room_id: decryptedRoomId })
+          .select('administration_level');
+        if (userToBeKicked.administration_level > result[0].administration_level)
+          throw new Error('Cannot remove user with higher privileges');
 
-      let { type } = request.body;
-      if (type === 1) {
-        // Ban action
-      } else {
-        console.log(userToKick);
-        await Database.table('user_rooms').where({ user_id: userToKick, room_id: decryptedRoomId }).delete();
-
-        //   .where('user_id', user.id)
-        //   .where('room_id', decryptedRoomId);
-        console.log('kick');
-        // Kick action
-      }
-
-      // let [data] = await Database.select('administration_level')
-      //   .from('user_rooms')
-      //   .where('user_id', user.id)
-      //   .where('room_id', decryptedRoomId);
+        if (type === 1) {
+          await trx.table('user_rooms').where({ user_id: userToKick, room_id: decryptedRoomId }).delete();
+          let [data] = await trx.table('rooms').select('ban_list', 'currentMembers').where({ id: decryptedRoomId });
+          await trx
+            .table('rooms')
+            .where({ id: decryptedRoomId })
+            .update({
+              ban_list: JSON.stringify([...data.ban_list, { name, id: request.params.id }]),
+              currentMembers: data.currentMembers - 1,
+            });
+          await trx.table('logs').insert({
+            room_id: decryptedRoomId,
+            description: `${user.email} banned ${name} from the `,
+            object: 'team',
+            date: new Date().toString(),
+            type: 10,
+          });
+        } else {
+          await trx.table('user_rooms').where({ user_id: userToKick, room_id: decryptedRoomId }).delete();
+          let [data] = await trx.table('rooms').select('currentMembers').where({ id: decryptedRoomId });
+          await trx
+            .table('rooms')
+            .where({ id: decryptedRoomId })
+            .update({
+              currentMembers: data.currentMembers - 1,
+            });
+          await trx.table('logs').insert({
+            room_id: decryptedRoomId,
+            description: `${user.email} kicked ${name} out of the `,
+            object: 'team',
+            date: new Date().toString(),
+            type: 9,
+          });
+        }
+      });
 
       response.status(200).send();
     } catch (err) {
       console.log(`(room_removeMember) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async getBanList({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+      if (result[0].administration_level < 4)
+        throw new Error('User does not have sufficient privileges to view this page');
+
+      let [data] = await Database.table('rooms').select('ban_list').where({ id: decryptedRoomId });
+      response.status(200).json(data.ban_list);
+    } catch (err) {
+      console.log(`(room_getBanList) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async updateBanList({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in room');
+      if (result[0].administration_level < 4)
+        throw new Error('User does not have sufficient privileges to update ban list');
+
+      const { id } = request.body;
+
+      await Database.transaction(async (trx) => {
+        let [data] = await trx.table('rooms').select('ban_list').where({ id: decryptedRoomId });
+        await trx
+          .table('rooms')
+          .where({ id: decryptedRoomId })
+          .update({
+            ban_list: JSON.stringify(data.ban_list.filter((item) => item.id !== id)),
+          });
+      });
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(room_updateBanList) ${new Date()} [User:${await auth.getUser().id}]: ${err.message}`);
       response.status(404).send();
     }
   }
@@ -317,6 +415,10 @@ class RoomController {
       if (result.length === 0) throw new Error('User not in room');
       if (result[0].administration_level < 4)
         throw new Error('User does not have sufficient privileges to edit settings');
+
+      if (result[0].administration_level < 5) {
+        throw new Error('User does not have sufficient privileges to update team settings');
+      }
       // let data = await Database.table('rooms').select('admin').where('id', decryptedRoomId);
       // if (data[0].admin !== user.id) {
       //   throw new Error('User changing room settings must be the owner');
@@ -370,7 +472,7 @@ class RoomController {
         name: roomName,
         description: roomDescription,
         password: Encryption.encrypt(roomPassword),
-        default_admin_tier: 2,
+        default_admin_tier: 3,
         currentMembers: 1,
         maxMembers: 12,
         private: false,
@@ -448,12 +550,19 @@ class RoomController {
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length !== 0) throw new Error('User already in room');
 
-      result = await Database.from('rooms').select('password', 'adminApproval', 'private').where('id', decryptedRoomId);
+      result = await Database.from('rooms')
+        .select('password', 'adminApproval', 'private', 'ban_list')
+        .where('id', decryptedRoomId);
 
       if (Encryption.decrypt(result[0].password) !== roomPassword) throw new Error('Wrong password');
       if (result[0].private) throw new Error('Private room');
-      // if (result[0].adminApproval) throw
+      for (let bannedUser of result[0].ban_list) {
+        if (bannedUser.id === user.id.toString()) {
+          throw new Error('User is banned from this team');
+        }
+      }
 
+      // if (result[0].adminApproval) throw
       // Future - add check here for if admin approval == true. If it is true
       // then we have to add it to pending table and tell user via notification/email that their request
       // has been sent to the room admin and needs to be approved

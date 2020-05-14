@@ -108,6 +108,14 @@ const getNotes = async () => {
   }
 };
 
+const getRoomBanList = async () => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/room/ban-list`);
+  } catch (err) {
+    throw new err();
+  }
+};
+
 const getRepository = async () => {
   try {
     return await axios.get(`${API_ENDPOINT}/repository`);
@@ -116,7 +124,7 @@ const getRepository = async () => {
   }
 };
 
-const getRoomAdminTier = async () => {
+const getRoomAdminTiers = async () => {
   try {
     return await axios.get(`${API_ENDPOINT}/user/room/tier`);
   } catch (err) {
@@ -140,9 +148,9 @@ const logout = async () => {
   }
 };
 
-const removeMember = async (id, type) => {
+const removeMember = async (id, name, type) => {
   try {
-    return await axios.delete(`${API_ENDPOINT}/room/user/${id}`, { data: { type } });
+    return await axios.delete(`${API_ENDPOINT}/room/user/${id}`, { data: { name, type } });
   } catch (err) {
     throw err;
   }
@@ -196,9 +204,17 @@ const sendShareIssueNotification = async (issue, issueId, message, users) => {
   }
 };
 
+const updateRoomBanList = async (id) => {
+  try {
+    await axios.post(`${API_ENDPOINT}/room/ban-list`, { id });
+  } catch (err) {
+    throw err;
+  }
+};
+
 const updateIssue = async (id, status) => {
   try {
-    await axios.post(`${API_ENDPOINT}/issue/progress`, { id: id, status: status });
+    await axios.post(`${API_ENDPOINT}/issue/progress`, { id, status });
   } catch (err) {
     throw err;
   }
@@ -212,6 +228,14 @@ const updateLayout = async (notes, layout, date) => {
   }
 };
 
+const updateUserAdminTier = async (name, id, tier) => {
+  try {
+    await axios.post(`${API_ENDPOINT}/user/room/tier`, { name, id, tier });
+  } catch (err) {
+    throw err;
+  }
+};
+
 export {
   checkAuth,
   clearNotifications,
@@ -219,13 +243,14 @@ export {
   createTeam,
   deleteIssue,
   deleteRoom,
+  getRoomBanList,
   getAvatar,
   getChat,
   getLogs,
   getNotes,
   getIssueById,
   getRepository,
-  getRoomAdminTier,
+  getRoomAdminTiers,
   joinTeam,
   logout,
   removeMember,
@@ -235,6 +260,8 @@ export {
   retrieveTeams,
   sendShareIssueNotification,
   sendNotificationsRead,
+  updateRoomBanList,
   updateIssue,
   updateLayout,
+  updateUserAdminTier,
 };

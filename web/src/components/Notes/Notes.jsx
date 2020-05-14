@@ -4,7 +4,7 @@ import { layout } from '../../globalStyles';
 import GridLayout, { WidthProvider } from 'react-grid-layout';
 import NoteModal from './NoteModal';
 import IconButton from './IconButton';
-import { getNotes, updateLayout } from '../../utility/restCalls';
+import { getNotes, updateLayout, getRoomAdminTiers } from '../../utility/restCalls';
 import NoteHelpModal from './NoteHelpModal';
 import moment from 'moment';
 import 'antd/dist/antd.css';
@@ -51,16 +51,22 @@ export default function Notes() {
   const [editingItem, setEditingItem] = useState(false);
   const [layoutData, setLayoutData] = useState([]);
   const [date, setDate] = useState(null); // date when notes were received
+  const [adminTier, setAdminTier] = useState(1);
 
   useEffect(() => {
     (async () => {
       const {
         data: { notes, notes_layout, last_modified },
       } = await getNotes();
-      setDate(moment(last_modified).format('YYYYMMDDhhmmss'));
+      let {
+        data: { administration_level },
+      } = await getRoomAdminTiers();
+
+      setLoading(false);
+      setDate(moment(last_modified, 'YYYYMMDDhhmmss'));
       setData(notes);
       setLayoutData(notes_layout);
-      setLoading(false);
+      setAdminTier(administration_level);
     })().catch((err) => {
       displaySimpleNotification('Session expired', 5, 'bottomRight', 'You need to login again.', 'warning', '#108ee9');
     });
@@ -221,7 +227,8 @@ export default function Notes() {
             title='Add new note'
             icon='plus'
             functionToExecute={() => setDisplayModal(true)}
-            disabled={editingItem}
+            disabled={editingItem || adminTier < 3}
+            loading={loading}
             nomargin={true}
             style={{ margin: 0 }}
           />
@@ -247,17 +254,24 @@ export default function Notes() {
                       key='edit'
                       style={{ maxWidth: '1rem' }}
                       onClick={item.edit ? () => handleSave(item) : () => handleEdit(item)}
+                      disabled={adminTier < 3}
                     />
                   </Tooltip>,
                   item.edit ? (
                     <Icon type='close' key='cancel' style={{ maxWidth: '1rem' }} onClick={() => handleCancel(item)} />
                   ) : (
-                    <Popconfirm title='Delete note?' onConfirm={() => handleDelete(item)} okText='Yes' cancelText='No'>
-                      <Icon type='delete' key='delete' style={{ maxWidth: '1rem' }} />
+                    <Popconfirm
+                      title='Delete note?'
+                      onConfirm={() => handleDelete(item)}
+                      okText='Yes'
+                      cancelText='No'
+                      disabled={adminTier < 3}
+                    >
+                      <Icon type='delete' key='delete' style={{ maxWidth: '1rem' }} disabled={adminTier < 3} />
                     </Popconfirm>
                   ),
                 ]}
-                style={{ pointerEvents: editingItem && !item.edit ? 'none' : 'auto' }}
+                style={{ pointerEvents: (editingItem && !item.edit) || adminTier < 3 ? 'none' : 'auto' }}
               >
                 <Card.Meta
                   avatar={<Avatar icon='bulb' style={{ backgroundColor: '#dab632', color: 'white' }} />}

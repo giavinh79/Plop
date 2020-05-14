@@ -6,7 +6,7 @@ export const CardHeader = styled.div`
   justify-content: space-between;
   color: #f3f3f3;
   font-weight: bold;
-  background-color: #5885b1;
+  background-color: ${(props) => (props.overdue ? '#b15858' : '#5885b1')};
 `;
 
 export const CardBody = styled.div`

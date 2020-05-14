@@ -17,6 +17,7 @@ const Schema = use('Schema');
  * 9 - user x kicked user y
  * 10 - user x banned user y
  * 11 - user x changed the administration tier of user y
+ * 12 - user x unbanned user y (unused for now)
  */
 class LogSchema extends Schema {
   up() {

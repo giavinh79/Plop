@@ -17,7 +17,7 @@ export default function Backlog() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get(`${API_ENDPOINT}/teamIssue/0`);
+      const { data } = await axios.get(`${API_ENDPOINT}/issue/team/0`);
       data.map((item, index) => {
         item.key = index;
         item.date = item.created_at.substring(0, 10);
@@ -34,10 +34,10 @@ export default function Backlog() {
   const handleDeletion = async (id) => {
     try {
       await deleteIssue(id);
-      displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
+      displaySimpleNotification('Success', 4, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
       setRefresh(!refresh);
     } catch (err) {
-      displaySimpleNotification('Error', 2, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
     }
   };
 
@@ -47,7 +47,7 @@ export default function Backlog() {
       await updateIssue(id, status + 1);
       setRefresh(!refresh);
     } catch (err) {
-      displaySimpleNotification('Error', 3, 'bottomRight', 'Issue could not be progressed.', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue could not be progressed.', 'warning', 'red');
     }
   };
 

@@ -34,6 +34,9 @@ class NoteController {
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
+      if (result[0].administration_level < 3) {
+        throw new Error('User does not have sufficient privileges to update notes');
+      }
 
       const { date, notes, layout } = request.body;
 

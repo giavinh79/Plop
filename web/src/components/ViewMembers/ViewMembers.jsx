@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Icon, Input, Row, Select, Skeleton, Table, Tooltip, Popconfirm } from 'antd';
+import { Button, Icon, Input, Row, Select, Skeleton, Table, Tooltip, Popconfirm, message } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { pagination } from '../../constants';
-import { retrieveMembers, getRoomAdminTier, removeMember } from '../../utility/restCalls';
+import { retrieveMembers, getRoomAdminTiers, removeMember, updateUserAdminTier } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
 import moment from 'moment';
 import 'antd/dist/antd.css';
@@ -27,7 +27,7 @@ export default function ViewMembers() {
       const { data } = await retrieveMembers();
       const {
         data: { administration_level, user },
-      } = await getRoomAdminTier();
+      } = await getRoomAdminTiers();
       setCurrentUser({ administration_level, user });
 
       setLoading(false);
@@ -44,7 +44,7 @@ export default function ViewMembers() {
     })().catch((err) => {
       displaySimpleNotification('Error', 5, 'bottomRight', `Unable to retrieve members: ${err}`, 'warning', 'red');
     });
-  }, []);
+  }, [refresh]);
 
   const handleFilter = (e) => {
     let userInput = e.target.value.toLowerCase();
@@ -62,13 +62,13 @@ export default function ViewMembers() {
     );
   };
 
-  const handleMemberRemoval = async (id, type) => {
+  const handleMemberRemoval = async (id, name, type) => {
     try {
-      await removeMember(id, type);
+      await removeMember(id, name, type);
       setRefresh(!refresh);
       displaySimpleNotification(
         'Success',
-        2,
+        4,
         'bottomRight',
         'Member has been terminated from the team',
         'smile',
@@ -77,12 +77,24 @@ export default function ViewMembers() {
     } catch (err) {
       displaySimpleNotification(
         'Error',
-        2,
+        4,
         'bottomRight',
         `Member could not be terminated from the team: ${err}`,
         'warning',
         'red'
       );
+    }
+  };
+
+  const handleTierChange = async (name, id, tier) => {
+    try {
+      await updateUserAdminTier(name, id, tier);
+      message.success('Changes were successfully saved');
+    } catch (err) {
+      console.log(err);
+      message.error('Changes were not saved');
+    } finally {
+      setRefresh(!refresh);
     }
   };
 
@@ -128,43 +140,40 @@ export default function ViewMembers() {
       ),
       key: 'manage',
       render: (item) => {
-        return item.member === currentUser.user ? (
+        return item.member === currentUser.user ||
+          currentUser.administration_level <= 3 ||
+          item.administration > currentUser.administration_level ? (
           <></>
         ) : (
           <>
             <Popconfirm
               title={`Are you sure you want to kick ${item.member} from the room?`}
-              onConfirm={() => handleMemberRemoval(item.id, 0)}
+              onConfirm={() => handleMemberRemoval(item.id, item.member, 0)}
               okText='Yes'
               cancelText='No'
-              disabled={currentUser.administration_level <= 4}
             >
-              <Button type='danger' disabled={currentUser.administration_level <= 4}>
-                Kick
-              </Button>
+              <Button type='danger'>Kick</Button>
             </Popconfirm>
             <Popconfirm
               title={`Are you sure you want to ban ${item.member} from the room?`}
-              onConfirm={() => handleMemberRemoval(item.id, 1)}
+              onConfirm={() => handleMemberRemoval(item.id, item.member, 1)}
               okText='Yes'
               cancelText='No'
-              disabled={currentUser.administration_level <= 4}
             >
-              <Button type='danger' style={{ margin: '0 1rem' }} disabled={currentUser.administration_level <= 4}>
+              <Button type='danger' style={{ margin: '0 1rem' }}>
                 Ban
               </Button>
             </Popconfirm>
             <Select
               defaultValue={item.administration}
               style={{ width: 120, margin: '1rem 0' }}
-              disabled={currentUser.administration_level <= 4}
-              // onChange={handleChange}
+              onChange={(tier) => handleTierChange(item.member, item.id, tier)}
             >
-              <Select.Option value={1}>Admin Tier 1</Select.Option>
-              <Select.Option value={2}>Admin Tier 2</Select.Option>
-              <Select.Option value={3}>Admin Tier 3</Select.Option>
-              <Select.Option value={4}>Admin Tier 4</Select.Option>
-              <Select.Option value={5}>Admin Tier 5</Select.Option>
+              {currentUser.administration_level >= 1 && <Select.Option value={1}>Admin Tier 1</Select.Option>}
+              {currentUser.administration_level >= 2 && <Select.Option value={2}>Admin Tier 2</Select.Option>}
+              {currentUser.administration_level >= 3 && <Select.Option value={3}>Admin Tier 3</Select.Option>}
+              {currentUser.administration_level >= 4 && <Select.Option value={4}>Admin Tier 4</Select.Option>}
+              {currentUser.administration_level >= 5 && <Select.Option value={5}>Admin Tier 5</Select.Option>}
             </Select>
           </>
         );

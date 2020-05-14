@@ -6,3 +6,12 @@
 .ant-form-explain {
   color: #ff5b64 !important;
 }
+
+.signup-form .ant-btn-primary {
+  background: linear-gradient(to right, #1890ff 0%, #477ab9 100%);
+  border: none;
+}
+
+.signup-form .ant-btn-primary:hover {
+  background: linear-gradient(to right, #317bbf 0%, rgb(81, 89, 185) 100%);
+}

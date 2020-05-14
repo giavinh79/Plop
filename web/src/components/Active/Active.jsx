@@ -16,7 +16,7 @@ export default function Active() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get(`${API_ENDPOINT}/teamIssue/1`);
+      const { data } = await axios.get(`${API_ENDPOINT}/issue/team/1`);
       let activeIssues = [...data.activeItems, ...data.completedItems, ...data.progressItems];
       activeIssues.map((item, index) => {
         item.key = index;
@@ -35,9 +35,9 @@ export default function Active() {
     try {
       await deleteIssue(id);
       setRefresh(!refresh);
-      displaySimpleNotification('Success', 2, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
+      displaySimpleNotification('Success', 4, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
     } catch (err) {
-      displaySimpleNotification('Error', 2, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
     }
   };
 
@@ -47,7 +47,7 @@ export default function Active() {
       await updateIssue(id, status + 1);
       setRefresh(!refresh);
     } catch (err) {
-      displaySimpleNotification('Error', 3, 'bottomRight', 'Issue could not be progressed.', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue could not be progressed.', 'warning', 'red');
     }
   };
 
@@ -134,7 +134,7 @@ export default function Active() {
       key: 'priority',
       dataIndex: 'priority',
       render: (priority) => {
-        return (
+        return true ? (
           <div style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
             <Tooltip title={priority ? 'Major Priority' : 'Minor Priority'} mouseEnterDelay={0.8}>
               {priority ? (
@@ -143,6 +143,10 @@ export default function Active() {
                 <Icon type='arrow-down' style={{ color: '#40b33f' }} />
               )}
             </Tooltip>
+          </div>
+        ) : (
+          <div style={{ width: '100%', textAlign: 'right' }}>
+            <Tag color='red'>overdue</Tag>
           </div>
         );
       },

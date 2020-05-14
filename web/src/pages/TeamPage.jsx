@@ -84,7 +84,7 @@ export default function Team() {
         'Unable to join team',
         4,
         'bottomRight',
-        `The team may be private, your credentials may be incorrect, or you may already have a pending request to join the team. ${err}`,
+        `The team may be private, at max capacity, or your credentials may be invalid (ie. banned from the team, incorrect...). ${err}`,
         'warning',
         '#108ee9'
       );

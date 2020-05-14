@@ -39,13 +39,17 @@ export default function NoteHelpModal({ setDisplayHelpModal }) {
           that any changes will automatically save!
         </ModalText>
       </p>
-      <>
+      <p>
         <ModalTextTitle>Markdown:</ModalTextTitle>{' '}
         <ModalText>
           For adding links, use the following markdown in the content body of a note: <Text code>[title](link)</Text>{' '}
           where 'title' is replaced by the text you want to display for the link (ie. Firebase) and 'link' is replaced
           by the website url (ie. https://firebase.google.com/).
         </ModalText>
+      </p>
+      <>
+        <ModalTextTitle>Permissions:</ModalTextTitle>{' '}
+        <ModalText>You must have administration tier 3 or higher to edit/add notes.</ModalText>
       </>
     </Modal>
   );

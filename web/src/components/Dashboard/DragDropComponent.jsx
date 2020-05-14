@@ -5,6 +5,7 @@ import { Card } from './Card';
 import { cardStyles, DroppableWrapper, getActiveStyle, getListStyle, Wrapper } from './DashboardStyles';
 import { ThemeContext } from '../../colors/theme';
 import { updateIssue } from '../../utility/restCalls';
+import { displaySimpleNotification } from '../../utility/services';
 
 /*
  * Component representing the three drag & drop columns active, progress, and complete
@@ -73,7 +74,14 @@ export default function DragDropComponent({ loading, items, setItems, source }) 
       const result = move(getList(source.droppableId), getList(destination.droppableId), source, destination);
 
       updateIssue(result.id, result.status).catch(() => {
-        console.log(`ERROR - Was not able to update issue ${result.id}`);
+        displaySimpleNotification(
+          'Error',
+          4,
+          'bottomRight',
+          'Issue progress was not saved. You may not have sufficient permissions.',
+          'warning',
+          'red'
+        );
       });
 
       // To identify which states to change and allow 3 way drag and drop

@@ -62,8 +62,8 @@ export default function Overview() {
 
   useEffect(() => {
     (async () => {
-      let { data: activeData } = await axios.get(`${API_ENDPOINT}/teamIssue/1`);
-      let { data: backlog } = await axios.get(`${API_ENDPOINT}/teamIssue/0`);
+      let { data: activeData } = await axios.get(`${API_ENDPOINT}/issue/team/1`);
+      let { data: backlog } = await axios.get(`${API_ENDPOINT}/issue/team/0`);
       if (isMounted.current) {
         setIssues(activeData);
         setBacklogIssues(backlog);

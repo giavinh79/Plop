@@ -9,6 +9,7 @@ import { isAuthenticated } from './services';
 
 const useActiveIssues = (type) => {
   //  type denotes whether it is for the Team or User dashboard
+  const [currentDate, setCurrentDate] = useState();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState({
     active: [],
@@ -22,9 +23,10 @@ const useActiveIssues = (type) => {
     isMounted.current = true;
 
     (async () => {
-      let { data } = await axios.get(`${API_ENDPOINT}/${type}Issue/1`);
-      const { activeItems, progressItems, completedItems } = data;
+      let { data } = await axios.get(`${API_ENDPOINT}/issue/${type}/1`);
+      const { activeItems, progressItems, completedItems, date } = data;
       if (isMounted.current) {
+        setCurrentDate(date);
         setItems({ active: activeItems, progress: progressItems, complete: completedItems });
         setLoading(false);
       }
@@ -37,7 +39,7 @@ const useActiveIssues = (type) => {
     };
   }, [items.complete.length, items.progress.length, items.active.length, type]);
 
-  return [items, setItems, loading];
+  return [items, setItems, loading, currentDate];
 };
 
 export { useActiveIssues };
