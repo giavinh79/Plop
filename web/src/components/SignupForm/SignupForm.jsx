@@ -50,39 +50,57 @@ function NormalLoginForm({ form }) {
         </div>
         <Form.Item>
           {getFieldDecorator('email')(
-            <Input
-              prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder='Email'
-              type='email'
-              autoComplete='nope'
-              required
-            />
+            <>
+              <label htmlFor='signup-email' className='hide-element'>
+                Email
+              </label>
+              <Input
+                prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder='Email'
+                type='email'
+                autoComplete='nope'
+                id='signup-email'
+                required
+              />
+            </>
           )}
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('password', {
             rules: [{ validator: validateToNextPassword }],
           })(
-            <Input
-              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type='password'
-              placeholder='Password'
-              autoComplete='new-password'
-              required
-            />
+            <>
+              <label htmlFor='signup-password' className='hide-element'>
+                Password
+              </label>
+              <Input
+                prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
+                type='password'
+                placeholder='Password'
+                autoComplete='new-password'
+                id='signup-password'
+                required
+              />
+            </>
           )}
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('confirm', {
             rules: [{ validator: compareToFirstPassword }],
           })(
-            <Input
-              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type='password'
-              placeholder='Confirm Password'
-              autoComplete='new-password'
-              required
-            />
+            <>
+              <label htmlFor='signup-password-two' className='hide-element'>
+                Confirm Password
+              </label>
+              <Input
+                prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
+                type='password'
+                placeholder='Confirm Password'
+                autoComplete='new-password'
+                id='signup-password-two'
+                required
+              />
+            </>
           )}
         </Form.Item>
         <Form.Item>
@@ -106,6 +124,7 @@ const styles = {
   title: {
     fontSize: '3rem',
     fontFamily: 'Montserrat',
+    fontDisplay: 'fallback',
     paddingBottom: '2rem',
     color: 'white',
     margin: '0',

@@ -6,6 +6,7 @@ export const HeaderWrapper = styled.div`
   align-items: center;
   flex-direction: row;
   font-family: 'Montserrat';
+  font-display: fallback;
   height: 9%;
   min-height: 4rem;
   background-color: ${(props) => (props.lightmode ? '#5885B1' : '#2d3848')};

@@ -207,6 +207,7 @@ export default function Notes() {
             allowClear
             size='large'
             placeholder='Highlight note by text'
+            disabled={loading}
             onChange={(e) => handleFilter(e)}
             style={{
               height: '2.7rem',

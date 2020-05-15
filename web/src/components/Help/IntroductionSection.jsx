@@ -17,7 +17,7 @@ export default function IntroductionSection() {
           there are 14 different pages team members can leverage for project management. At the bottom right of the
           interface, the user can access the team chat to communicate in real time with other online users. In the top
           bar, or the header, there are clickable icons and info for the user's convenience. At the top left, the user
-          can see the name of the team. To the rop right, the user can access team notifications, user settings, and a
+          can see the name of the team. To the top right, the user can access team notifications, user settings, and a
           useful dropdown for quickly changing teams. For any questions, concerns, or feedback about the application
           itself please email <Text code>plopwebapp@gmail.com</Text>.
         </Text>

@@ -47,6 +47,21 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
 };
 
 export default function Routes() {
+  useEffect(() => {
+    var head = document.head;
+    var link = document.createElement('link');
+
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css?family=Montserrat';
+
+    head.appendChild(link);
+
+    return () => {
+      head.removeChild(link);
+    };
+  }, []);
+
   return (
     <ThemeProvider>
       <Router>

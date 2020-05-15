@@ -21,6 +21,7 @@ export const MobileLogoText = styled.h1`
   color: white;
   font-size: 2.5rem;
   font-family: 'Montserrat';
+  font-display: fallback;
   font-weight: bold;
 
   @media only screen and (min-width: 870px) {

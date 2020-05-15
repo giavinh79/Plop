@@ -95,7 +95,7 @@ export default function Homepage() {
         </div>
         <div className='landing-plop-image-wrapper'>
           <img
-            src='/images/carousel5.PNG'
+            src='/images/landing.png'
             style={{
               border: '1px solid #e8e8e8',
               borderRadius: '10px',

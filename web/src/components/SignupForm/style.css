@@ -15,3 +15,15 @@
 .signup-form .ant-btn-primary:hover {
   background: linear-gradient(to right, #317bbf 0%, rgb(81, 89, 185) 100%);
 }
+
+.hide-element {
+  border: 0;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}

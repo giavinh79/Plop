@@ -6,6 +6,7 @@ export const cardStyles = {
     justifyContent: 'center',
     fontSize: '2rem',
     fontFamily: '"Montserrat"',
+    fontDisplay: 'fallback',
   },
   title: {
     margin: '1rem',
