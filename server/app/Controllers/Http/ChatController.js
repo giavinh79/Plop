@@ -12,6 +12,7 @@ class ChatController {
 
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
+
       // need to check each user's avatars in chat comments and update the tables first
       // maybe have map structure for 'caching'
       let chats = await Database.from('chats').where('room_id', decryptedRoomId).select('*');
@@ -46,14 +47,6 @@ class ChatController {
       }
     } catch (err) {
       console.log(`(chat_get) ${new Date()}: ${err.message}`);
-      response.status(404).send();
-    }
-  }
-
-  async getTeam({ auth, request, response }) {
-    try {
-    } catch (err) {
-      console.log(`(issue_getTeam) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }

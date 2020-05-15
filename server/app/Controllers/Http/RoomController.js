@@ -730,7 +730,6 @@ class RoomController {
     try {
       const user = await auth.getUser();
       const decryptedRoomId = hashids.decodeHex(request.body.id);
-
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
 
       if (result.length === 0) throw new Error('Unauthorized Access');
@@ -740,11 +739,13 @@ class RoomController {
         Env.get('DEVELOPMENT') === 'true'
           ? {
               httpOnly: true,
+              path: '/',
             }
           : {
               httpOnly: true,
               secure: true,
               sameSite: 'none',
+              path: '/',
             }
       );
       response.status(200).send();
