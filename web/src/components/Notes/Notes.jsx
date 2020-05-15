@@ -189,7 +189,7 @@ export default function Notes() {
       {displayModal && <NoteModal data={data} handleCreate={handleCreate} setDisplayModal={setDisplayModal} />}
       <div style={layout}>
         <Row type='flex' style={{ alignItems: 'center' }}>
-          <p style={{ fontSize: '2rem', marginBottom: '1rem' }}>Team Notes</p>
+          <p style={{ opacity: loading ? 0.3 : 1, fontSize: '2rem', marginBottom: '1rem' }}>Team Notes</p>
           {loading && (
             <Icon
               type='loading'
@@ -197,7 +197,7 @@ export default function Notes() {
               style={{
                 color: '#6ca1d8',
                 fontSize: '1.4rem',
-                margin: '0 0 1rem 0.7rem',
+                margin: '0 0 1rem 1rem',
               }}
             />
           )}
