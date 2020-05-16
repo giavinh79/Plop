@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Form, Icon, Input } from 'antd';
 import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../constants';
 import './style.css';
-import { Redirect } from 'react-router-dom';
 
 function NormalLoginForm({ form }) {
   const [toTeam, setToTeam] = useState(false);
@@ -30,6 +30,7 @@ function NormalLoginForm({ form }) {
     form.validateFields(async (err, values) => {
       if (!err) {
         try {
+          console.log(values);
           await axios.post(`${API_ENDPOINT}/signup`, values);
           displaySimpleNotification('Success!', 4, 'bottomRight', 'Account was created.', 'smile', '#108ee9');
           await axios.post(`${API_ENDPOINT}/login`, values);
@@ -49,58 +50,52 @@ function NormalLoginForm({ form }) {
           <p style={styles.title}>Sign Up</p>
         </div>
         <Form.Item>
+          <label htmlFor='signup-email' className='hide-element'>
+            Email
+          </label>
           {getFieldDecorator('email')(
-            <>
-              <label htmlFor='signup-email' className='hide-element'>
-                Email
-              </label>
-              <Input
-                prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
-                placeholder='Email'
-                type='email'
-                autoComplete='nope'
-                id='signup-email'
-                required
-              />
-            </>
+            <Input
+              prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder='Email'
+              type='email'
+              autoComplete='nope'
+              id='signup-email'
+              required
+            />
           )}
         </Form.Item>
         <Form.Item>
+          <label htmlFor='signup-password' className='hide-element'>
+            Password
+          </label>
           {getFieldDecorator('password', {
             rules: [{ validator: validateToNextPassword }],
           })(
-            <>
-              <label htmlFor='signup-password' className='hide-element'>
-                Password
-              </label>
-              <Input
-                prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-                type='password'
-                placeholder='Password'
-                autoComplete='new-password'
-                id='signup-password'
-                required
-              />
-            </>
+            <Input
+              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type='password'
+              placeholder='Password'
+              autoComplete='new-password'
+              id='signup-password'
+              required
+            />
           )}
         </Form.Item>
         <Form.Item>
+          <label htmlFor='signup-password-two' className='hide-element'>
+            Confirm Password
+          </label>
           {getFieldDecorator('confirm', {
             rules: [{ validator: compareToFirstPassword }],
           })(
-            <>
-              <label htmlFor='signup-password-two' className='hide-element'>
-                Confirm Password
-              </label>
-              <Input
-                prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-                type='password'
-                placeholder='Confirm Password'
-                autoComplete='new-password'
-                id='signup-password-two'
-                required
-              />
-            </>
+            <Input
+              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type='password'
+              placeholder='Confirm Password'
+              autoComplete='new-password'
+              id='signup-password-two'
+              required
+            />
           )}
         </Form.Item>
         <Form.Item>

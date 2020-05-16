@@ -4,7 +4,6 @@ import { Avatar, Modal, Button, Icon, Popconfirm, Row, Typography, List, Skeleto
 import InfiniteScroll from 'react-infinite-scroller';
 import { clearNotifications, sendNotificationsRead } from '../../../utility/restCalls';
 import { displaySimpleNotification } from '../../../utility/services';
-import 'antd/dist/antd.css';
 
 const { Text } = Typography;
 

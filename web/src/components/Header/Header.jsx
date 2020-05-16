@@ -9,7 +9,7 @@ import { WrappedHorizontalLoginForm } from './LoginForm.jsx';
 import { retrieveNotifications } from '../../utility/restCalls';
 import TeamDropdown from './TeamDropdown';
 import { ThemeContext } from '../../colors/theme';
-import { LogoText, MobileLogoText, TeamWrapper } from './HeaderStyles';
+import { MobileLogoText, TeamWrapper } from './HeaderStyles';
 
 export default function Header() {
   const [showNotificationModal, setShowNotificationModal] = useState(false);
@@ -70,7 +70,6 @@ export default function Header() {
       style={location.pathname === '/' ? { backgroundColor: '#445D66', padding: '1rem 13rem 0 13rem' } : {}}
     >
       <div style={{ display: 'flex', alignItems: 'center', padding: location.pathname === '/team' ? '0 1rem' : '0' }}>
-        {location.pathname === '/team' && <LogoText>PL</LogoText>}
         <Logo
           src='/images/justlogo.png'
           alt='logo'
@@ -79,7 +78,9 @@ export default function Header() {
           style={{ padding: location.pathname === '/team' ? 0 : '0 1rem' }}
         />
         {location.pathname === '/' && <MobileLogoText>plop</MobileLogoText>}
-        {location.pathname === '/team' && <LogoText>P</LogoText>}
+        {location.pathname === '/team' && (
+          <MobileLogoText style={{ marginLeft: '0.5rem', fontSize: '2rem' }}>plop</MobileLogoText>
+        )}
       </div>
       {location.pathname.substring(0, 10) === '/dashboard' && (
         <TeamWrapper>

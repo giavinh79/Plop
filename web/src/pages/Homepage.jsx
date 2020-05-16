@@ -28,7 +28,6 @@ export default function Homepage() {
       <div style={{ width: '100%' }}>
         <div className='landing-container'>
           <div className='landing-flex-wrapper'>
-            {/* <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}> */}
             <div className='landing-container-one'>
               <h1 className='landing-header'>
                 Make <span style={{ color: '#5faeff' }}>managing projects</span> simple and <span>efficient</span>.
@@ -39,7 +38,6 @@ export default function Homepage() {
               </h2>
             </div>
             <div style={{ display: 'flex', padding: '0 2rem', justifyContent: 'flex-end' }}>
-              {/* <img src='/images/work_svg.svg' /> */}
               <FormWrapper style={{ position: 'inherit' }}>
                 <SignupForm />
               </FormWrapper>
@@ -110,8 +108,8 @@ export default function Homepage() {
         <div className='landing-cloud-section'>
           {/* <div
             style={{ position: 'absolute', zIndex: '1', width: '100%', height: '100rem', backgroundColor: '#86868659' }}
-          ></div> */}
-          {/* <Fade left>
+          ></div>
+          <Fade left>
             <Card
               style={{ width: 300, height: '18rem', margin: '5rem' }}
               cover={<img alt='example' src='https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png' />}
@@ -126,8 +124,8 @@ export default function Homepage() {
             >
               <Card.Meta avatar={<Avatar icon='smile' />} title='Card title' description='This is the description' />
             </Card>
-          </Fade> */}
-          {/* <Fade left>
+          </Fade>
+          <Fade left>
             <div style={{ width: '50%' }}>
               <img
                 src='/images/carousel1.PNG'
@@ -136,7 +134,6 @@ export default function Homepage() {
               />
             </div>
           </Fade> */}
-          {/* <img src='/images/blob-shape.svg' alt='blob' /> */}
         </div>
         <div className='landing-last-section'>
           <Result
@@ -166,13 +163,6 @@ export default function Homepage() {
             >
               Privacy Policy
             </p>
-            {/* <Divider type='vertical' style={{ margin: '0 0.5rem' }} />
-            <p
-              style={{ color: 'white', cursor: 'pointer', margin: 0, fontSize: '1rem', fontWeight: 'bold' }}
-              onClick={() => setDisplayModal(true)}
-            >
-              Terms
-            </p> */}
           </div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Icon type='twitter' style={{ fontSize: '2rem', color: 'white' }} />

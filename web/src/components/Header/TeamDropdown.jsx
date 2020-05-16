@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import { Dropdown, Icon, Menu } from 'antd';
 import { createSession } from '../../utility/restCalls';
-import 'antd/dist/antd.css';
 import './style.css';
 
 function TeamDropdown({ history }) {

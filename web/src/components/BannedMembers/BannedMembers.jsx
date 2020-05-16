@@ -3,7 +3,6 @@ import { Icon, Table, Row, Skeleton, Popconfirm } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { getRoomBanList, updateRoomBanList } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
-import 'antd/dist/antd.css';
 
 // rename to BannedMembersList later
 export default function BannedMembers() {

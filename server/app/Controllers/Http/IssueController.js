@@ -436,7 +436,7 @@ class IssueController {
         throw new Error('Unable to edit issues not directly assigned to user');
       }
 
-      if (dataAssignee.assignee) {
+      if (assignee) {
         await this.handleNotification(2, {
           assignee,
           issue: title,

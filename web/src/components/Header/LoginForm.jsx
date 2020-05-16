@@ -5,7 +5,6 @@ import { Button, Col, Form, Input, Icon } from 'antd';
 import { API_ENDPOINT } from '../../constants';
 import { displaySimpleNotification } from '../../utility/services';
 import { checkAuth, logout } from '../../utility/restCalls';
-import 'antd/dist/antd.css';
 import './style.css';
 
 function HorizontalLoginForm({ form }) {

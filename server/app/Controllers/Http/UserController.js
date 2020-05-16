@@ -1,16 +1,13 @@
 'use strict';
 
 const nodemailer = require('nodemailer');
-const Encryption = use('Encryption');
 const Hashids = require('hashids/cjs');
 const hashids = new Hashids('', 9);
 const Database = use('Database');
 const Env = use('Env');
 const User = use('App/Models/User');
 const { validate } = use('Validator');
-// Add new columns for user and room (temp) for potential upgrades in the future
-// Example - level, expiry date
-// Encrypt room IDs and pass that to client, decrypt on return
+
 class UserController {
   async addNewUser({ request, response }) {
     const rules = {
@@ -27,7 +24,6 @@ class UserController {
         const { email, password } = request.body;
         user.fill({ email: email, password: password, numTeams: 0, darkMode: 0, status: 0, avatar: 1 });
         await user.save();
-
         const mailOptions = {
           from: Env.get('EMAIL_USER'),
           to: user.email,
@@ -113,7 +109,9 @@ class UserController {
         room_id: decryptedRoomId,
       });
 
-      response.status(200).json({ role: data.role, activity });
+      response
+        .status(200)
+        .json({ role: data.role, activity: activity.filter((item) => item.description.includes(user.email)) });
     } catch (err) {
       console.log(`(user_roomInfo_get) ${new Date()}: ${err.message}`);
       response.status(404).send('Error');
