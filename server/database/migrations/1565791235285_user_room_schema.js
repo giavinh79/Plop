@@ -12,7 +12,7 @@ class UserRoomSchema extends Schema {
       table.string('role', 50);
       table.json('activity');
       table.json('notifications');
-      table.integer('last_checked_chat');
+      table.string('last_checked_chat');
       table.integer('administration_level');
       // table.timestamps();
     });

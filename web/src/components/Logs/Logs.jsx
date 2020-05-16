@@ -24,6 +24,8 @@ export default function Logs() {
           object: log.object,
           type: log.type,
           issueId: log.issue_id,
+          filteredByText: false,
+          filteredByType: false,
           date: moment(log.date).format('MMMM DD, YYYY'),
           time: moment(log.date).format('hh:mm A'),
         };
@@ -61,15 +63,45 @@ export default function Logs() {
 
   const handleFilter = (e) => {
     let userInput = e.target.value.toLowerCase();
-    setData(
-      backup.filter((item) => {
-        return (
-          item.description.toLowerCase().includes(userInput) ||
-          item.time.toLowerCase().includes(userInput) ||
-          item.date.toLowerCase().includes(userInput)
-        );
-      })
-    );
+
+    let filteredBackup = backup.map((item) => {
+      if (
+        item.description.toLowerCase().includes(userInput) ||
+        item.time.toLowerCase().includes(userInput) ||
+        item.date.toLowerCase().includes(userInput)
+      ) {
+        item.filteredByText = false;
+      } else {
+        item.filteredByText = true;
+      }
+      return item;
+    });
+
+    setData(filteredBackup);
+  };
+
+  const handleTypeFilter = (filter) => {
+    let numFilter = parseInt(filter);
+
+    if (numFilter === 0) {
+      return setData(
+        backup.map((item) => {
+          item.filteredByType = false;
+          return item;
+        })
+      );
+    } else {
+      return setData(
+        backup.map((item) => {
+          if (item.type === numFilter - 1) {
+            item.filteredByType = false;
+          } else {
+            item.filteredByType = true;
+          }
+          return item;
+        })
+      );
+    }
   };
 
   const handleLogIcon = (type) => {
@@ -168,44 +200,22 @@ export default function Logs() {
     return true;
   };
 
-  const handleTypeFilter = (filter) => {
-    let numFilter = parseInt(filter);
-
-    switch (numFilter) {
-      case 0:
-        return setData(backup.slice(0, 30));
-      case 1:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 2:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 3:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 4:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 5:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 6:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 7:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 8:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 9:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 10:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 11:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      case 12:
-        return setData(backup.filter((item) => item.type === numFilter - 1));
-      default:
-        return;
-    }
-  };
-
   return (
     <div style={layout} ref={logsContainer}>
-      <p style={subheader}>Project Logs</p>
+      <Row type='flex' style={{ alignItems: 'center' }}>
+        <p style={{ ...subheader, opacity: loading ? 0.3 : 1, marginBottom: '1rem' }}>Project Logs</p>
+        {loading && (
+          <Icon
+            type='loading'
+            spin
+            style={{
+              color: '#6ca1d8',
+              fontSize: '1.4rem',
+              margin: '0 0 1rem 1rem',
+            }}
+          />
+        )}
+      </Row>
       <Row type='flex' style={{ alignItems: 'center', marginBottom: '1rem', flexWrap: 'nowrap' }}>
         <Input.Search
           allowClear
@@ -215,12 +225,14 @@ export default function Logs() {
           style={{
             height: '2.5rem',
           }}
+          disabled={loading}
         />
         <Select
           defaultValue='0'
           style={{ marginLeft: '1rem', width: '17rem' }}
           size='large'
           onChange={handleTypeFilter}
+          disabled={loading}
         >
           <Select.Option value='0'>All logs</Select.Option>
           <Select.Option value='1'>Issues created</Select.Option>
@@ -240,8 +252,9 @@ export default function Logs() {
       <List
         style={{ border: '1px solid #ccc' }}
         itemLayout='horizontal'
+        loading={loading}
         className='log-list'
-        dataSource={data}
+        dataSource={data.filter((item) => !item.filteredByText && !item.filteredByType)}
         renderItem={(item, index) => (
           <List.Item style={{ backgroundColor: index % 2 === 0 ? 'white' : '#f9f5f5', padding: '1rem' }}>
             <Skeleton loading={loading} active avatar size='small' paragraph={{ rows: 1 }} avatar={{ size: 'small' }}>

@@ -113,8 +113,6 @@ class IssueController {
       const { assignee, deadline, description, dragger, priority, status, shortDescription, tag, title } = request.body;
       const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
-      console.log(request.body);
-
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
@@ -147,7 +145,7 @@ class IssueController {
         title,
         room: decryptedRoomId,
         shortDescription,
-        deadline: deadline.toString(),
+        deadline: deadline ? deadline.toString() : null,
         description,
         assignee,
         creator: user.email,
@@ -528,7 +526,7 @@ class IssueController {
             title,
             shortDescription,
             description,
-            deadline: deadline.toString(),
+            deadline: deadline ? deadline.toString() : null,
             assignee,
             tag: JSON.stringify(tag),
             image: JSON.stringify(imageIdArray),
@@ -542,7 +540,7 @@ class IssueController {
             title,
             shortDescription,
             description,
-            deadline: deadline.toString(),
+            deadline: deadline ? deadline.toString() : null,
             assignee,
             tag: JSON.stringify(tag),
             priority,

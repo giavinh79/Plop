@@ -99,13 +99,21 @@ class UserController {
   async getUserRoomInfo({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      let [data] = await Database.select('role')
-        .from('user_rooms')
-        .where({
-          room_id: hashids.decodeHex(request.cookie('room')),
-          user_id: user.id,
-        });
-      response.status(200).json(data);
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('Unauthorized Access');
+
+      let [data] = await Database.select('role').from('user_rooms').where({
+        room_id: decryptedRoomId,
+        user_id: user.id,
+      });
+
+      let activity = await Database.select('description', 'issue_id', 'object').from('logs').where({
+        room_id: decryptedRoomId,
+      });
+
+      response.status(200).json({ role: data.role, activity });
     } catch (err) {
       console.log(`(user_roomInfo_get) ${new Date()}: ${err.message}`);
       response.status(404).send('Error');
@@ -117,13 +125,14 @@ class UserController {
     try {
       const user = await auth.getUser();
       const { avatar, role } = request.body;
+      const decryptedRoomId = hashids.decodeHex(request.body.id);
 
       await Database.table('users').where('id', user.id).update({ avatar: avatar });
 
       if (role != null) {
         await Database.table('user_rooms')
           .where({
-            room_id: hashids.decodeHex(request.cookie('room')),
+            room_id: decryptedRoomId,
             user_id: user.id,
           })
           .update({ role: role });
@@ -139,6 +148,7 @@ class UserController {
   async getAvatar({ auth, response }) {
     try {
       const user = await auth.getUser();
+
       const data = await Database.table('users').select('avatar').where('id', user.id);
       response.status(200).json({ avatar: data[0].avatar });
     } catch (err) {

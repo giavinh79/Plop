@@ -14,10 +14,8 @@ class ChatController {
       if (result.length === 0) throw new Error('User not in this room');
 
       // need to check each user's avatars in chat comments and update the tables first
-      // maybe have map structure for 'caching'
       let chats = await Database.from('chats').where('room_id', decryptedRoomId).select('*');
       let promisesArray = [];
-      let updatedChats = []; // adding avatar attribute and determining if message belongs to current user
       let userAvatarMap = new Map();
       chats.map((item) => {
         promisesArray.push(
@@ -47,6 +45,38 @@ class ChatController {
       }
     } catch (err) {
       console.log(`(chat_get) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async getLastReadChat({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in this room');
+
+      response.status(200).json({ lastCheckedChat: result[0].last_checked_chat });
+    } catch (err) {
+      console.log(`(chat_getLastReadChat) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
+  async updateLastReadChat({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in this room');
+
+      let { data } = request.body;
+
+      response.status(200).json({ lastCheckedChat: result[0].last_checked_chat });
+    } catch (err) {
+      console.log(`(chat_updateLastReadChat) ${new Date()}: ${err.message}`);
       response.status(404).send();
     }
   }

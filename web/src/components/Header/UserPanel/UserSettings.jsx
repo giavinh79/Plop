@@ -4,11 +4,13 @@ import { useHistory } from 'react-router-dom';
 import { Button, Col, Divider, Drawer, Form, Icon, Input, Row, Select, Tooltip } from 'antd';
 import { API_ENDPOINT } from '../../../constants';
 import { ThemeContext } from '../../../colors/theme';
+import { ActionsWrapper, ActivityLogWrapper, ActivityContainer } from './UserSettingsStyles';
 
 const { Option } = Select;
 
 const UserSettings2 = ({ displayUserModal, form }) => {
-  const { location } = useHistory();
+  const history = useHistory();
+  const { location } = history;
   const [theme, setTheme] = useContext(ThemeContext);
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
@@ -17,6 +19,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
   const [email, setEmail] = useState('Please enter email');
   const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || '1');
   const [role, setRole] = useState(null);
+  const [activity, setActivity] = useState([]);
   const { getFieldDecorator } = form;
 
   useEffect(() => {
@@ -29,11 +32,15 @@ const UserSettings2 = ({ displayUserModal, form }) => {
       localStorage.setItem('avatar', avatarIndex);
 
       // Retrieving user information linked to room
-      setLoadingData(false);
       let {
-        data: { role },
+        data: { role, activity },
       } = await axios.get(`${API_ENDPOINT}/user/room/info`);
-      setRole(role);
+      setLoadingData(false);
+
+      if (location.pathname !== '/team') {
+        setRole(role);
+        setActivity(activity.reverse());
+      }
     })().catch((err) => {
       console.log(err);
     });
@@ -224,43 +231,46 @@ const UserSettings2 = ({ displayUserModal, form }) => {
               label={
                 <div>
                   Activity Overview
-                  <Tooltip title='User logs for currently joined team'>
+                  <Tooltip title='Basic user logs for currently joined team'>
                     <Icon type='question-circle-o' style={{ padding: '0 0.3rem' }} />
                   </Tooltip>
                 </div>
               }
             >
-              {getFieldDecorator('description', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'please enter url description',
-                  },
-                ],
-              })(<Input.TextArea rows={4} disabled />)}
+              <ActivityContainer>
+                {activity.map((item, index) => {
+                  return (
+                    <ActivityLogWrapper key={index}>
+                      <p>
+                        {item.description}{' '}
+                        {item.issue_id ? (
+                          <span
+                            style={{ color: '#1b5b9a', cursor: 'pointer', fontWeight: 500 }}
+                            onClick={() => history.push(`/dashboard/issue/${item.issue_id}`)}
+                          >
+                            {item.object}
+                          </span>
+                        ) : (
+                          <span style={{ fontWeight: 500 }}>{item.object}</span>
+                        )}
+                      </p>
+                      <Divider style={{ marginTop: 0, marginBottom: 0 }} />
+                    </ActivityLogWrapper>
+                  );
+                })}
+              </ActivityContainer>
             </Form.Item>
           </Col>
         </Row>
       </Form>
-      <div
-        style={{
-          position: 'absolute',
-          right: 0,
-          bottom: 0,
-          width: '100%',
-          borderTop: '1px solid #e9e9e9',
-          padding: '10px 16px',
-          background: '#fff',
-          textAlign: 'right',
-        }}
-      >
+      <ActionsWrapper>
         <Button onClick={handleClose} style={{ marginRight: 8 }}>
           Cancel
         </Button>
         <Button type='primary' loading={loadingSave} onClick={handleSave}>
           Save
         </Button>
-      </div>
+      </ActionsWrapper>
     </Drawer>
   );
 };
