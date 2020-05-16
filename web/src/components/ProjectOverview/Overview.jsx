@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Badge, Descriptions, Progress, Row } from 'antd';
+import { Badge, Descriptions, Progress, Row, Icon } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import axios from 'axios';
 import { API_ENDPOINT } from '../../constants';
 import { LineChart, XAxis, YAxis, Legend, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
-import 'antd/dist/antd.css';
 
 const data = [
   {
@@ -52,13 +51,14 @@ const data = [
 ];
 
 export default function Overview() {
-  const isMounted = useRef(true);
+  const [loading, setLoading] = useState(true);
+  const [backlogIssues, setBacklogIssues] = useState([]);
   const [issues, setIssues] = useState({
     activeItems: [],
     progressItems: [],
     completedItems: [],
   });
-  const [backlogIssues, setBacklogIssues] = useState([]);
+  const isMounted = useRef(true);
 
   useEffect(() => {
     (async () => {
@@ -67,6 +67,7 @@ export default function Overview() {
       if (isMounted.current) {
         setIssues(activeData);
         setBacklogIssues(backlog);
+        setLoading(false);
       }
     })().catch((err) => {
       console.log(err);
@@ -79,7 +80,22 @@ export default function Overview() {
 
   return (
     <div style={layout}>
-      <p style={subheader}>Project Overview (incomplete)</p>
+      <Row type='flex' style={{ alignItems: 'center' }}>
+        <p style={{ opacity: loading ? 0.3 : 1, fontSize: '2rem', marginBottom: '1rem' }}>
+          Project Overview (incomplete)
+        </p>
+        {loading && (
+          <Icon
+            type='loading'
+            spin
+            style={{
+              color: '#6ca1d8',
+              fontSize: '1.4rem',
+              margin: '0 0 1rem 1rem',
+            }}
+          />
+        )}
+      </Row>
 
       <Descriptions bordered style={{ marginBottom: '2rem' }}>
         <Descriptions.Item label='Sprint Completion' span={3}>

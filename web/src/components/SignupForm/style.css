@@ -16,7 +16,7 @@
   background: linear-gradient(to right, #317bbf 0%, rgb(81, 89, 185) 100%);
 }
 
-.hide-element {
+.signup-form .ant-form-item-label {
   border: 0;
   clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
   clip: rect(1px, 1px, 1px, 1px);

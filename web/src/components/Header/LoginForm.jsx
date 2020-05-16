@@ -70,6 +70,9 @@ function HorizontalLoginForm({ form }) {
       ) : (
         <Form layout='inline' onSubmit={handleSubmit} className='login-form'>
           <Form.Item>
+            <label htmlFor='loginEmail' className='hide-element'>
+              Email
+            </label>
             <Input
               prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder='Username'
@@ -82,6 +85,9 @@ function HorizontalLoginForm({ form }) {
             />
           </Form.Item>
           <Form.Item>
+            <label htmlFor='loginPassword' className='hide-element'>
+              Email
+            </label>
             <Input
               prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
               type='password'

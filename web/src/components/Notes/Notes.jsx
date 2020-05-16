@@ -7,10 +7,9 @@ import IconButton from './IconButton';
 import { getNotes, updateLayout, getRoomAdminTiers } from '../../utility/restCalls';
 import NoteHelpModal from './NoteHelpModal';
 import moment from 'moment';
-import 'antd/dist/antd.css';
+import { displaySimpleNotification } from '../../utility/services';
 import './grid-styles.css';
 import './resizable-styles.css';
-import { displaySimpleNotification } from '../../utility/services';
 
 const ReactGridLayout = WidthProvider(GridLayout);
 

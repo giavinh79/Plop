@@ -3,7 +3,6 @@ import { Menu, Icon, Tooltip } from 'antd';
 import { ThemeContext } from '../../colors/theme';
 import { withRouter, useHistory } from 'react-router-dom';
 import { getRepository, getRoomAdminTiers } from '../../utility/restCalls';
-import 'antd/dist/antd.css';
 import './SideNav.css';
 
 const { SubMenu } = Menu;

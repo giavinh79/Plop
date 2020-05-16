@@ -5,7 +5,6 @@ import { Calendar, Icon, Row } from 'antd';
 import axios from 'axios';
 import { API_ENDPOINT } from '../../constants';
 import { LinkWrapper } from './ScheduleStyles';
-import 'antd/dist/antd.css';
 
 export default function Schedule() {
   const [data, setData] = useState([]);
@@ -35,7 +34,7 @@ export default function Schedule() {
     );
 
     const calendarObj = new Date(date);
-    calendarObj.setDate(calendarObj.getDate() - 1);
+    // calendarObj.setDate(calendarObj.getDate() - 1); need to enforce a strict timezone to prevent timing issues
     const calendarDate = parseInt(
       calendarObj.getUTCFullYear().toString() + getMonth(calendarObj) + calendarObj.getUTCDate().toString()
     );

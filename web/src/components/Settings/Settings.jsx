@@ -22,7 +22,6 @@ import { displaySimpleNotification } from '../../utility/services';
 import { API_ENDPOINT } from '../../constants';
 import { deleteRoom, getRoomAdminTiers } from '../../utility/restCalls';
 import { SettingsWrapper, Text } from './SettingStyles';
-import 'antd/dist/antd.css';
 
 const { Option } = Select;
 

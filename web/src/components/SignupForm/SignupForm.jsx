@@ -49,10 +49,7 @@ function NormalLoginForm({ form }) {
         <div style={{ textAlign: 'center' }}>
           <p style={styles.title}>Sign Up</p>
         </div>
-        <Form.Item>
-          <label htmlFor='signup-email' className='hide-element'>
-            Email
-          </label>
+        <Form.Item label={<span className='hide-element'>Email</span>}>
           {getFieldDecorator('email')(
             <Input
               prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -64,10 +61,7 @@ function NormalLoginForm({ form }) {
             />
           )}
         </Form.Item>
-        <Form.Item>
-          <label htmlFor='signup-password' className='hide-element'>
-            Password
-          </label>
+        <Form.Item label={<span className='hide-element'>Password</span>}>
           {getFieldDecorator('password', {
             rules: [{ validator: validateToNextPassword }],
           })(
@@ -81,10 +75,10 @@ function NormalLoginForm({ form }) {
             />
           )}
         </Form.Item>
-        <Form.Item>
-          <label htmlFor='signup-password-two' className='hide-element'>
+        <Form.Item label={<span className='hide-element'>Confirm Password</span>}>
+          {/* <label htmlFor='signup-password-two' className='hide-element'>
             Confirm Password
-          </label>
+          </label> */}
           {getFieldDecorator('confirm', {
             rules: [{ validator: compareToFirstPassword }],
           })(

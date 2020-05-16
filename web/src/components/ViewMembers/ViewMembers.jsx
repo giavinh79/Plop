@@ -5,7 +5,7 @@ import { pagination } from '../../constants';
 import { retrieveMembers, getRoomAdminTiers, removeMember, updateUserAdminTier } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
 import moment from 'moment';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 
 // Tiers of administration: 5
 // 4 - can't change team settings
