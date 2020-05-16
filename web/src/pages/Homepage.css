@@ -43,6 +43,11 @@
   margin-bottom: 1rem;
 }
 
+.landing-mobile-header {
+  color: #f96363e3;
+  display: none;
+}
+
 .landing-subheader {
   position: relative;
   z-index: 2;
@@ -152,8 +157,14 @@
   }
 
   .landing-header {
+    display: none;
     font-size: 2rem;
   }
+
+  .landing-mobile-header {
+    display: block;
+  }
+
   .landing-subheader {
     font-size: 1rem;
   }

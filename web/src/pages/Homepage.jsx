@@ -1,13 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, lazy, Suspense } from 'react';
 import { WrappedNormalLoginForm as SignupForm } from '../components/SignupForm/SignupForm';
 import { FormWrapper } from './HomepageStyles';
-import { Alert, Button, BackTop, Card, Icon, Modal, Result, Divider } from 'antd';
-import MediaQuery from 'react-responsive';
+import { Alert, Button, Icon, Result } from 'antd';
+// import MediaQuery from 'react-responsive';
 // import Fade from 'react-reveal/Fade';
 import './Homepage.css';
 import HomepagePrivacyTerms from './HomepagePrivacyTerms';
-import Particles from 'react-particles-js';
+// import Particles from 'react-particles-js';
 import { particleParams } from '../constants/particles';
+
+const ParticlesComponent = lazy(() => import('react-particles-js'));
+
+// const AvatarComponent = lazy(() => import('./AvatarComponent'));
+
+// const renderLoader = () => <p>Loading</p>;
+
+// const DetailsComponent = () => (
 
 export default function Homepage() {
   const [visible, setVisible] = useState(true);
@@ -23,7 +31,10 @@ export default function Homepage() {
     <>
       {displayModal && <HomepagePrivacyTerms setDisplayModal={setDisplayModal} />}
       <div className='particle-wrapper'>
-        <Particles params={particleParams} height='50rem' className='particle-effect' />
+        <Suspense fallback={<div></div>}>
+          <ParticlesComponent params={particleParams} height='50rem' className='particle-effect' />
+        </Suspense>
+        {/* <Particles params={particleParams} height='50rem' className='particle-effect' /> */}
       </div>
       <div style={{ width: '100%' }}>
         <div className='landing-container'>
@@ -31,6 +42,9 @@ export default function Homepage() {
             <div className='landing-container-one'>
               <h1 className='landing-header'>
                 Make <span style={{ color: '#5faeff' }}>managing projects</span> simple and <span>efficient</span>.
+              </h1>
+              <h1 className='landing-mobile-header'>
+                Plop is not designed for small screens yet, please wait for the mobile app. Thanks!
               </h1>
               <h2 className='landing-subheader'>
                 Featuring a simple interface with chat, drag-and-drop dashboards, and more,{' '}
@@ -151,7 +165,7 @@ export default function Homepage() {
             className='landing-last-section-content'
           />
         </div>
-        <BackTop ref={backToTop} />
+        {/* <BackTop ref={backToTop} /> */}
         <footer className='landing-footer'>
           <div>
             <p style={{ color: 'white', margin: 0, fontSize: '1rem', fontWeight: 'bold' }}>&copy; 2020 Plop, Inc. </p>
@@ -173,21 +187,20 @@ export default function Homepage() {
           </div>
         </footer>
       </div>
-      <MediaQuery maxDeviceWidth={480} maxWidth={480}>
-        <Modal
-          title='Mobile usage is unsupported'
-          visible={visible}
-          onCancel={hideModal}
-          footer={
-            <Button type='primary' onClick={hideModal}>
-              Ok
-            </Button>
-          }
-          width={450}
-        >
-          <p>Plop is not designed for small screens yet, please wait for the mobile app. Thanks!</p>
-        </Modal>
-      </MediaQuery>
+      {/* <Modal
+        title='Mobile usage is unsupported'
+        visible={visible}
+        onCancel={hideModal}
+        footer={
+          <Button type='primary' onClick={hideModal}>
+            Ok
+          </Button>
+        }
+        className='mobile-modal'
+        width={450}
+      >
+        <p>Plop is not designed for small screens yet, please wait for the mobile app. Thanks!</p>
+      </Modal> */}
     </>
   );
 }
