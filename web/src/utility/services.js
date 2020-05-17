@@ -23,15 +23,16 @@ const compareDates = (deadline) => {
     return month < 10 ? '0' + month : '' + month;
   }
 
+  function getDay(date) {
+    let day = date.getUTCDate() + 1;
+    return day < 10 ? '0' + day : '' + day;
+  }
+
   const deadlineObj = new Date(deadline);
-  const deadlineDate = parseInt(
-    deadlineObj.getUTCFullYear().toString() + getMonth(deadlineObj) + deadlineObj.getUTCDate().toString()
-  );
+  const deadlineDate = parseInt(deadlineObj.getUTCFullYear().toString() + getMonth(deadlineObj) + getDay(deadlineObj));
 
   const todayObj = new Date();
-  const todayDate = parseInt(
-    todayObj.getUTCFullYear().toString() + getMonth(todayObj) + todayObj.getUTCDate().toString()
-  );
+  const todayDate = parseInt(todayObj.getUTCFullYear().toString() + getMonth(todayObj) + getDay(todayObj));
 
   return deadlineDate < todayDate;
 };

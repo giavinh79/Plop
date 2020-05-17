@@ -20,4 +20,10 @@ export const NavText = styled.p`
   font-weight: ${(props) => (props.bold ? 'bold' : 'initial')};
   color: #6f6f6f;
   cursor: pointer;
+
+  &:hover {
+    -webkit-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
+  }
 `;

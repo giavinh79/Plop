@@ -69,7 +69,10 @@ export default function Header() {
       homepage={location.pathname === '/' ? 1 : 0}
       style={location.pathname === '/' ? { backgroundColor: '#445D66', padding: '1rem 13rem 0 13rem' } : {}}
     >
-      <div style={{ display: 'flex', alignItems: 'center', padding: location.pathname === '/team' ? '0 1rem' : '0' }}>
+      <div
+        style={{ display: 'flex', alignItems: 'center', padding: location.pathname === '/team' ? '0 1rem' : '0' }}
+        onClick={() => history.push('/')}
+      >
         <Logo
           src='/images/justlogo.png'
           alt='logo'

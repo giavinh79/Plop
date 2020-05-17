@@ -1,40 +1,33 @@
 import React, { useState, useRef, lazy, Suspense } from 'react';
 import { WrappedNormalLoginForm as SignupForm } from '../components/SignupForm/SignupForm';
 import { FormWrapper } from './HomepageStyles';
-import { Alert, Button, Icon, Result } from 'antd';
+import { Alert, BackTop, Button, Icon, Result } from 'antd';
 // import MediaQuery from 'react-responsive';
 // import Fade from 'react-reveal/Fade';
 import './Homepage.css';
 import HomepagePrivacyTerms from './HomepagePrivacyTerms';
-// import Particles from 'react-particles-js';
 import { particleParams } from '../constants/particles';
 
-const ParticlesComponent = lazy(() => import('react-particles-js'));
+// const ParticlesComponent = lazy(() => import('react-particles-js'));
 
-// const AvatarComponent = lazy(() => import('./AvatarComponent'));
-
-// const renderLoader = () => <p>Loading</p>;
-
-// const DetailsComponent = () => (
+const ParticlesComponent = lazy(() => {
+  return Promise.all([import('react-particles-js'), new Promise((resolve) => setTimeout(resolve, 300))]).then(
+    ([moduleExports]) => moduleExports
+  );
+});
 
 export default function Homepage() {
-  const [visible, setVisible] = useState(true);
   const [displayModal, setDisplayModal] = useState(false);
-  const signupRef = useRef(); // will need to forward refs
+  // const signupRef = useRef(); // will need to forward refs
   const backToTop = useRef();
-
-  const hideModal = () => {
-    setVisible(false);
-  };
 
   return (
     <>
       {displayModal && <HomepagePrivacyTerms setDisplayModal={setDisplayModal} />}
       <div className='particle-wrapper'>
-        <Suspense fallback={<div></div>}>
+        <Suspense fallback={<></>}>
           <ParticlesComponent params={particleParams} height='50rem' className='particle-effect' />
         </Suspense>
-        {/* <Particles params={particleParams} height='50rem' className='particle-effect' /> */}
       </div>
       <div style={{ width: '100%' }}>
         <div className='landing-container'>

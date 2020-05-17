@@ -28,15 +28,20 @@ export default function Schedule() {
       return month < 10 ? '0' + month : '' + month;
     }
 
+    function getDay(date) {
+      let day = date.getUTCDate() + 1;
+      return day < 10 ? '0' + day : '' + day;
+    }
+
     const deadlineObj = new Date(deadline);
     const deadlineDate = parseInt(
-      deadlineObj.getUTCFullYear().toString() + getMonth(deadlineObj) + deadlineObj.getUTCDate().toString()
+      deadlineObj.getUTCFullYear().toString() + getMonth(deadlineObj) + getDay(deadlineObj)
     );
 
     const calendarObj = new Date(date);
     // calendarObj.setDate(calendarObj.getDate() - 1); need to enforce a strict timezone to prevent timing issues
     const calendarDate = parseInt(
-      calendarObj.getUTCFullYear().toString() + getMonth(calendarObj) + calendarObj.getUTCDate().toString()
+      calendarObj.getUTCFullYear().toString() + getMonth(calendarObj) + getDay(calendarObj)
     );
 
     return deadlineDate === calendarDate;

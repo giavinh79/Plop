@@ -12,12 +12,20 @@ export const TeamWrapper = styled.div`
 `;
 
 export const MobileLogoText = styled.h1`
+  cursor: pointer;
+  z-index: 2;
   margin: 3rem 0 0 -0.5rem;
   color: white;
   font-size: 2.5rem;
   font-family: 'Montserrat';
   font-display: fallback;
   font-weight: bold;
+  transition: transform 0.3s ease;
+  transform: translateX(0px);
+
+  &:hover {
+    transform: translateX(10px);
+  }
 
   @media only screen and (min-width: 870px) {
     margin: 0 0 0 -0.5rem;

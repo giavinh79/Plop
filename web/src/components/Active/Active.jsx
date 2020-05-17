@@ -6,7 +6,7 @@ import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT, tagMap, pagination, progressMap } from '../../constants';
 import { ActionText } from './ActiveStyles';
 import { deleteIssue, updateIssue } from '../../utility/restCalls';
-import { displaySimpleNotification } from '../../utility/services';
+import { displaySimpleNotification, compareDates } from '../../utility/services';
 
 export default function Active() {
   const [data, setData] = useState([]);
@@ -132,21 +132,20 @@ export default function Active() {
     {
       title: '',
       key: 'priority',
-      dataIndex: 'priority',
-      render: (priority) => {
-        return true ? (
+      render: (item) => {
+        return item.deadline && compareDates(item.deadline) ? (
+          <div style={{ width: '100%', textAlign: 'center' }}>
+            <Tag color='red'>overdue</Tag>
+          </div>
+        ) : (
           <div style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
-            <Tooltip title={priority ? 'Major Priority' : 'Minor Priority'} mouseEnterDelay={0.8}>
-              {priority ? (
+            <Tooltip title={item.priority ? 'Major Priority' : 'Minor Priority'} mouseEnterDelay={0.8}>
+              {item.priority ? (
                 <Icon type='arrow-up' style={{ color: '#b23f3f' }} />
               ) : (
                 <Icon type='arrow-down' style={{ color: '#40b33f' }} />
               )}
             </Tooltip>
-          </div>
-        ) : (
-          <div style={{ width: '100%', textAlign: 'right' }}>
-            <Tag color='red'>overdue</Tag>
           </div>
         );
       },

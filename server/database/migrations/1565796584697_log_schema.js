@@ -23,8 +23,8 @@ class LogSchema extends Schema {
   up() {
     this.create('logs', (table) => {
       table.increments();
-      table.integer('room_id').unsigned().references('id').inTable('rooms');
-      table.integer('issue_id').unsigned().references('id').inTable('issues');
+      table.integer('room_id').unsigned();
+      table.integer('issue_id').unsigned();
       table.integer('type').unsigned();
       table.string('description', 200);
       table.string('object', 100);

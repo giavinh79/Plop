@@ -4,7 +4,7 @@ export const subscribeToRoom = (ws, chatData, setChat, setChatData, setChatLoadi
   ws.connect(); // connect to the server
 
   ws.on('open', async () => {
-    let chat = ws.subscribe(`room:${JSON.parse(localStorage.getItem('currentTeam')).id}`);
+    let chat = ws.subscribe(`room:${JSON.parse(localStorage.getItem('currentTeam')).id}`); // maybe if this is null do a call to get room ID
     setChat(chat);
 
     chat.on('ready', async () => {
