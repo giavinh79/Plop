@@ -38,6 +38,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
   const [assignees, setAssignees] = useState([]);
   const [data, setData] = useState(location.data || null);
   const [loading, setLoading] = useState((isManualNavigation && data == null) || false);
+  const [loadingSave, setLoadingSave] = useState(false);
   const titleRef = useRef();
   const history = useHistory();
   const historyTrack = useRef(true); // track whether user manually navigated to this page to configure go back button
@@ -110,6 +111,8 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
     e.preventDefault();
 
     form.validateFields((err, values) => {
+      setLoadingSave(true);
+
       const toBase64 = (file) =>
         new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -152,6 +155,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
               );
               resetForm();
             }
+            setLoadingSave(false);
           } catch (err) {
             displaySimpleNotification(
               'Error',
@@ -381,7 +385,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
               )}
               <Form.Item wrapperCol={{ span: 12, offset: 6 }} style={{ alignItems: 'flex-end' }}>
                 {data == null ? (
-                  <Button type='primary' onClick={handleSubmit}>
+                  <Button type='primary' onClick={handleSubmit} loading={loadingSave}>
                     Submit
                   </Button>
                 ) : (
