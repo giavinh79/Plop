@@ -72,9 +72,14 @@ class ChatController {
       const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in this room');
 
-      let { data } = request.body;
+      let { date } = request.body;
 
-      response.status(200).json({ lastCheckedChat: result[0].last_checked_chat });
+      await Database.table('user_rooms')
+        .where('user_id', user.id)
+        .where('room_id', decryptedRoomId)
+        .update('last_checked_chat', date);
+
+      response.status(200).send();
     } catch (err) {
       console.log(`(chat_updateLastReadChat) ${new Date()}: ${err.message}`);
       response.status(404).send();

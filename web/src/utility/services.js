@@ -16,7 +16,7 @@ const isAuthenticated = async () => {
   }
 };
 
-// for determining if issues are overdue (ie. 1 day behind)
+// Determines if issues are overdue (ie. 1 day behind)
 const compareDates = (deadline) => {
   function getMonth(date) {
     let month = date.getUTCMonth() + 1;

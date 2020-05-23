@@ -92,6 +92,14 @@ const getChat = async (issue) => {
   }
 };
 
+const getLastReadChat = async () => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/chats/last-read`);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const getLogs = async (issue) => {
   try {
     return await axios.get(`${API_ENDPOINT}/logs`);
@@ -204,6 +212,14 @@ const sendShareIssueNotification = async (issue, issueId, message, users) => {
   }
 };
 
+const updateLastReadChat = async (date) => {
+  try {
+    await axios.post(`${API_ENDPOINT}/chats/last-read`, { date });
+  } catch (err) {
+    throw err;
+  }
+};
+
 const updateRoomBanList = async (id) => {
   try {
     await axios.post(`${API_ENDPOINT}/room/ban-list`, { id });
@@ -245,6 +261,7 @@ export {
   deleteRoom,
   getRoomBanList,
   getAvatar,
+  getLastReadChat,
   getChat,
   getLogs,
   getNotes,
@@ -260,6 +277,7 @@ export {
   retrieveTeams,
   sendShareIssueNotification,
   sendNotificationsRead,
+  updateLastReadChat,
   updateRoomBanList,
   updateIssue,
   updateLayout,

@@ -158,7 +158,6 @@ class UserController {
   // Using JWT, so I am actually checking for the token here
   async checkSession({ auth, response }) {
     try {
-      await auth.check();
       const user = await auth.getUser();
       response.status(200).send({ email: user.email });
     } catch (err) {

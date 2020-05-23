@@ -16,6 +16,12 @@ export const Table = styled.nav`
   box-shadow: 0 1px 8px rgba(27, 31, 35, 0.15), 0 0 1px rgba(106, 115, 125, 0.35);
 `;
 
+export const TableHeader = styled.h2`
+  margin: 1rem 0 1.5rem 0rem;
+  font-weight: 700;
+  color: #2c343e;
+`;
+
 export const NavText = styled.p`
   font-weight: ${(props) => (props.bold ? 'bold' : 'initial')};
   color: #6f6f6f;

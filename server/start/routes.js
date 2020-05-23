@@ -10,6 +10,19 @@ const jwtMiddleware = async ({ request }, next) => {
   }
 };
 
+// // maybe implement this middleware for cleaner code
+// const authMiddleware = async (auth, { request, response }, next) => {
+//   try {
+//     const user = await auth.getUser();
+//     request.user = user;
+//     // make call to user_rooms DB using request.cookie('room') to determine privilege level
+//     // if exists, store it in request.administration
+//     next();
+//   } catch (err) {
+//     response.status(404).send();
+//   }
+// };
+
 Route.on('/').render('welcome');
 
 // Authentication
@@ -69,7 +82,7 @@ Route.post('/issue/share', 'IssueController.shareIssue').middleware(jwtMiddlewar
 // Chat
 Route.get('/chats', 'ChatController.get').middleware(jwtMiddleware);
 Route.get('/chats/last-read', 'ChatController.getLastReadChat').middleware(jwtMiddleware);
-Route.post('/chats/last-read', 'ChatController.updatelastReadChat').middleware(jwtMiddleware);
+Route.post('/chats/last-read', 'ChatController.updateLastReadChat').middleware(jwtMiddleware);
 
 // Notes
 Route.get('/notes', 'NoteController.get').middleware(jwtMiddleware);
@@ -77,8 +90,3 @@ Route.post('/notes', 'NoteController.update').middleware(jwtMiddleware);
 
 // Logs
 Route.get('/logs', 'LogController.get').middleware(jwtMiddleware);
-
-// Images (unused currently)
-// Route.put('/image', 'ImageController.create').middleware(jwtMiddleware);
-// Route.get('/image/:id', 'ImageController.get').middleware(jwtMiddleware);
-// Route.delete('/image/:id', 'ImageController.delete').middleware(jwtMiddleware);

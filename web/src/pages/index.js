@@ -1,5 +1,2 @@
-import homepage from './Homepage';
-import team from './TeamPage';
-
-export const Homepage = homepage;
-export const Team = team;
+export { default as Homepage } from './Homepage';
+export { default as Team } from './TeamPage';

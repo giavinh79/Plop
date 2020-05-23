@@ -1,11 +1,11 @@
 import React from 'react';
 import { Divider } from 'antd';
-import { SectionNavHeader, Table, NavText } from './HelpStyles';
+import { SectionNavHeader, Table, TableHeader, NavText } from './HelpStyles';
 
 export default function TableOfContents({ setPage, page }) {
   return (
     <Table>
-      <h2 style={{ margin: '1rem 0 1.5rem 0rem', fontWeight: 700, color: '#2c343e' }}>Table of Contents</h2>
+      <TableHeader>Table of Contents</TableHeader>
       <SectionNavHeader>- Introduction -</SectionNavHeader>
       <NavText onClick={() => setPage(0)} bold={page === 0 ? 1 : 0}>
         Overview
