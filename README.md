@@ -99,4 +99,5 @@ $\web npm run coverage
 
 ## Practices
 
-Coding styles enforced by Prettier config (found in .prettierrc files in root folders).
+*Coding styles* enforced by Prettier config (found in .prettierrc files in root folders).
+*Naming scheme:* Camel case for JS functions/variables, hyphen delimiters for URLs, server endpoints, and CSS class selectors, and finally snake case for DB column and table names (there may be code discrepancies in which I hope to fix sometime)

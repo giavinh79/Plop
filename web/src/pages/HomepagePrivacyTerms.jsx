@@ -1,15 +1,14 @@
 import React from 'react';
 import { Button, Modal } from 'antd';
 
-export default function HomepagePrivacyTerms({ setDisplayModal }) {
+export default function HomepagePrivacyTerms({ setDisplayPrivacyModal }) {
   return (
     <Modal
-      title='Privacy Policy for Plop'
+      title='Privacy Policy'
       visible={true}
-      onCancel={() => setDisplayModal(false)}
-      cancelText='f'
+      onCancel={() => setDisplayPrivacyModal(false)}
       footer={[
-        <Button key='submit' type='primary' onClick={() => setDisplayModal(false)}>
+        <Button key='submit' type='primary' onClick={() => setDisplayPrivacyModal(false)}>
           Ok
         </Button>,
       ]}

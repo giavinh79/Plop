@@ -1,14 +1,11 @@
 import React, { useState, useRef, lazy, Suspense } from 'react';
 import { WrappedNormalLoginForm as SignupForm } from '../components/SignupForm/SignupForm';
 import { FormWrapper } from './HomepageStyles';
-import { Alert, BackTop, Button, Icon, Result } from 'antd';
-// import MediaQuery from 'react-responsive';
-// import Fade from 'react-reveal/Fade';
-import './Homepage.css';
+import { Alert, Button, Icon, Result } from 'antd';
 import HomepagePrivacyTerms from './HomepagePrivacyTerms';
 import { particleParams } from '../constants/particles';
-
-// const ParticlesComponent = lazy(() => import('react-particles-js'));
+import './Homepage.css';
+import HomepageTermsConditions from './HomepageTermsConditions';
 
 const ParticlesComponent = lazy(() => {
   return Promise.all([import('react-particles-js'), new Promise((resolve) => setTimeout(resolve, 300))]).then(
@@ -16,14 +13,20 @@ const ParticlesComponent = lazy(() => {
   );
 });
 
+const Backtop = lazy(() => import('antd').then((module) => ({ default: module.BackTop })));
+
+const Fade = lazy(() => import('react-reveal/Fade'));
+
 export default function Homepage() {
-  const [displayModal, setDisplayModal] = useState(false);
+  const [displayPrivacyModal, setDisplayPrivacyModal] = useState(false);
+  const [displayTermsModal, setDisplayTermsModal] = useState(false);
   // const signupRef = useRef(); // will need to forward refs
   const backToTop = useRef();
 
   return (
     <>
-      {displayModal && <HomepagePrivacyTerms setDisplayModal={setDisplayModal} />}
+      {displayPrivacyModal && <HomepagePrivacyTerms setDisplayPrivacyModal={setDisplayPrivacyModal} />}
+      {displayTermsModal && <HomepageTermsConditions setDisplayTermsModal={setDisplayTermsModal} />}
       <div className='particle-wrapper'>
         <Suspense fallback={<></>}>
           <ParticlesComponent params={particleParams} height='50rem' className='particle-effect' />
@@ -66,11 +69,13 @@ export default function Homepage() {
             display: 'flex',
             flexWrap: 'wrap',
             width: '100%',
+            alignItems: 'baseline',
             justifyContent: 'center',
             padding: '0 11rem 1.5rem 11rem',
           }}
         >
-          <div style={{ flex: 1, padding: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, padding: '1rem' }}>
+            <img src='/images/plan.svg' alt='plan' style={{ width: '100%', padding: '0 3rem', maxWidth: '30rem' }} />
             <Alert
               message={<span style={{ fontWeight: '500' }}>Plan</span>}
               description='Create project issues and track their progress through the team/user dashboard.'
@@ -79,7 +84,12 @@ export default function Homepage() {
               style={{ minWidth: '20rem' }}
             />
           </div>
-          <div style={{ flex: 1, padding: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, padding: '1rem' }}>
+            <img
+              src='/images/manage.svg'
+              alt='manage'
+              style={{ width: '100%', padding: '0 3rem', maxWidth: '30rem' }}
+            />
             <Alert
               message={<span style={{ fontWeight: '500' }}>Manage</span>}
               description='Create teams, invite new members, and establish a team hierarchy with ease.'
@@ -88,7 +98,12 @@ export default function Homepage() {
               style={{ minWidth: '20rem' }}
             />
           </div>
-          <div style={{ flex: 1, padding: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, padding: '1rem' }}>
+            <img
+              src='/images/communicate.svg'
+              alt='communicate'
+              style={{ width: '100%', padding: '0 3rem', maxWidth: '30rem' }}
+            />
             <Alert
               message={<span style={{ fontWeight: '500' }}>Communicate</span>}
               description='Share issues and collaborate through the notification system and in-built chat.'
@@ -114,33 +129,52 @@ export default function Homepage() {
 
         <div className='landing-cloud-section'>
           {/* <div
+            className='landing-cloud-section-filter'
             style={{ position: 'absolute', zIndex: '1', width: '100%', height: '100rem', backgroundColor: '#86868659' }}
-          ></div>
-          <Fade left>
-            <Card
-              style={{ width: 300, height: '18rem', margin: '5rem' }}
-              cover={<img alt='example' src='https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png' />}
-            >
-              <Card.Meta avatar={<Avatar icon='smile' />} title='Card title' description='This is the description' />
-            </Card>
-          </Fade>
-          <Fade right delay={500}>
-            <Card
-              style={{ width: 300, height: '18rem', margin: '5rem' }}
-              cover={<img alt='example' src='https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png' />}
-            >
-              <Card.Meta avatar={<Avatar icon='smile' />} title='Card title' description='This is the description' />
-            </Card>
-          </Fade>
-          <Fade left>
-            <div style={{ width: '50%' }}>
-              <img
-                src='/images/carousel1.PNG'
-                alt='example pic of app'
-                style={{ width: '100%', height: 'auto', borderRadius: '15px' }}
-              />
-            </div>
-          </Fade> */}
+          ></div> */}
+          <Suspense fallback={<></>}>
+            <Fade left delay={100}>
+              <div className='suspense-element'>
+                <div className='fade-in-element-wrapper'>
+                  <img src='/images/opensource.svg' className='fade-in-element-image' />
+                </div>
+                <div
+                  className='fade-in-element-wrapper'
+                  style={{ padding: '2rem', fontFamily: 'Montserrat', maxWidth: '800px' }}
+                >
+                  <p className='fade-in-element-text'>
+                    <span style={{ color: '#577090' }}>Free</span> and
+                    <span style={{ color: '#577090' }}> Open Source</span>
+                  </p>
+                  <p style={{ fontSize: '1.2rem', color: '#666' }}>
+                    As an open-source project, anyone can help contribute to Plop's code repository. By being community
+                    driven, more power is given to the users. Plop can hopefully become an effective project management
+                    tool that teams everywhere can trust.
+                  </p>
+                </div>
+              </div>
+            </Fade>
+            <Fade right delay={400}>
+              <div className='suspense-element'>
+                <div className='fade-in-element-wrapper'>
+                  <img src='/images/theme.svg' className='fade-in-element-image' />
+                </div>
+                <div
+                  className='fade-in-element-wrapper'
+                  style={{ padding: '2rem', fontFamily: 'Montserrat', maxWidth: '800px' }}
+                >
+                  <p className='fade-in-element-text'>
+                    <span style={{ color: '#577090' }}>Comprehensive</span>
+                  </p>
+                  <p style={{ fontSize: '1.2rem', color: '#666' }}>
+                    There are many other features that still haven't been discussed! Theming, avatars, team and user
+                    logs... all these different functionalities give users a complete experience and the power to
+                    customize various things.
+                  </p>
+                </div>
+              </div>
+            </Fade>
+          </Suspense>
         </div>
         <div className='landing-last-section'>
           <Result
@@ -158,17 +192,18 @@ export default function Homepage() {
             className='landing-last-section-content'
           />
         </div>
-        {/* <BackTop ref={backToTop} /> */}
+        <Suspense fallback={<></>}>
+          <Backtop ref={backToTop} />
+        </Suspense>
+
         <footer className='landing-footer'>
-          <div>
-            <p style={{ color: 'white', margin: 0, fontSize: '1rem', fontWeight: 'bold' }}>&copy; 2020 Plop, Inc. </p>
-          </div>
           <div className='landing-footer-text'>
-            <p
-              style={{ color: 'white', cursor: 'pointer', margin: 0, fontSize: '1rem', fontWeight: 'bold' }}
-              onClick={() => setDisplayModal(true)}
-            >
-              Privacy Policy
+            <p style={{ color: '#e2e2e2', margin: 0 }}>&copy; 2020 Plop, Inc. </p>
+            <p className='landing-footer-terms' onClick={() => setDisplayPrivacyModal(true)}>
+              Privacy
+            </p>
+            <p className='landing-footer-terms' onClick={() => setDisplayTermsModal(true)}>
+              Terms
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -180,20 +215,6 @@ export default function Homepage() {
           </div>
         </footer>
       </div>
-      {/* <Modal
-        title='Mobile usage is unsupported'
-        visible={visible}
-        onCancel={hideModal}
-        footer={
-          <Button type='primary' onClick={hideModal}>
-            Ok
-          </Button>
-        }
-        className='mobile-modal'
-        width={450}
-      >
-        <p>Plop is not designed for small screens yet, please wait for the mobile app. Thanks!</p>
-      </Modal> */}
     </>
   );
 }
