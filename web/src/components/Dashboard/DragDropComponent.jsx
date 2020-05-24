@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Skeleton } from 'antd';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card } from './Card';
@@ -11,8 +11,17 @@ import { displaySimpleNotification } from '../../utility/services';
  * Component representing the three drag & drop columns active, progress, and complete
  * Takes inputs from TeamDashboard and UserDashboard components
  */
-export default function DragDropComponent({ loading, items, setItems, source }) {
-  // const { Search } = Input;
+export default function DragDropComponent({ loading, itemsData, source }) {
+  const [items, setItems] = useState({
+    active: [],
+    progress: [],
+    complete: [],
+  });
+
+  useEffect(() => {
+    setItems(itemsData);
+  }, [itemsData]);
+
   const [theme] = useContext(ThemeContext);
 
   const id2List = {
@@ -110,7 +119,7 @@ export default function DragDropComponent({ loading, items, setItems, source }) 
               )}
 
               {items.active.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
+                <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -140,7 +149,7 @@ export default function DragDropComponent({ loading, items, setItems, source }) 
                 </>
               )}
               {items.progress.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
+                <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -170,7 +179,7 @@ export default function DragDropComponent({ loading, items, setItems, source }) 
                 </>
               )}
               {items.complete.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
+                <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}

@@ -39,7 +39,7 @@ const useActiveIssues = (type) => {
     };
   }, [items.complete.length, items.progress.length, items.active.length, type]);
 
-  return [items, setItems, loading, currentDate];
+  return [items, loading, currentDate];
 };
 
 export { useActiveIssues };

@@ -4,7 +4,7 @@ import DragDropComponent from './DragDropComponent';
 import { useActiveIssues } from '../../utility/hooks';
 
 export default function UserDashboard() {
-  const [items, setItems, loading] = useActiveIssues('user');
+  const [items, loading] = useActiveIssues('user');
 
   const isEmpty = () => {
     try {
@@ -23,7 +23,7 @@ export default function UserDashboard() {
       />
     </div>
   ) : (
-    <DragDropComponent items={items} setItems={setItems} loading={loading} source={1} />
+    <DragDropComponent itemsData={items} loading={loading} source={1} />
   );
 }
 
