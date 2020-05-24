@@ -57,9 +57,6 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 ## Project To Dos
 
 **Immediate**
-- Refactoring all CSS and finishing dark theme
-- More component modularization
-- Refactoring all remaining class components to function components + hooks
 - Real-time notifications and live dashboard changes
 - JWT token refresh
 - Encoding emails and data
@@ -82,9 +79,21 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 - Better server-side logging for analytics, debugging...
 - More DB seeds for fast queries and factories for creating dummy data (which the tests can use)
 
+**Clean up Code**
+I am aware that there are some discrepancies regarding styling and class/function components along with areas in the project that could be further mordularized or better organized (code/folder structure, naming...etc.).
+- Delete pages folder and organize components folder and naming better
+- Refactoring CSS into styled-components where possible and re-use this across project
+- Component modularization to better organize code and follow DRY principle
+- Refactoring all remaining class components to function components + hooks
+- More unit testing with React Testing Library + Jest
+- Put all REST calls in restCalls.js
+- Proper error status codes and handling functions for both client and server applications
+- Consistent naming (some table names are camel case whereas others are snake case, styles.css vs componentName.css ...etc.)
+- Server app: Leverage models more, more utility/middleware functions to reduce repeated code, consistent syntax...
+
 ## Testing
 
-'adonis seed' must have been run and executed properly to fill DB with dummy data. The tests are designed using Jest and React Testing Library.
+**'adonis seed'** must have been run and executed properly to fill DB with dummy data. The tests are designed using Jest and React Testing Library.
 
 1. Execute unit tests on the React FE application.
 ```
@@ -99,5 +108,6 @@ $\web npm run coverage
 
 ## Practices
 
-*Coding styles* enforced by Prettier config (found in .prettierrc files in root folders).
-*Naming scheme:* Camel case for JS functions/variables, hyphen delimiters for URLs, server endpoints, and CSS class selectors, and finally snake case for DB column and table names (there may be code discrepancies in which I hope to fix sometime)
+**Coding styles** enforced by Prettier config (found in `.prettierrc` files in root folders).
+
+**Naming scheme:** Camel case for JS functions/variables, hyphen delimiters for URLs, server endpoints, and CSS class selectors, and finally snake case for DB column and table names (there may be code discrepancies in which I hope to fix sometime)
