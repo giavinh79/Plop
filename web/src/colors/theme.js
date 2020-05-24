@@ -13,14 +13,12 @@ export const LIGHT_SIDE_NAV_COLOR = '#somehexvalue';
 export const LIGHT_BACKGROUND_COLOR = '#somehexvalue';
 
 // ThemeContext
-
 const defaultLightTheme = localStorage.getItem('theme') === 'dark' ? false : true;
 
 const ThemeContext = createContext({
   isLightMode: defaultLightTheme,
 });
 
-// Maybe memoize however since nearly all components depend on this context, re-rendering is necessary
 const ThemeProvider = (props) => {
   const [theme, setTheme] = useState({
     isLightMode: defaultLightTheme,

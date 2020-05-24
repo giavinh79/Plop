@@ -4,8 +4,8 @@ import { FormWrapper } from './HomepageStyles';
 import { Alert, Button, Icon, Result } from 'antd';
 import HomepagePrivacyTerms from './HomepagePrivacyTerms';
 import { particleParams } from '../constants/particles';
-import './Homepage.css';
 import HomepageTermsConditions from './HomepageTermsConditions';
+import './Homepage.css';
 
 const ParticlesComponent = lazy(() => {
   return Promise.all([import('react-particles-js'), new Promise((resolve) => setTimeout(resolve, 300))]).then(
@@ -136,7 +136,7 @@ export default function Homepage() {
             <Fade left delay={100}>
               <div className='suspense-element'>
                 <div className='fade-in-element-wrapper'>
-                  <img src='/images/opensource.svg' className='fade-in-element-image' />
+                  <img src='/images/opensource.svg' className='fade-in-element-image' alt='open-source' />
                 </div>
                 <div
                   className='fade-in-element-wrapper'
@@ -148,8 +148,8 @@ export default function Homepage() {
                   </p>
                   <p style={{ fontSize: '1.2rem', color: '#666' }}>
                     As an open-source project, anyone can help contribute to Plop's code repository. By being community
-                    driven, more power is given to the users. Plop can hopefully become an effective project management
-                    tool that teams everywhere can trust.
+                    driven, more power and flexibility is given to the users. Drop by the GitHub (in site footer) and
+                    help improve Plop!
                   </p>
                 </div>
               </div>
@@ -157,7 +157,7 @@ export default function Homepage() {
             <Fade right delay={400}>
               <div className='suspense-element'>
                 <div className='fade-in-element-wrapper'>
-                  <img src='/images/theme.svg' className='fade-in-element-image' />
+                  <img src='/images/theme.svg' className='fade-in-element-image' alt='configuration' />
                 </div>
                 <div
                   className='fade-in-element-wrapper'
@@ -168,7 +168,7 @@ export default function Homepage() {
                   </p>
                   <p style={{ fontSize: '1.2rem', color: '#666' }}>
                     There are many other features that still haven't been discussed! Theming, avatars, team and user
-                    logs... all these different functionalities give users a complete experience and the power to
+                    logs... all these different functionalities give users a complete experience and the ability to
                     customize various things.
                   </p>
                 </div>
@@ -180,7 +180,7 @@ export default function Homepage() {
           <Result
             status='success'
             title='What are you waiting for?'
-            subTitle='Sign up now and leverate this project management platform for free! Plop will always remain free and open-source.'
+            subTitle='Sign up now and leverate this project management platform for free! Feel free to contact us for any questions, concerns, or feedback.'
             extra={[
               <Button type='primary' key='registration' onClick={() => backToTop.current.scrollToTop()}>
                 Sign Up
@@ -207,7 +207,9 @@ export default function Homepage() {
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Icon type='twitter' style={{ fontSize: '2rem', color: 'white' }} />
+            <a href='https://twitter.com/plopwebapp' target='_blank' rel='noopener noreferrer'>
+              <Icon type='twitter' style={{ fontSize: '2rem', color: 'white' }} />
+            </a>
             <a href='https://github.com/gv79/plop' target='_blank' rel='noopener noreferrer'>
               <Icon type='github' style={{ fontSize: '2rem', color: 'white', margin: '0 1rem' }} />
             </a>
