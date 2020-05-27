@@ -25,13 +25,6 @@ import { SettingsWrapper, Text } from './SettingStyles';
 
 const { Option } = Select;
 
-// // Tiers of administration: 5
-// 4 - can't delete members
-// 3 - can't invite new members
-// 2 - can't create issues but can move issues
-// 1 - can't manipulate any issues
-// 0 - can only see issues assigned to them
-
 export default function Settings() {
   const email = useRef('');
   const password = useRef('');

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Skeleton } from 'antd';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import Card from './Card';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { cardStyles, DroppableWrapper, getActiveStyle, getListStyle, Wrapper } from './DashboardStyles';
 import { ThemeContext } from '../../colors/theme';
 import { updateIssue } from '../../utility/restCalls';

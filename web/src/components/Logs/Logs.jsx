@@ -9,11 +9,12 @@ import './style.css';
 export default function Logs() {
   const history = useHistory();
   const isMounted = useRef(true);
+
+  const logIndex = useRef(30);
+  const logsContainer = useRef();
   const [backup, setBackup] = useState();
   const [data, setData] = useState(['1']);
   const [loading, setLoading] = useState(true);
-  const [logIndex, setLogIndex] = useState(9);
-  const logsContainer = useRef();
 
   useEffect(() => {
     (async () => {
@@ -26,8 +27,8 @@ export default function Logs() {
           issueId: log.issue_id,
           filteredByText: false,
           filteredByType: false,
-          date: moment(log.date).format('MMMM DD, YYYY'),
-          time: moment(log.date).format('hh:mm A'),
+          date: moment(new Date(log.date)).format('MMMM DD, YYYY'),
+          time: moment(new Date(log.date)).format('hh:mm A'),
         };
       });
 
@@ -52,11 +53,11 @@ export default function Logs() {
 
   const trackScrolling = () => {
     // Check if user has scrolled to bottom of element
-    if (logsContainer.current.getBoundingClientRect().bottom <= window.innerHeight) {
+    if (logsContainer.current.getBoundingClientRect().bottom <= window.innerHeight + 2) {
       if (data && backup && data.length < backup.length) {
-        let endIndex = logIndex + 30 > backup.length ? backup.length : logIndex + 30;
-        setData((data) => [...data, ...backup.slice(logIndex, endIndex)]);
-        setLogIndex((logIndex) => logIndex + 30);
+        let endIndex = logIndex.current + 30 > backup.length ? backup.length : logIndex.current + 30;
+        setData((data) => [...data, ...backup.slice(logIndex.current, endIndex)]);
+        logIndex.current += 30;
       }
     }
   };
@@ -257,7 +258,7 @@ export default function Logs() {
         dataSource={data.filter((item) => !item.filteredByText && !item.filteredByType)}
         renderItem={(item, index) => (
           <List.Item style={{ backgroundColor: index % 2 === 0 ? 'white' : '#f9f5f5', padding: '1rem' }}>
-            <Skeleton loading={loading} active avatar size='small' paragraph={{ rows: 1 }} avatar={{ size: 'small' }}>
+            <Skeleton loading={loading} active paragraph={{ rows: 1 }} avatar={{ size: 'small' }}>
               <List.Item.Meta
                 avatar={
                   <Avatar icon={handleLogIcon(item.type)} style={{ backgroundColor: handleLogIconColor(item.type) }} />

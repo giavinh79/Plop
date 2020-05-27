@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Row, Typography } from 'antd';
+import { Breadcrumb, Row } from 'antd';
 import { layout } from '../../globalStyles';
 import IntroductionSection from './IntroductionSection';
 import TableOfContents from './TableOfContents';

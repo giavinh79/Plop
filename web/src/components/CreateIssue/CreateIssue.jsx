@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -40,38 +40,42 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
   const [loading, setLoading] = useState((isManualNavigation && data == null) || false);
   const [loadingSave, setLoadingSave] = useState(false);
   const titleRef = useRef();
+
   const history = useHistory();
   const historyTrack = useRef(true); // track whether user manually navigated to this page to configure go back button
 
-  const parseImages = (issue) => {
-    if (issue && issue.image) {
-      setDefaultFileList(
-        issue.image.map((item, key) => {
-          return {
-            uid: item.id,
-            key: key,
-            name: item.id,
-            status: 'done',
-            url: item.url,
-          };
-        })
-      );
-      return;
-    }
-    if (data && data.image) {
-      setDefaultFileList(
-        data.image.map((item, key) => {
-          return {
-            uid: item.id,
-            key: key,
-            name: item.id,
-            status: 'done',
-            url: item.url,
-          };
-        })
-      );
-    }
-  };
+  const parseImages = useCallback(
+    (issue) => {
+      if (issue && issue.image) {
+        setDefaultFileList(
+          issue.image.map((item, key) => {
+            return {
+              uid: item.id,
+              key: key,
+              name: item.id,
+              status: 'done',
+              url: item.url,
+            };
+          })
+        );
+        return;
+      }
+      if (data && data.image) {
+        setDefaultFileList(
+          data.image.map((item, key) => {
+            return {
+              uid: item.id,
+              key: key,
+              name: item.id,
+              status: 'done',
+              url: item.url,
+            };
+          })
+        );
+      }
+    },
+    [data]
+  );
 
   useEffect(() => {
     if (titleRef.current) titleRef.current.focus();
@@ -95,7 +99,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
     })().catch((err) => {
       console.log(err);
     });
-  }, []);
+  }, [isManualNavigation, location.data, parseImages]);
 
   const handleDeletion = async (id) => {
     try {
