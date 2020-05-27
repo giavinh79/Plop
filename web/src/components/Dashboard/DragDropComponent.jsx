@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Skeleton } from 'antd';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Card } from './Card';
+import Card from './Card';
 import { cardStyles, DroppableWrapper, getActiveStyle, getListStyle, Wrapper } from './DashboardStyles';
 import { ThemeContext } from '../../colors/theme';
 import { updateIssue } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
+import DraggableCardsList from './DraggableCardsList';
 
 /*
  * Component representing the three drag & drop columns active, progress, and complete
@@ -18,6 +19,7 @@ export default function DragDropComponent({ loading, itemsData, source }) {
     complete: [],
   });
 
+  // maybe memoize setItems from custom hook (passed in through prop) using useCallback instead, and keep the setItems from the custom hook
   useEffect(() => {
     setItems(itemsData);
   }, [itemsData]);
@@ -32,7 +34,7 @@ export default function DragDropComponent({ loading, itemsData, source }) {
 
   const getList = (id) => items[id2List[id]];
 
-  // A little function to help us with reordering the result
+  // Reordering the result
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -40,7 +42,7 @@ export default function DragDropComponent({ loading, itemsData, source }) {
     return result;
   };
 
-  // Moves an item from one list to another list.
+  // Moving items between the lists
   const move = (source, destination, droppableSource, droppableDestination) => {
     let issueId;
     let issueStatus = droppableDestination.droppableId.slice(-1) - 0;
@@ -117,21 +119,7 @@ export default function DragDropComponent({ loading, itemsData, source }) {
                   <Skeleton active />
                 </>
               )}
-
-              {items.active.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
-                    >
-                      <Card data={item} source={source} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              <DraggableCardsList items={items.active} source={source} getActiveStyle={getActiveStyle} />
               {provided.placeholder}
             </DroppableWrapper>
           )}
@@ -148,20 +136,7 @@ export default function DragDropComponent({ loading, itemsData, source }) {
                   <Skeleton active />
                 </>
               )}
-              {items.progress.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
-                    >
-                      <Card data={item} source={source} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              <DraggableCardsList items={items.progress} source={source} getActiveStyle={getActiveStyle} />
               {provided.placeholder}
             </DroppableWrapper>
           )}
@@ -178,20 +153,7 @@ export default function DragDropComponent({ loading, itemsData, source }) {
                   <Skeleton active />
                 </>
               )}
-              {items.complete.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getActiveStyle(snapshot.isDragging, provided.draggableProps.style)}
-                    >
-                      <Card data={item} source={source} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              <DraggableCardsList items={items.complete} source={source} getActiveStyle={getActiveStyle} />
               {provided.placeholder}
             </DroppableWrapper>
           )}

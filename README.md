@@ -78,8 +78,10 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 - Look at any accessibility problems (ie. contrast)
 - Better server-side logging for analytics, debugging...
 - More DB seeds for fast queries and factories for creating dummy data (which the tests can use)
+- Set up CDNs (but unnecessary atm)
 
 **Clean up Code**
+
 I am aware that there are some discrepancies regarding styling and class/function components along with areas in the project that could be further mordularized or better organized (code/folder structure, naming...etc.).
 - Delete pages folder and organize components folder and naming better
 - Refactoring CSS into styled-components where possible and re-use this across project
