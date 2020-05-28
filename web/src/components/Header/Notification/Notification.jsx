@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Avatar, Modal, Button, Popconfirm, Row, Typography, List, Skeleton } from 'antd';
+import { Avatar, Modal, Button, Popconfirm, Row, Typography, List, Skeleton, Checkbox } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { clearNotifications, sendNotificationsRead } from '../../../utility/restCalls';
 import { displaySimpleNotification } from '../../../utility/services';
+import moment from 'moment';
 
 const { Text } = Typography;
 
@@ -162,6 +163,9 @@ export default function Notification({ data, setNotificationData, setShowNotific
       title='Notifications'
       onOk={handleCloseModal}
       onCancel={handleCloseModal}
+      bodyStyle={{
+        padding: '10px',
+      }}
       footer={[
         <Button key='back' onClick={handleCloseModal}>
           Return
@@ -209,54 +213,53 @@ export default function Notification({ data, setNotificationData, setShowNotific
           <List
             dataSource={notifications}
             renderItem={(item) => (
-              <List.Item key={item.id} style={{ opacity: toBeRemoved.includes(item.id) ? 0.5 : 1 }}>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      shape='square'
-                      icon={item.type === 2 ? 'form' : 'file-add'}
-                      style={{ backgroundColor: item.status === 0 ? '#d4bb40' : '#8294ab' }}
-                    />
-                  }
-                  title={
-                    <>
+              <List.Item key={item.id}>
+                <Row type='flex' style={{ width: '100%', opacity: toBeRemoved.includes(item.id) ? 0.5 : 1 }}>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar
+                        shape='square'
+                        icon={item.type === 2 ? 'form' : 'file-add'}
+                        style={{ backgroundColor: item.status === 0 ? '#d4bb40' : '#8294ab' }}
+                      />
+                    }
+                    title={
+                      <>
+                        <a
+                          href='/dashboard'
+                          disabled={toBeRemoved.includes(item.id) ? true : false}
+                          onClick={(e) => handleIssue(e, item)}
+                        >
+                          {item.event}
+                        </a>
+                        {item.status === 0 && <span style={{ color: 'blue' }}> (new!)</span>}
+                      </>
+                    }
+                    description={item.description}
+                  />
+                  <Row type='flex' align='bottom' justify='end' style={{ flexDirection: 'column' }}>
+                    <div style={{ color: 'green' }}>{moment(new Date(item.date)).format('DD/MM/YYYY hh:mm A')}</div>
+                    <div>
                       <a
                         href='/dashboard'
                         disabled={toBeRemoved.includes(item.id) ? true : false}
                         onClick={(e) => handleIssue(e, item)}
                       >
-                        {item.event}
+                        Go to issue
                       </a>
-                      {item.status === 0 && <span style={{ color: 'blue' }}> (new!)</span>}
-                    </>
-                  }
-                  description={item.description}
-                />
-                <Row type='flex' align='bottom' justify='end' style={{ flexDirection: 'column' }}>
-                  <a
-                    href='/dashboard'
-                    style={{ color: toBeRemoved.includes(item.id) ? '#7a858e' : '#b9334c' }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (toBeRemoved.includes(item.id)) {
-                        setToBeRemoved(toBeRemoved.filter((removedItem) => removedItem !== item.id));
-                      } else {
-                        setToBeRemoved([...toBeRemoved, item.id]);
-                      }
-                    }}
-                  >
-                    {toBeRemoved.includes(item.id) ? 'Cancel removal' : 'Remove'}
-                  </a>
-                  <Row type='flex'>
-                    <a
-                      href='/dashboard'
-                      disabled={toBeRemoved.includes(item.id) ? true : false}
-                      onClick={(e) => handleIssue(e, item)}
-                    >
-                      Go to issue
-                    </a>
+                    </div>
                   </Row>
                 </Row>
+                <Checkbox
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setToBeRemoved([...toBeRemoved, item.id]);
+                    } else {
+                      setToBeRemoved(toBeRemoved.filter((removedItem) => removedItem !== item.id));
+                    }
+                  }}
+                  style={{ marginLeft: '1rem' }}
+                ></Checkbox>
               </List.Item>
             )}
           ></List>

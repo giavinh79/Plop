@@ -98,7 +98,7 @@
   flex-direction: column;
   width: 100%;
   align-items: center;
-  height: 95rem;
+  height: 75rem;
 }
 
 .landing-cloud-section-filter {
@@ -106,7 +106,7 @@
   position: absolute;
   z-index: 1;
   width: 100%;
-  height: 95rem;
+  height: 75rem;
   background-color: #86868659;
 }
 
@@ -155,7 +155,7 @@
   display: flex;
   flex-wrap: wrap;
   margin: 6rem;
-  margin-top: 12rem;
+  margin-top: 8rem;
   box-shadow: 0 5px 10px rgba(154, 160, 185, 0.05), 0 15px 40px rgba(166, 173, 201, 0.2);
   border-radius: 10px;
   background-color: white;

@@ -9,12 +9,19 @@ export default function MemberSlider() {
   };
 
   return (
-    <Row>
-      <Col span={12}>
+    <Row style={{ width: '100%' }}>
+      <Col span={18}>
         <Slider min={4} max={12} onChange={onChange} value={value} disabled />
       </Col>
-      <Col span={4}>
-        <InputNumber min={4} max={12} style={{ marginLeft: 16 }} onChange={onChange} value={value} disabled />
+      <Col span={6}>
+        <InputNumber
+          min={4}
+          max={12}
+          style={{ marginLeft: 16, width: 'fit-content' }}
+          onChange={onChange}
+          value={value}
+          disabled
+        />
       </Col>
     </Row>
   );

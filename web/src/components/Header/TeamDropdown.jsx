@@ -53,6 +53,7 @@ function TeamDropdown({ history }) {
               onClick={(event) => {
                 displayLoading(event);
               }}
+              style={{ fontWeight: JSON.parse(localStorage.getItem('currentTeam')).id === team.id ? 500 : 'initial' }}
             >
               <Icon type='team' />
               {team.name}
