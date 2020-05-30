@@ -25,29 +25,6 @@ class LogController {
       response.status(404).send();
     }
   }
-
-  async create({ auth, request, response }) {
-    try {
-      const user = await auth.getUser();
-      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
-
-      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
-      if (result.length === 0) throw new Error('User not in this room');
-
-      const notes = await Database.select('*').from('notes').where('room_id', decryptedRoomId);
-
-      if (notes.length === 0) {
-        response.status(200).json([]);
-      } else {
-        console.log(notes);
-      }
-
-      response.status(200).json();
-    } catch (err) {
-      console.log(`(log_create) ${new Date()}: ${err.message}`);
-      response.status(404).send();
-    }
-  }
 }
 
 module.exports = LogController;

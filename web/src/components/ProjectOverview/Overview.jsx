@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Badge, Descriptions, Progress, Row, Icon } from 'antd';
-import { layout, subheader } from '../../globalStyles';
+import { layout } from '../../globalStyles';
 import axios from 'axios';
 import { API_ENDPOINT } from '../../constants';
 import { LineChart, XAxis, YAxis, Legend, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';

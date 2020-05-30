@@ -62,6 +62,8 @@ export const SearchWrapper = styled.div`
 export const Wrapper = styled.div`
   display: inherit;
   width: inherit;
+  height: 100%;
+
   @media (max-width: 850px) {
     flex-direction: column;
   }

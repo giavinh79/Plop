@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { API_ENDPOINT } from '../constants';
-import axios from 'axios';
 import { isAuthenticated } from './services';
+import { getIssues } from './restCalls';
 
 /*
  * Custom Hooks
@@ -9,13 +8,13 @@ import { isAuthenticated } from './services';
 
 const useActiveIssues = (type) => {
   //  type denotes whether it is for the Team or User dashboard
-  const [currentDate, setCurrentDate] = useState();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState({
     active: [],
     progress: [],
     complete: [],
   });
+  const [newRequest, setNewRequest] = useState(true);
 
   const isMounted = useRef(false);
 
@@ -23,10 +22,9 @@ const useActiveIssues = (type) => {
     isMounted.current = true;
 
     (async () => {
-      let { data } = await axios.get(`${API_ENDPOINT}/issue/${type}/1`);
-      const { activeItems, progressItems, completedItems, date } = data;
+      let { data } = await getIssues(type);
+      const { activeItems, progressItems, completedItems } = data;
       if (isMounted.current) {
-        setCurrentDate(date);
         setItems({ active: activeItems, progress: progressItems, complete: completedItems });
         setLoading(false);
       }
@@ -37,9 +35,9 @@ const useActiveIssues = (type) => {
     return () => {
       isMounted.current = false;
     };
-  }, [items.complete.length, items.progress.length, items.active.length, type]);
+  }, [items.complete.length, items.progress.length, items.active.length, type, newRequest]);
 
-  return [items, loading, currentDate];
+  return [items, loading, newRequest, setNewRequest];
 };
 
 export { useActiveIssues };

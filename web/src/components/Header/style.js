@@ -9,6 +9,7 @@ export const HeaderWrapper = styled.div`
   font-display: fallback;
   height: 9%;
   min-height: 4rem;
+  max-height: 6rem;
   background-color: ${(props) => (props.lightmode ? '#5885B1' : '#2d3848')};
 
   @media screen and (max-width: 1120px) {

@@ -13,7 +13,6 @@ export default function BannedMembers() {
   useEffect(() => {
     (async () => {
       let { data } = await getRoomBanList();
-      console.log(data);
       setData(
         data.map((item, index) => {
           item.key = index;

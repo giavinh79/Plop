@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Avatar, Modal, Button, Icon, Popconfirm, Row, Typography, List, Skeleton } from 'antd';
+import { Avatar, Modal, Button, Popconfirm, Row, Typography, List, Skeleton, Checkbox } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { clearNotifications, sendNotificationsRead } from '../../../utility/restCalls';
 import { displaySimpleNotification } from '../../../utility/services';
+import moment from 'moment';
 
 const { Text } = Typography;
-
-// Message component for when sockets are implemented
 
 // const sampleData = [
 // {
@@ -27,7 +26,6 @@ const { Text } = Typography;
 export default function Notification({ data, setNotificationData, setShowNotificationModal, setRefresh, refresh }) {
   const history = useHistory();
   const [loading, setLoading] = useState(true);
-  const [loadingIssue, setLoadingIssue] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [toBeRemoved, setToBeRemoved] = useState([]);
 
@@ -53,19 +51,21 @@ export default function Notification({ data, setNotificationData, setShowNotific
 
   const handleNotification = (item) => {
     // Create notification object here and add unique properties after (DRY)
-    let notificationObject = {};
+    let notificationObject = {
+      id: item.notificationId,
+      issueId: item.issueId,
+      status: item.status,
+      type: item.type,
+      date: item.date,
+    };
 
     switch (item.type) {
       case 1:
         setNotifications((notifications) => [
           {
-            id: item.notificationId,
-            issueId: item.issueId,
+            ...notificationObject,
             description: `${item.sourceUser} has assigned you task '${item.issue}'.`,
             event: 'You have been assigned to an issue',
-            status: item.status,
-            type: item.type,
-            date: item.date,
           },
           ...notifications,
         ]);
@@ -73,13 +73,9 @@ export default function Notification({ data, setNotificationData, setShowNotific
       case 2:
         setNotifications((notifications) => [
           {
-            id: item.notificationId,
-            issueId: item.issueId,
+            ...notificationObject,
             description: `Task '${item.issue}' has been re-assigned to user ${item.assignee}.`,
             event: 'Issue no longer assigned to you',
-            status: item.status,
-            type: item.type,
-            date: item.date,
           },
           ...notifications,
         ]);
@@ -87,12 +83,9 @@ export default function Notification({ data, setNotificationData, setShowNotific
       case 3:
         setNotifications((notifications) => [
           {
-            id: item.notificationId,
-            issueId: item.issueId,
+            ...notificationObject,
             description: `${item.sourceUser} has commented on task '${item.issue}'.`,
             event: 'There are new comments on your issue.',
-            status: item.status,
-            type: item.type,
           },
           ...notifications,
         ]);
@@ -100,16 +93,13 @@ export default function Notification({ data, setNotificationData, setShowNotific
       case 4:
         setNotifications((notifications) => [
           {
-            id: item.notificationId,
-            issueId: item.issueId,
+            ...notificationObject,
             description: (
               <span>
                 {item.sourceUser}: <Text code>{item.message}</Text>
               </span>
             ),
             event: `Issue '${item.issue}' has been shared with you.`,
-            status: item.status,
-            type: item.type,
           },
           ...notifications,
         ]);
@@ -173,6 +163,9 @@ export default function Notification({ data, setNotificationData, setShowNotific
       title='Notifications'
       onOk={handleCloseModal}
       onCancel={handleCloseModal}
+      bodyStyle={{
+        padding: '10px',
+      }}
       footer={[
         <Button key='back' onClick={handleCloseModal}>
           Return
@@ -220,58 +213,53 @@ export default function Notification({ data, setNotificationData, setShowNotific
           <List
             dataSource={notifications}
             renderItem={(item) => (
-              <List.Item key={item.id} style={{ opacity: toBeRemoved.includes(item.id) ? 0.5 : 1 }}>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      shape='square'
-                      icon={item.type === 2 ? 'form' : 'file-add'}
-                      style={{ backgroundColor: item.status === 0 ? '#d4bb40' : '#8294ab' }}
-                    />
-                  }
-                  title={
-                    <>
-                      <a href='/dashboard' disabled={toBeRemoved.includes(item.id) ? true : false}>
-                        {item.event}
+              <List.Item key={item.id}>
+                <Row type='flex' style={{ width: '100%', opacity: toBeRemoved.includes(item.id) ? 0.5 : 1 }}>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar
+                        shape='square'
+                        icon={item.type === 2 ? 'form' : 'file-add'}
+                        style={{ backgroundColor: item.status === 0 ? '#d4bb40' : '#8294ab' }}
+                      />
+                    }
+                    title={
+                      <>
+                        <a
+                          href='/dashboard'
+                          disabled={toBeRemoved.includes(item.id) ? true : false}
+                          onClick={(e) => handleIssue(e, item)}
+                        >
+                          {item.event}
+                        </a>
+                        {item.status === 0 && <span style={{ color: 'blue' }}> (new!)</span>}
+                      </>
+                    }
+                    description={item.description}
+                  />
+                  <Row type='flex' align='bottom' justify='end' style={{ flexDirection: 'column' }}>
+                    <div style={{ color: 'green' }}>{moment(new Date(item.date)).format('DD/MM/YYYY hh:mm A')}</div>
+                    <div>
+                      <a
+                        href='/dashboard'
+                        disabled={toBeRemoved.includes(item.id) ? true : false}
+                        onClick={(e) => handleIssue(e, item)}
+                      >
+                        Go to issue
                       </a>
-                      {item.status === 0 && <span style={{ color: 'blue' }}> (new!)</span>}
-                    </>
-                  }
-                  description={item.description}
-                />
-                <Row type='flex' align='bottom' justify='end' style={{ flexDirection: 'column' }}>
-                  <a
-                    style={{ color: '#7a858e' }}
-                    onClick={() => {
-                      if (toBeRemoved.includes(item.id)) {
-                        setToBeRemoved(toBeRemoved.filter((removedItem) => removedItem !== item.id));
-                      } else {
-                        setToBeRemoved([...toBeRemoved, item.id]);
-                      }
-                    }}
-                  >
-                    {toBeRemoved.includes(item.id) ? 'Cancel removal' : 'Remove'}
-                  </a>
-                  <Row type='flex'>
-                    <Icon
-                      type='loading'
-                      spin
-                      style={{
-                        display: loadingIssue ? 'block' : 'none',
-                        color: '#6ca1d8',
-                        fontSize: '1.4rem',
-                        marginRight: '0.7rem',
-                      }}
-                    />
-                    <a
-                      href='/dashboard'
-                      disabled={toBeRemoved.includes(item.id) ? true : false}
-                      onClick={(e) => handleIssue(e, item)}
-                    >
-                      Go to issue
-                    </a>
+                    </div>
                   </Row>
                 </Row>
+                <Checkbox
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setToBeRemoved([...toBeRemoved, item.id]);
+                    } else {
+                      setToBeRemoved(toBeRemoved.filter((removedItem) => removedItem !== item.id));
+                    }
+                  }}
+                  style={{ marginLeft: '1rem' }}
+                ></Checkbox>
               </List.Item>
             )}
           ></List>

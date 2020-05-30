@@ -6,17 +6,6 @@
 import axios from 'axios';
 import { API_ENDPOINT } from '../constants';
 
-// This function catches errors thrown from axios calls and handles the response object to the frontend
-const handleErrorResponse = (err) => {
-  // switch (err.message) {
-  //   case ERROR_SESSION_INVALID:
-  //     throw SESSION_INVALID_MESSAGE; // i.e. String constant containing "User is not authenticated."
-  //     break;
-  //   default:
-  //     throw err(UNKNOWN_ERROR);
-  // }
-};
-
 // Confirm user is logged in
 const checkAuth = async () => {
   try {
@@ -73,6 +62,14 @@ const getAvatar = async () => {
     return await axios.get(`${API_ENDPOINT}/avatar`);
   } catch (err) {
     throw new err();
+  }
+};
+
+const getIssues = async (type) => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/issue/${type}/1`);
+  } catch (err) {
+    throw err;
   }
 };
 
@@ -265,6 +262,7 @@ export {
   getChat,
   getLogs,
   getNotes,
+  getIssues,
   getIssueById,
   getRepository,
   getRoomAdminTiers,

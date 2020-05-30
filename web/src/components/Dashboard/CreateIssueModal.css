@@ -1,0 +1,16 @@
+.issue-modal .ant-form-item-control-wrapper {
+  width: 100% !important;
+}
+
+.issue-modal .ant-form-item-label {
+  padding-bottom: 0.3rem;
+}
+
+.issue-modal .ant-upload {
+  width: 100%;
+}
+
+.priority .ant-form-item-children {
+  display: flex;
+  justify-content: flex-end;
+}

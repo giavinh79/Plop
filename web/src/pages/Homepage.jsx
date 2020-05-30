@@ -155,7 +155,7 @@ export default function Homepage() {
               </div>
             </Fade>
             <Fade right delay={400}>
-              <div className='suspense-element'>
+              <div className='suspense-element' style={{ marginTop: '2rem' }}>
                 <div className='fade-in-element-wrapper'>
                   <img src='/images/theme.svg' className='fade-in-element-image' alt='configuration' />
                 </div>

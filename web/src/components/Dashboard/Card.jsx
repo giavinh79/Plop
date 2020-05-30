@@ -5,7 +5,7 @@ import { Icon, Tag } from 'antd';
 import { CardHeader, CardBody } from './CardStyles';
 import { compareDates } from '../../utility/services';
 
-export function Card({ data }) {
+export default function Card({ data }) {
   const [toIssue, setToIssue] = useState(false);
   const { id, deadline, title, shortDescription } = data;
 
@@ -22,9 +22,7 @@ export function Card({ data }) {
       )}
       <CardHeader overdue={deadline && compareDates(deadline) ? 1 : 0}>
         <div>{title}</div>
-        <div>
-          <Icon type='info-circle' style={styles.cardIcon} onClick={() => setToIssue(true)} />
-        </div>
+        <Icon type='info-circle' style={styles.cardIcon} onClick={() => setToIssue(true)} />
       </CardHeader>
       <CardBody>
         <p>
@@ -41,6 +39,8 @@ export function Card({ data }) {
 }
 
 Card.propTypes = {
+  id: PropTypes.number,
+  deadline: PropTypes.string,
   title: PropTypes.string,
   shortDescription: PropTypes.string,
 };

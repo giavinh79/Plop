@@ -3,6 +3,9 @@
  *
  */
 
+import React from 'react';
+import { Select } from 'antd';
+
 export const progressMap = { 1: 'Active', 2: 'In Progress', 3: 'Completed' };
 
 export const tagMap = {
@@ -15,6 +18,18 @@ export const tagMap = {
   documentation: 'gold',
   research: 'gray',
 };
+
+export const tagSuggestions = [
+  <Select.Option key='Backend'>Backend</Select.Option>,
+  <Select.Option key='Bug'>Bug</Select.Option>,
+  <Select.Option key='Database'>Database</Select.Option>,
+  <Select.Option key='DevOps'>DevOps</Select.Option>,
+  <Select.Option key='Documentation'>Documentation</Select.Option>,
+  <Select.Option key='Frontend'>Frontend</Select.Option>,
+  <Select.Option key='Research'>Research</Select.Option>,
+  <Select.Option key='Security'>Security</Select.Option>,
+  <Select.Option key='Testing'>Testing</Select.Option>,
+];
 
 export const pagination = {
   pageSize: 8,

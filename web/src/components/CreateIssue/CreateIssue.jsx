@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -18,7 +18,7 @@ import {
 } from 'antd';
 import { displaySimpleNotification, compareDates } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
-import { API_ENDPOINT } from '../../constants';
+import { API_ENDPOINT, tagSuggestions } from '../../constants';
 import { retrieveAssignees, deleteIssue, getIssueById } from '../../utility/restCalls.js';
 import CommentBody from '../Comment/CommentBody.jsx';
 import ShareIssue from './ShareIssue.jsx';
@@ -40,38 +40,42 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
   const [loading, setLoading] = useState((isManualNavigation && data == null) || false);
   const [loadingSave, setLoadingSave] = useState(false);
   const titleRef = useRef();
+
   const history = useHistory();
   const historyTrack = useRef(true); // track whether user manually navigated to this page to configure go back button
 
-  const parseImages = (issue) => {
-    if (issue && issue.image) {
-      setDefaultFileList(
-        issue.image.map((item, key) => {
-          return {
-            uid: item.id,
-            key: key,
-            name: item.id,
-            status: 'done',
-            url: item.url,
-          };
-        })
-      );
-      return;
-    }
-    if (data && data.image) {
-      setDefaultFileList(
-        data.image.map((item, key) => {
-          return {
-            uid: item.id,
-            key: key,
-            name: item.id,
-            status: 'done',
-            url: item.url,
-          };
-        })
-      );
-    }
-  };
+  const parseImages = useCallback(
+    (issue) => {
+      if (issue && issue.image) {
+        setDefaultFileList(
+          issue.image.map((item, key) => {
+            return {
+              uid: item.id,
+              key: key,
+              name: item.id,
+              status: 'done',
+              url: item.url,
+            };
+          })
+        );
+        return;
+      }
+      if (data && data.image) {
+        setDefaultFileList(
+          data.image.map((item, key) => {
+            return {
+              uid: item.id,
+              key: key,
+              name: item.id,
+              status: 'done',
+              url: item.url,
+            };
+          })
+        );
+      }
+    },
+    [data]
+  );
 
   useEffect(() => {
     if (titleRef.current) titleRef.current.focus();
@@ -95,7 +99,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
     })().catch((err) => {
       console.log(err);
     });
-  }, []);
+  }, [isManualNavigation, location.data, parseImages]);
 
   const handleDeletion = async (id) => {
     try {
@@ -183,18 +187,6 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
     }
     return e && e.fileList;
   };
-
-  const tagSuggestions = [
-    <Select.Option key='Backend'>Backend</Select.Option>,
-    <Select.Option key='Bug'>Bug</Select.Option>,
-    <Select.Option key='Database'>Database</Select.Option>,
-    <Select.Option key='DevOps'>DevOps</Select.Option>,
-    <Select.Option key='Documentation'>Documentation</Select.Option>,
-    <Select.Option key='Frontend'>Frontend</Select.Option>,
-    <Select.Option key='Research'>Research</Select.Option>,
-    <Select.Option key='Security'>Security</Select.Option>,
-    <Select.Option key='Testing'>Testing</Select.Option>,
-  ];
 
   const disabledDate = (current) => {
     return current && current.valueOf() < Date.now() - 60 * 60 * 24 * 1000 * 2;
@@ -383,12 +375,11 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                   </Form.Item>
                 </>
               )}
-              <Form.Item wrapperCol={{ span: 12, offset: 6 }} style={{ alignItems: 'flex-end' }}>
-                {data == null ? (
-                  <Button type='primary' onClick={handleSubmit} loading={loadingSave}>
-                    Submit
-                  </Button>
-                ) : (
+              <Form.Item
+                wrapperCol={{ span: 12, offset: 6 }}
+                style={{ alignItems: 'flex-end', marginLeft: data ? '' : 'auto' }}
+              >
+                {data ? (
                   <Popconfirm
                     title='Are you sure you want to save this task?'
                     onConfirm={handleSubmit}
@@ -397,6 +388,10 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                   >
                     <Button type='primary'>Save</Button>
                   </Popconfirm>
+                ) : (
+                  <Button type='primary' onClick={handleSubmit} loading={loadingSave}>
+                    Submit
+                  </Button>
                 )}
               </Form.Item>
             </div>

@@ -44,7 +44,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
     })().catch((err) => {
       console.log(err);
     });
-  }, []);
+  }, [location.pathname]);
 
   const handleClose = () => {
     setVisible(false);
