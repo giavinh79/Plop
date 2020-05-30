@@ -65,6 +65,14 @@ const getAvatar = async () => {
   }
 };
 
+const getIssues = async (type) => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/issue/${type}/1`);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const getIssueById = async (issue) => {
   try {
     return await axios.get(`${API_ENDPOINT}/issue/${issue}`);
@@ -254,6 +262,7 @@ export {
   getChat,
   getLogs,
   getNotes,
+  getIssues,
   getIssueById,
   getRepository,
   getRoomAdminTiers,

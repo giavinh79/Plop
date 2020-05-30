@@ -1,34 +1,108 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Skeleton } from 'antd';
+import { Input, Skeleton, Button, Row } from 'antd';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { cardStyles, DroppableWrapper, getActiveStyle, getListStyle, Wrapper } from './DashboardStyles';
 import { ThemeContext } from '../../colors/theme';
-import { updateIssue } from '../../utility/restCalls';
+import { updateIssue, getIssues } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
 import DraggableCardsList from './DraggableCardsList';
+import CreateIssueModal from './CreateIssueModal';
+import styled from 'styled-components';
+import { useRef } from 'react';
+
+const CreateIssueButton = styled(Button)`
+  margin-right: 2rem;
+  font-weight: 500;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 18px 0px rgba(0, 0, 0, 0.12) !important;
+`;
+
+const Toolbar = styled(Row)`
+  flex-wrap: nowrap !important;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: #f7f7f7;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: inherit;
+`;
+
+const id2List = {
+  droppable1: 'active',
+  droppable2: 'progress',
+  droppable3: 'complete',
+};
 
 /*
  * Component representing the three drag & drop columns active, progress, and complete
  * Takes inputs from TeamDashboard and UserDashboard components
  */
-export default function DragDropComponent({ loading, itemsData, source }) {
+export default function DragDropComponent({ loading, itemsData, source, newRequest, setNewRequest, type }) {
+  const [theme] = useContext(ThemeContext);
+  const searchbarRef = useRef();
+  const [refresh, setRefresh] = useState(false);
+  const [issueModal, setIssueModal] = useState(false);
+  const [backupItems, setBackupItems] = useState({
+    active: [],
+    progress: [],
+    complete: [],
+  });
   const [items, setItems] = useState({
     active: [],
     progress: [],
     complete: [],
   });
 
-  // maybe memoize setItems from custom hook (passed in through prop) using useCallback instead, and keep the setItems from the custom hook
   useEffect(() => {
     setItems(itemsData);
-  }, [itemsData]);
+    setBackupItems(itemsData);
+  }, [itemsData, newRequest]);
 
-  const [theme] = useContext(ThemeContext);
+  useEffect(() => {
+    (async () => {
+      const {
+        data: { activeItems, progressItems, completedItems },
+      } = await getIssues(type);
+      setBackupItems({ active: activeItems, progress: progressItems, complete: completedItems });
+    })().catch((err) => {
+      console.log(err);
+    });
+  }, [refresh, type]);
 
-  const id2List = {
-    droppable1: 'active',
-    droppable2: 'progress',
-    droppable3: 'complete',
+  const resetSearch = () => {
+    searchbarRef.current.input.state.value = '';
+    setItems(backupItems);
+  };
+
+  const handleSearch = (e) => {
+    let userInput = e.target.value.toLowerCase();
+    let filteredItems = {};
+
+    filteredItems.active = backupItems.active.filter((item) => {
+      return inputExists(item, userInput);
+    });
+
+    filteredItems.progress = backupItems.progress.filter((item) => {
+      return inputExists(item, userInput);
+    });
+
+    filteredItems.complete = backupItems.complete.filter((item) => {
+      return inputExists(item, userInput);
+    });
+    setItems(filteredItems);
+  };
+
+  const inputExists = (item, userInput) => {
+    return (
+      (item.assignee && item.assignee.toLowerCase().includes(userInput)) ||
+      (item.description && item.description.toLowerCase().includes(userInput)) ||
+      item.title.toLowerCase().includes(userInput) ||
+      item.shortDescription.toLowerCase().includes(userInput) ||
+      (item.tag.length > 0 && JSON.stringify(item.tag).toLowerCase().includes(userInput))
+    );
   };
 
   const getList = (id) => items[id2List[id]];
@@ -100,88 +174,109 @@ export default function DragDropComponent({ loading, itemsData, source }) {
       if (identify === 3) setItems({ ...items, active: result.droppable1, progress: result.droppable2 });
       else if (identify === 4) setItems({ ...items, active: result.droppable1, complete: result.droppable3 });
       else setItems({ ...items, progress: result.droppable2, complete: result.droppable3 });
+      setRefresh(!refresh);
     }
   };
 
   return (
-    <Wrapper>
-      <DragDropContext onDragEnd={onDragEnd} style={{ height: '50%' }}>
-        <Droppable droppableId='droppable1'>
-          {(provided, snapshot) => (
-            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}>
-              <div style={cardStyles.titleWrapper}>
-                <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Active</h5>
-              </div>
-              {loading && (
-                <>
-                  <Skeleton active />
-                  <Skeleton active />
-                </>
-              )}
-              <DraggableCardsList items={items.active} source={source} getActiveStyle={getActiveStyle} />
-              {provided.placeholder}
-            </DroppableWrapper>
-          )}
-        </Droppable>
-        <Droppable droppableId='droppable2'>
-          {(provided, snapshot) => (
-            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}>
-              <div style={cardStyles.titleWrapper}>
-                <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>In Progress</h5>
-              </div>
-              {loading && (
-                <>
-                  <Skeleton active />
-                  <Skeleton active />
-                </>
-              )}
-              <DraggableCardsList items={items.progress} source={source} getActiveStyle={getActiveStyle} />
-              {provided.placeholder}
-            </DroppableWrapper>
-          )}
-        </Droppable>
-        <Droppable droppableId='droppable3'>
-          {(provided, snapshot) => (
-            <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}>
-              <div style={cardStyles.titleWrapper}>
-                <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Completed</h5>
-              </div>
-              {loading && (
-                <>
-                  <Skeleton active />
-                  <Skeleton active />
-                </>
-              )}
-              <DraggableCardsList items={items.complete} source={source} getActiveStyle={getActiveStyle} />
-              {provided.placeholder}
-            </DroppableWrapper>
-          )}
-        </Droppable>
-      </DragDropContext>
-      {/* <div
-        style={{
-          position: 'fixed',
-          width: '100%',
-          display: 'flex',
-          bottom: 0,
-          right: '7rem',
-          width: '50%',
-          maxWidth: '40rem',
-          minWidth: '20rem',
-        }}
-      >
-        <Search
+    <Container>
+      {issueModal && (
+        <CreateIssueModal
+          setIssueModal={setIssueModal}
+          newRequest={newRequest}
+          setNewRequest={setNewRequest}
+          resetSearch={resetSearch}
+        />
+      )}
+      <Toolbar type='flex'>
+        <Input.Search
           allowClear
           size='large'
           placeholder='Filter issues through data search'
-          onSearch={value => console.log(value)}
-          disabled
+          onChange={(e) => handleSearch(e)}
+          disabled={loading}
+          ref={searchbarRef}
           style={{
+            margin: '1.5rem',
+            minWidth: '20rem',
             height: '2.7rem',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.3)',
           }}
         />
-      </div> */}
-    </Wrapper>
+        <CreateIssueButton
+          type='primary'
+          shape='round'
+          icon='plus'
+          size='large'
+          onClick={() => setIssueModal(true)}
+          disabled={loading}
+        >
+          Create Issue
+        </CreateIssueButton>
+      </Toolbar>
+      <Wrapper>
+        <DragDropContext onDragEnd={onDragEnd} style={{ height: '50%' }}>
+          <Droppable droppableId='droppable1'>
+            {(provided, snapshot) => (
+              <DroppableWrapper
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}
+              >
+                <div style={cardStyles.titleWrapper}>
+                  <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Active</h5>
+                </div>
+                {loading && (
+                  <>
+                    <Skeleton active />
+                    <Skeleton active />
+                  </>
+                )}
+                <DraggableCardsList items={items.active} source={source} getActiveStyle={getActiveStyle} />
+                {provided.placeholder}
+              </DroppableWrapper>
+            )}
+          </Droppable>
+          <Droppable droppableId='droppable2'>
+            {(provided, snapshot) => (
+              <DroppableWrapper
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}
+              >
+                <div style={cardStyles.titleWrapper}>
+                  <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>In Progress</h5>
+                </div>
+                {loading && (
+                  <>
+                    <Skeleton active />
+                    <Skeleton active />
+                  </>
+                )}
+                <DraggableCardsList items={items.progress} source={source} getActiveStyle={getActiveStyle} />
+                {provided.placeholder}
+              </DroppableWrapper>
+            )}
+          </Droppable>
+          <Droppable droppableId='droppable3'>
+            {(provided, snapshot) => (
+              <DroppableWrapper
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}
+              >
+                <div style={cardStyles.titleWrapper}>
+                  <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Completed</h5>
+                </div>
+                {loading && (
+                  <>
+                    <Skeleton active />
+                    <Skeleton active />
+                  </>
+                )}
+                <DraggableCardsList items={items.complete} source={source} getActiveStyle={getActiveStyle} />
+                {provided.placeholder}
+              </DroppableWrapper>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </Wrapper>
+    </Container>
   );
 }

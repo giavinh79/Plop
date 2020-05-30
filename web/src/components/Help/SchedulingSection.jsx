@@ -1,0 +1,1 @@
+In Scrum, teams forecast to complete a set of user stories or other work items during a fixed time duration, known as a sprint. Generally speaking, sprints are one, two, or four weeks long. It's up to the team to determine the length of a sprint — we recommend starting with two weeks.

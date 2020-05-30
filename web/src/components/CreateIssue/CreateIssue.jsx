@@ -18,7 +18,7 @@ import {
 } from 'antd';
 import { displaySimpleNotification, compareDates } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
-import { API_ENDPOINT } from '../../constants';
+import { API_ENDPOINT, tagSuggestions } from '../../constants';
 import { retrieveAssignees, deleteIssue, getIssueById } from '../../utility/restCalls.js';
 import CommentBody from '../Comment/CommentBody.jsx';
 import ShareIssue from './ShareIssue.jsx';
@@ -187,18 +187,6 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
     }
     return e && e.fileList;
   };
-
-  const tagSuggestions = [
-    <Select.Option key='Backend'>Backend</Select.Option>,
-    <Select.Option key='Bug'>Bug</Select.Option>,
-    <Select.Option key='Database'>Database</Select.Option>,
-    <Select.Option key='DevOps'>DevOps</Select.Option>,
-    <Select.Option key='Documentation'>Documentation</Select.Option>,
-    <Select.Option key='Frontend'>Frontend</Select.Option>,
-    <Select.Option key='Research'>Research</Select.Option>,
-    <Select.Option key='Security'>Security</Select.Option>,
-    <Select.Option key='Testing'>Testing</Select.Option>,
-  ];
 
   const disabledDate = (current) => {
     return current && current.valueOf() < Date.now() - 60 * 60 * 24 * 1000 * 2;
@@ -387,12 +375,11 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                   </Form.Item>
                 </>
               )}
-              <Form.Item wrapperCol={{ span: 12, offset: 6 }} style={{ alignItems: 'flex-end' }}>
-                {data == null ? (
-                  <Button type='primary' onClick={handleSubmit} loading={loadingSave}>
-                    Submit
-                  </Button>
-                ) : (
+              <Form.Item
+                wrapperCol={{ span: 12, offset: 6 }}
+                style={{ alignItems: 'flex-end', marginLeft: data ? '' : 'auto' }}
+              >
+                {data ? (
                   <Popconfirm
                     title='Are you sure you want to save this task?'
                     onConfirm={handleSubmit}
@@ -401,6 +388,10 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                   >
                     <Button type='primary'>Save</Button>
                   </Popconfirm>
+                ) : (
+                  <Button type='primary' onClick={handleSubmit} loading={loadingSave}>
+                    Submit
+                  </Button>
                 )}
               </Form.Item>
             </div>
