@@ -62,7 +62,7 @@ export default function Notes() {
       } = await getRoomAdminTiers();
 
       setLoading(false);
-      setDate(moment(last_modified, 'YYYYMMDDhhmmss'));
+      setDate(last_modified);
       setData(notes);
       setLayoutData(notes_layout);
       setAdminTier(administration_level);
@@ -111,7 +111,8 @@ export default function Notes() {
     });
 
     setData(updatedData);
-    if (data.length > 0 && !loading && layoutData.length > 0) await updateLayout(updatedData, layoutData, date);
+    if (data.length > 0 && !loading && layoutData.length > 0)
+      await updateLayout(updatedData, layoutData, moment(new Date()).format('YYYYMMDDhhmmss'), date);
   };
 
   const handleEdit = (note) => {
@@ -140,7 +141,8 @@ export default function Notes() {
       })
     );
     try {
-      if (data.length > 0 && !loading && layoutData.length > 0) await updateLayout(data, layoutData, date);
+      if (data.length > 0 && !loading && layoutData.length > 0)
+        await updateLayout(data, layoutData, moment(new Date()).format('YYYYMMDDhhmmss'), date);
     } catch (err) {
       if (err.response.data === 'ERROR_NEW_NOTE_CHANGES') {
         displaySimpleNotification(
@@ -167,7 +169,8 @@ export default function Notes() {
     });
     setLayoutData(newLayout);
     try {
-      if (data.length > 0 && !loading && layout.length > 0) await updateLayout(data, newLayout, date);
+      if (data.length > 0 && !loading && layout.length > 0)
+        await updateLayout(data, newLayout, moment(new Date()).format('YYYYMMDDhhmmss'), date);
     } catch (err) {
       if (err.response.data === 'ERROR_NEW_NOTE_CHANGES') {
         displaySimpleNotification(

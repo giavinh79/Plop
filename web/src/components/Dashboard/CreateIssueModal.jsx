@@ -10,7 +10,6 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
   const [visible, setVisible] = useState(true);
   const [title, setTitle] = useState('');
   const [shortDescription, setShortDescription] = useState('');
-  const [defaultFileList, setDefaultFileList] = useState([]);
   const [assignees, setAssignees] = useState([]);
   const [loadingSave, setLoadingSave] = useState(false);
   const titleRef = useRef();
@@ -210,7 +209,7 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
             {getFieldDecorator('dragger', {
               valuePropName: 'fileList',
               getValueFromEvent: normFile,
-              initialValue: defaultFileList,
+              initialValue: [],
             })(
               <Upload.Dragger
                 listType='picture'

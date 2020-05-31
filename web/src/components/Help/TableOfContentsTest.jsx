@@ -6,14 +6,13 @@ import './TableOfContents.css';
 const { TabPane } = Tabs;
 
 const navigationArray = [
-  'I. Overview',
+  'I. Introduction',
   'II. Pages',
   'III. Issues',
   'IV. Chat',
-  'V. User Settings',
-  'VI. Team Settings',
-  'VII. Scheduling',
-  'IX. Logs',
+  'V. Scheduling',
+  // 'VI. Notifications',
+  // 'IX. Logs',
 ];
 
 export default function TableOfContentsTest({ setPage }) {

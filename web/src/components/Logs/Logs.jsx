@@ -271,7 +271,7 @@ export default function Logs() {
                 }
                 description={
                   <Row type='flex'>
-                    <div>
+                    <div style={{ marginRight: '5rem' }}>
                       {item.description}
                       <span
                         style={{ cursor: 'pointer', fontWeight: '500', color: '#637bd0' }}

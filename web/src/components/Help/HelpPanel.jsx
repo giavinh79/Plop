@@ -6,9 +6,10 @@ import IntroductionSection from './IntroductionSection';
 import PageSection from './PageSection';
 import TableOfContentsTest from './TableOfContentsTest';
 import IssueSection from './IssueSection';
+import ChatSection from './ChatSection';
 
 const mapPageToText = {
-  0: { section: 'Introduction', subSection: 'Overview' },
+  0: { section: 'Introduction', subSection: 'Introduction' },
   1: { section: 'Introduction', subSection: 'Pages' },
   2: { section: '', subSection: 'Issues' },
   3: { section: '', subSection: 'Chat' },
@@ -33,13 +34,15 @@ export default function HelpPanel() {
         return <PageSection />;
       case 2:
         return <IssueSection />;
+      case 3:
+        return <ChatSection />;
       default:
         return <IntroductionSection />;
     }
   };
 
   const setSectionAddress = (page) => {
-    const { section, subSection } = mapPageToText[page];
+    const { subSection } = mapPageToText[page];
 
     return (
       <>

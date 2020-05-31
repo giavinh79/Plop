@@ -33,3 +33,9 @@ export const NavText = styled.p`
     transform: scale(1.05);
   }
 `;
+
+export const Subheader = styled.p`
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.8rem;
+`;

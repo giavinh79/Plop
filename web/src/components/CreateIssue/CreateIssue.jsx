@@ -101,10 +101,10 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
   const handleDeletion = async (id) => {
     try {
       await deleteIssue(id);
-      displaySimpleNotification('Success', 4, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
+      displaySimpleNotification('Success', 4, 'bottomRight', 'Issue was deleted.', 'smile', '#108ee9');
       historyTrack.current ? history.goBack() : history.push('/dashboard');
     } catch (err) {
-      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue was not deleted.', 'warning', 'red');
     }
   };
 

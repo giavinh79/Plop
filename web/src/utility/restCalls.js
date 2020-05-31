@@ -241,9 +241,9 @@ const updateIssue = async (id, status) => {
   }
 };
 
-const updateLayout = async (notes, layout, date) => {
+const updateLayout = async (notes, layout, date, oldDate) => {
   try {
-    await axios.post(`${API_ENDPOINT}/notes`, { notes, layout, date });
+    await axios.post(`${API_ENDPOINT}/notes`, { notes, layout, date, oldDate });
   } catch (err) {
     throw err;
   }

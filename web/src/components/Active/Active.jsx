@@ -34,9 +34,9 @@ export default function Active() {
     try {
       await deleteIssue(id);
       setRefresh(!refresh);
-      displaySimpleNotification('Success', 4, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
+      displaySimpleNotification('Success', 4, 'bottomRight', 'Issue was deleted.', 'smile', '#108ee9');
     } catch (err) {
-      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue was not deleted.', 'warning', 'red');
     }
   };
 

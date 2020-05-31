@@ -17,7 +17,6 @@ import { updateIssue, getIssues } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
 import DraggableCardsList from './DraggableCardsList';
 import CreateIssueModal from './CreateIssueModal';
-import styled from 'styled-components';
 import { useRef } from 'react';
 
 const id2List = {

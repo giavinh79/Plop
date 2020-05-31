@@ -34,10 +34,10 @@ export default function Backlog() {
   const handleDeletion = async (id) => {
     try {
       await deleteIssue(id);
-      displaySimpleNotification('Success', 4, 'bottomRight', 'Issue was deleted', 'smile', '#108ee9');
+      displaySimpleNotification('Success', 4, 'bottomRight', 'Issue was deleted.', 'smile', '#108ee9');
       setRefresh(!refresh);
     } catch (err) {
-      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue was not deleted', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Issue was not deleted.', 'warning', 'red');
     }
   };
 

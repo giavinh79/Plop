@@ -1,5 +1,6 @@
 import React from 'react';
 import { List, Typography } from 'antd';
+import { Subheader } from './HelpStyles';
 
 const { Text } = Typography;
 
@@ -7,9 +8,9 @@ export default function IntroductionSection() {
   return (
     <div style={{ padding: '0 2rem' }}>
       <div style={{ paddingBottom: '2rem' }}>
-        <p style={{ fontSize: '1.5rem', fontWeight: 500 }}>
+        <Subheader>
           <Text>Description</Text>
-        </p>
+        </Subheader>
         <Text type='secondary' style={{ textIndent: '30px' }}>
           Plop is an application that allows teams to collaborate and manage projects. After signing up, the user can
           choose to create a team or join a team. In total, a user can only be a member of a total of three different
@@ -24,9 +25,9 @@ export default function IntroductionSection() {
         {/* <Icon type="twitter" /> */}
       </div>
 
-      <p style={{ fontSize: '1.5rem', fontWeight: 500 }}>
+      <Subheader>
         <Text>Administration Tiers</Text>
-      </p>
+      </Subheader>
       <Text type='secondary'>
         There are five different administration tiers you may configure for each user, these go from 1-5. Each tier has
         all the permissions of the tiers below it and more. They can be directly edited for each user in the members
