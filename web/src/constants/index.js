@@ -36,6 +36,11 @@ export const pagination = {
   hideOnSinglePage: true,
 };
 
+export const formItemLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 14 },
+};
+
 /* Configuration Variables
  * For configuring project to work in different ways
  *

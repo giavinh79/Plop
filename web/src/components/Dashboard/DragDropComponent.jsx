@@ -1,7 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Input, Skeleton, Button, Row } from 'antd';
+import { Input, Skeleton, Icon, Tooltip, Modal } from 'antd';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { cardStyles, DroppableWrapper, getActiveStyle, getListStyle, Wrapper } from './DashboardStyles';
+import {
+  cardStyles,
+  DroppableWrapper,
+  getActiveStyle,
+  getListStyle,
+  Wrapper,
+  Container,
+  Toolbar,
+  CreateIssueButton,
+  CheckIcon,
+} from './DashboardStyles';
 import { ThemeContext } from '../../colors/theme';
 import { updateIssue, getIssues } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
@@ -9,26 +19,6 @@ import DraggableCardsList from './DraggableCardsList';
 import CreateIssueModal from './CreateIssueModal';
 import styled from 'styled-components';
 import { useRef } from 'react';
-
-const CreateIssueButton = styled(Button)`
-  margin-right: 2rem;
-  font-weight: 500;
-  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14),
-    0px 1px 18px 0px rgba(0, 0, 0, 0.12) !important;
-`;
-
-const Toolbar = styled(Row)`
-  flex-wrap: nowrap !important;
-  justify-content: flex-end;
-  align-items: center;
-  background-color: #f7f7f7;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: inherit;
-`;
 
 const id2List = {
   droppable1: 'active',
@@ -261,8 +251,53 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
                 ref={provided.innerRef}
                 style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}
               >
-                <div style={cardStyles.titleWrapper}>
+                <div style={{ ...cardStyles.titleWrapper, alignItems: 'center' }}>
                   <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Completed</h5>
+                  {items.complete.length > 0 && (
+                    <Tooltip title='Use this button to mark all completed issues as finished.'>
+                      <CheckIcon
+                        type='check'
+                        onClick={() => {
+                          Modal.confirm({
+                            title: 'Delete all completed issues?',
+                            icon: <Icon type='exclamation-circle' />,
+                            maskClosable: true,
+                            okText: `Confirm Deletion (${items.complete.length} tasks)`,
+                            content: (
+                              <>
+                                <div>
+                                  Typically this button is used to mark the end of a{' '}
+                                  <a
+                                    style={{ color: '#337094', fontWeight: 500 }}
+                                    href='https://searchsoftwarequality.techtarget.com/definition/Scrum-sprint'
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                  >
+                                    sprint/development cycle
+                                  </a>
+                                  . On confirmation, the issues in this column are marked as complete and{' '}
+                                  <span style={{ color: '#B15858', fontWeight: 500 }}>deleted</span>. You may optionally
+                                  provide a name for this sprint which will appear in your team logs.
+                                </div>
+                                <Input
+                                  placeholder='(Optional) Name of Sprint'
+                                  style={{ margin: '1rem 0' }}
+                                  type='text'
+                                  autoComplete='nope'
+                                />
+                              </>
+                            ),
+                            onOk() {
+                              console.log('OK');
+                            },
+                            onCancel() {
+                              console.log('Cancel');
+                            },
+                          });
+                        }}
+                      />
+                    </Tooltip>
+                  )}
                 </div>
                 {loading && (
                   <>

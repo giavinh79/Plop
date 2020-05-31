@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button, Icon, Row } from 'antd';
 
 export const cardStyles = {
   titleWrapper: {
@@ -67,6 +68,41 @@ export const Wrapper = styled.div`
   @media (max-width: 850px) {
     flex-direction: column;
   }
+`;
+
+export const CheckIcon = styled(Icon)`
+  cursor: pointer;
+  padding: 0.5rem;
+  background-color: #15b335d4;
+  color: white !important;
+  font-size: 1.5rem;
+  border-radius: 20px;
+
+  &:hover {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+`;
+
+export const CreateIssueButton = styled(Button)`
+  margin-right: 2rem;
+  font-weight: 500;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 18px 0px rgba(0, 0, 0, 0.12) !important;
+`;
+
+export const Toolbar = styled(Row)`
+  flex-wrap: nowrap !important;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: #f7f7f7;
+`;
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: inherit;
 `;
 
 export const getActiveStyle = (isDragging, draggableStyle) => ({

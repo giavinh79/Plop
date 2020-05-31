@@ -23,6 +23,14 @@ const clearNotifications = async (notifications) => {
   }
 };
 
+const createIssue = async (values) => {
+  try {
+    return await axios.put(`${API_ENDPOINT}/issue`, values);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const createSession = async (event) => {
   try {
     await axios.post(`${API_ENDPOINT}/room/session`, {
@@ -252,6 +260,7 @@ const updateUserAdminTier = async (name, id, tier) => {
 export {
   checkAuth,
   clearNotifications,
+  createIssue,
   createSession,
   createTeam,
   deleteIssue,

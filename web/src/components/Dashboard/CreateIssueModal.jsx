@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { AutoComplete, Button, DatePicker, Divider, Icon, Input, Form, Modal, Radio, Select, Upload } from 'antd';
 import { displaySimpleNotification } from '../../utility/services.js';
-import { retrieveAssignees } from '../../utility/restCalls.js';
-import { tagSuggestions, API_ENDPOINT } from '../../constants/index.js';
+import { retrieveAssignees, createIssue } from '../../utility/restCalls.js';
+import { tagSuggestions, formItemLayout } from '../../constants/index.js';
+import { disabledDate, toBase64, normFile } from '../../utility/issueServices';
 import './CreateIssueModal.css';
-import { Redirect, useHistory } from 'react-router-dom';
-import axios from 'axios';
 
 function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, resetSearch }) {
   const [visible, setVisible] = useState(true);
-  const history = useHistory();
   const [title, setTitle] = useState('');
   const [shortDescription, setShortDescription] = useState('');
   const [defaultFileList, setDefaultFileList] = useState([]);
@@ -18,10 +16,6 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
   const titleRef = useRef();
   const { getFieldDecorator } = form;
   const createInput = useRef();
-  const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 14 },
-  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -45,34 +39,11 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
     }, 200);
   };
 
-  const normFile = (e) => {
-    if (e.fileList.length >= 6) {
-      while (e.fileList.length >= 6) e.fileList.pop();
-      displaySimpleNotification('Error', 6, 'bottomRight', 'Image uploads are limited to five.', 'warning', 'red');
-    }
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
-
-  const disabledDate = (current) => {
-    return current && current.valueOf() < Date.now() - 60 * 60 * 24 * 1000 * 2;
-  };
-
   const handleSubmit = () => {
     // e.preventDefault();
 
     form.validateFields((err, values) => {
       setLoadingSave(true);
-
-      const toBase64 = (file) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
-        });
 
       (async function getEncodedImageValues(values, resetForm) {
         let base = [];
@@ -86,7 +57,7 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
 
         if (!err) {
           try {
-            const res = await axios.put(`${API_ENDPOINT}/issue`, values);
+            const res = await createIssue(values);
             resetSearch();
             setNewRequest(!newRequest);
             displaySimpleNotification(
@@ -131,12 +102,7 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
         overflow: 'auto',
       }}
     >
-      <Form
-        {...formItemLayout}
-        className='issue-modal'
-        //   onSubmit={handleSubmit}
-        // style={{ display: 'flex', flexWrap: 'wrap' }}
-      >
+      <Form {...formItemLayout} className='issue-modal'>
         <Form.Item label='Title' labelCol={{ span: 24 }}>
           {getFieldDecorator('title', {
             rules: [
@@ -167,7 +133,7 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
           })(<Input.TextArea autosize={{ minRows: '2', maxRows: '15' }} maxLength={1000} />)}
         </Form.Item>
 
-        <Form.Item label='Assignee' labelCol={{ span: 24 }}>
+        <Form.Item label='Assignee' labelCol={{ span: 24 }} style={{ position: 'relative', zIndex: 5 }}>
           {getFieldDecorator('assignee', {
             initialValue: '',
           })(
@@ -176,32 +142,48 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
               filterOption={(inputValue, option) =>
                 option.props.children.toUpperCase().substring(0, inputValue.length).includes(inputValue.toUpperCase())
               }
+              getPopupContainer={(trigger) => trigger.parentNode}
             >
               <Input.Search placeholder='Search by email' onSearch={(value) => console.log(value)} autoComplete='off' />
             </AutoComplete>
           )}
         </Form.Item>
 
-        <Form.Item label='Tags' labelCol={{ span: 24 }}>
+        <Form.Item label='Tags' labelCol={{ span: 24 }} style={{ position: 'relative', zIndex: 4 }}>
           {getFieldDecorator('tag', {
             initialValue: [],
           })(
-            <Select mode='tags' maxTagTextLength={10} maxTagCount={1} tokenSeparators={[',']} placeholder='Issue Tags'>
+            <Select
+              mode='tags'
+              maxTagTextLength={10}
+              maxTagCount={1}
+              tokenSeparators={[',']}
+              placeholder='Issue Tags'
+              getPopupContainer={(trigger) => trigger.parentNode}
+              style={{ position: 'relative' }}
+              placement='bottomLeft'
+            >
               {tagSuggestions}
             </Select>
           )}
         </Form.Item>
 
-        <Form.Item label='Deadline' labelCol={{ span: 24 }}>
+        <Form.Item label='Deadline' labelCol={{ span: 24 }} style={{ zIndex: 3 }}>
           {getFieldDecorator('deadline', {
             initialValue: null,
-          })(<DatePicker disabledDate={disabledDate} style={{ width: '100%' }} />)}
+          })(
+            <DatePicker
+              disabledDate={disabledDate}
+              style={{ position: 'relative', width: '100%' }}
+              getCalendarContainer={() => document.getElementById('validate_other_deadline')}
+            />
+          )}
         </Form.Item>
-        <Form.Item label='Status' labelCol={{ span: 24 }}>
+        <Form.Item label='Status' labelCol={{ span: 24 }} style={{ zIndex: 2 }}>
           {getFieldDecorator('status', {
             initialValue: 1,
           })(
-            <Select>
+            <Select getPopupContainer={(trigger) => trigger.parentNode} style={{ zIndex: 5 }}>
               <Select.Option value={0}>Backlog</Select.Option>
               <Select.Option value={1}>Active</Select.Option>
               <Select.Option value={2}>In Progress</Select.Option>
@@ -210,7 +192,7 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
           )}
         </Form.Item>
 
-        <Form.Item className='priority' labelCol={{ offset: 0 }}>
+        <Form.Item className='priority' labelCol={{ offset: 0 }} style={{ zIndex: 1 }}>
           {getFieldDecorator('priority', {
             initialValue: 0,
           })(
@@ -223,7 +205,7 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
 
         <Divider />
 
-        <Form.Item>
+        <Form.Item style={{ zIndex: 1 }}>
           <div style={{ width: '100%' }}>
             {getFieldDecorator('dragger', {
               valuePropName: 'fileList',

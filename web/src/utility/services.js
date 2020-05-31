@@ -3,7 +3,7 @@ import { Icon, notification, Modal } from 'antd';
 import { checkAuth } from './restCalls';
 
 /*
- * Commonly used functions
+ * Commonly used geneeral functions
  */
 
 const isAuthenticated = async () => {

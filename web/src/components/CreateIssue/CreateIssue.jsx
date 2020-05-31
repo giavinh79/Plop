@@ -18,22 +18,19 @@ import {
 } from 'antd';
 import { displaySimpleNotification, compareDates } from '../../utility/services.js';
 import { layout, subheader } from '../../globalStyles';
-import { API_ENDPOINT, tagSuggestions } from '../../constants';
-import { retrieveAssignees, deleteIssue, getIssueById } from '../../utility/restCalls.js';
+import { API_ENDPOINT, formItemLayout, tagSuggestions } from '../../constants';
+import { retrieveAssignees, deleteIssue, getIssueById, createIssue } from '../../utility/restCalls.js';
 import CommentBody from '../Comment/CommentBody.jsx';
 import ShareIssue from './ShareIssue.jsx';
+import { disabledDate, toBase64, normFile } from '../../utility/issueServices';
 import moment from 'moment';
 import './style.css';
 
 const { TextArea } = Input;
 
-const formItemLayout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 14 },
-};
-
 // Divide this up into two components and make a HoC (maybe)
 export default function CreateIssue({ form, location, isManualNavigation }) {
+  const { getFieldDecorator } = form;
   const [defaultFileList, setDefaultFileList] = useState([]);
   const [assignees, setAssignees] = useState([]);
   const [data, setData] = useState(location.data || null);
@@ -117,14 +114,6 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
     form.validateFields((err, values) => {
       setLoadingSave(true);
 
-      const toBase64 = (file) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
-        });
-
       (async function getEncodedImageValues(values, resetForm) {
         let base = [];
         if (values.dragger) {
@@ -148,7 +137,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                 '#108ee9'
               );
             } else {
-              const res = await axios.put(`${API_ENDPOINT}/issue`, values);
+              const res = await createIssue(values);
               displaySimpleNotification(
                 'Success',
                 2,
@@ -177,23 +166,6 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
     });
   };
 
-  const normFile = (e) => {
-    if (e.fileList.length >= 6) {
-      while (e.fileList.length >= 6) e.fileList.pop();
-      displaySimpleNotification('Error', 6, 'bottomRight', 'Image uploads are limited to five.', 'warning', 'red');
-    }
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
-
-  const disabledDate = (current) => {
-    return current && current.valueOf() < Date.now() - 60 * 60 * 24 * 1000 * 2;
-  };
-
-  const { getFieldDecorator } = form;
-
   return !loading ? (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={layout} className='createIssue'>
@@ -219,7 +191,6 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
               <ShareIssue assignees={assignees} issue={data.title} issueId={data.id} />
             </>
           )}
-          {/* <div style="justify-content: center;display: flex;border-radius: 50%;height: 2.5rem;width: 2.5rem;margin: 0 1rem;border: 1px solid #ccc;align-items: center;"> */}
         </div>
         <Form {...formItemLayout} onSubmit={handleSubmit} style={{ display: 'flex', flexWrap: 'wrap' }}>
           <div style={{ flex: 4, padding: '1rem' }}>
