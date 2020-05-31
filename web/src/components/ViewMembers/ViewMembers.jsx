@@ -70,7 +70,7 @@ export default function ViewMembers() {
         'Success',
         4,
         'bottomRight',
-        'Member has been terminated from the team',
+        'Member has been terminated from the team.',
         'smile',
         '#108ee9'
       );
@@ -79,7 +79,7 @@ export default function ViewMembers() {
         'Error',
         4,
         'bottomRight',
-        `Member could not be terminated from the team: ${err}`,
+        `Member could not be terminated from the team: ${err}.`,
         'warning',
         'red'
       );

@@ -115,9 +115,9 @@ export default function Settings() {
   const handleSave = async () => {
     try {
       await axios.post(`${API_ENDPOINT}/room`, state);
-      displaySimpleNotification('Success', 4, 'bottomRight', 'Team settings were saved', 'smile', '#108ee9');
+      displaySimpleNotification('Success', 4, 'bottomRight', 'Team settings were saved.', 'smile', '#108ee9');
     } catch (err) {
-      displaySimpleNotification('Error', 4, 'bottomRight', 'Team settings could not be saved', 'warning', 'red');
+      displaySimpleNotification('Error', 4, 'bottomRight', 'Team settings could not be saved.', 'warning', 'red');
     }
   };
 

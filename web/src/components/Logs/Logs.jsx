@@ -159,9 +159,13 @@ export default function Logs() {
       case 9:
         return '#FEBF35';
       case 10:
-        return '#8aa953';
+        return '#ad4848';
       case 11:
         return '#bd9c63';
+
+      // standard gray color - maybe for unbanning #c1bab5
+      // green olive colro: #8aa953 for completing issue maybe - smile icon
+      // #558658 // for completing sprint - check icon
       default:
         return '#a7a4a4';
     }

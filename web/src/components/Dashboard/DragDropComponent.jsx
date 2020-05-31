@@ -181,7 +181,7 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
         <Input.Search
           allowClear
           size='large'
-          placeholder='Filter issues through data search'
+          placeholder='Filter issues through deep data search'
           onChange={(e) => handleSearch(e)}
           disabled={loading}
           ref={searchbarRef}
