@@ -600,6 +600,50 @@ class IssueController {
     }
   }
 
+  async endSprint({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
+
+      const result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
+      if (result.length === 0) throw new Error('User not in this room');
+
+      // Must be at least tier 2 to complete a sprint
+      if (result[0].administration_level === 1) {
+        throw new Error('Unable to edit issues not directly assigned to user');
+      }
+
+      const { issues, sprint } = request.body; // array containing issue IDs
+
+      await Database.transaction(async (trx) => {
+        // map over array of issues deleting each
+        // log deleting over all issues. add sprint name if exists
+        // JSON.stringify object containing issue names + sprint name and pass into object
+
+        await trx
+          .table('issues')
+          .where({ room: decryptedRoomId, id: request.body.id })
+          .update({ status: request.body.status });
+
+        let [data] = await trx.table('issues').select('title', 'assignee').where('id', request.body.id);
+
+        // await trx.table('logs').insert({
+        //   room_id: decryptedRoomId,
+        //   issue_id: request.body.id,
+        //   description: `${user.email} updated issue `,
+        //   object: data.title,
+        //   date: new Date().toString(),
+        //   type: 1,
+        // });
+      });
+
+      response.status(200).send();
+    } catch (err) {
+      console.log(`(issue_endSprint) ${new Date()}: ${err.message}`);
+      response.status(404).send();
+    }
+  }
+
   async shareIssue({ auth, request, response }) {
     try {
       const user = await auth.getUser();

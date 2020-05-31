@@ -38,7 +38,7 @@ class NoteController {
         throw new Error('User does not have sufficient privileges to update notes');
       }
 
-      const { date, notes, layout } = request.body;
+      const { oldDate, date, notes, layout } = request.body;
 
       let updatedNotes = notes.map((note) => {
         note.id = uuidv4();
@@ -49,12 +49,12 @@ class NoteController {
         .select('last_modified', 'last_modified_by')
         .where('room_id', decryptedRoomId);
 
-      if (date && parseInt(date) < parseInt(dateData.last_modified)) {
+      if (date && parseInt(oldDate) !== parseInt(dateData.last_modified) && user.id !== dateData.last_modified_by) {
         throw new Error('ERROR_NEW_NOTE_CHANGES'); // someone has edited the notes since user received notes
       }
 
       await Database.transaction(async (trx) => {
-        if (user.id !== dateData.last_modified_by) {
+        if (date - dateData.last_modified > 500) {
           await Database.table('logs').insert({
             room_id: decryptedRoomId,
             description: `${user.email} updated the `,

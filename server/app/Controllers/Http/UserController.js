@@ -123,10 +123,9 @@ class UserController {
     try {
       const user = await auth.getUser();
       const { avatar, role } = request.body;
-      const decryptedRoomId = hashids.decodeHex(request.body.id);
+      const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
       await Database.table('users').where('id', user.id).update({ avatar: avatar });
-
       if (role != null) {
         await Database.table('user_rooms')
           .where({

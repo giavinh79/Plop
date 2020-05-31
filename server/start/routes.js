@@ -74,6 +74,7 @@ Route.delete('/issue/:id', 'IssueController.delete').middleware(jwtMiddleware);
 Route.get('/issue/team/:status', 'IssueController.getTeam').middleware(jwtMiddleware);
 Route.get('/issue/user/:status', 'IssueController.getUser').middleware(jwtMiddleware);
 Route.post('/issue/progress', 'IssueController.updateProgress').middleware(jwtMiddleware);
+Route.post('/issue/completed', 'IssueController.endSprint').middleware(jwtMiddleware);
 
 Route.get('/comments/:id', 'IssueController.getComments').middleware(jwtMiddleware);
 Route.post('/comment', 'IssueController.setComments').middleware(jwtMiddleware);

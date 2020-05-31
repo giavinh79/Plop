@@ -1,9 +1,9 @@
 Plop
 =====
 
-Plop is a web application that uses React.js as its frontend framework and Adonis.js (Node.js web framework) as the REST API. It is a simple project management tool targeted towards small teams (< 12) however, it can also be used by individuals who want a more complex to-do list.
+Plop is an open-source web application that uses React.js as its frontend framework and Adonis.js (Node.js web framework) as the REST API. It is a simple project management tool targeted towards small teams (< 12) however, it can also be used by individuals who want a more complex to-do list.
 
-A postgreSQL relational database is used which is managed using the Lucid ORM to take advantage of models, controllers, migrations, seeds and factories. This allows us to easily replicate common SQL queries, setup the database with ease, and create dummy data. Cloudinary is currently used to store images.
+For data, a postgreSQL relational database is used. The Lucid ORM is leveraged for the benefits of models, controllers, migrations, seeds, and factories. This allows us to easily execute common queries, setup the database with ease, and create dummy data. Cloudinary is currently used to store images.
 
 ![Plop Dark Mode Preview](https://github.com/GV79/Plop/blob/master/readme-plop.png)
 
@@ -26,13 +26,13 @@ $\web npm start
 
 ### Running Server
 
-1. Go to server folder, set up environment variables in your local .env file (see .env.example for attributes that you must fill in), and have working PostgresQL database you can connect to.
+1. Go to server folder, set up environment variables in your local .env file (see .env.example for attributes that you must fill in), and have a working PostgresQL database you can connect to.
 
 2. Set up database (requires Adonis CLI) with proper tables.
 ```
 $\server adonis migration:run
 ```
-3. Fill database with dummy test data (you can now login as a user called 'tester@gmail.com' with password 'test' with a prebuilt team.)
+3. Fill database with dummy test data (you can now login as a user called 'tester@gmail.com' with password 'test' with a prebuilt team).
 ```
 $\server adonis seed
 ```
@@ -52,7 +52,7 @@ $\server adonis migration:rollback
 
 ### DB Resources
 
-postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-postgresql/ and if you want to use mySQL, a mySQL remote database can be setup via http://remotemysql.com (will require some code changes for app to function properly though).
+postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-postgresql/ and if you want to use mySQL, a mySQL remote database can be setup via http://remotemysql.com (will require some code changes for app to function properly though due to how differently they deal with JSON data types).
 
 ## Project To Dos
 
@@ -112,4 +112,4 @@ $\web npm run coverage
 
 **Coding styles** enforced by Prettier config (found in `.prettierrc` files in root folders).
 
-**Naming scheme:** Camel case for JS functions/variables, hyphen delimiters for URLs, server endpoints, and CSS class selectors, and finally snake case for DB column and table names (there may be code discrepancies in which I hope to fix sometime)
+**Naming scheme:** Camel case for JS functions/variables, hyphen delimiters for URLs, server endpoints, and CSS class selectors, and finally snake case for DB column and table names (there may be code discrepancies in which I hope to fix sometime).
