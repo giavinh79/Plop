@@ -5,6 +5,21 @@ import { Avatar, Input, List, Row, Skeleton, Icon, Select } from 'antd';
 import { getLogs } from '../../utility/restCalls';
 import moment from 'moment';
 import './style.css';
+import styled from 'styled-components';
+
+const ObjectWrapper = styled.span`
+  cursor: pointer;
+  font-weight: 500;
+  color: #637bd0;
+`;
+
+const ActionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  color: #6989ab;
+  cursor: pointer;
+  margin-left: auto;
+`;
 
 export default function Logs() {
   const history = useHistory();
@@ -50,6 +65,89 @@ export default function Logs() {
       document.removeEventListener('scroll', trackScrolling);
     };
   });
+
+  const LOG_MAP = [
+    {
+      /* creating issue */
+      icon: 'pull-request',
+      color: '#7C67F9',
+      navigation: (id) => history.push(`/dashboard/issue/${id}`),
+    },
+    {
+      /* updating issue */
+      icon: 'pull-request',
+      color: '#51bb66',
+      navigation: (id) => history.push(`/dashboard/issue/${id}`),
+    },
+    {
+      /* deleting issue */
+      icon: 'pull-request',
+      color: '#de4545',
+    },
+    {
+      /* commenting on issues */
+      icon: 'pushpin',
+      color: '#415ac1',
+      navigation: (id) => history.push(`/dashboard/issue/${id}`),
+    },
+    {
+      /* updating notes */
+      icon: 'container',
+      color: '#24D481',
+      navigation: () => history.push('/dashboard/notes'),
+    },
+    {
+      /* user edited team settings */
+      icon: 'setting',
+      color: '#FC80B9',
+      navigation: () => history.push('/dashboard/settings'),
+    },
+    {
+      /* user creating team */
+      icon: 'team',
+      color: '#ec864f',
+    },
+    {
+      /* user joining team */
+      icon: 'user-add',
+      color: '#b85fc5',
+      navigation: () => history.push('/dashboard/members'),
+    },
+    {
+      /* user leaving team */
+      icon: 'user-delete',
+      color: '#3bbdbb',
+      navigation: () => history.push('/dashboard/members'),
+    },
+    {
+      /* user x kicked user y*/
+      icon: 'user-delete',
+      color: '#FEBF35',
+      navigation: () => history.push('/dashboard/members'),
+    },
+    {
+      /* user x banned user y*/
+      icon: 'user-delete',
+      color: '#ad4848',
+      navigation: () => history.push('/dashboard/members'),
+    },
+    {
+      /* user x changed the administration tier of user y */
+      icon: 'user',
+      color: '#bd9c63',
+      navigation: () => history.push('/dashboard/members'),
+    },
+    {
+      /* completing issue (deleting an issue in complete status)*/
+      icon: 'check',
+      color: '#8aa953',
+    },
+    {
+      /* completing sprint (similar color to 12 ideally) */
+      icon: 'smile',
+      color: '#558658',
+    },
+  ];
 
   const trackScrolling = () => {
     // Check if user has scrolled to bottom of element
@@ -106,103 +204,63 @@ export default function Logs() {
   };
 
   const handleLogIcon = (type) => {
-    switch (type) {
-      case 0:
-        return 'pull-request';
-      case 1:
-        return 'pull-request';
-      case 2:
-        return 'pull-request';
-      case 3:
-        return 'pushpin';
-      case 4:
-        return 'container';
-      case 5:
-        return 'setting';
-      case 6:
-        return 'team';
-      case 7:
-        return 'user-add';
-      case 8:
-        return 'user-delete';
-      case 9:
-        return 'user-delete';
-      case 10:
-        return 'user-delete';
-      case 11:
-        return 'user';
-      default:
-        return 'pushpin';
+    if (type < LOG_MAP.length) {
+      return LOG_MAP[type].icon;
     }
+    return 'pushpin';
   };
 
   const handleLogIconColor = (type) => {
-    switch (type) {
-      case 0:
-        return '#7C67F9';
-      case 1:
-        return '#51bb66';
-      case 2:
-        return '#de4545';
-      case 3:
-        return '#415ac1';
-      case 4:
-        return '#24D481';
-      case 5:
-        return '#FC80B9';
-      case 6:
-        return '#ec864f';
-      case 7:
-        return '#b85fc5';
-      case 8:
-        return '#3bbdbb';
-      case 9:
-        return '#FEBF35';
-      case 10:
-        return '#ad4848';
-      case 11:
-        return '#bd9c63';
-
-      // standard gray color - maybe for unbanning #c1bab5
-      // green olive colro: #8aa953 for completing issue maybe - smile icon
-      // #558658 // for completing sprint - check icon
-      default:
-        return '#a7a4a4';
+    // standard gray color - maybe for unbanning #c1bab5
+    if (type < LOG_MAP.length) {
+      return LOG_MAP[type].color;
     }
+    return '#a7a4a4';
   };
 
   const handleLogNavigation = (type, id) => {
-    switch (type) {
-      case 0:
-        return history.push(`/dashboard/issue/${id}`);
-      case 1:
-        return history.push(`/dashboard/issue/${id}`);
-      case 3:
-        return history.push(`/dashboard/issue/${id}`);
-      case 4:
-        return history.push('/dashboard/notes');
-      case 5:
-        return history.push('/dashboard/settings');
-      case 7:
-        return history.push('/dashboard/members');
-      case 8:
-        return history.push('/dashboard/members');
-      case 9:
-        return history.push('/dashboard/members');
-      case 10:
-        return history.push('/dashboard/members');
-      case 11:
-        return history.push('/dashboard/members');
-      default:
-        return;
+    if (LOG_MAP[type].navigation) {
+      return LOG_MAP[type].navigation(id);
     }
+    return;
+  };
+
+  const handleSprintLogDescription = (description, object) => {
+    const sprintName = JSON.parse(object).name;
+    if (sprintName) {
+      let descriptionArray = description.split(' ');
+      return (
+        <>
+          {descriptionArray.map((word) => {
+            if (word === 'name_placeholder') {
+              return <span style={{ fontWeight: 500, color: '#2b9651' }}>Sprint {sprintName} </span>;
+            }
+            return word + ' ';
+          })}
+        </>
+      );
+    }
+    return description;
+  };
+
+  const handleSprintLogObject = (object) => {
+    const issues = JSON.parse(object).issues;
+    return (
+      <>
+        {issues.map((issue, index) => {
+          return (
+            <React.Fragment key={index}>
+              <ObjectWrapper>{issue}</ObjectWrapper>
+              {index !== issues.length - 1 && ', '}
+            </React.Fragment>
+          );
+        })}
+      </>
+    );
   };
 
   const isNavigable = (type) => {
-    if (type === 2 || type === 6) {
-      return false;
-    }
-    return true;
+    return !(type === 2 || type === 6 || type === 12 || type === 13);
   };
 
   return (
@@ -276,27 +334,24 @@ export default function Logs() {
                 description={
                   <Row type='flex'>
                     <div style={{ marginRight: '5rem' }}>
-                      {item.description}
-                      <span
-                        style={{ cursor: 'pointer', fontWeight: '500', color: '#637bd0' }}
-                        onClick={() => handleLogNavigation(item.type, item.issueId)}
-                      >
-                        {item.object}
-                      </span>
+                      {item.type === 13 ? (
+                        <>
+                          {handleSprintLogDescription(item.description, item.object)}
+                          {handleSprintLogObject(item.object)}
+                        </>
+                      ) : (
+                        <>
+                          {item.description}
+                          <ObjectWrapper onClick={() => handleLogNavigation(item.type, item.issueId)}>
+                            {item.object}
+                          </ObjectWrapper>
+                        </>
+                      )}
                     </div>
                     {isNavigable(item.type) && (
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          color: '#6989ab',
-                          cursor: 'pointer',
-                          marginLeft: 'auto',
-                        }}
-                        onClick={() => handleLogNavigation(item.type, item.issueId)}
-                      >
+                      <ActionWrapper onClick={() => handleLogNavigation(item.type, item.issueId)}>
                         Go to <Icon type='arrow-right' style={{ marginLeft: '0.3rem' }} />
-                      </div>
+                      </ActionWrapper>
                     )}
                   </Row>
                 }

@@ -197,7 +197,7 @@ class IssueController {
       if (result.length === 0) throw new Error('User not in this room');
 
       // Cloudinary image deletion code
-      const issue = await Database.table('issues').where('id', request.params.id).select('image');
+      const issue = await Database.table('issues').where('id', request.params.id).select('image', 'status');
 
       const imagePromises = [];
 
@@ -227,10 +227,13 @@ class IssueController {
 
         await trx.table('logs').insert({
           room_id: decryptedRoomId,
-          description: `${user.email} deleted issue `,
+          description:
+            issue[0].status === 3
+              ? `${user.email} marked the following issue as complete: `
+              : `${user.email} deleted issue `,
           object: data.title,
           date: new Date().toString(),
-          type: 2,
+          type: 12,
         });
 
         const deletions = await trx.table('issues').where('id', request.params.id).delete();
@@ -600,6 +603,7 @@ class IssueController {
     }
   }
 
+  // Called when user uses 'Complete' button to dismiss all completed issues
   async endSprint({ auth, request, response }) {
     try {
       const user = await auth.getUser();
@@ -613,28 +617,50 @@ class IssueController {
         throw new Error('Unable to edit issues not directly assigned to user');
       }
 
-      const { issues, sprint } = request.body; // array containing issue IDs
+      const { issues, name } = request.body; // array containing issue IDs
 
       await Database.transaction(async (trx) => {
-        // map over array of issues deleting each
-        // log deleting over all issues. add sprint name if exists
-        // JSON.stringify object containing issue names + sprint name and pass into object
+        // "issue.title, issue1.title, issue2.title..."
+        let sprintObject = {};
+        sprintObject.issues = issues.map((item) => item.title);
+        sprintObject.name = name;
 
-        await trx
-          .table('issues')
-          .where({ room: decryptedRoomId, id: request.body.id })
-          .update({ status: request.body.status });
+        for (let issue of issues) {
+          console.log(issue);
+          let imagePromises = [];
+          if (issue.image && Array.isArray(issue.image)) {
+            for (let item of issue.image) {
+              imagePromises.push(
+                new Promise((resolve, reject) => {
+                  cloudinary.v2.uploader.destroy(item.id, (error, result) => {
+                    if (error) {
+                      if (error.result !== 'not found') {
+                        reject(new Error('Cloudinary image deletion failed'));
+                      } else {
+                        resolve();
+                      }
+                    } else {
+                      resolve();
+                    }
+                  });
+                })
+              );
+            }
+            await Promise.all(imagePromises);
+            await trx.table('issues').where('id', issue.id).delete();
+          }
+        }
 
-        let [data] = await trx.table('issues').select('title', 'assignee').where('id', request.body.id);
-
-        // await trx.table('logs').insert({
-        //   room_id: decryptedRoomId,
-        //   issue_id: request.body.id,
-        //   description: `${user.email} updated issue `,
-        //   object: data.title,
-        //   date: new Date().toString(),
-        //   type: 1,
-        // });
+        await trx.table('logs').insert({
+          room_id: decryptedRoomId,
+          description:
+            name && name.length > 0
+              ? `${user.email} ended name_placeholder which contained the following issues: `
+              : `${user.email} marked the following issues as completed: `,
+          object: JSON.stringify(sprintObject),
+          date: new Date().toString(),
+          type: 13,
+        });
       });
 
       response.status(200).send();

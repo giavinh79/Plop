@@ -74,12 +74,12 @@ const displaySessionExpired = () => {
   });
 };
 
-const displayUnknownError = () => {
+const displayUnknownError = (err) => {
   notification.open({
     message: 'Error occured',
     duration: 15,
     placement: 'bottomRight',
-    description: 'Unknown Error. Contact plopwebapp@gmail.com.',
+    description: `An unknown error has occured: ${err}. Please refresh the page and try again. If there is still an error, contact the help desk.`,
     icon: <Icon type='warning' style={{ color: '#108ee9' }} />,
   });
 };

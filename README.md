@@ -56,29 +56,37 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 
 ## Project To Dos
 
-**Immediate**
+**Immediate pre-V1**
 - Real-time notifications and live dashboard changes
-- JWT token refresh
-- Encoding emails and data
-- Complete landing and help pages
-- SendGrid API instead of nodemailer for emails
-- GitHub API to tie issues directly to commits
-- Redesign team settings page
+- Finish Help section
 - Throttling request, reCAPTCHA for signup, team data limits
-- Improving performance (audit through Google Lighthouse)
-- More Node.js and React.js testing coverage
-- Project Overview graph
+- Project Overview graph + Sprint integration
+- Look at any accessibility problems (ie. contrast)
+- Finish Dark Theme
+- Private Team (maybe joining team should then return specific errors?)
+- Table Sorting
+- Some minor bug fixes (date timezones, comment avatars...)
+- Changing password
 
-**Long Term**
+**Future Enhancements and Fixes**
+- Cleaning up code and adding more tests
+- Optimizing performance (can audit through Google Lighthouse and React Profiler)
+- SendGrid API instead of nodemailer for emails
+- GitHub API to tie issues directly to commits *
+- More flexibility (renaming dashboard columns, making custom tags...)
 - More functionality for team settings (ie. admin approval)
-- Password and email changing
+- Performance Version of websocket AdonisJS
+- JWT token refresh
 - Mobile responsiveness (or app)
 - Enable saving files as well and move to Amazon AWS S3 Bucket instead of Cloudinary
-- Firebase Google Analytics
-- Look at any accessibility problems (ie. contrast)
 - Better server-side logging for analytics, debugging...
 - More DB seeds for fast queries and factories for creating dummy data (which the tests can use)
-- Set up CDNs (but unnecessary atm)
+- More powerful team notes through a rich text editor (Slate)
+- CI and CD (Travis CI for backend, CircleCI for React)
+- Replace prop drilling with Redux Toolkit
+- Optimize antd css loading (babel-plugin-import)
+- Heroku jobs for cleaning up unused imges or inactive teams
+- Modifiable permissions
 
 **Clean up Code**
 

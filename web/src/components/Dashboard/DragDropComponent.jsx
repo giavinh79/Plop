@@ -13,7 +13,7 @@ import {
   CheckIcon,
 } from './DashboardStyles';
 import { ThemeContext } from '../../colors/theme';
-import { updateIssue, getIssues } from '../../utility/restCalls';
+import { updateIssue, getIssues, endSprint } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
 import DraggableCardsList from './DraggableCardsList';
 import CreateIssueModal from './CreateIssueModal';
@@ -30,15 +30,13 @@ const id2List = {
  * Takes inputs from TeamDashboard and UserDashboard components
  */
 export default function DragDropComponent({ loading, itemsData, source, newRequest, setNewRequest, type }) {
-  const [theme] = useContext(ThemeContext);
   const searchbarRef = useRef();
+  const sprintName = useRef();
+  const [theme] = useContext(ThemeContext);
+
   const [refresh, setRefresh] = useState(false);
   const [issueModal, setIssueModal] = useState(false);
-  const [backupItems, setBackupItems] = useState({
-    active: [],
-    progress: [],
-    complete: [],
-  });
+  const [backupItems, setBackupItems] = useState();
   const [items, setItems] = useState({
     active: [],
     progress: [],
@@ -279,18 +277,40 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
                                   provide a name for this sprint which will appear in your team logs.
                                 </div>
                                 <Input
+                                  addonBefore='Sprint'
                                   placeholder='(Optional) Name of Sprint'
                                   style={{ margin: '1rem 0' }}
                                   type='text'
                                   autoComplete='nope'
+                                  onChange={(e) => (sprintName.current = e.target.value)}
                                 />
                               </>
                             ),
                             onOk() {
-                              console.log('OK');
+                              return new Promise(async (resolve) => {
+                                try {
+                                  await endSprint(items.complete, sprintName.current);
+                                  displaySimpleNotification(
+                                    'Success',
+                                    4,
+                                    'bottomRight',
+                                    'Issues were successfully marked as completed.',
+                                    'smile',
+                                    '#108ee9'
+                                  );
+                                } catch (err) {
+                                  // check session
+                                  // displayUnknownError
+                                } finally {
+                                  sprintName.current = '';
+                                  resetSearch();
+                                  setNewRequest(!newRequest);
+                                  resolve();
+                                }
+                              });
                             },
                             onCancel() {
-                              console.log('Cancel');
+                              sprintName.current = '';
                             },
                           });
                         }}

@@ -65,6 +65,15 @@ const deleteRoom = async (email, password) => {
   }
 };
 
+// Called when user uses complete button on dashboard
+const endSprint = async (issues, name) => {
+  try {
+    await axios.post(`${API_ENDPOINT}/issue/completed`, { issues, name });
+  } catch (err) {
+    throw err;
+  }
+};
+
 const getAvatar = async () => {
   try {
     return await axios.get(`${API_ENDPOINT}/avatar`);
@@ -265,6 +274,7 @@ export {
   createTeam,
   deleteIssue,
   deleteRoom,
+  endSprint,
   getRoomBanList,
   getAvatar,
   getLastReadChat,

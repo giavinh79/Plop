@@ -136,6 +136,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                 'smile',
                 '#108ee9'
               );
+              historyTrack.current ? history.goBack() : history.push('/dashboard');
             } else {
               const res = await createIssue(values);
               displaySimpleNotification(
