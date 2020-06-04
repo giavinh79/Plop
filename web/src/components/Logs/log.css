@@ -1,3 +1,5 @@
+/* Overriding Ant Design styles */
+
 .log-list .ant-skeleton-title {
   margin: 0 !important;
 }

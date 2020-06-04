@@ -14,13 +14,13 @@ import Active from './components/Active/Active';
 import Backlog from './components/Backlog/Backlog';
 import Logs from './components/Logs/Logs';
 import Settings from './components/Settings/Settings';
+import ChatIcon from './components/Chat/ChatIcon';
+import HelpPanel from './components/Help/HelpPanel';
+import BannedMembers from './components/BannedMembers/BannedMembers';
 import { BodyWrapper, DashboardWrapper } from './globalStyles';
 import { displaySimpleNotification } from './utility/services';
 import { ThemeProvider } from './colors/theme';
 import { checkAuth } from './utility/restCalls';
-import ChatIcon from './components/Chat/ChatIcon';
-import HelpPanel from './components/Help/HelpPanel';
-import BannedMembers from './components/BannedMembers/BannedMembers';
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const [authenticated, setAuthenticated] = useState(null);
@@ -48,14 +48,21 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
 
 export default function Routes() {
   useEffect(() => {
-    var head = document.head;
-    var link = document.createElement('link');
+    let head = document.head;
+    let link = document.createElement('link');
 
     link.type = 'text/css';
     link.rel = 'stylesheet';
     link.href = 'https://fonts.googleapis.com/css?family=Montserrat';
 
     head.appendChild(link);
+
+    // link = document.createElement('link');
+    // link.type = 'text/css';
+    // link.rel = 'stylesheet';
+    // link.href = 'https://cdnjs.cloudflare.com/ajax/libs/antd/4.3.1/antd.min.css';
+
+    // head.appendChild(link);
 
     return () => {
       head.removeChild(link);

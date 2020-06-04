@@ -3,23 +3,9 @@ import { useHistory } from 'react-router-dom';
 import { layout, subheader } from '../../globalStyles';
 import { Avatar, Input, List, Row, Skeleton, Icon, Select } from 'antd';
 import { getLogs } from '../../utility/restCalls';
+import { ActionWrapper, ObjectWrapper } from './LogStyles';
 import moment from 'moment';
-import './style.css';
-import styled from 'styled-components';
-
-const ObjectWrapper = styled.span`
-  cursor: pointer;
-  font-weight: 500;
-  color: #637bd0;
-`;
-
-const ActionWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  color: #6989ab;
-  cursor: pointer;
-  margin-left: auto;
-`;
+import './log.css';
 
 export default function Logs() {
   const history = useHistory();
@@ -27,9 +13,11 @@ export default function Logs() {
 
   const logIndex = useRef(30);
   const logsContainer = useRef();
+
   const [backup, setBackup] = useState();
   const [data, setData] = useState(['1']);
   const [loading, setLoading] = useState(true);
+  const [filterEnabled, setFilterEnabled] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -39,6 +27,7 @@ export default function Logs() {
           description: log.description,
           object: log.object,
           type: log.type,
+          id: log.id,
           issueId: log.issue_id,
           filteredByText: false,
           filteredByType: false,
@@ -50,6 +39,7 @@ export default function Logs() {
       if (isMounted.current) {
         setBackup(formattedData);
         setData(formattedData.slice(0, 30));
+        console.log(formattedData.slice(0, 30));
         setLoading(false);
       }
 
@@ -151,11 +141,15 @@ export default function Logs() {
 
   const trackScrolling = () => {
     // Check if user has scrolled to bottom of element
+
     if (logsContainer.current.getBoundingClientRect().bottom <= window.innerHeight + 2) {
-      if (data && backup && data.length < backup.length) {
-        let endIndex = logIndex.current + 30 > backup.length ? backup.length : logIndex.current + 30;
-        setData((data) => [...data, ...backup.slice(logIndex.current, endIndex)]);
-        logIndex.current += 30;
+      if (filterEnabled) {
+      } else {
+        if (data && backup && data.length < backup.length) {
+          let endIndex = logIndex.current + 30 > backup.length ? backup.length : logIndex.current + 30;
+          setData((data) => [...data, ...backup.slice(logIndex.current, endIndex)]);
+          logIndex.current += 30;
+        }
       }
     }
   };
@@ -176,7 +170,18 @@ export default function Logs() {
       return item;
     });
 
-    setData(filteredBackup);
+    // console.log('hio');
+    // setData(filteredBackup);
+
+    // filteredBacku
+
+    if (userInput == null || userInput == '') {
+      setFilterEnabled(false);
+      setData(filteredBackup.slice(0, 30));
+    } else {
+      setFilterEnabled(true);
+      setData(filteredBackup);
+    }
   };
 
   const handleTypeFilter = (filter) => {

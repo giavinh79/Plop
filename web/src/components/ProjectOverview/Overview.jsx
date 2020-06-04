@@ -1,55 +1,84 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Badge, Descriptions, Progress, Row, Icon } from 'antd';
+import { Badge, Descriptions, Progress, Row, Icon, Spin } from 'antd';
 import { layout } from '../../globalStyles';
 import { LineChart, XAxis, YAxis, Legend, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
 import { getIssues, getLogsForGraph } from '../../utility/restCalls';
 import axios from 'axios';
 import { API_ENDPOINT } from '../../constants';
 
-const data = [
-  {
-    name: 'January',
-    'tasks created ': 5,
-    'tasks completed': 0,
-    amt: 2400,
-  },
-  {
-    name: 'February',
-    'tasks created ': 8,
-    'tasks completed': 4,
-    amt: 2210,
-  },
-  {
-    name: 'March',
-    'tasks created ': 15,
-    'tasks completed': 10,
-    amt: 2290,
-  },
-  {
-    name: 'April',
-    'tasks created ': 2,
-    'tasks completed': 2,
-    amt: 2000,
-  },
-  {
-    name: 'May',
-    'tasks created ': 5,
-    'tasks completed': 7,
-    amt: 2181,
-  },
-  {
-    name: 'June',
-    'tasks created ': 3,
-    'tasks completed': 6,
-    amt: 2500,
-  },
-  {
-    name: 'July',
-    'tasks created ': 7,
-    'tasks completed': 3,
-    amt: 2100,
-  },
-];
+// Determine graph's x axis based on current month
+const relativeLogsObject = () => {
+  const currentMonth = new Date().getMonth();
+
+  const logsObject = [
+    { name: 'January', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'Februry', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'March', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'April', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'May', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'June', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'July', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'August', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'September', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'October', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'November', 'tasks created': 0, 'tasks completed': 0 },
+    { name: 'December', 'tasks created': 0, 'tasks completed': 0 },
+  ];
+
+  const relativeLogsObject = [];
+  for (let i = 0; i < 12; i++) {
+    let conversion = i + (12 - currentMonth);
+    if (conversion < 12) {
+      relativeLogsObject[i] = logsObject[conversion];
+    } else {
+      relativeLogsObject[i] = logsObject[conversion - 12];
+    }
+  }
+  return { relativeLogsObject };
+};
+
+const logsToData = (logs) => {
+  const { relativeLogsObject: logsObject } = relativeLogsObject();
+  const monthMap = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  for (let log of logs) {
+    const month = new Date(log.date).getMonth();
+    let monthIndex = 0; // actual month index in my log object
+    for (let i = 0; i < logsObject.length; i++) {
+      if (logsObject[i].name === monthMap[month]) {
+        monthIndex = i;
+        break;
+      }
+    }
+
+    let tasksCreated = logsObject[monthIndex]['tasks created'];
+    let tasksCompleted = logsObject[monthIndex]['tasks completed'];
+
+    if (log.type === 0) {
+      logsObject[monthIndex]['tasks created'] = ++tasksCreated;
+    } else if (log.type === 12) {
+      logsObject[monthIndex]['tasks completed'] = ++tasksCompleted;
+    } else if (log.type === 13) {
+      const issues = JSON.parse(log.object).issues;
+      tasksCompleted += issues.length;
+      logsObject[monthIndex]['tasks completed'] = tasksCompleted;
+    }
+  }
+  return logsObject;
+};
 
 export default function Overview() {
   const [loading, setLoading] = useState(true);
@@ -59,7 +88,7 @@ export default function Overview() {
     progressItems: [],
     completedItems: [],
   });
-  const [logs, setLogs] = useState(data); // for graph
+  const [logs, setLogs] = useState([]); // for graph
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -70,8 +99,8 @@ export default function Overview() {
       if (isMounted.current) {
         setIssues(activeData);
         setBacklogIssues(backlog);
-        setLoading(false);
         setLogs(logsToData(logs));
+        setLoading(false);
       }
     })().catch((err) => {
       console.log(err);
@@ -80,11 +109,7 @@ export default function Overview() {
     return () => {
       isMounted.current = false;
     };
-  }, []);
-
-  const logsToData = (logs) => {
-    return data;
-  };
+  }, [logsToData]);
 
   return (
     <div style={layout}>
@@ -103,52 +128,54 @@ export default function Overview() {
         )}
       </Row>
 
-      <Descriptions bordered style={{ marginBottom: '2rem' }}>
-        <Descriptions.Item label='Sprint Completion' span={3}>
-          <Row type='flex' style={{ flexWrap: 'nowrap', alignItems: 'center' }}>
-            <Badge status='processing' text='Running' style={{ minWidth: '5rem' }} />
-            <Progress
-              strokeColor={{
-                from: '#108ee9',
-                to: '#87d068',
-              }}
-              percent={Math.round(
-                (issues.completedItems.length /
-                  (issues.activeItems.length + issues.progressItems.length + issues.completedItems.length) || 0) * 100
-              )}
-              status='active'
-            />
-          </Row>
-        </Descriptions.Item>
-        <Descriptions.Item label='Active Tasks'>{issues.activeItems.length}</Descriptions.Item>
-        <Descriptions.Item label='In Progress Tasks'>{issues.progressItems.length}</Descriptions.Item>
-        <Descriptions.Item label='Completed Tasks'>{issues.completedItems.length}</Descriptions.Item>
-        <Descriptions.Item label='Archived Tasks'>0</Descriptions.Item>
-        <Descriptions.Item label='Tasks in backlog' span={2}>
-          {backlogIssues.length}
-        </Descriptions.Item>
-      </Descriptions>
+      <Spin tip='Loading...' spinning={loading}>
+        <Descriptions bordered style={{ marginBottom: '2rem' }}>
+          <Descriptions.Item label='Sprint Completion' span={3}>
+            <Row type='flex' style={{ flexWrap: 'nowrap', alignItems: 'center' }}>
+              <Badge status='processing' text='Running' style={{ minWidth: '5rem' }} />
+              <Progress
+                strokeColor={{
+                  from: '#108ee9',
+                  to: '#87d068',
+                }}
+                percent={Math.round(
+                  (issues.completedItems.length /
+                    (issues.activeItems.length + issues.progressItems.length + issues.completedItems.length) || 0) * 100
+                )}
+                status='active'
+              />
+            </Row>
+          </Descriptions.Item>
+          <Descriptions.Item label='Active Tasks'>{issues.activeItems.length}</Descriptions.Item>
+          <Descriptions.Item label='In Progress Tasks'>{issues.progressItems.length}</Descriptions.Item>
+          <Descriptions.Item label='Completed Tasks'>{issues.completedItems.length}</Descriptions.Item>
+          <Descriptions.Item label='Archived Tasks'>0</Descriptions.Item>
+          <Descriptions.Item label='Tasks in backlog'>{backlogIssues.length}</Descriptions.Item>
+        </Descriptions>
+      </Spin>
       <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
-        <p style={{ fontSize: '1.5rem' }}>Task Analysis</p>
-        <ResponsiveContainer width={'99%'} height={400}>
-          <LineChart
-            data={logs}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray='3 3' />
-            <XAxis dataKey='name' />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type='monotone' dataKey='tasks created ' stroke='#82ca9d' />
-            <Line type='monotone' dataKey='tasks completed' stroke='#8884d8' activeDot={{ r: 8 }} />
-          </LineChart>
-        </ResponsiveContainer>
+        <p style={{ fontSize: '1.5rem' }}>Issues Analysis</p>
+        {!loading && (
+          <ResponsiveContainer width={'99%'} height={400}>
+            <LineChart
+              data={logs}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='name' />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type='monotone' dataKey='tasks created' stroke='#82ca9d' />
+              <Line type='monotone' dataKey='tasks completed' stroke='#8884d8' activeDot={{ r: 8 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </div>
       {/* <Progress
         type='circle'
@@ -161,3 +188,13 @@ export default function Overview() {
     </div>
   );
 }
+
+/*
+  const exampleData = [
+    {
+      name: 'January',
+      'tasks created ': 5,
+      'tasks completed': 0,
+    },
+  ];
+*/

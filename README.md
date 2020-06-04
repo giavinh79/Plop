@@ -82,15 +82,16 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 - Better server-side logging for analytics, debugging...
 - More DB seeds for fast queries and factories for creating dummy data (which the tests can use)
 - More powerful team notes through a rich text editor (Slate)
-- CI and CD (Travis CI for backend, CircleCI for React)
+- CI and CD (Travis CI for backend, GitHub actions for React)
 - Replace prop drilling with Redux Toolkit
 - Optimize antd css loading (babel-plugin-import)
 - Heroku jobs for cleaning up unused imges or inactive teams
 - Modifiable permissions
+- Chat page (make it easier to read chat and enable searching for text)
 
 **Clean up Code**
 
-I am aware that there are some discrepancies regarding styling and class/function components along with areas in the project that could be further mordularized or better organized (code/folder structure, naming...etc.).
+I am aware that there are some discrepancies regarding styling and class/function components along with areas in the project that could be further modularized or better organized (code/folder structure, naming, functions...etc.).
 - Delete pages folder and organize components folder and naming better
 - Refactoring CSS into styled-components where possible and re-use this across project
 - Component modularization to better organize code and follow DRY principle
@@ -100,6 +101,8 @@ I am aware that there are some discrepancies regarding styling and class/functio
 - Proper error status codes and handling functions for both client and server applications
 - Consistent naming (some table names are camel case whereas others are snake case, styles.css vs componentName.css ...etc.)
 - Server app: Leverage models more, more utility/middleware functions to reduce repeated code, consistent syntax...
+- Splitting functions up more (reducing side effects, abstracting logic...)
+- Maybe take any utility functions out of each component and put them in a NameServices.js file
 
 ## Testing
 

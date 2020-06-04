@@ -1,6 +1,5 @@
 import React from 'react';
 import { Tabs } from 'antd';
-import 'antd/dist/antd.css';
 import './TableOfContents.css';
 
 const { TabPane } = Tabs;
