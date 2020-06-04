@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const ActivityContainer = styled.div`
   width: 100%;
-  height: 8rem;
+  height: 10rem;
   text-align: center;
   border: 1px solid #e8e8e8;
   border-radius: 5px;
@@ -24,4 +24,10 @@ export const ActionsWrapper = styled.div`
 export const ActivityLogWrapper = styled.div`
   padding: 0.7rem 0.7rem 0 0.7rem;
   width: 100%;
+`;
+
+export const ObjectLinkWrapper = styled.span`
+  color: #1b5b9a;
+  cursor: pointer;
+  font-weight: 500;
 `;

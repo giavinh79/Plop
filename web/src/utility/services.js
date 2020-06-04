@@ -16,7 +16,16 @@ const isAuthenticated = async () => {
   }
 };
 
-// Determines if issues are overdue (ie. 1 day behind)
+const isJSONString = (item) => {
+  try {
+    JSON.parse(item);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+// Returns true if issues are overdue (ie. 1 day behind)
 const compareDates = (deadline) => {
   function getMonth(date) {
     let month = date.getUTCMonth() + 1;
@@ -86,6 +95,7 @@ const displayUnknownError = (err) => {
 
 export {
   isAuthenticated,
+  isJSONString,
   compareDates,
   displayInfoDialog,
   displaySimpleNotification,

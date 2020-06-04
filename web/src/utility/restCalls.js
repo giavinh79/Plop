@@ -114,9 +114,17 @@ const getLastReadChat = async () => {
   }
 };
 
-const getLogs = async (issue) => {
+const getLogs = async (filter) => {
   try {
     return await axios.get(`${API_ENDPOINT}/logs`);
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getLogsForGraph = async (filter) => {
+  try {
+    return await axios.get(`${API_ENDPOINT}/logs/graph`);
   } catch (err) {
     throw err;
   }
@@ -280,6 +288,7 @@ export {
   getLastReadChat,
   getChat,
   getLogs,
+  getLogsForGraph,
   getNotes,
   getIssues,
   getIssueById,

@@ -184,10 +184,12 @@ export default function Logs() {
 
     if (numFilter === 0) {
       return setData(
-        backup.map((item) => {
-          item.filteredByType = false;
-          return item;
-        })
+        backup
+          .map((item) => {
+            item.filteredByType = false;
+            return item;
+          })
+          .slice(0, 30)
       );
     } else {
       return setData(
@@ -231,9 +233,13 @@ export default function Logs() {
       let descriptionArray = description.split(' ');
       return (
         <>
-          {descriptionArray.map((word) => {
+          {descriptionArray.map((word, index) => {
             if (word === 'name_placeholder') {
-              return <span style={{ fontWeight: 500, color: '#2b9651' }}>Sprint {sprintName} </span>;
+              return (
+                <span style={{ fontWeight: 500, color: '#2b9651' }} key={index}>
+                  Sprint {sprintName}{' '}
+                </span>
+              );
             }
             return word + ' ';
           })}
@@ -310,6 +316,8 @@ export default function Logs() {
           <Select.Option value='10'>Users kicked</Select.Option>
           <Select.Option value='11'>Users banned</Select.Option>
           <Select.Option value='12'>User privileges changed</Select.Option>
+          <Select.Option value='13'>Issues completed</Select.Option>
+          <Select.Option value='14'>Sprints completed</Select.Option>
         </Select>
       </Row>
       <List

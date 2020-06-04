@@ -2,25 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { layout, subheader } from '../../globalStyles';
 import { Calendar, Icon, Row } from 'antd';
-import axios from 'axios';
-import { API_ENDPOINT } from '../../constants';
-import { LinkWrapper } from './ScheduleStyles';
+import { LinkWrapper, OverdueIssue } from './ScheduleStyles';
+import { getIssues } from '../../utility/restCalls';
 
 export default function Schedule() {
+  const [overdueIssues, setOverdueIssues] = useState(0);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      let {
+      const {
         data: { activeItems, progressItems, completedItems },
-      } = await axios.get(`${API_ENDPOINT}/issue/team/1`);
+      } = await getIssues('team');
+      const issues = [...activeItems, ...progressItems, ...completedItems];
+      setOverdueIssues(findOverdueIssues(issues));
       setLoading(false);
-      setData([...activeItems, ...progressItems, ...completedItems].filter((item) => item.deadline));
+      setData(issues.filter((item) => item.deadline));
     })().catch((err) => {
       console.log(err);
     });
   });
+
+  const findOverdueIssues = (issues) => {
+    let counter = 0;
+    const currentDate = new Date().getTime();
+    const deadlineIssues = issues.filter((item) => item.deadline != null);
+
+    for (let issue of deadlineIssues) {
+      if (new Date(issue.deadline).getTime() < currentDate) {
+        counter++;
+      }
+    }
+    return counter;
+  };
 
   const compareDates = (date, deadline) => {
     function getMonth(date) {
@@ -44,7 +59,7 @@ export default function Schedule() {
       calendarObj.getUTCFullYear().toString() + getMonth(calendarObj) + getDay(calendarObj)
     );
 
-    return deadlineDate === calendarDate;
+    if (deadlineDate) return deadlineDate === calendarDate;
   };
 
   const dateCellRender = (value) => {
@@ -80,6 +95,7 @@ export default function Schedule() {
     <div style={layout}>
       <Row type='flex' style={{ alignItems: 'center' }}>
         <p style={{ ...subheader, opacity: loading ? 0.3 : 1, marginBottom: '1rem' }}>Project Schedule</p>
+        {overdueIssues > 0 && <OverdueIssue>1 overdue issue(s)</OverdueIssue>}
         {loading && (
           <Icon
             type='loading'

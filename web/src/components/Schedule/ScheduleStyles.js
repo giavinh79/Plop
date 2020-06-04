@@ -7,3 +7,9 @@ export const LinkWrapper = styled.div`
   border: 1px solid #e8e8e8;
   border-radius: 10px;
 `;
+
+export const OverdueIssue = styled.span`
+  color: #bb6464;
+  font-size: 1.1rem;
+  margin: 0 1rem 0 auto;
+`;

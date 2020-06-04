@@ -4,7 +4,8 @@ import { useHistory } from 'react-router-dom';
 import { Button, Col, Divider, Drawer, Form, Icon, Input, Row, Select, Tooltip } from 'antd';
 import { API_ENDPOINT } from '../../../constants';
 import { ThemeContext } from '../../../colors/theme';
-import { ActionsWrapper, ActivityLogWrapper, ActivityContainer } from './UserSettingsStyles';
+import { ActionsWrapper, ActivityLogWrapper, ActivityContainer, ObjectLinkWrapper } from './UserSettingsStyles';
+import { isJSONString } from '../../../utility/services';
 
 const { Option } = Select;
 
@@ -241,19 +242,23 @@ const UserSettings2 = ({ displayUserModal, form }) => {
                 {activity.map((item, index) => {
                   return (
                     <ActivityLogWrapper key={index}>
-                      <p>
-                        {item.description}{' '}
-                        {item.issue_id ? (
-                          <span
-                            style={{ color: '#1b5b9a', cursor: 'pointer', fontWeight: 500 }}
-                            onClick={() => history.push(`/dashboard/issue/${item.issue_id}`)}
-                          >
-                            {item.object}
-                          </span>
-                        ) : (
-                          <span style={{ fontWeight: 500 }}>{item.object}</span>
-                        )}
-                      </p>
+                      {isJSONString(item.object) ? (
+                        <p>
+                          {item.description.replace('name_placeholder', JSON.parse(item.object).name)}{' '}
+                          <span style={{ fontWeight: 500 }}>{JSON.parse(item.object).issues.join(', ')}</span>
+                        </p>
+                      ) : (
+                        <p>
+                          {item.description}{' '}
+                          {item.issue_id ? (
+                            <ObjectLinkWrapper onClick={() => history.push(`/dashboard/issue/${item.issue_id}`)}>
+                              {item.object}
+                            </ObjectLinkWrapper>
+                          ) : (
+                            <span style={{ fontWeight: 500 }}>{item.object}</span>
+                          )}
+                        </p>
+                      )}
                       <Divider style={{ marginTop: 0, marginBottom: 0 }} />
                     </ActivityLogWrapper>
                   );

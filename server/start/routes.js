@@ -91,3 +91,4 @@ Route.post('/notes', 'NoteController.update').middleware(jwtMiddleware);
 
 // Logs
 Route.get('/logs', 'LogController.get').middleware(jwtMiddleware);
+Route.get('/logs/graph', 'LogController.getLogsForGraph').middleware(jwtMiddleware);

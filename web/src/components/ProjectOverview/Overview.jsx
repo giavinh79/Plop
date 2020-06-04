@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Badge, Descriptions, Progress, Row, Icon } from 'antd';
 import { layout } from '../../globalStyles';
+import { LineChart, XAxis, YAxis, Legend, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
+import { getIssues, getLogsForGraph } from '../../utility/restCalls';
 import axios from 'axios';
 import { API_ENDPOINT } from '../../constants';
-import { LineChart, XAxis, YAxis, Legend, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
 
 const data = [
   {
@@ -58,16 +59,19 @@ export default function Overview() {
     progressItems: [],
     completedItems: [],
   });
+  const [logs, setLogs] = useState(data); // for graph
   const isMounted = useRef(true);
 
   useEffect(() => {
     (async () => {
-      let { data: activeData } = await axios.get(`${API_ENDPOINT}/issue/team/1`);
+      let { data: activeData } = await getIssues('team');
       let { data: backlog } = await axios.get(`${API_ENDPOINT}/issue/team/0`);
+      let { data: logs } = await getLogsForGraph();
       if (isMounted.current) {
         setIssues(activeData);
         setBacklogIssues(backlog);
         setLoading(false);
+        setLogs(logsToData(logs));
       }
     })().catch((err) => {
       console.log(err);
@@ -78,12 +82,14 @@ export default function Overview() {
     };
   }, []);
 
+  const logsToData = (logs) => {
+    return data;
+  };
+
   return (
     <div style={layout}>
       <Row type='flex' style={{ alignItems: 'center' }}>
-        <p style={{ opacity: loading ? 0.3 : 1, fontSize: '2rem', marginBottom: '1rem' }}>
-          Project Overview (incomplete)
-        </p>
+        <p style={{ opacity: loading ? 0.3 : 1, fontSize: '2rem', marginBottom: '1rem' }}>Project Overview</p>
         {loading && (
           <Icon
             type='loading'
@@ -126,7 +132,7 @@ export default function Overview() {
         <p style={{ fontSize: '1.5rem' }}>Task Analysis</p>
         <ResponsiveContainer width={'99%'} height={400}>
           <LineChart
-            data={data}
+            data={logs}
             margin={{
               top: 5,
               right: 30,
