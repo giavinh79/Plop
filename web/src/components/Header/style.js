@@ -1,16 +1,15 @@
-// for more complex styling with selectors, responsive media queries, or seperating JS and styling code
 import styled from 'styled-components';
 
 export const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: row;
+  background-color: ${({ theme }) => theme.header.backgroundColor};
   font-family: 'Montserrat';
   font-display: fallback;
   height: 9%;
   min-height: 4rem;
   max-height: 6rem;
-  background-color: ${(props) => (props.lightmode ? '#5885B1' : '#2d3848')};
 
   @media screen and (max-width: 1120px) {
     padding: ${(props) => (props.homepage ? '2rem !important' : '')};

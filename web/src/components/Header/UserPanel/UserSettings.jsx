@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { Button, Col, Divider, Drawer, Form, Icon, Input, Row, Select, Tooltip } from 'antd';
 import { API_ENDPOINT } from '../../../constants';
-import { ThemeContext } from '../../../colors/theme';
+import { ThemeContext, defaultThemeObject, darkThemeObject } from '../../../colors/theme';
 import { ActionsWrapper, ActivityLogWrapper, ActivityContainer, ObjectLinkWrapper } from './UserSettingsStyles';
 import { isJSONString } from '../../../utility/services';
 
@@ -169,7 +169,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
                   value='light'
                   onClick={() => {
                     localStorage.setItem('theme', 'light');
-                    setTheme({ isLightMode: true });
+                    setTheme(defaultThemeObject);
                   }}
                 >
                   Light Theme
@@ -178,7 +178,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
                   value='dark'
                   onClick={() => {
                     localStorage.setItem('theme', 'dark');
-                    setTheme({ isLightMode: false });
+                    setTheme(darkThemeObject);
                   }}
                 >
                   Dark Theme

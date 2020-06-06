@@ -57,13 +57,6 @@ export default function Routes() {
 
     head.appendChild(link);
 
-    // link = document.createElement('link');
-    // link.type = 'text/css';
-    // link.rel = 'stylesheet';
-    // link.href = 'https://cdnjs.cloudflare.com/ajax/libs/antd/4.3.1/antd.min.css';
-
-    // head.appendChild(link);
-
     return () => {
       head.removeChild(link);
     };

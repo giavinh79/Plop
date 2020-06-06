@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { displaySimpleNotification } from '../utility/services';
 import { API_ENDPOINT } from '../constants';
 import { joinTeam, retrieveTeams } from '../utility/restCalls';
-import { Container, TeamCard } from './TeamPageStyles';
+import { Container, TeamCard, Subcontainer } from './TeamPageStyles';
 import TeamCreationModal from '../components/Team/TeamCreationModal';
 import TeamsJoined from '../components/Team/TeamsJoined';
 import { ThemeContext } from '../colors/theme';
@@ -99,7 +99,12 @@ export default function Team() {
   const handleEnterTeam = async (e, team) => {
     e.preventDefault();
     localStorage.setItem('currentTeam', JSON.stringify({ id: team.id }));
-    await axios.post(`${API_ENDPOINT}/room/session`, { id: team.id });
+    try {
+      await axios.post(`${API_ENDPOINT}/room/session`, { id: team.id });
+    } catch (err) {
+      console.log(err);
+    }
+
     setToDashboard(true);
   };
 
@@ -108,13 +113,13 @@ export default function Team() {
   ) : (
     <>
       {teamCreation && <TeamCreationModal setTeams={setTeams} setTeamCreation={setTeamCreation} teams={teams} />}
-      <Container lightmode={theme.isLightMode}>
-        <div style={styles.subcontainer}>
+      <Container theme={theme}>
+        <Subcontainer>
           <TeamCard
             title='Make a team'
-            lightmode={theme.isLightMode ? 1 : 0}
-            bordered={theme.isLightMode ? 0 : 1}
-            headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
+            theme={theme}
+            bordered={!theme.isLightMode}
+            headStyle={theme.isLightMode ? {} : { border: 'none', color: theme.team.card.titleColor }}
           >
             <p>
               <a href='/' onClick={(e) => handleTeamCreation(e)}>
@@ -133,9 +138,9 @@ export default function Team() {
           </TeamCard>
           <TeamCard
             title='Join a team'
-            lightmode={theme.isLightMode ? 1 : 0}
-            bordered={theme.isLightMode ? 0 : 1}
-            headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
+            theme={theme}
+            bordered={!theme.isLightMode}
+            headStyle={theme.isLightMode ? {} : { border: 'none', color: theme.team.card.titleColor }}
           >
             <Input
               placeholder='Team ID'
@@ -169,7 +174,7 @@ export default function Team() {
               </Button>
             </div>
           </TeamCard>
-        </div>
+        </Subcontainer>
         <div style={{ display: 'flex', width: '100%', flex: '2' }}>
           <TeamCard
             title={
@@ -187,9 +192,9 @@ export default function Team() {
                 />
               </Row>
             }
-            lightmode={theme.isLightMode ? 1 : 0}
-            bordered={theme.isLightMode ? 0 : 1}
-            headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
+            theme={theme}
+            bordered={!theme.isLightMode}
+            headStyle={theme.isLightMode ? {} : { border: 'none', color: theme.team.card.titleColor }}
             extra={<p style={{ color: teams.length === 3 ? '#d45f5f' : '#6f6b6b' }}>{teams.length}/3</p>}
           >
             <TeamsJoined teams={teams} handleEnterTeam={handleEnterTeam} handleLeaveTeam={handleLeaveTeam} />
@@ -199,24 +204,3 @@ export default function Team() {
     </>
   );
 }
-
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    width: '100%',
-    backgroundPosition: '0 0',
-  },
-  subcontainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    width: '100%',
-    marginTop: '1rem',
-  },
-  card: {
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-    margin: '1rem',
-    flex: 1,
-  },
-};

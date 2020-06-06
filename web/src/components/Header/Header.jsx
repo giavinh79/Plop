@@ -65,7 +65,7 @@ export default function Header() {
 
   return (
     <HeaderWrapper
-      lightmode={theme.isLightMode ? 1 : 0}
+      theme={theme}
       homepage={location.pathname === '/' ? 1 : 0}
       style={location.pathname === '/' ? { backgroundColor: '#445D66', padding: '1rem 13rem 0 13rem' } : {}}
     >

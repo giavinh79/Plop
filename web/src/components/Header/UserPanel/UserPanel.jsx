@@ -38,7 +38,7 @@ export default class UserPanel extends React.Component {
         <p style={{ margin: 0 }}>Settings</p>
       </Menu.Item>
       <Menu.Item key='1' disabled>
-        <p style={{ margin: 0, color: '#ccc' }}>Help</p>
+        <p style={{ margin: 0, color: '#ccc' }}>Update</p>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item

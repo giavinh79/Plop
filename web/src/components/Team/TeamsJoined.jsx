@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from '../../colors/theme';
-import { Avatar, Popconfirm, Row } from 'antd';
+import { Avatar, Popconfirm, Row, Icon } from 'antd';
 import { JoinedTeamCard } from '../../pages/TeamPageStyles';
 
 export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams }) {
@@ -29,7 +29,7 @@ export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams })
                   {team.currentMembers} member(s)
                 </span>
               }
-              lightmode={theme.isLightMode ? 1 : 0}
+              theme={theme}
               nomargin={1}
               headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
             >
@@ -54,17 +54,17 @@ export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams })
                   cancelText='No'
                 >
                   <Row type='flex' align='middle' style={{ cursor: 'pointer' }}>
-                    <p style={{ margin: 0 }}>Leave</p>
                     <img
                       src='/images/exit.svg'
                       alt='exit icon'
                       style={{
-                        margin: '0 0.5rem',
+                        marginRight: '1rem',
                         width: '2rem',
                         transform: 'scaleX(-1)',
                         color: 'rgb(144, 181, 208)',
                       }}
                     />
+                    <p style={{ margin: 0 }}>Leave</p>
                   </Row>
                 </Popconfirm>
                 <Row
@@ -74,14 +74,14 @@ export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams })
                   onClick={(e) => handleEnterTeam(e, team)}
                 >
                   <a href='/dashboard'>Enter</a>
-                  {/* <Icon
-                  type='right-circle'
-                  style={{
-                    marginLeft: '0.5rem',
-                    fontSize: '2rem',
-                    color: '#79B7D4',
-                  }}
-                /> */}
+                  <Icon
+                    type='swap-right'
+                    style={{
+                      marginLeft: '0.3rem',
+                      fontSize: '1.1rem',
+                      color: '#79B7D4',
+                    }}
+                  />
                 </Row>
               </div>
             </JoinedTeamCard>
