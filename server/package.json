@@ -33,7 +33,7 @@
     "mysql": "^2.17.1",
     "node-cookie": "^2.1.2",
     "nodemailer": "^6.3.0",
-    "nodemon": "^1.19.1",
+    "nodemon": "^2.0.4",
     "patch-package": "^6.2.2",
     "pg": "^7.12.1",
     "url-parse": "^1.4.7",
