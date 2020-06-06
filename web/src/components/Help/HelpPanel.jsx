@@ -6,14 +6,15 @@ import IntroductionSection from './IntroductionSection';
 import PageSection from './PageSection';
 import TableOfContentsTest from './TableOfContentsTest';
 import IssueSection from './IssueSection';
-import ChatSection from './ChatSection';
+import HelpChatSection from './HelpChatSection';
+import HelpScheduleSection from './HelpScheduleSection';
 
 const mapPageToText = {
   0: { section: 'Introduction', subSection: 'Introduction' },
   1: { section: 'Introduction', subSection: 'Pages' },
   2: { section: '', subSection: 'Issues' },
   3: { section: '', subSection: 'Chat' },
-  4: { section: '', subSection: 'User Settings' },
+  4: { section: '', subSection: 'Scheduling' },
   5: { section: '', subSection: 'Team Settings' },
   6: { section: '', subSection: 'Analytics' },
   7: { section: '', subSection: 'Scheduling' },
@@ -35,7 +36,9 @@ export default function HelpPanel() {
       case 2:
         return <IssueSection />;
       case 3:
-        return <ChatSection />;
+        return <HelpChatSection />;
+      case 4:
+        return <HelpScheduleSection />;
       default:
         return <IntroductionSection />;
     }

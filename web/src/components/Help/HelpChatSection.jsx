@@ -4,7 +4,7 @@ import { Subheader } from './HelpStyles';
 
 const { Text } = Typography;
 
-export default function ChatSection() {
+export default function HelpChatSection() {
   return (
     <div style={{ padding: '0 2rem' }}>
       <div style={{ paddingBottom: '2rem' }}>

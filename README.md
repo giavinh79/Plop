@@ -56,11 +56,10 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 
 ## Project To Dos
 
-**Immediate pre-V1**
+**Immediate**
 - Real-time notifications and live dashboard changes
 - Finish Help section
 - Throttling request, reCAPTCHA for signup, team data limits
-- Project Overview graph + Sprint integration
 - Look at any accessibility problems (ie. contrast)
 - Finish Dark Theme
 - Private Team (maybe joining team should then return specific errors?)
@@ -81,13 +80,17 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 - Enable saving files as well and move to Amazon AWS S3 Bucket instead of Cloudinary
 - Better server-side logging for analytics, debugging...
 - More DB seeds for fast queries and factories for creating dummy data (which the tests can use)
-- More powerful team notes through a rich text editor (Slate)
+- More powerful team notes through a rich text editor (Slate) + color customization
 - CI and CD (Travis CI for backend, GitHub actions for React)
 - Replace prop drilling with Redux Toolkit
+- Create issues directly on schedule page for easy deadlines
 - Optimize antd css loading (babel-plugin-import)
-- Heroku jobs for cleaning up unused imges or inactive teams
+- Heroku jobs for cleaning up unused images or inactive teams
 - Modifiable permissions
 - Chat page (make it easier to read chat and enable searching for text)
+- @ing someone in chat which creates a sound ping if they are online
+- Upgraded schedule (easily drag and drop issues on to the calendar to set/update deadlines)
+- Invite link (automatically make user join team, signup/login flow if user not logged in)
 
 **Clean up Code**
 
