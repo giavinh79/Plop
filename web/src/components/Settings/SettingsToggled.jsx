@@ -24,11 +24,11 @@ export default function SettingsToggled({ adminApproval, loading, privateTeam })
         <Switch defaultChecked={true} disabled />
         <TextSecondary>
           Enable logs{' '}
-          <span>
+          {/* <span>
             <Tooltip title='Preserve team history at cost of slightly slower request calls'>
               <Icon type='question-circle-o' style={{ paddingRight: '0.3rem' }} />
             </Tooltip>
-          </span>
+          </span> */}
         </TextSecondary>
       </ToggleWrapper>
       <ToggleWrapper>

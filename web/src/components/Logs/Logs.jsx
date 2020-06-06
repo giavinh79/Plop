@@ -5,19 +5,25 @@ import { Avatar, Input, List, Row, Skeleton, Icon, Select } from 'antd';
 import { getLogs } from '../../utility/restCalls';
 import { ActionWrapper, ObjectWrapper } from './LogStyles';
 import moment from 'moment';
+import { debounce } from 'lodash';
 import './log.css';
 
 export default function Logs() {
   const history = useHistory();
   const isMounted = useRef(true);
 
-  const logIndex = useRef(30);
   const logsContainer = useRef();
 
-  const [backup, setBackup] = useState();
-  const [data, setData] = useState(['1']);
+  const [backup, setBackup] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterEnabled, setFilterEnabled] = useState(false);
+
+  const searchFilterEnabled = useRef(false);
+  const typeFilterEnabled = useRef(false);
+  const filteredSearchBackup = useRef(new Set()); // contains logs filtered by search
+  const filteredTypeBackup = useRef(new Set()); // contains logs filtered by type dropdown
+
+  const [filteredBackup, setFilteredBackup] = useState();
 
   useEffect(() => {
     (async () => {
@@ -29,8 +35,6 @@ export default function Logs() {
           type: log.type,
           id: log.id,
           issueId: log.issue_id,
-          filteredByText: false,
-          filteredByType: false,
           date: moment(new Date(log.date)).format('MMMM DD, YYYY'),
           time: moment(new Date(log.date)).format('hh:mm A'),
         };
@@ -39,7 +43,6 @@ export default function Logs() {
       if (isMounted.current) {
         setBackup(formattedData);
         setData(formattedData.slice(0, 30));
-        console.log(formattedData.slice(0, 30));
         setLoading(false);
       }
 
@@ -142,71 +145,90 @@ export default function Logs() {
   const trackScrolling = () => {
     // Check if user has scrolled to bottom of element
 
-    if (logsContainer.current.getBoundingClientRect().bottom <= window.innerHeight + 2) {
-      if (filterEnabled) {
+    if (data && logsContainer.current.getBoundingClientRect().bottom <= window.innerHeight + 2) {
+      if (searchFilterEnabled.current || typeFilterEnabled.current) {
+        if (filteredBackup && data.length < filteredBackup.length) {
+          const endIndex = Math.min(data.length + 30, filteredBackup.length);
+          setData((data) => [...data, ...filteredBackup.slice(data.length, endIndex)]);
+        }
       } else {
-        if (data && backup && data.length < backup.length) {
-          let endIndex = logIndex.current + 30 > backup.length ? backup.length : logIndex.current + 30;
-          setData((data) => [...data, ...backup.slice(logIndex.current, endIndex)]);
-          logIndex.current += 30;
+        if (backup && data.length < backup.length) {
+          const endIndex = Math.min(data.length + 30, backup.length);
+          setData((data) => [...data, ...backup.slice(data.length, endIndex)]);
         }
       }
     }
   };
 
+  // Handles filtering by search
+  // need debounce function
   const handleFilter = (e) => {
-    let userInput = e.target.value.toLowerCase();
-
-    let filteredBackup = backup.map((item) => {
-      if (
-        item.description.toLowerCase().includes(userInput) ||
-        item.time.toLowerCase().includes(userInput) ||
-        item.date.toLowerCase().includes(userInput)
-      ) {
-        item.filteredByText = false;
+    const userInput = e.target.value.toLowerCase();
+    debounce((userInput) => {
+      if (userInput == null || userInput === '') {
+        searchFilterEnabled.current = false;
+        filteredSearchBackup.current = new Set();
+        if (typeFilterEnabled.current) {
+          const filteredBackup = backup.filter((log) => !filteredTypeBackup.current.has(log.id));
+          setFilteredBackup(filteredBackup);
+          setData(filteredBackup.slice(0, 30));
+        } else {
+          setData(backup.slice(0, 30));
+        }
       } else {
-        item.filteredByText = true;
+        let filteredSet = new Set(); // contains filtered logs
+        searchFilterEnabled.current = true;
+
+        for (let item of backup) {
+          if (
+            !item.description.toLowerCase().includes(userInput) &&
+            !item.time.toLowerCase().includes(userInput) &&
+            !item.object.toLowerCase().includes(userInput) &&
+            !item.date.toLowerCase().includes(userInput)
+          ) {
+            filteredSet.add(item.id);
+          }
+        }
+
+        filteredSearchBackup.current = filteredSet;
+        const filteredBackup = backup.filter(
+          (log) => !filteredSearchBackup.current.has(log.id) && !filteredTypeBackup.current.has(log.id)
+        );
+        setFilteredBackup(filteredBackup);
+        setData(filteredBackup.slice(0, 30));
       }
-      return item;
-    });
-
-    // console.log('hio');
-    // setData(filteredBackup);
-
-    // filteredBacku
-
-    if (userInput == null || userInput == '') {
-      setFilterEnabled(false);
-      setData(filteredBackup.slice(0, 30));
-    } else {
-      setFilterEnabled(true);
-      setData(filteredBackup);
-    }
+    }, 250)(userInput);
   };
 
   const handleTypeFilter = (filter) => {
     let numFilter = parseInt(filter);
 
     if (numFilter === 0) {
-      return setData(
-        backup
-          .map((item) => {
-            item.filteredByType = false;
-            return item;
-          })
-          .slice(0, 30)
-      );
+      typeFilterEnabled.current = false;
+      if (searchFilterEnabled.current) {
+        const filteredBackup = backup.filter((log) => !filteredSearchBackup.current.has(log.id));
+        setFilteredBackup(filteredBackup);
+        setData(filteredBackup.slice(0, 30));
+      } else {
+        setData(backup.slice(0, 30));
+      }
     } else {
-      return setData(
-        backup.map((item) => {
-          if (item.type === numFilter - 1) {
-            item.filteredByType = false;
-          } else {
-            item.filteredByType = true;
-          }
-          return item;
-        })
+      let filteredSet = new Set(); // contains filtered logs
+      typeFilterEnabled.current = true;
+
+      for (let item of backup) {
+        if (item.type !== numFilter - 1) {
+          filteredSet.add(item.id);
+        }
+      }
+
+      filteredTypeBackup.current = filteredSet;
+      const filteredBackup = backup.filter(
+        (log) => !filteredSearchBackup.current.has(log.id) && !filteredTypeBackup.current.has(log.id)
       );
+
+      setFilteredBackup(filteredBackup);
+      setData(filteredBackup.slice(0, 30));
     }
   };
 
@@ -295,7 +317,7 @@ export default function Logs() {
           allowClear
           size='large'
           placeholder='Filter logs by date or description text'
-          onChange={(e) => handleFilter(e)}
+          onChange={handleFilter}
           style={{
             height: '2.5rem',
           }}
@@ -330,7 +352,7 @@ export default function Logs() {
         itemLayout='horizontal'
         loading={loading}
         className='log-list'
-        dataSource={data.filter((item) => !item.filteredByText && !item.filteredByType)}
+        dataSource={data}
         renderItem={(item, index) => (
           <List.Item style={{ backgroundColor: index % 2 === 0 ? 'white' : '#f9f5f5', padding: '1rem' }}>
             <Skeleton loading={loading} active paragraph={{ rows: 1 }} avatar={{ size: 'small' }}>

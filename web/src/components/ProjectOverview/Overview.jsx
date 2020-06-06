@@ -3,8 +3,8 @@ import { Badge, Descriptions, Progress, Row, Icon, Spin } from 'antd';
 import { layout } from '../../globalStyles';
 import { LineChart, XAxis, YAxis, Legend, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
 import { getIssues, getLogsForGraph } from '../../utility/restCalls';
-import axios from 'axios';
 import { API_ENDPOINT } from '../../constants';
+import axios from 'axios';
 
 // Determine graph's x axis based on current month
 const relativeLogsObject = () => {
@@ -109,7 +109,7 @@ export default function Overview() {
     return () => {
       isMounted.current = false;
     };
-  }, [logsToData]);
+  }, []);
 
   return (
     <div style={layout}>

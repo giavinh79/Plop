@@ -4,8 +4,8 @@ import { MembersOnlineWrapper, MembersOnline } from './ChatStyles';
 import ChatMessage from './ChatMessage';
 import UserChatMessage from './UserChatMessage';
 import InfiniteScroll from 'react-infinite-scroller';
-import './Chat.css'; // to override ant design
 import ChatMember from './ChatMember';
+import './Chat.css'; // to override ant design
 
 export default function Chat({ chat, chatMessages, chatUsers, setChatData }) {
   const [usersOnlineView, setUsersOnlineView] = useState(false);
@@ -116,9 +116,8 @@ export default function Chat({ chat, chatMessages, chatUsers, setChatData }) {
           )
         }
         headStyle={{
-          // backgroundColor: '#477084',
-          color: 'white',
           background: 'linear-gradient(to right, rgb(112, 145, 177) 0%, rgb(81, 125, 146) 100%)',
+          color: 'white',
         }}
         style={{
           width: 500,
