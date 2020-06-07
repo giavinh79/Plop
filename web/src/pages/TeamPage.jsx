@@ -4,7 +4,7 @@ import { Alert, Button, Icon, Input, Row } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { displaySimpleNotification } from '../utility/services';
 import { API_ENDPOINT } from '../constants';
-import { joinTeam, retrieveTeams } from '../utility/restCalls';
+import { joinTeam, retrieveTeams, leaveTeam } from '../utility/restCalls';
 import { Container, TeamCard, Subcontainer } from './TeamPageStyles';
 import TeamCreationModal from '../components/Team/TeamCreationModal';
 import TeamsJoined from '../components/Team/TeamsJoined';
@@ -35,7 +35,7 @@ export default function Team() {
 
   const handleLeaveTeam = async (teamId) => {
     try {
-      await axios.delete('/member/room', { data: { teamId } });
+      await leaveTeam(teamId);
       let cachedTeams = JSON.parse(localStorage.getItem('teams'));
       cachedTeams = cachedTeams.filter((item) => {
         return item.id !== teamId;

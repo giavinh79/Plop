@@ -170,6 +170,14 @@ const joinTeam = async (data) => {
   }
 };
 
+const leaveTeam = async (teamId) => {
+  try {
+    return await axios.delete(`${API_ENDPOINT}/member/room`, { data: { teamId } });
+  } catch (err) {
+    throw err;
+  }
+};
+
 const logout = async () => {
   try {
     await axios.post(`${API_ENDPOINT}/logout`);
@@ -295,6 +303,7 @@ export {
   getRepository,
   getRoomAdminTiers,
   joinTeam,
+  leaveTeam,
   logout,
   removeMember,
   retrieveAssignees,
