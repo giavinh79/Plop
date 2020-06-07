@@ -115,7 +115,7 @@ export const getActiveStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 });
 
-export const getListStyle = (isDraggingOver, isLightMode) => ({
-  background: isDraggingOver ? 'lightblue' : !isLightMode ? '#F2F7FC' : 'white',
+export const getListStyle = (isDraggingOver, theme) => ({
+  background: isDraggingOver ? 'lightblue' : theme.home.backgroundColor,
   padding: '1rem 2rem',
 });

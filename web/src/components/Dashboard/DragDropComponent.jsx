@@ -204,10 +204,7 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
         <DragDropContext onDragEnd={onDragEnd} style={{ height: '50%' }}>
           <Droppable droppableId='droppable1'>
             {(provided, snapshot) => (
-              <DroppableWrapper
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}
-              >
+              <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme)}>
                 <div style={cardStyles.titleWrapper}>
                   <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Active</h5>
                 </div>
@@ -224,10 +221,7 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
           </Droppable>
           <Droppable droppableId='droppable2'>
             {(provided, snapshot) => (
-              <DroppableWrapper
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}
-              >
+              <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme)}>
                 <div style={cardStyles.titleWrapper}>
                   <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>In Progress</h5>
                 </div>
@@ -244,10 +238,7 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
           </Droppable>
           <Droppable droppableId='droppable3'>
             {(provided, snapshot) => (
-              <DroppableWrapper
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver, theme.isLightMode)}
-              >
+              <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme)}>
                 <div style={{ ...cardStyles.titleWrapper, alignItems: 'center' }}>
                   <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Completed</h5>
                   {items.complete.length > 0 && (

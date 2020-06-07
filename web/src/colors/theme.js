@@ -26,7 +26,9 @@ export const defaultThemeObject = {
       boxShadow: 'none',
     },
   },
-  home: {},
+  home: {
+    backgroundColor: 'white',
+  },
 };
 
 // Hex color codes for dark theme
@@ -50,7 +52,9 @@ export const darkThemeObject = {
       boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
     },
   },
-  home: {},
+  home: {
+    backgroundColor: '#F2F7FC',
+  },
 };
 
 const ThemeContext = createContext(isDefaultLightTheme ? defaultThemeObject : darkThemeObject);
