@@ -14,7 +14,7 @@
     "react-infinite-scroller": "^1.2.4",
     "react-particles-js": "^3.2.1",
     "react-reveal": "^1.2.2",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "^3.4.0",
     "recharts": "^1.8.5",
     "styled-components": "^4.3.2"
