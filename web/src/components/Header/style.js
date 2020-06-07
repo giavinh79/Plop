@@ -11,7 +11,7 @@ export const HeaderWrapper = styled.div`
   min-height: 4rem;
   max-height: 6rem;
 
-  @media screen and (max-width: 1120px) {
+  @media screen and (max-width: 1155px) {
     padding: ${(props) => (props.homepage ? '2rem !important' : '')};
   }
 
@@ -19,6 +19,7 @@ export const HeaderWrapper = styled.div`
     background-color: ${(props) => (props.homepage ? '#303f44 !important' : '')};
     height: ${(props) => (props.homepage ? 'auto' : '')};
     flex-direction: ${(props) => (props.homepage ? 'column-reverse' : '')};
+    max-height: initial;
   }
 `;
 

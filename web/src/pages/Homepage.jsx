@@ -29,8 +29,11 @@ export default function Homepage() {
       {displayTermsModal && <HomepageTermsConditions setDisplayTermsModal={setDisplayTermsModal} />}
       <div className='particle-wrapper'>
         <Suspense fallback={<></>}>
-          <ParticlesComponent params={particleParams} height='50rem' className='particle-effect' />
+          {window.innerWidth > 870 && (
+            <ParticlesComponent params={particleParams} height='50rem' className='particle-effect' />
+          )}
         </Suspense>
+        )
       </div>
       <div style={{ width: '100%' }}>
         <div className='landing-container'>

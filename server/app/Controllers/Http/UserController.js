@@ -97,6 +97,10 @@ class UserController {
       const user = await auth.getUser();
       const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
+      if (!decryptedRoomId) {
+        return response.status(200).json({ role: null, activity: null });
+      }
+
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('Unauthorized Access');
 

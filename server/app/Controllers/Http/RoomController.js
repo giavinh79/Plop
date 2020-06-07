@@ -625,9 +625,13 @@ class RoomController {
 
   async leave({ auth, request, response }) {
     try {
+      console.log('leave test');
       const user = await auth.getUser();
       const { teamId } = request.body;
       const decryptedRoomId = hashids.decodeHex(teamId);
+      console.log(request.body);
+      console.log(teamId);
+      console.log(decryptedRoomId);
 
       let result = await Database.from('user_rooms').where('user_id', user.id).where('room_id', decryptedRoomId);
       if (result.length === 0) throw new Error('User not in room');
@@ -666,7 +670,7 @@ class RoomController {
       response.status(200).send();
     } catch (err) {
       console.log(`(room_leave) ${new Date()}: ${err.message}`);
-      response.status(404).send();
+      response.status(404).send(err);
     }
   }
 

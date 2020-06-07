@@ -82,7 +82,7 @@ export default function Header() {
         />
         {location.pathname === '/' && <MobileLogoText>plop</MobileLogoText>}
         {location.pathname === '/team' && (
-          <MobileLogoText style={{ marginLeft: '0.5rem', fontSize: '2rem' }}>plop</MobileLogoText>
+          <MobileLogoText style={{ margin: '0 0 0 0.5rem', fontSize: '2rem' }}>plop</MobileLogoText>
         )}
       </div>
       {location.pathname.substring(0, 10) === '/dashboard' && (
