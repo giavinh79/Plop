@@ -14,9 +14,11 @@ export default function HelpChatSection() {
         <Text type='secondary' style={{ textIndent: '30px' }}>
           Chat is a feature that allows members in a team to communicate in real time. To begin chatting, click on the
           chat icon at the bottom right of the dashboard:
-          <br />
-          <img src='/images/help/chat-icon.png' alt='chat' style={{ margin: '0.5rem' }} />
         </Text>
+        <details style={{ outline: 'none', marginTop: '1rem' }}>
+          <summary>Image of Chat Icon</summary>
+          <img src='/images/help/chat-icon.png' alt='chat' style={{ margin: '0.5rem' }} />
+        </details>
       </div>
 
       <div style={{ paddingBottom: '2rem' }}>

@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import { Tooltip, Popconfirm, Icon, Table as ActiveTable, Divider, Row, Skeleton, Tag } from 'antd';
+import { Tooltip, Popconfirm, Icon, Table, Divider, Row, Skeleton, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT, tagMap, pagination, progressMap } from '../../constants';
 import { ActionText } from './ActiveStyles';
 import { deleteIssue, updateIssue } from '../../utility/restCalls';
 import { displaySimpleNotification, compareDates } from '../../utility/services';
 
+// Make custom hook for Active/Backlog states (?)
 export default function Active() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false); // toggle
   const [issue, setIssue] = useState(null); // to navigate to
+
+  // Filtering
+  const [sortedInfo, setSortedInfo] = useState({});
+  const [filteredInfo, setFilteredInfo] = useState({});
+
+  const handleChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+    setFilteredInfo(filters);
+  };
 
   useEffect(() => {
     (async () => {
@@ -54,6 +64,8 @@ export default function Active() {
     {
       title: 'Title',
       key: 'title',
+      sorter: (a, b) => a.title.localeCompare(b.title),
+      sortOrder: sortedInfo.columnKey === 'title' && sortedInfo.order,
       render: (item) => (
         <ActionText style={{ color: '#5185bb' }} onClick={() => setIssue(item)}>
           {item.title}
@@ -63,11 +75,15 @@ export default function Active() {
     {
       title: 'Description',
       dataIndex: 'shortDescription',
+      sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+      sortOrder: sortedInfo.columnKey === 'shortDescription' && sortedInfo.order,
       key: 'shortDescription',
     },
     {
       title: 'Date',
       dataIndex: 'date',
+      sorter: (a, b) => a.date.localeCompare(b.date),
+      sortOrder: sortedInfo.columnKey === 'date' && sortedInfo.order,
       key: 'date',
     },
     {
@@ -86,6 +102,14 @@ export default function Active() {
           })}
         </span>
       ),
+      filters: Object.entries(tagMap).map((tag) => {
+        return {
+          text: tag[0].toUpperCase(),
+          value: tag[0],
+        };
+      }),
+      filteredValue: filteredInfo.tag || null,
+      onFilter: (value, record) => record.tag.includes(value[0].toUpperCase() + value.slice(1)),
     },
     {
       title: 'Status',
@@ -94,6 +118,13 @@ export default function Active() {
       render: (status) => {
         return <p style={{ margin: 0 }}>{progressMap[status]}</p>;
       },
+      filters: [
+        { text: 'Active', value: 1 },
+        { text: 'In Progress', value: 2 },
+        { text: 'Completed', value: 3 },
+      ],
+      filteredValue: filteredInfo.status || null,
+      onFilter: (value, record) => record.status === value,
     },
     {
       title: 'Action',
@@ -167,11 +198,12 @@ export default function Active() {
         {loading ? (
           <Skeleton active />
         ) : (
-          <ActiveTable
+          <Table
             columns={columns}
             dataSource={data}
             pagination={pagination}
             style={{ border: '1px solid #ccc', borderRadius: '5px' }}
+            onChange={handleChange}
           />
         )}
       </div>

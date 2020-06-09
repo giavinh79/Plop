@@ -46,6 +46,7 @@ export default function Team() {
           return item.id !== teamId;
         })
       );
+      displaySimpleNotification('Success', 4, 'bottomRight', 'You have left the team.', 'smile', '#108ee9');
     } catch (err) {
       displaySimpleNotification(
         'Error',

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import { Divider, Popconfirm, Row, Table as BacklogTable, Skeleton, Tag } from 'antd';
+import { Divider, Popconfirm, Row, Table, Skeleton, Tag } from 'antd';
 import { layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT, tagMap, pagination } from '../../constants';
 import { displaySimpleNotification } from '../../utility/services';
@@ -14,6 +14,10 @@ export default function Backlog() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [issue, setIssue] = useState(null); // to navigate to
+
+  // Filtering
+  const [sortedInfo, setSortedInfo] = useState({});
+  const [filteredInfo, setFilteredInfo] = useState({});
 
   useEffect(() => {
     (async () => {
@@ -30,6 +34,11 @@ export default function Backlog() {
       console.log(err);
     });
   }, [refresh]);
+
+  const handleChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+    setFilteredInfo(filters);
+  };
 
   const handleDeletion = async (id) => {
     try {
@@ -55,6 +64,8 @@ export default function Backlog() {
     {
       title: 'Title',
       key: 'title',
+      sorter: (a, b) => a.title.localeCompare(b.title),
+      sortOrder: sortedInfo.columnKey === 'title' && sortedInfo.order,
       render: (item) => (
         <ActionText style={{ color: '#5185bb' }} onClick={() => setIssue(item)}>
           {item.title}
@@ -64,16 +75,22 @@ export default function Backlog() {
     {
       title: 'Id',
       dataIndex: 'id',
+      sorter: (a, b) => a.id - b.id,
+      sortOrder: sortedInfo.columnKey === 'id' && sortedInfo.order,
       key: 'id',
     },
     {
       title: 'Description',
       dataIndex: 'shortDescription',
+      sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+      sortOrder: sortedInfo.columnKey === 'shortDescription' && sortedInfo.order,
       key: 'shortDescription',
     },
     {
       title: 'Date',
       dataIndex: 'date',
+      sorter: (a, b) => a.date.localeCompare(b.date),
+      sortOrder: sortedInfo.columnKey === 'date' && sortedInfo.order,
       key: 'date',
     },
     {
@@ -93,6 +110,14 @@ export default function Backlog() {
           })}
         </span>
       ),
+      filters: Object.entries(tagMap).map((tag) => {
+        return {
+          text: tag[0].toUpperCase(),
+          value: tag[0],
+        };
+      }),
+      filteredValue: filteredInfo.tag || null,
+      onFilter: (value, record) => record.tag.includes(value[0].toUpperCase() + value.slice(1)),
     },
     {
       title: 'Action',
@@ -145,11 +170,12 @@ export default function Backlog() {
         {loading ? (
           <Skeleton active />
         ) : (
-          <BacklogTable
+          <Table
             columns={columns}
             dataSource={data}
             pagination={pagination}
             style={{ border: '1px solid #ccc', borderRadius: '5px' }}
+            onChange={handleChange}
           />
         )}
       </div>
