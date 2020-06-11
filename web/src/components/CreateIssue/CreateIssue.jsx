@@ -17,7 +17,7 @@ import {
   Tag,
 } from 'antd';
 import { displaySimpleNotification, compareDates } from '../../utility/services.js';
-import { layout, subheader } from '../../globalStyles';
+import { Layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT, formItemLayout, tagSuggestions } from '../../constants';
 import { retrieveAssignees, deleteIssue, getIssueById, createIssue } from '../../utility/restCalls.js';
 import CommentBody from '../Comment/CommentBody.jsx';
@@ -41,7 +41,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
   const history = useHistory();
   const historyTrack = useRef(true); // track whether user manually navigated to this page to configure go back button
 
-  const parseImages = useCallback((issue) => {
+  const parseImages = useCallback((issue, data) => {
     if (issue && issue.image) {
       setDefaultFileList(
         issue.image.map((item, key) => {
@@ -56,18 +56,23 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
       );
       return;
     }
-    if (data && data.image) {
-      setDefaultFileList(
-        data.image.map((item, key) => {
-          return {
-            uid: item.id,
-            key: key,
-            name: item.id,
-            status: 'done',
-            url: item.url,
-          };
-        })
-      );
+
+    try {
+      if (data && data.image) {
+        setDefaultFileList(
+          data.image.map((item, key) => {
+            return {
+              uid: item.id,
+              key: key,
+              name: item.id,
+              status: 'done',
+              url: item.url,
+            };
+          })
+        );
+      }
+    } catch (err) {
+      console.log(err);
     }
   }, []);
 
@@ -85,7 +90,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
         setLoading(false);
         if (titleRef.current) titleRef.current.focus();
       } else {
-        parseImages();
+        parseImages(null, location.data);
       }
       const { data } = await retrieveAssignees();
       setAssignees(data);
@@ -165,7 +170,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
 
   return !loading ? (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-      <div style={layout} className='createIssue'>
+      <Layout className='createIssue'>
         <div style={{ display: 'flex' }}>
           <p style={subheader}>{data == null ? 'Create Issue' : data.title}</p>
           {data && (
@@ -389,7 +394,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
             </div>
           </Form.Item>
         </Form>
-      </div>
+      </Layout>
       {data && <CommentBody id={data.id} />}
     </div>
   ) : (
