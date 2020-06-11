@@ -41,42 +41,37 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
   const history = useHistory();
   const historyTrack = useRef(true); // track whether user manually navigated to this page to configure go back button
 
-  const parseImages = useCallback(
-    (issue) => {
-      if (issue && issue.image) {
-        setDefaultFileList(
-          issue.image.map((item, key) => {
-            return {
-              uid: item.id,
-              key: key,
-              name: item.id,
-              status: 'done',
-              url: item.url,
-            };
-          })
-        );
-        return;
-      }
-      if (data && data.image) {
-        setDefaultFileList(
-          data.image.map((item, key) => {
-            return {
-              uid: item.id,
-              key: key,
-              name: item.id,
-              status: 'done',
-              url: item.url,
-            };
-          })
-        );
-      }
-    },
-    [data]
-  );
+  const parseImages = useCallback((issue) => {
+    if (issue && issue.image) {
+      setDefaultFileList(
+        issue.image.map((item, key) => {
+          return {
+            uid: item.id,
+            key: key,
+            name: item.id,
+            status: 'done',
+            url: item.url,
+          };
+        })
+      );
+      return;
+    }
+    if (data && data.image) {
+      setDefaultFileList(
+        data.image.map((item, key) => {
+          return {
+            uid: item.id,
+            key: key,
+            name: item.id,
+            status: 'done',
+            url: item.url,
+          };
+        })
+      );
+    }
+  }, []);
 
   useEffect(() => {
-    if (titleRef.current) titleRef.current.focus();
-
     (async function () {
       if (isManualNavigation && location.data == null) {
         let path = window.location.pathname;
@@ -88,6 +83,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
         setData(issue);
         parseImages(issue);
         setLoading(false);
+        if (titleRef.current) titleRef.current.focus();
       } else {
         parseImages();
       }

@@ -22,7 +22,7 @@ export default function Schedule() {
     })().catch((err) => {
       console.log(err);
     });
-  });
+  }, []);
 
   const findOverdueIssues = (issues) => {
     let counter = 0;
@@ -49,16 +49,15 @@ export default function Schedule() {
     }
 
     const deadlineObj = new Date(deadline);
+    deadlineObj.setMinutes(deadlineObj.getMinutes() - new Date().getTimezoneOffset());
     const deadlineDate = parseInt(
       deadlineObj.getUTCFullYear().toString() + getMonth(deadlineObj) + getDay(deadlineObj)
     );
 
     const calendarObj = new Date(date);
-    // calendarObj.setDate(calendarObj.getDate() - 1); need to enforce a strict timezone to prevent timing issues
     const calendarDate = parseInt(
       calendarObj.getUTCFullYear().toString() + getMonth(calendarObj) + getDay(calendarObj)
     );
-
     if (deadlineDate) return deadlineDate === calendarDate;
   };
 
