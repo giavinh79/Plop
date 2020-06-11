@@ -96,7 +96,10 @@ export default function Header() {
           <WrappedHorizontalLoginForm />
         ) : (
           <>
-            {location.pathname !== '/team' && (
+            {location.pathname === '/team' ? (
+              // <Icon type='pushpin' style={{ fontSize: '2rem', margin: '0 0.5rem', color: '#dadada' }} />
+              <></>
+            ) : (
               <>
                 {showNotificationModal && (
                   <Notification

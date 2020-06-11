@@ -1,10 +1,12 @@
-/* Code Constants
- * Variables which control various FE properties
- *
- */
+/* Exports constants and config variables */
 
 import React from 'react';
 import { Select } from 'antd';
+export * from './notes';
+
+/* Table Constants
+ *
+ */
 
 export const progressMap = { 1: 'Active', 2: 'In Progress', 3: 'Completed' };
 

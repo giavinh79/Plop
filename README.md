@@ -1,7 +1,7 @@
 Plop
 =====
 
-Plop is an open-source web application that uses React.js as its frontend framework and Adonis.js (Node.js web framework) as the REST API. It is a simple project management tool targeted towards small teams (< 12) however, it can also be used by individuals who want a more complex to-do list.
+Plop is an open-source web application that uses React.js as its frontend framework and Adonis.js (Node.js framework) as the REST API. It is a simple project management tool targeted towards small teams (< 12) however, it can also be used by individuals who want a more complex to-do list.
 
 For data, a postgreSQL relational database is used. The Lucid ORM is leveraged for the benefits of models, controllers, migrations, seeds, and factories. This allows us to easily execute common queries, setup the database with ease, and create dummy data. Cloudinary is currently used to store images.
 

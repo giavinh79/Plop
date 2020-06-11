@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Badge, Descriptions, Progress, Row, Icon, Spin } from 'antd';
 import { layout } from '../../globalStyles';
-import { LineChart, XAxis, YAxis, Legend, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
+import { Bar, BarChart, XAxis, YAxis, Legend, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { getIssues, getLogsForGraph } from '../../utility/restCalls';
 import { API_ENDPOINT } from '../../constants';
 import axios from 'axios';
@@ -154,10 +154,10 @@ export default function Overview() {
         </Descriptions>
       </Spin>
       <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
-        <p style={{ fontSize: '1.5rem' }}>Issues Analysis</p>
+        <p style={{ fontSize: '1.5rem' }}>Issue Analysis</p>
         {!loading && (
           <ResponsiveContainer width={'99%'} height={400}>
-            <LineChart
+            <BarChart
               data={logs}
               margin={{
                 top: 5,
@@ -171,9 +171,9 @@ export default function Overview() {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type='monotone' dataKey='tasks created' stroke='#82ca9d' />
-              <Line type='monotone' dataKey='tasks completed' stroke='#8884d8' activeDot={{ r: 8 }} />
-            </LineChart>
+              <Bar dataKey='tasks created' fill='#8884d8' />
+              <Bar dataKey='tasks completed' fill='#82ca9d' />
+            </BarChart>
           </ResponsiveContainer>
         )}
       </div>

@@ -35,8 +35,8 @@ export default function NoteHelpModal({ setDisplayHelpModal }) {
         <ModalTextTitle>Using:</ModalTextTitle>{' '}
         <ModalText>
           Notes can be created by pressing the plus (+) button. These notes can then be stretched and moved around the
-          layout. The two buttons at the bottom of each note allows you to edit or delete notes instantly. Keep in mind
-          that any changes will automatically save!
+          layout. The three buttons at the bottom of each note allows you to edit or delete notes instantly. Keep in
+          mind that any changes will automatically save!
         </ModalText>
       </p>
       <p>

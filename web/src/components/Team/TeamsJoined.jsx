@@ -31,7 +31,11 @@ export default function TeamsJoined({ handleEnterTeam, handleLeaveTeam, teams })
               }
               theme={theme}
               nomargin={1}
-              headStyle={theme.isLightMode ? {} : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }}
+              headStyle={
+                theme.isLightMode
+                  ? { backgroundColor: '#f8f8f8' }
+                  : { border: 'none', color: 'rgba(255, 255, 255, 0.85)' }
+              }
             >
               <p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                 <strong>ID: </strong>
