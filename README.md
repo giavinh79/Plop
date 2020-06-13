@@ -32,6 +32,9 @@ For data storage, a postgreSQL relational database is used. The Lucid ORM is lev
 
 ### Running Frontend
 
+If you would like to only look at the frontend, go into web/src/Routes.js and edit the `ProtectedRoute` component on line 25
+(set `authenticated` to always be true and remove the `useEffect` function).
+
 1. Go to web folder and install dependencies (requires Node.js and NPM).
 ```
 $\web npm install
