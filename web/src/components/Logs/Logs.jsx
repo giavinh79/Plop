@@ -261,7 +261,7 @@ export default function Logs() {
       return (
         <>
           {descriptionArray.map((word, index) => {
-            if (word === 'name_placeholder') {
+            if (word === '$Sprint$') {
               return (
                 <span style={{ fontWeight: 500, color: '#2b9651' }} key={index}>
                   Sprint {sprintName}{' '}

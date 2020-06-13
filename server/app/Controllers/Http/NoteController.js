@@ -49,9 +49,10 @@ class NoteController {
         .select('last_modified', 'last_modified_by')
         .where('room_id', decryptedRoomId);
 
-      if (date && parseInt(oldDate) !== parseInt(dateData.last_modified) && user.id !== dateData.last_modified_by) {
-        throw new Error('ERROR_NEW_NOTE_CHANGES'); // someone has edited the notes since user received notes
-      }
+      // no longer needed due to real-time note changes
+      // if (date && parseInt(oldDate) !== parseInt(dateData.last_modified) && user.id !== dateData.last_modified_by) {
+      //   throw new Error('ERROR_NEW_NOTE_CHANGES'); // someone has edited the notes since user received notes
+      // }
 
       await Database.transaction(async (trx) => {
         if (date - dateData.last_modified > 500) {

@@ -46,7 +46,7 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
   useEffect(() => {
     setItems(itemsData);
     setBackupItems(itemsData);
-  }, [itemsData, newRequest]);
+  }, [itemsData]);
 
   useEffect(() => {
     (async () => {
@@ -306,6 +306,11 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
                                   // displayUnknownError
                                 } finally {
                                   sprintName.current = '';
+                                  setBackupItems({
+                                    active: backupItems.active,
+                                    progress: backupItems.backup,
+                                    complete: [],
+                                  });
                                   resetSearch();
                                   setNewRequest(!newRequest);
                                   resolve();

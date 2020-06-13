@@ -48,7 +48,7 @@ export default function TeamCreationModal({ setTeams, setTeamCreation, teams }) 
         { name: res.data.name, description: res.data.description, id: res.data.id, currentMembers: '1' },
       ]);
       localStorage.setItem('teams', JSON.stringify(currentTeams.data));
-      console.log(localStorage.getItem('teams'));
+      // console.log(localStorage.getItem('teams'));
 
       displayInfoDialog(
         'Team was successfully created!',

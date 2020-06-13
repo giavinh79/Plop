@@ -143,7 +143,7 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
               }
               getPopupContainer={(trigger) => trigger.parentNode}
             >
-              <Input.Search placeholder='Search by email' onSearch={(value) => console.log(value)} autoComplete='off' />
+              <Input.Search placeholder='Search by email' autoComplete='none' />
             </AutoComplete>
           )}
         </Form.Item>
@@ -222,7 +222,7 @@ function CreateIssueModal({ form, setIssueModal, newRequest, setNewRequest, rese
                   <Icon type='inbox' />
                 </p>
                 <p className='ant-upload-text'>Click or drag images to this area to upload</p>
-                <p className='ant-upload-hint'>Upload Limits: 5 Images or 5 MB.</p>
+                <p className='ant-upload-hint'>Upload Limits: 5 Images</p>
               </Upload.Dragger>
             )}
           </div>

@@ -36,7 +36,6 @@ export default function NoteModal({ data, handleCreate, setDisplayModal }) {
   };
 
   const handleBgColorChange = (color) => {
-    console.log(color);
     setBackgroundColor(color.hex);
   };
 
@@ -55,7 +54,7 @@ export default function NoteModal({ data, handleCreate, setDisplayModal }) {
   };
 
   const handleSave = async () => {
-    let index = parseInt(data[data.length - 1].uuid) + 1;
+    let index = data.length > 0 ? parseInt(data[data.length - 1].uuid) + 1 : 0;
     handleCreate({ uuid: index.toString(), title, description, titleColor, contentColor, backgroundColor });
     handleCancel();
   };

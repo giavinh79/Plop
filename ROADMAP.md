@@ -2,6 +2,7 @@
 
 **V1.1**
 - Finish dark theme and refactor styling
+- Delete Logs
 - Bug Fixes
 
 **V1.2 Roadmap**

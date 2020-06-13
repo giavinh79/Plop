@@ -24,9 +24,9 @@ import CommentBody from '../Comment/CommentBody.jsx';
 import ShareIssue from './ShareIssue.jsx';
 import { disabledDate, toBase64, normFile } from '../../utility/issueServices';
 import moment from 'moment';
-import './style.css';
 import { useContext } from 'react';
 import { ThemeContext } from '../../colors/theme.js';
+import './style.css';
 
 const { TextArea } = Input;
 
@@ -245,12 +245,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                         .includes(inputValue.toUpperCase())
                     }
                   >
-                    <Input.Search
-                      placeholder='Search by email'
-                      onSearch={(value) => console.log(value)}
-                      style={{ width: 200 }}
-                      autoComplete='off'
-                    />
+                    <Input.Search placeholder='Search by email' style={{ width: 200 }} autoComplete='none' />
                   </AutoComplete>
                 )}
               </Form.Item>
@@ -392,7 +387,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                     <Icon type='inbox' />
                   </p>
                   <p className='ant-upload-text'>Click or drag images to this area to upload</p>
-                  <p className='ant-upload-hint'>Upload Limits: 5 Images or 5 MB.</p>
+                  <p className='ant-upload-hint'>Upload Limits: 5 Images</p>
                 </Upload.Dragger>
               )}
             </div>

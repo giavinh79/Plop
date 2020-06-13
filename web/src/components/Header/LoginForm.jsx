@@ -28,7 +28,6 @@ function HorizontalLoginForm({ form }) {
         data: { email },
       } = await checkAuth();
       setLoggedInEmail(email);
-      console.log(email);
     } catch (err) {
       localStorage.clear();
       setLoggedInEmail(null);

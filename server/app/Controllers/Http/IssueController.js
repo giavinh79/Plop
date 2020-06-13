@@ -626,7 +626,6 @@ class IssueController {
         sprintObject.name = name;
 
         for (let issue of issues) {
-          console.log(issue);
           let imagePromises = [];
           if (issue.image && Array.isArray(issue.image)) {
             for (let item of issue.image) {
@@ -655,7 +654,7 @@ class IssueController {
           room_id: decryptedRoomId,
           description:
             name && name.length > 0
-              ? `${user.email} ended name_placeholder which contained the following issues: `
+              ? `${user.email} ended $Sprint$ which contained the following issues: `
               : `${user.email} marked the following issues as completed: `,
           object: JSON.stringify(sprintObject),
           date: new Date().toString(),

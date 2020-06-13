@@ -244,7 +244,7 @@ const UserSettings2 = ({ displayUserModal, form }) => {
                     <ActivityLogWrapper key={index}>
                       {isJSONString(item.object) ? (
                         <p>
-                          {item.description.replace('name_placeholder', JSON.parse(item.object).name)}{' '}
+                          {item.description.replace('$Sprint$', JSON.parse(item.object).name)}{' '}
                           <span style={{ fontWeight: 500 }}>{JSON.parse(item.object).issues.join(', ')}</span>
                         </p>
                       ) : (

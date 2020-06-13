@@ -30,7 +30,6 @@ function NormalLoginForm({ form }) {
     form.validateFields(async (err, values) => {
       if (!err) {
         try {
-          console.log(values);
           await axios.post(`${API_ENDPOINT}/signup`, values);
           displaySimpleNotification('Success!', 4, 'bottomRight', 'Account was created.', 'smile', '#108ee9');
           await axios.post(`${API_ENDPOINT}/login`, values);
