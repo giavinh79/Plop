@@ -65,7 +65,7 @@ export default function Notification({ data, setNotificationData, setShowNotific
           {
             ...notificationObject,
             description: `${item.sourceUser} has assigned you task '${item.issue}'.`,
-            event: 'You have been assigned to an issue',
+            event: 'You have been assigned to an issue.',
           },
           ...notifications,
         ]);
@@ -75,7 +75,7 @@ export default function Notification({ data, setNotificationData, setShowNotific
           {
             ...notificationObject,
             description: `Task '${item.issue}' has been re-assigned to user ${item.assignee}.`,
-            event: 'Issue no longer assigned to you',
+            event: 'Issue no longer assigned to you.',
           },
           ...notifications,
         ]);
@@ -85,7 +85,7 @@ export default function Notification({ data, setNotificationData, setShowNotific
           {
             ...notificationObject,
             description: `${item.sourceUser} has commented on task '${item.issue}'.`,
-            event: 'There are new comments on your issue.',
+            event: 'There are new comments on an issue.',
           },
           ...notifications,
         ]);
@@ -238,7 +238,7 @@ export default function Notification({ data, setNotificationData, setShowNotific
                     description={item.description}
                   />
                   <Row type='flex' align='bottom' justify='end' style={{ flexDirection: 'column' }}>
-                    <div style={{ color: 'green' }}>{moment(new Date(item.date)).format('DD/MM/YYYY hh:mm A')}</div>
+                    <div style={{ color: 'green' }}>{moment(new Date(item.date)).format('MMM DD, YYYY | hh:mm A')}</div>
                     <div>
                       <a
                         href='/dashboard'
