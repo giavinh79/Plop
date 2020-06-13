@@ -1,13 +1,30 @@
 Plop
 =====
 
-Plop is an open-source web application that uses React.js as its frontend framework and Adonis.js (Node.js framework) as the REST API. It is a simple project management tool targeted towards small teams (< 12) however, it can also be used by individuals who want a more complex to-do list.
+Plop is an open-source web application that uses React.js as its frontend framework and Adonis.js (Node.js framework) as the REST API. It is a simple project management tool targeted towards small teams (< 12) where users can create, assign, and manage tasks.
 
-For data, a postgreSQL relational database is used. The Lucid ORM is leveraged for the benefits of models, controllers, migrations, seeds, and factories. This allows us to easily execute common queries, setup the database with ease, and create dummy data. Cloudinary is currently used to store images.
+For data storage, a postgreSQL relational database is used. The Lucid ORM is leveraged for the benefits of models, controllers, migrations, seeds, and factories. This allows us to easily execute common queries, setup the database with ease, and create dummy data. Cloudinary is currently used to store images.
 
 ![Plop Dark Mode Preview](https://github.com/GV79/Plop/blob/master/readme-plop.png)
 
 > [Current deployed on https://www.plop.team/ as version 0.8 via Netlify. Backend is deployed on https://plopwebapp.herokuapp.com/ using Heroku.](https://plop.team/)
+
+# Features
+
+* Drag and Drop dashboard
+* Create/join up to 3 teams easily
+* Create, assign, and track tasks
+* Real-time chat
+* Team notes (with real-time changes)
+* User and team settings
+* Filterable tables containing backlog and active tasks/issues
+* Project overview (basic statistics)
+* Schedule (lists issues w/ deadlines on the calendar)
+* Colorful and filterable logs to easily track team actions
+* Member hierarchy and management (kick/ban/promote/demote members)
+* Help page (for understanding how to use various features within the site)
+* Theming
+* Basic sprint implementation
 
 # Getting Started
 
@@ -57,32 +74,25 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 ## Project To Dos
 
 **Immediate**
-- Real-time notifications and live dashboard changes
-- Finish Help section
 - Throttling request, reCAPTCHA for signup, team data limits
 - Look at any accessibility problems (ie. contrast)
-- Finish Dark Theme
-- Private Team (maybe joining team should then return specific errors?)
-- Table Sorting
-- Some minor bug fixes (date timezones, comment avatars...)
-- Changing password
+- Completely finish dark theme
+- Enabling locked settings in team settings
 
-**Future Enhancements and Fixes**
-- Cleaning up code and adding more tests
+**Future Enhancements and Features**
+- Some features discussed in ROADMAP.md
 - Optimizing performance (can audit through Google Lighthouse and React Profiler)
+- Mobile app
 - SendGrid API instead of nodemailer for emails
-- GitHub API to tie issues directly to commits *
 - More flexibility (renaming dashboard columns, making custom tags...)
 - More functionality for team settings (ie. admin approval)
-- Performance Version of websocket AdonisJS
+- Performance version of websocket AdonisJS
 - JWT token refresh
-- Mobile responsiveness (or app)
 - Enable saving files as well and move to Amazon AWS S3 Bucket instead of Cloudinary
 - Better server-side logging for analytics, debugging...
 - More DB seeds for fast queries and factories for creating dummy data (which the tests can use)
-- More powerful team notes through a rich text editor (Slate) + color customization
-- CI and CD (Travis CI for backend, GitHub actions for React)
-- Replace prop drilling with Redux Toolkit
+- CI and CD (Travis CI)
+- Redux Toolkit for simplifying state in some areas
 - Create issues directly on schedule page for easy deadlines
 - Optimize antd css loading (babel-plugin-import)
 - Heroku jobs for cleaning up unused images or inactive teams
@@ -95,13 +105,13 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 **Clean up Code**
 
 I am aware that there are some discrepancies regarding styling and class/function components along with areas in the project that could be further modularized or better organized (code/folder structure, naming, functions...etc.).
-- Delete pages folder and organize components folder and naming better
+- Delete pages folder, organize components folder, and improve naming
 - Refactoring CSS into styled-components where possible and re-use this across project
-- Component modularization to better organize code and follow DRY principle
+- Component modularization to better organize code and to follow DRY principle
 - Refactoring all remaining class components to function components + hooks
 - More unit testing with React Testing Library + Jest
 - Put all REST calls in restCalls.js
-- Proper error status codes and handling functions for both client and server applications
+- Proper error status codes and handling functions for both client and server
 - Consistent naming (some table names are camel case whereas others are snake case, styles.css vs componentName.css ...etc.)
 - Server app: Leverage models more, more utility/middleware functions to reduce repeated code, consistent syntax...
 - Splitting functions up more (reducing side effects, abstracting logic...)
