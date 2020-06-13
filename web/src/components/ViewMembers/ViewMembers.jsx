@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Icon, Input, Row, Select, Skeleton, Table, Tooltip, Popconfirm, message } from 'antd';
-import { layout, subheader } from '../../globalStyles';
+import { Layout, subheader } from '../../globalStyles';
 import { pagination } from '../../constants';
 import { retrieveMembers, getRoomAdminTiers, removeMember, updateUserAdminTier } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
 import moment from 'moment';
+import { useContext } from 'react';
+import { ThemeContext } from '../../colors/theme';
 // import 'antd/dist/antd.css';
 
 // Tiers of administration: 5
@@ -15,6 +17,8 @@ import moment from 'moment';
 // 0 - can only see issues assigned to them
 
 export default function ViewMembers() {
+  const [theme] = useContext(ThemeContext);
+
   const backupData = useRef();
   const [refresh, setRefresh] = useState(false); // for refreshing DB calls
   const [title, setTitle] = useState('Members List');
@@ -182,8 +186,8 @@ export default function ViewMembers() {
   ];
 
   return (
-    <div style={layout}>
-      <p style={{ ...subheader, opacity: loading ? 0.3 : 1 }}>{title}</p>
+    <Layout theme={theme}>
+      <p style={{ ...subheader, color: theme.textColor, opacity: loading ? 0.3 : 1 }}>{title}</p>
       <div style={{ marginBottom: '1rem' }}>
         <Input.Search
           allowClear
@@ -204,10 +208,14 @@ export default function ViewMembers() {
             columns={columns}
             dataSource={memberData}
             pagination={pagination}
-            style={{ border: '1px solid #ccc', borderRadius: '5px' }}
+            style={{
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              backgroundColor: theme.isLightMode ? '' : '#f8f8f8',
+            }}
           />
         </>
       )}
-    </div>
+    </Layout>
   );
 }

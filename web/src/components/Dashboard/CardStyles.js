@@ -14,4 +14,6 @@ export const CardBody = styled.div`
   padding: 16px;
   min-height: 5rem;
   word-break: break-word;
+  background-color: ${({ theme, overdue }) => (overdue ? theme.home.cardBgColorOverdue : theme.home.cardBgColor)};
+  color: ${({ theme }) => theme.textColor};
 `;

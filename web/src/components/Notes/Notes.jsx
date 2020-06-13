@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Icon, Input, Row } from 'antd';
-import { layout } from '../../globalStyles';
+import { Layout } from '../../globalStyles';
 import NoteModal from './NoteModal';
 import IconButton from './IconButton';
 import { getNotes, updateLayout, getRoomAdminTiers } from '../../utility/restCalls';
@@ -8,8 +8,11 @@ import NoteHelpModal from './NoteHelpModal';
 import moment from 'moment';
 import { displaySimpleNotification } from '../../utility/services';
 import NotesGrid from './NotesGrid';
+import { ThemeContext } from '../../colors/theme';
 
 export default function Notes() {
+  const [theme] = useContext(ThemeContext);
+
   const [data, setData] = useState([]);
   const [displayModal, setDisplayModal] = useState(false);
   const [displayHelpModal, setDisplayHelpModal] = useState(false);
@@ -215,9 +218,18 @@ export default function Notes() {
     <>
       {displayHelpModal && <NoteHelpModal setDisplayHelpModal={setDisplayHelpModal} />}
       {displayModal && <NoteModal data={data} handleCreate={handleCreate} setDisplayModal={setDisplayModal} />}
-      <div style={layout}>
+      <Layout theme={theme}>
         <Row type='flex' style={{ alignItems: 'center' }}>
-          <p style={{ opacity: loading ? 0.3 : 1, fontSize: '2rem', marginBottom: '1rem' }}>Team Notes</p>
+          <p
+            style={{
+              opacity: loading ? 0.3 : 1,
+              color: theme.isLightMode ? '' : 'white',
+              fontSize: '2rem',
+              marginBottom: '1rem',
+            }}
+          >
+            Team Notes
+          </p>
           {loading && (
             <Icon
               type='loading'
@@ -278,7 +290,7 @@ export default function Notes() {
           layoutData={layoutData}
           parsedDescription={parsedDescription}
         />
-      </div>
+      </Layout>
     </>
   );
 }

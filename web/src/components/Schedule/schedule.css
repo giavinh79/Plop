@@ -1,0 +1,14 @@
+/* Overriding antd styles for dark theme */
+
+.dark-theme .ant-fullcalendar {
+  background-color: #ffffff29;
+  border-radius: 10px;
+}
+
+.dark-theme .ant-fullcalendar-column-header {
+  color: #5ec7e6;
+}
+
+.dark-theme .ant-fullcalendar-value {
+  color: #e8e8e8;
+}

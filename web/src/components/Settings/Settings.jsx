@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import { layout, subheader } from '../../globalStyles';
+import { Layout, subheader } from '../../globalStyles';
 import { Alert, Button, Col, Icon, Input, Modal, Popconfirm, Tooltip, Row, Select, Skeleton } from 'antd';
 import MemberSlider from './MemberSlider';
 import { displaySimpleNotification } from '../../utility/services';
@@ -123,7 +123,7 @@ export default function Settings() {
 
   return (
     <>
-      <div style={layout}>
+      <Layout>
         <p style={{ ...subheader, opacity: loading ? 0.3 : 1 }}>Team Settings</p>
         <SettingsWrapper>
           <WideDiv>
@@ -295,7 +295,7 @@ export default function Settings() {
             </Button>
           </Popconfirm>
         </div>
-      </div>
+      </Layout>
       {toTeam && <Redirect push to='/team' />}
     </>
   );

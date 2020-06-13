@@ -96,13 +96,14 @@ export const Toolbar = styled(Row)`
   flex-wrap: nowrap !important;
   justify-content: flex-end;
   align-items: center;
-  background-color: #f7f7f7;
+  background-color: ${({ theme }) => theme.home.filterBgColor};
 `;
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: inherit;
+  border-left: ${({ theme }) => theme.home.leftBorder};
 `;
 
 export const getActiveStyle = (isDragging, draggableStyle) => ({

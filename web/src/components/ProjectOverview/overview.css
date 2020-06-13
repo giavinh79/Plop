@@ -1,0 +1,4 @@
+/* Overwriting antd progress component text styles */
+.dark-theme-text.ant-progress .ant-progress-text {
+  color: #e8e8e8;
+}

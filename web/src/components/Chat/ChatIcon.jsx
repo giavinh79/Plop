@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Badge, Icon, Spin } from 'antd';
 import Chat from './Chat';
 import { ChatIconWrapper } from './ChatIconStyles';
@@ -6,9 +6,13 @@ import Ws from '@adonisjs/websocket-client';
 import { WEB_SOCKET } from '../../constants';
 import { subscribeToRoom } from '../../websockets/ws';
 import { getLastReadChat, updateLastReadChat } from '../../utility/restCalls';
+import { ThemeContext } from '../../colors/theme';
 
 export default function ChatIcon() {
   const ws = useRef(Ws(WEB_SOCKET));
+
+  const [theme] = useContext(ThemeContext);
+
   const [chat, setChat] = useState(null);
   const [chatNotification, setChatNotification] = useState(false);
   const [chatLoading, setChatLoading] = useState(true);
@@ -64,6 +68,7 @@ export default function ChatIcon() {
       overlay={
         <Chat chat={chat} chatUsers={chatData.users} chatMessages={chatData.messages} setChatData={setChatData} />
       }
+      theme={theme}
       placement='topRight'
       trigger={['click']}
       disabled={chatLoading ? true : false}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Breadcrumb, Row } from 'antd';
-import { layout } from '../../globalStyles';
+import { Layout } from '../../globalStyles';
 import IntroductionSection from './IntroductionSection';
 // import TableOfContents from './TableOfContents';
 import PageSection from './PageSection';
@@ -60,22 +60,20 @@ export default function HelpPanel() {
   };
 
   return (
-    <div style={{ width: '100%' }}>
-      <div style={layout}>
-        <Breadcrumb>
-          <Breadcrumb.Item>
-            <span>Help</span>
-          </Breadcrumb.Item>
-          {setSectionAddress(page)}
-        </Breadcrumb>
-        <p style={{ fontSize: '2.4rem', margin: '1rem 0', textAlign: 'center' }}>{mapPageToText[page].subSection}</p>
+    <Layout>
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <span>Help</span>
+        </Breadcrumb.Item>
+        {setSectionAddress(page)}
+      </Breadcrumb>
+      <p style={{ fontSize: '2.4rem', margin: '1rem 0', textAlign: 'center' }}>{mapPageToText[page].subSection}</p>
 
-        <Row type='flex' style={{ justifyContent: 'flex-end', padding: '1rem 0' }}>
-          <TableOfContentsTest setPage={setPage} page={page} />
-          <div style={{ flex: 1 }}>{changePage(page)}</div>
-          {/* <TableOfContents setPage={setPage} page={page} /> */}
-        </Row>
-      </div>
-    </div>
+      <Row type='flex' style={{ justifyContent: 'flex-end', padding: '1rem 0' }}>
+        <TableOfContentsTest setPage={setPage} page={page} />
+        <div style={{ flex: 1 }}>{changePage(page)}</div>
+        {/* <TableOfContents setPage={setPage} page={page} /> */}
+      </Row>
+    </Layout>
   );
 }

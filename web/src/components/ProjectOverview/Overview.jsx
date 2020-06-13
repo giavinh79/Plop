@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Badge, Descriptions, Progress, Row, Icon, Spin } from 'antd';
-import { layout } from '../../globalStyles';
+import { Layout } from '../../globalStyles';
 import { Bar, BarChart, XAxis, YAxis, Legend, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { getIssues, getLogsForGraph } from '../../utility/restCalls';
 import { API_ENDPOINT } from '../../constants';
+import { ThemeContext } from '../../colors/theme';
 import axios from 'axios';
+import './overview.css';
 
 // Determine graph's x axis based on current month
 const relativeLogsObject = () => {
@@ -81,6 +83,8 @@ const logsToData = (logs) => {
 };
 
 export default function Overview() {
+  const [theme] = useContext(ThemeContext);
+
   const [loading, setLoading] = useState(true);
   const [backlogIssues, setBacklogIssues] = useState([]);
   const [issues, setIssues] = useState({
@@ -112,9 +116,18 @@ export default function Overview() {
   }, []);
 
   return (
-    <div style={layout}>
+    <Layout theme={theme}>
       <Row type='flex' style={{ alignItems: 'center' }}>
-        <p style={{ opacity: loading ? 0.3 : 1, fontSize: '2rem', marginBottom: '1rem' }}>Project Overview</p>
+        <p
+          style={{
+            opacity: loading ? 0.3 : 1,
+            color: theme.textColor,
+            fontSize: '2rem',
+            marginBottom: '1rem',
+          }}
+        >
+          Project Overview
+        </p>
         {loading && (
           <Icon
             type='loading'
@@ -129,11 +142,16 @@ export default function Overview() {
       </Row>
 
       <Spin tip='Loading...' spinning={loading}>
-        <Descriptions bordered style={{ marginBottom: '2rem' }}>
+        <Descriptions bordered style={{ backgroundColor: theme.overview.tableBgColor }}>
           <Descriptions.Item label='Sprint Completion' span={3}>
             <Row type='flex' style={{ flexWrap: 'nowrap', alignItems: 'center' }}>
-              <Badge status='processing' text='Running' style={{ minWidth: '5rem' }} />
+              <Badge
+                status='processing'
+                text={<span style={{ color: theme.textColor }}>Running</span>}
+                style={{ minWidth: '5rem' }}
+              />
               <Progress
+                className={theme.isLightMode ? '' : 'dark-theme-text'}
                 strokeColor={{
                   from: '#108ee9',
                   to: '#87d068',
@@ -146,15 +164,25 @@ export default function Overview() {
               />
             </Row>
           </Descriptions.Item>
-          <Descriptions.Item label='Active Tasks'>{issues.activeItems.length}</Descriptions.Item>
-          <Descriptions.Item label='In Progress Tasks'>{issues.progressItems.length}</Descriptions.Item>
-          <Descriptions.Item label='Completed Tasks'>{issues.completedItems.length}</Descriptions.Item>
-          <Descriptions.Item label='Archived Tasks'>0</Descriptions.Item>
-          <Descriptions.Item label='Tasks in backlog'>{backlogIssues.length}</Descriptions.Item>
+          <Descriptions.Item label='Active Tasks'>
+            <span style={{ color: theme.textColor }}>{issues.activeItems.length}</span>
+          </Descriptions.Item>
+          <Descriptions.Item label='In Progress Tasks'>
+            <span style={{ color: theme.textColor }}>{issues.progressItems.length}</span>
+          </Descriptions.Item>
+          <Descriptions.Item label='Completed Tasks'>
+            <span style={{ color: theme.textColor }}>{issues.completedItems.length}</span>
+          </Descriptions.Item>
+          <Descriptions.Item label='Archived Tasks'>
+            <span style={{ color: theme.textColor }}>0</span>
+          </Descriptions.Item>
+          <Descriptions.Item label='Tasks in backlog'>
+            <span style={{ color: theme.textColor }}>{backlogIssues.length}</span>
+          </Descriptions.Item>
         </Descriptions>
       </Spin>
       <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
-        <p style={{ fontSize: '1.5rem' }}>Issue Analysis</p>
+        <p style={{ color: theme.textColor, fontSize: '1.5rem', marginTop: '2rem' }}>Issue Analysis</p>
         {!loading && (
           <ResponsiveContainer width={'99%'} height={400}>
             <BarChart
@@ -165,9 +193,10 @@ export default function Overview() {
                 left: 20,
                 bottom: 5,
               }}
+              style={{ color: theme.isLightMode ? '' : '#e8e8e8' }}
             >
               <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='name' />
+              <XAxis dataKey='name' tick={{ fill: theme.textColor }} />
               <YAxis />
               <Tooltip />
               <Legend />
@@ -185,7 +214,7 @@ export default function Overview() {
         }}
         percent={20}
       /> */}
-    </div>
+    </Layout>
   );
 }
 

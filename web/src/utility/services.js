@@ -38,6 +38,7 @@ const compareDates = (deadline) => {
   }
 
   const deadlineObj = new Date(deadline);
+  deadlineObj.setMinutes(deadlineObj.getMinutes() - new Date().getTimezoneOffset());
   const deadlineDate = parseInt(deadlineObj.getUTCFullYear().toString() + getMonth(deadlineObj) + getDay(deadlineObj));
 
   const todayObj = new Date();

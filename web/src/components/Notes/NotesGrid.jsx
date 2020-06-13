@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Avatar, Card, Icon, Input, Popconfirm, Tooltip } from 'antd';
 import GridLayout, { WidthProvider } from 'react-grid-layout';
 import ColorModal from './ColorModal';
+import { ThemeContext } from '../../colors/theme';
 import './grid-styles.css';
 import './resizable-styles.css';
 
@@ -20,6 +21,7 @@ function NotesGrid({
   layoutData,
   parsedDescription,
 }) {
+  const [theme] = useContext(ThemeContext);
   const [colorModal, setColorModal] = useState(null);
 
   return (
@@ -32,7 +34,13 @@ function NotesGrid({
         cols={12}
         rowHeight={150}
         width={1000}
-        style={{ border: '1px solid #e8e8e8', borderRadius: '10px', minHeight: '15rem', minWidth: '50rem' }}
+        style={{
+          backgroundColor: theme.note.gridBgColor,
+          border: theme.note.gridBorder,
+          borderRadius: '10px',
+          minHeight: '15rem',
+          minWidth: '50rem',
+        }}
         isDraggable={!editingItem}
         onLayoutChange={(layout) => handleLayout(layout)}
         bodyStyle={{ backgroundColor: 'red' }}
@@ -41,6 +49,10 @@ function NotesGrid({
           return (
             <Card
               key={index}
+              style={{
+                pointerEvents: (editingItem && !item.edit) || adminTier < 3 ? 'none' : 'auto',
+                border: theme.isLightMode ? '1px solid #e8e8e8' : 'none',
+              }}
               bodyStyle={{
                 flex: 1,
                 backgroundColor: item.backgroundColor,
@@ -73,7 +85,6 @@ function NotesGrid({
                   </Popconfirm>
                 ),
               ]}
-              style={{ pointerEvents: (editingItem && !item.edit) || adminTier < 3 ? 'none' : 'auto' }}
             >
               <Card.Meta
                 avatar={<Avatar icon='bulb' style={{ backgroundColor: '#dab632', color: 'white' }} />}

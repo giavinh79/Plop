@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { Tooltip, Popconfirm, Icon, Table, Divider, Row, Skeleton, Tag } from 'antd';
-import { layout, subheader } from '../../globalStyles';
+import { Layout, subheader } from '../../globalStyles';
 import { API_ENDPOINT, tagMap, pagination, progressMap } from '../../constants';
 import { ActionText } from './ActiveStyles';
 import { deleteIssue, updateIssue } from '../../utility/restCalls';
@@ -193,7 +193,7 @@ export default function Active() {
           }}
         />
       )}
-      <div style={layout}>
+      <Layout>
         <p style={{ ...subheader, opacity: loading ? 0.3 : 1 }}>Active Issues</p>
         {loading ? (
           <Skeleton active />
@@ -206,7 +206,7 @@ export default function Active() {
             onChange={handleChange}
           />
         )}
-      </div>
+      </Layout>
     </>
   );
 }

@@ -166,7 +166,7 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
   };
 
   return (
-    <Container>
+    <Container theme={theme}>
       {issueModal && (
         <CreateIssueModal
           setIssueModal={setIssueModal}
@@ -175,7 +175,7 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
           resetSearch={resetSearch}
         />
       )}
-      <Toolbar type='flex'>
+      <Toolbar type='flex' theme={theme}>
         <Input.Search
           allowClear
           size='large'
@@ -206,7 +206,11 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
             {(provided, snapshot) => (
               <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme)}>
                 <div style={cardStyles.titleWrapper}>
-                  <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Active</h5>
+                  <h5
+                    style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1, color: theme.isLightMode ? '' : 'white' }}
+                  >
+                    Active
+                  </h5>
                 </div>
                 {loading && (
                   <>
@@ -223,7 +227,11 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
             {(provided, snapshot) => (
               <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme)}>
                 <div style={cardStyles.titleWrapper}>
-                  <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>In Progress</h5>
+                  <h5
+                    style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1, color: theme.isLightMode ? '' : 'white' }}
+                  >
+                    In Progress
+                  </h5>
                 </div>
                 {loading && (
                   <>
@@ -240,7 +248,11 @@ export default function DragDropComponent({ loading, itemsData, source, newReque
             {(provided, snapshot) => (
               <DroppableWrapper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver, theme)}>
                 <div style={{ ...cardStyles.titleWrapper, alignItems: 'center' }}>
-                  <h5 style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1 }}>Completed</h5>
+                  <h5
+                    style={{ ...cardStyles.title, opacity: loading ? 0.3 : 1, color: theme.isLightMode ? '' : 'white' }}
+                  >
+                    Completed
+                  </h5>
                   {items.complete.length > 0 && (
                     <Tooltip title='Use this button to mark all completed issues as finished.'>
                       <CheckIcon

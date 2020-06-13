@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { layout, subheader } from '../../globalStyles';
+import { Layout, subheader } from '../../globalStyles';
 import { Avatar, Input, List, Row, Skeleton, Icon, Select } from 'antd';
 import { getLogs } from '../../utility/restCalls';
 import { ActionWrapper, ObjectWrapper } from './LogStyles';
@@ -297,7 +297,7 @@ export default function Logs() {
   };
 
   return (
-    <div style={layout} ref={logsContainer}>
+    <Layout ref={logsContainer}>
       <Row type='flex' style={{ alignItems: 'center' }}>
         <p style={{ ...subheader, opacity: loading ? 0.3 : 1, marginBottom: '1rem' }}>Project Logs</p>
         {loading && (
@@ -395,6 +395,6 @@ export default function Logs() {
           </List.Item>
         )}
       />
-    </div>
+    </Layout>
   );
 }

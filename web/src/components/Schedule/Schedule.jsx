@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { layout, subheader } from '../../globalStyles';
+import { Layout, subheader } from '../../globalStyles';
 import { Calendar, Icon, Row } from 'antd';
 import { LinkWrapper, OverdueIssue } from './ScheduleStyles';
 import { getIssues } from '../../utility/restCalls';
+import { ThemeContext } from '../../colors/theme';
+import './schedule.css';
 
 export default function Schedule() {
+  const [theme] = useContext(ThemeContext);
   const [overdueIssues, setOverdueIssues] = useState(0);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +72,7 @@ export default function Schedule() {
       >
         {data.map((item, index) => {
           return compareDates(value, item.deadline) ? (
-            <LinkWrapper key={index}>
+            <LinkWrapper key={index} theme={theme}>
               {/* <Badge
                 status="error"
                 text={
@@ -91,9 +94,11 @@ export default function Schedule() {
   };
 
   return (
-    <div style={layout}>
+    <Layout theme={theme}>
       <Row type='flex' style={{ alignItems: 'center' }}>
-        <p style={{ ...subheader, opacity: loading ? 0.3 : 1, marginBottom: '1rem' }}>Project Schedule</p>
+        <p style={{ ...subheader, color: theme.textColor, opacity: loading ? 0.3 : 1, marginBottom: '1rem' }}>
+          Project Schedule
+        </p>
         {overdueIssues > 0 && <OverdueIssue>1 overdue issue(s)</OverdueIssue>}
         {loading && (
           <Icon
@@ -107,7 +112,13 @@ export default function Schedule() {
           />
         )}
       </Row>
-      <Calendar dateCellRender={dateCellRender} style={{ display: loading ? 'none' : 'block' }} />
-    </div>
+      <Calendar
+        dateCellRender={dateCellRender}
+        className={theme.isLightMode ? '' : 'dark-theme'}
+        style={{
+          display: loading ? 'none' : 'block',
+        }}
+      />
+    </Layout>
   );
 }

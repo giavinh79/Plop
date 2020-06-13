@@ -25,11 +25,15 @@ import ShareIssue from './ShareIssue.jsx';
 import { disabledDate, toBase64, normFile } from '../../utility/issueServices';
 import moment from 'moment';
 import './style.css';
+import { useContext } from 'react';
+import { ThemeContext } from '../../colors/theme.js';
 
 const { TextArea } = Input;
 
 // Divide this up into two components and make a HoC (maybe)
 export default function CreateIssue({ form, location, isManualNavigation }) {
+  const [theme] = useContext(ThemeContext);
+
   const { getFieldDecorator } = form;
   const [defaultFileList, setDefaultFileList] = useState([]);
   const [assignees, setAssignees] = useState([]);
@@ -172,7 +176,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
       <Layout className='createIssue'>
         <div style={{ display: 'flex' }}>
-          <p style={subheader}>{data == null ? 'Create Issue' : data.title}</p>
+          <p style={{ ...subheader }}>{data == null ? 'Create Issue' : data.title}</p>
           {data && (
             <>
               <p

@@ -1,13 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Card, Icon, Input, List } from 'antd';
 import { MembersOnlineWrapper, MembersOnline } from './ChatStyles';
 import ChatMessage from './ChatMessage';
 import UserChatMessage from './UserChatMessage';
 import InfiniteScroll from 'react-infinite-scroller';
 import ChatMember from './ChatMember';
+import { ThemeContext } from '../../colors/theme';
 import './Chat.css'; // to override ant design
 
 export default function Chat({ chat, chatMessages, chatUsers, setChatData }) {
+  const [theme] = useContext(ThemeContext);
   const [usersOnlineView, setUsersOnlineView] = useState(false);
   const inputRef = useRef();
 
@@ -124,6 +126,7 @@ export default function Chat({ chat, chatMessages, chatUsers, setChatData }) {
           maxHeight: 500,
         }}
         className='chat-wrapper'
+        bordered={theme.isLightMode}
       >
         {usersOnlineView ? (
           <List

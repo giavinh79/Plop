@@ -4,8 +4,11 @@ import { Redirect } from 'react-router-dom';
 import { Icon, Tag } from 'antd';
 import { CardHeader, CardBody } from './CardStyles';
 import { compareDates } from '../../utility/services';
+import { useContext } from 'react';
+import { ThemeContext } from '../../colors/theme';
 
 export default function Card({ data }) {
+  const [theme] = useContext(ThemeContext);
   const [toIssue, setToIssue] = useState(false);
   const { id, deadline, title, shortDescription } = data;
 
@@ -24,7 +27,7 @@ export default function Card({ data }) {
         <div>{title}</div>
         <Icon type='info-circle' style={styles.cardIcon} onClick={() => setToIssue(true)} />
       </CardHeader>
-      <CardBody>
+      <CardBody theme={theme} overdue={deadline && compareDates(deadline) ? 1 : 0}>
         <p>
           {deadline && compareDates(deadline) && (
             <Tag color='red' style={{ position: 'relative', bottom: 0, right: 0, maxHeight: '24px' }}>

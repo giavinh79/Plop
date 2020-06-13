@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Icon, Table, Row, Skeleton, Popconfirm } from 'antd';
-import { layout, subheader } from '../../globalStyles';
+import { Layout, subheader } from '../../globalStyles';
 import { getRoomBanList, updateRoomBanList } from '../../utility/restCalls';
 import { displaySimpleNotification } from '../../utility/services';
+import { ThemeContext } from '../../colors/theme';
 
 // rename to BannedMembersList later
 export default function BannedMembers() {
+  const [theme] = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -64,9 +66,22 @@ export default function BannedMembers() {
   };
 
   return (
-    <div style={layout}>
-      <p style={{ ...subheader, opacity: loading ? 0.3 : 1 }}>Banned Members List</p>
-      {loading ? <Skeleton active /> : <Table columns={columns} dataSource={data} pagination={false} />}
-    </div>
+    <Layout theme={theme}>
+      <p style={{ ...subheader, color: theme.textColor, opacity: loading ? 0.3 : 1 }}>Banned Members List</p>
+      {loading ? (
+        <Skeleton active />
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={false}
+          style={{
+            borderTopLeftRadius: '5px',
+            borderTopRightRadius: '5px',
+            backgroundColor: theme.isLightMode ? '' : '#f8f8f8',
+          }}
+        />
+      )}
+    </Layout>
   );
 }
