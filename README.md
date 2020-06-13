@@ -48,7 +48,7 @@ $\web npm start
 
 1. Go to server folder, set up environment variables in your local .env file (see .env.example for attributes that you must fill in), and have a working PostgresQL database you can connect to.
 
-2. Set up database (requires Adonis CLI) with proper tables.
+2. Set up database (requires [Adonis CLI](https://adonisjs.com/docs/4.1/installation)) with proper tables.
 ```
 $\server adonis migration:run
 ```
