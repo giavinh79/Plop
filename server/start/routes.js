@@ -26,8 +26,8 @@ const jwtMiddleware = async ({ request }, next) => {
 Route.on('/').render('welcome');
 
 // Authentication
-Route.post('/login', 'UserController.login');
-Route.post('/signup', 'UserController.addNewUser');
+Route.post('/login', 'UserController.login').middleware('throttle:10,120');
+Route.post('/signup', 'UserController.addNewUser').middleware('throttle:10,120');
 Route.post('/session', 'UserController.checkSession').middleware(jwtMiddleware);
 Route.post('/logout', 'UserController.logout').middleware(jwtMiddleware);
 
