@@ -1,5 +1,6 @@
 import { getChat } from '../utility/restCalls';
 
+/* Websockets for chat messages and notifications */
 export const subscribeToRoom = (ws, chatData, setChat, setChatData, setChatLoading, setChatNotification) => {
   ws.connect(); // connect to the server
 
@@ -21,8 +22,6 @@ export const subscribeToRoom = (ws, chatData, setChat, setChatData, setChatLoadi
         return { ...chatData, messages };
       });
       setChatLoading(false);
-      // call lastCheckedChat endpoint, if the date is < most recent chat message, show red symbol
-      // when user clicks chat, send a request to lastCheckedChat endpoint to refresh date and manually turn off state
     });
 
     /* On socket message event handler

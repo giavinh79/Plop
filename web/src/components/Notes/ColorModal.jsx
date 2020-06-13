@@ -14,6 +14,11 @@ export default function ColorModal({ data, handleColorEdit, setColorModal }) {
 
   const handleCancel = () => {
     setVisible(false);
+    handleColorEdit(data.id, {
+      backgroundColor: data.backgroundColor,
+      titleColor: data.titleColor,
+      contentColor: data.contentColor,
+    });
     setTimeout(() => {
       setColorModal(null);
     }, 200);
@@ -45,7 +50,10 @@ export default function ColorModal({ data, handleColorEdit, setColorModal }) {
 
   const handleSave = () => {
     handleColorEdit(data.id, { backgroundColor, titleColor, contentColor }, true);
-    handleCancel();
+    setVisible(false);
+    setTimeout(() => {
+      setColorModal(null);
+    }, 200);
   };
 
   return (

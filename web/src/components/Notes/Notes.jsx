@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState, useRef } from 'react';
 import { Button, Icon, Input, Row } from 'antd';
 import { Layout } from '../../globalStyles';
 import NoteModal from './NoteModal';
@@ -9,8 +9,13 @@ import moment from 'moment';
 import { displaySimpleNotification } from '../../utility/services';
 import NotesGrid from './NotesGrid';
 import { ThemeContext } from '../../colors/theme';
+import Ws from '@adonisjs/websocket-client';
+import { WEB_SOCKET } from '../../constants';
 
 export default function Notes() {
+  const ws = useRef(Ws(WEB_SOCKET));
+  const chat = useRef();
+
   const [theme] = useContext(ThemeContext);
 
   const [data, setData] = useState([]);
@@ -35,8 +40,21 @@ export default function Notes() {
       setData(notes);
       setLayoutData(notes_layout);
       setAdminTier(administration_level);
+
+      ws.current.connect();
+
+      ws.current.on('open', () => {
+        chat.current = ws.current.subscribe(`room-notes:${JSON.parse(localStorage.getItem('currentTeam')).id}`);
+
+        chat.current.on('message', (message) => {
+          setData(message.data);
+          setLayoutData(message.newLayout);
+        });
+      });
+
       setLoading(false);
     })().catch((err) => {
+      console.log(err);
       displaySimpleNotification('Session expired', 5, 'bottomRight', 'You need to login again.', 'warning', '#108ee9');
     });
   }, []);
@@ -121,8 +139,10 @@ export default function Notes() {
       });
 
       setData(updatedData);
-      if (data.length > 0 && save && !loading && updatedData.length > 0)
+      if (data.length > 0 && save && !loading && updatedData.length > 0) {
         await updateLayout(updatedData, layoutData, moment(new Date()).format('YYYYMMDDhhmmss'), date);
+        chat.current.emit('message', { data: updatedData, newLayout: layoutData });
+      }
     },
     [data, date, layoutData, loading]
   );
@@ -134,8 +154,10 @@ export default function Notes() {
       });
 
       setData(updatedData);
-      if (data.length > 0 && !loading && layoutData.length > 0)
+      if (data.length > 0 && !loading && layoutData.length > 0) {
         await updateLayout(updatedData, layoutData, moment(new Date()).format('YYYYMMDDhhmmss'), date);
+        chat.current.emit('message', { data: updatedData, newLayout: layoutData });
+      }
     },
     [data, layoutData, loading, date]
   );
@@ -169,8 +191,10 @@ export default function Notes() {
       })
     );
     try {
-      if (data.length > 0 && !loading && layoutData.length > 0)
+      if (data.length > 0 && !loading && layoutData.length > 0) {
         await updateLayout(data, layoutData, moment(new Date()).format('YYYYMMDDhhmmss'), date);
+        chat.current.emit('message', { data, newLayout: layoutData });
+      }
     } catch (err) {
       if (err.response.data === 'ERROR_NEW_NOTE_CHANGES') {
         displaySimpleNotification(
@@ -199,6 +223,7 @@ export default function Notes() {
         });
         setLayoutData(newLayout);
         await updateLayout(data, newLayout, moment(new Date()).format('YYYYMMDDhhmmss'), date);
+        chat.current.emit('message', { data, newLayout });
       }
     } catch (err) {
       if (err.response.data === 'ERROR_NEW_NOTE_CHANGES') {

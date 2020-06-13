@@ -13,9 +13,9 @@ export default function HelpChatSection() {
         </Subheader>
         <Text type='secondary' style={{ textIndent: '30px' }}>
           Chat is a feature that allows members in a team to communicate in real time. As it is very basic in its
-          implementation, it's mainly aimed for quick conversations. For better communication within a team, we
-          recommend products like Slack or Microsoft Teams. To begin chatting, click on the chat icon at the bottom
-          right of the dashboard:
+          implementation, it's mainly aimed for quick conversations. For better text communication within a team, we
+          recommend products like Slack or Microsoft Teams. For voice/video communication, software like Zoom, WebEx,
+          and Discord can be used. To begin chatting, click on the chat icon at the bottom right of the dashboard:
         </Text>
         <details style={{ outline: 'none', marginTop: '1rem' }}>
           <summary>Image of Chat Icon</summary>

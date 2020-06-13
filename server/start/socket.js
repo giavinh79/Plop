@@ -1,3 +1,4 @@
+/* Contains socket channels room and room-notes */
 'use strict';
 
 const Ws = use('Ws');
@@ -77,6 +78,26 @@ Ws.channel('room:*', async ({ auth, socket, request }) => {
     });
   } catch (err) {
     console.log(`Socket Error ${err}`);
+    socket.close();
+  }
+})
+  .middleware(jwtMiddleware)
+  .middleware(['auth']);
+
+Ws.channel('room-notes:*', async ({ auth, socket, request }) => {
+  try {
+    let user = await auth.getUser();
+    const result = await Database.from('user_rooms')
+      .where('user_id', user.id)
+      .where('room_id', hashids.decodeHex(request.cookie('room')));
+
+    if (result.length === 0) socket.close();
+
+    socket.on('message', async (data) => {
+      socket.broadcast('message', { ...data });
+    });
+  } catch (err) {
+    console.log(`Socket Note Error ${err}`);
     socket.close();
   }
 })

@@ -55,7 +55,7 @@ export default function NoteModal({ data, handleCreate, setDisplayModal }) {
   };
 
   const handleSave = async () => {
-    let index = data.length + 1;
+    let index = parseInt(data[data.length - 1].uuid) + 1;
     handleCreate({ uuid: index.toString(), title, description, titleColor, contentColor, backgroundColor });
     handleCancel();
   };
