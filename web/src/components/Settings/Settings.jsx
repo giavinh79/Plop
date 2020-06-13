@@ -18,6 +18,7 @@ export default function Settings() {
   const password = useRef('');
   const isMounted = useRef(true);
 
+  const [updated, setUpdated] = useState(false); // enables save button if updated
   const [loading, setLoading] = useState(true);
   const [toTeam, setToTeam] = useState(false);
   const [adminTier, setAdminTier] = useState(1);
@@ -148,7 +149,10 @@ export default function Settings() {
                       defaultValue={state.repository || 'https://github.com'}
                       autoComplete='new-password'
                       type='text'
-                      onChange={(e) => setState({ ...state, repository: e.target.value })}
+                      onChange={(e) => {
+                        setUpdated(true);
+                        setState({ ...state, repository: e.target.value });
+                      }}
                     />
                   </>
                 )}
@@ -165,7 +169,10 @@ export default function Settings() {
                   <Input
                     type='text'
                     value={state.name}
-                    onChange={(e) => setState({ ...state, name: e.target.value })}
+                    onChange={(e) => {
+                      setUpdated(true);
+                      setState({ ...state, name: e.target.value });
+                    }}
                   />
                 </>
               )}
@@ -183,7 +190,10 @@ export default function Settings() {
                     value={state.description}
                     autosize={{ minRows: 6, maxRows: 6 }}
                     maxLength={220}
-                    onChange={(e) => setState({ ...state, description: e.target.value })}
+                    onChange={(e) => {
+                      setUpdated(true);
+                      setState({ ...state, description: e.target.value });
+                    }}
                   />
                 </>
               )}
@@ -208,7 +218,10 @@ export default function Settings() {
                       value={state.decryptPass}
                       autoComplete='new-password'
                       type='password'
-                      onChange={(e) => setState({ ...state, decryptPass: e.target.value })}
+                      onChange={(e) => {
+                        setUpdated(true);
+                        setState({ ...state, decryptPass: e.target.value });
+                      }}
                     />
                   </>
                 )}
@@ -238,6 +251,7 @@ export default function Settings() {
                           defaultValue={state.default_admin_tier}
                           style={{ width: '100%', marginBottom: '1rem' }}
                           onChange={(tier) => {
+                            setUpdated(true);
                             setState({ ...state, default_admin_tier: tier });
                           }}
                         >
@@ -290,7 +304,7 @@ export default function Settings() {
             disabled={loading || adminTier < 5}
             placement='topLeft'
           >
-            <Button key='submit' type='primary' disabled={loading || adminTier < 5}>
+            <Button key='submit' type='primary' disabled={!updated || adminTier < 5}>
               Save
             </Button>
           </Popconfirm>

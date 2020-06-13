@@ -358,7 +358,7 @@ export default function CreateIssue({ form, location, isManualNavigation }) {
                     okText='Yes'
                     cancelText='No'
                   >
-                    <Button type='primary'>Save</Button>
+                    <Button type='primary'>Save Changes</Button>
                   </Popconfirm>
                 ) : (
                   <Button type='primary' onClick={handleSubmit} loading={loadingSave}>
