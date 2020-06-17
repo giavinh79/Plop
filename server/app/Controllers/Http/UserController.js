@@ -97,7 +97,7 @@ class UserController {
       const user = await auth.getUser();
       const decryptedRoomId = hashids.decodeHex(request.cookie('room'));
 
-      if (!decryptedRoomId) {
+      if (decryptedRoomId == null || !decryptedRoomId) {
         return response.status(200).json({ role: null, activity: null });
       }
 
