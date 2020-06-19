@@ -47,6 +47,6 @@
     "@testing-library/jest-dom": "^5.9.0",
     "@testing-library/react": "^10.2.0",
     "eslint-config-airbnb": "^18.0.1",
-    "eslint-plugin-jsx-a11y": "^6.2.3"
+    "eslint-plugin-jsx-a11y": "^6.3.0"
   }
 }
