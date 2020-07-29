@@ -67,6 +67,24 @@
   font-size: 3rem;
   font-weight: 500;
   color: #0b254b;
+  margin-bottom: 1rem;
+}
+
+.landing-section-info-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: baseline;
+  justify-content: center;
+  padding: 0 11rem 1.5rem 11rem;
+}
+
+.landing-section-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  padding: 1rem;
 }
 
 .landing-plop-image-wrapper {

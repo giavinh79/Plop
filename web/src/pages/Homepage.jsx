@@ -33,7 +33,6 @@ export default function Homepage() {
             <ParticlesComponent params={particleParams} height='50rem' className='particle-effect' />
           )}
         </Suspense>
-        )
       </div>
       <div style={{ width: '100%' }}>
         <div className='landing-container'>
@@ -67,27 +66,18 @@ export default function Homepage() {
         <div className='landing-section-one'>
           <p className='landing-section-header-one'>Why Plop?</p>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            width: '100%',
-            alignItems: 'baseline',
-            justifyContent: 'center',
-            padding: '0 11rem 1.5rem 11rem',
-          }}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, padding: '1rem' }}>
+        <div className='landing-section-info-wrapper'>
+          <div className='landing-section-info'>
             <img src='/images/plan.svg' alt='plan' style={{ width: '100%', padding: '0 3rem', maxWidth: '30rem' }} />
             <Alert
               message={<span style={{ fontWeight: '500' }}>Plan</span>}
               description='Create project issues and track their progress through the team/user dashboard.'
               type='info'
               showIcon
-              style={{ minWidth: '20rem' }}
+              style={{ minWidth: '20rem', marginTop: '2rem' }}
             />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, padding: '1rem' }}>
+          <div className='landing-section-info'>
             <img
               src='/images/manage.svg'
               alt='manage'
@@ -98,10 +88,10 @@ export default function Homepage() {
               description='Create teams, invite new members, and establish a team hierarchy with ease.'
               type='info'
               showIcon
-              style={{ minWidth: '20rem' }}
+              style={{ minWidth: '20rem', marginTop: '2rem' }}
             />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, padding: '1rem' }}>
+          <div className='landing-section-info'>
             <img
               src='/images/communicate.svg'
               alt='communicate'
@@ -112,7 +102,7 @@ export default function Homepage() {
               description='Share issues and collaborate through the notification system and in-built chat.'
               type='info'
               showIcon
-              style={{ minWidth: '20rem' }}
+              style={{ minWidth: '20rem', marginTop: '2rem' }}
             />
           </div>
         </div>
