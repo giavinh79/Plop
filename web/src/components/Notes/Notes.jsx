@@ -19,7 +19,7 @@ export default function Notes() {
   const [theme] = useContext(ThemeContext);
 
   const [data, setData] = useState([]);
-  const [displayModal, setDisplayModal] = useState(true);
+  const [displayModal, setDisplayModal] = useState(false);
   const [displayHelpModal, setDisplayHelpModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState(false);

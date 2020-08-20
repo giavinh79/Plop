@@ -95,10 +95,8 @@ export default function NoteModal({ data, handleCreate, setDisplayModal }) {
           setDescription(e.currentTarget.value);
         }}
       />
-      <p style={{ fontWeight: 500 }}>Icon</p>
+      {/* <p style={{ fontWeight: 500 }}>Icon</p>
       <Row type='flex' style={{ marginBottom: '1rem', justifyContent: 'space-around' }}>
-        {/* Add icons to choose from
-Support retrospectives as well: smile, frown, lightbulb, alert, exclamation, folder, cloud, fire (lets go for 8/10) */}
         <NoteAvatar icon='stop' highlighted={icon === 0} onClick={() => setIcon(0)} />
         <NoteAvatar icon='bulb' highlighted={icon === 1} onClick={() => setIcon(1)} />
         <NoteAvatar icon='folder' highlighted={icon === 2} onClick={() => setIcon(2)} />
@@ -108,7 +106,7 @@ Support retrospectives as well: smile, frown, lightbulb, alert, exclamation, fol
         <NoteAvatar icon='fire' highlighted={icon === 6} onClick={() => setIcon(6)} />
         <NoteAvatar icon='smile' highlighted={icon === 7} onClick={() => setIcon(7)} />
         <NoteAvatar icon='frown' highlighted={icon === 8} onClick={() => setIcon(8)} />
-      </Row>
+      </Row> */}
       <p style={{ fontWeight: 500 }}>Background Color</p>
       <TwitterPicker
         width='100%'
