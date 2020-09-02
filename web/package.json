@@ -13,7 +13,7 @@
     "react-dom": "^16.8.6",
     "react-grid-layout": "^0.18.3",
     "react-infinite-scroller": "^1.2.4",
-    "react-particles-js": "^3.2.1",
+    "react-particles-js": "^3.3.0",
     "react-reveal": "^1.2.2",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.4.3",
