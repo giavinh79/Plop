@@ -9,7 +9,7 @@ For data storage, a postgreSQL relational database is used. The Lucid ORM is lev
 
 ![Plop Dark Mode Preview](https://github.com/GV79/Plop/blob/master/readme-plop.png)
 
-> [Current deployed on https://www.plopteam.rocks/ as version 0.8 via Netlify. Backend is deployed on https://plopwebapp.herokuapp.com/ using Heroku.](https://plop.team/)
+> [Current deployed on https://www.plopteam.rocks/ as version 0.8 via Netlify. Backend is deployed on https://plopwebapp.herokuapp.com/ using Heroku.](https://www.plopteam.rocks/)
 
 # Features
 
