@@ -1,7 +1,7 @@
 Plop
 =====
 
-**Note** - This project was originally created to develop my React.js knowledge with a focus on feature delivery (completeness). Therefore, the code is not close to what I would consider production quality and a future goal is to refactor both the frontend and backend at some point.
+**Note** - This project was originally created to develop my React.js knowledge with a focus on feature delivery (completeness). Therefore, the code is not close to what I would consider production quality and a future goal is to refactor both the frontend and backend at some point. Currently does not work with incognito due to how cookies are being currently used (for authorization).
 
 Plop is an open-source web application that uses React.js as its frontend library and Adonis.js (Node.js framework) as the REST API. It is a simple project management tool targeted towards small teams (< 12) where users can create, assign, and manage tasks.
 
