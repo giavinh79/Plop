@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Input, Modal, Row } from 'antd';
 import { CirclePicker, TwitterPicker, HuePicker } from 'react-color';
-import { CirclePickerContainer, NoteAvatar } from './NoteStyles';
-import './react-color.css';
+
+import { CirclePickerContainer } from './NoteStyles';
 import { NOTE_BACKGROUND_COLORS, NOTE_TITLE_COLORS, NOTE_CONTENT_COLORS } from '../../constants';
+
+import './react-color.css';
 
 const { TextArea } = Input;
 
@@ -12,7 +14,6 @@ export default function NoteModal({ data, handleCreate, setDisplayModal }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  const [icon, setIcon] = useState(0);
   const [titleColor, setTitleColor] = useState('rgba(0,0,0,.85)');
   const [contentColor, setContentColor] = useState('rgba(0,0,0,.60)');
   const [backgroundColor, setBackgroundColor] = useState('white');

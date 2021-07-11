@@ -7,15 +7,13 @@ import { particleParams } from '../constants/particles';
 import HomepageTermsConditions from './HomepageTermsConditions';
 import './Homepage.css';
 
-const ParticlesComponent = lazy(() => {
-  return Promise.all([import('react-particles-js'), new Promise((resolve) => setTimeout(resolve, 300))]).then(
+const ParticlesComponent = lazy(async () => {
+  return Promise.all([import('react-tsparticles'), new Promise((resolve) => setTimeout(resolve, 300))]).then(
     ([moduleExports]) => moduleExports
   );
 });
 
 const Backtop = lazy(() => import('antd').then((module) => ({ default: module.BackTop })));
-
-const Fade = lazy(() => import('react-reveal/Fade'));
 
 export default function Homepage() {
   const [displayPrivacyModal, setDisplayPrivacyModal] = useState(false);
@@ -30,7 +28,7 @@ export default function Homepage() {
       <div className='particle-wrapper'>
         <Suspense fallback={<></>}>
           {window.innerWidth > 870 && (
-            <ParticlesComponent params={particleParams} height='50rem' className='particle-effect' />
+            <ParticlesComponent options={particleParams} height='50rem' className='particle-effect' />
           )}
         </Suspense>
       </div>
@@ -126,47 +124,43 @@ export default function Homepage() {
             style={{ position: 'absolute', zIndex: '1', width: '100%', height: '100rem', backgroundColor: '#86868659' }}
           ></div> */}
           <Suspense fallback={<></>}>
-            <Fade left delay={100}>
-              <div className='suspense-element'>
-                <div className='fade-in-element-wrapper'>
-                  <img src='/images/opensource.svg' className='fade-in-element-image' alt='open-source' />
-                </div>
-                <div
-                  className='fade-in-element-wrapper'
-                  style={{ padding: '2rem', fontFamily: 'Montserrat', maxWidth: '800px' }}
-                >
-                  <p className='fade-in-element-text'>
-                    <span style={{ color: '#577090' }}>Free</span> and
-                    <span style={{ color: '#577090' }}> Open Source</span>
-                  </p>
-                  <p style={{ fontSize: '1.2rem', color: '#666' }}>
-                    As an open-source project, anyone can help contribute to Plop's code repository. By being community
-                    driven, more power and flexibility is given to the users. Drop by the GitHub (in site footer) and
-                    help improve Plop!
-                  </p>
-                </div>
+            <div className='suspense-element'>
+              <div className='fade-in-element-wrapper'>
+                <img src='/images/opensource.svg' className='fade-in-element-image' alt='open-source' />
               </div>
-            </Fade>
-            <Fade right delay={400}>
-              <div className='suspense-element' style={{ marginTop: '2rem' }}>
-                <div className='fade-in-element-wrapper'>
-                  <img src='/images/theme.svg' className='fade-in-element-image' alt='configuration' />
-                </div>
-                <div
-                  className='fade-in-element-wrapper'
-                  style={{ padding: '2rem', fontFamily: 'Montserrat', maxWidth: '800px' }}
-                >
-                  <p className='fade-in-element-text'>
-                    <span style={{ color: '#577090' }}>Comprehensive</span>
-                  </p>
-                  <p style={{ fontSize: '1.2rem', color: '#666' }}>
-                    There are many other features that still haven't been discussed! Theming, avatars, team and user
-                    logs... all these different functionalities give users a complete experience and the ability to
-                    customize various things.
-                  </p>
-                </div>
+              <div
+                className='fade-in-element-wrapper'
+                style={{ padding: '2rem', fontFamily: 'Montserrat', maxWidth: '800px' }}
+              >
+                <p className='fade-in-element-text'>
+                  <span style={{ color: '#577090' }}>Free</span> and
+                  <span style={{ color: '#577090' }}> Open Source</span>
+                </p>
+                <p style={{ fontSize: '1.2rem', color: '#666' }}>
+                  As an open-source project, anyone can help contribute to Plop's code repository. By being community
+                  driven, more power and flexibility is given to the users. Drop by the GitHub (in site footer) and help
+                  improve Plop!
+                </p>
               </div>
-            </Fade>
+            </div>
+            <div className='suspense-element' style={{ marginTop: '2rem' }}>
+              <div className='fade-in-element-wrapper'>
+                <img src='/images/theme.svg' className='fade-in-element-image' alt='configuration' />
+              </div>
+              <div
+                className='fade-in-element-wrapper'
+                style={{ padding: '2rem', fontFamily: 'Montserrat', maxWidth: '800px' }}
+              >
+                <p className='fade-in-element-text'>
+                  <span style={{ color: '#577090' }}>Comprehensive</span>
+                </p>
+                <p style={{ fontSize: '1.2rem', color: '#666' }}>
+                  There are many other features that still haven't been discussed! Theming, avatars, team and user
+                  logs... all these different functionalities give users a complete experience and the ability to
+                  customize various things.
+                </p>
+              </div>
+            </div>
           </Suspense>
         </div>
         <div className='landing-last-section'>

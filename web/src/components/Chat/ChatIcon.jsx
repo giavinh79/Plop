@@ -31,9 +31,9 @@ export default function ChatIcon() {
   useEffect(() => {
     subscribeToRoom(ws.current, chatData, setChat, setChatData, setChatLoading, setChatNotification); // connect to team's chat
 
-    return () => {
+    return (ws) => {
       try {
-        if (ws.current) ws.current.close();
+        ws.current.close();
       } catch (err) {}
     };
   }, []);
