@@ -5,7 +5,8 @@
   "description": "The fullstack application boilerplate for Adonisjs",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js --ignore ../src",
+    "start": "node server.js",
+    "dev": "nodemon server.js --ignore ../src",
     "test": "node ace test"
   },
   "keywords": [
