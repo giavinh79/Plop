@@ -1,34 +1,34 @@
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/web"
-  schedule:
-    interval: monthly
-    time: "10:00"
-  open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: antd
-    versions:
-    - 4.11.2
-    - 4.12.1
-    - 4.12.2
-    - 4.12.3
-    - 4.13.0
-    - 4.13.1
-  - dependency-name: react-scripts
-    versions:
-    - 4.0.1
-    - 4.0.2
-  - dependency-name: "@testing-library/react"
-    versions:
-    - 11.2.3
-    - 11.2.4
-  - dependency-name: react-grid-layout
-    versions:
-    - 1.2.0
-- package-ecosystem: npm
-  directory: "/server"
-  schedule:
-    interval: monthly
-    time: "10:00"
-  open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    directory: '/web'
+    schedule:
+      interval: monthly
+      time: '10:00'
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: antd
+        versions:
+          - 4.11.2
+          - 4.12.1
+          - 4.12.2
+          - 4.12.3
+          - 4.13.0
+          - 4.13.1
+      - dependency-name: react-scripts
+        versions:
+          - 4.0.1
+          - 4.0.2
+      - dependency-name: '@testing-library/react'
+        versions:
+          - 11.2.3
+          - 11.2.4
+      - dependency-name: react-grid-layout
+        versions:
+          - 1.2.0
+  - package-ecosystem: npm
+    directory: '/server'
+    schedule:
+      interval: monthly
+      time: '10:00'
+    open-pull-requests-limit: 10
