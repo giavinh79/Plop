@@ -5,8 +5,10 @@
   "proxy": "http://localhost:3333",
   "dependencies": {
     "@adonisjs/websocket-client": "^1.0.9",
+    "@sentry/react": "^6.9.0",
+    "@sentry/tracing": "^6.9.0",
     "antd": "^3.20.7",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",
     "react-color": "^2.18.1",
