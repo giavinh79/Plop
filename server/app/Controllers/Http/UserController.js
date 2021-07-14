@@ -154,10 +154,7 @@ class UserController {
     try {
       const user = await auth.getUser();
       response.status(200).send({ email: user.email });
-    } catch (err) {
-      console.log(err);
-      response.status(404).send();
-    }
+    } catch (err) { }
   }
 
   // JWT stored in httpOnly token to prevent XSS and CSRF

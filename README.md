@@ -1,5 +1,4 @@
-Plop
-=====
+# Plop
 
 **Note** - This project was originally created to develop my React.js knowledge with a focus on feature delivery (completeness). Therefore, the code is not close to what I would consider production quality and a future goal is to refactor both the frontend and backend at some point. Currently does not work with incognito due to how cookies are being currently used (for authorization).
 
@@ -13,20 +12,20 @@ For data storage, a postgreSQL relational database is used. The Lucid ORM is lev
 
 # Features
 
-* Drag and Drop dashboard
-* Create/join up to 3 teams easily
-* Create, assign, and track tasks
-* Real-time chat
-* Team notes (with real-time changes)
-* User and team settings
-* Filterable tables containing backlog and active tasks/issues
-* Project overview (basic statistics)
-* Schedule (lists issues w/ deadlines on the calendar)
-* Colorful and filterable logs to easily track team actions
-* Member hierarchy and management (kick/ban/promote/demote members)
-* Help page (for understanding how to use various features within the site)
-* Theming
-* Basic sprint implementation
+- Drag and Drop dashboard
+- Create/join up to 3 teams easily
+- Create, assign, and track tasks
+- Real-time chat
+- Team notes (with real-time changes)
+- User and team settings
+- Filterable tables containing backlog and active tasks/issues
+- Project overview (basic statistics)
+- Schedule (lists issues w/ deadlines on the calendar)
+- Colorful and filterable logs to easily track team actions
+- Member hierarchy and management (kick/ban/promote/demote members)
+- Help page (for understanding how to use various features within the site)
+- Theming
+- Basic sprint implementation
 
 # Getting Started
 
@@ -38,10 +37,13 @@ If you would like to only look at the frontend, go into web/src/Routes.js and ed
 (set `authenticated` to always be true and remove the `useEffect` function).
 
 1. Go to web folder and install dependencies (requires Node.js and NPM).
+
 ```
 $\web npm install
 ```
+
 2. Run frontend application.
+
 ```
 $\web npm start
 ```
@@ -51,26 +53,38 @@ $\web npm start
 1. Go to server folder, set up environment variables in your local .env file (see .env.example for attributes that you must fill in), and have a working PostgresQL database you can connect to.
 
 2. Set up database (requires [Adonis CLI](https://adonisjs.com/docs/4.1/installation)) with proper tables.
+
 ```
 $\server adonis migration:run
 ```
+
 3. Fill database with dummy test data (you can now login as a user called 'tester@gmail.com' with password 'test' with a prebuilt team).
+
 ```
 $\server adonis seed
 ```
+
 4. Go to server folder and install dependencies (requires Node.js and NPM).
+
 ```
 $\server npm install
 ```
+
 5. Run server on localhost:3333.
+
 ```
 $\server npm start
 ```
 
 Note: For resetting the database (all your data will be deleted)
+
 ```
 $\server adonis migration:rollback
 ```
+
+### Docker
+
+Use Docker Desktop and `docker-compose up -d` to manage the creation and running of the various services necessary.
 
 ### DB Resources
 
@@ -79,12 +93,14 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 ## Project To Dos
 
 **Immediate**
+
 - Throttling request, reCAPTCHA for signup, team data limits
 - Look at any accessibility problems (ie. contrast)
 - Completely finish dark theme
 - Enabling locked settings in team settings
 
 **Future Enhancements and Features**
+
 - Some features discussed in ROADMAP.md
 - Optimizing performance (can audit through Google Lighthouse and React Profiler)
 - Mobile app
@@ -110,6 +126,7 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 **Clean up Code**
 
 I am aware that there are some discrepancies regarding styling and class/function components along with areas in the project that could be further modularized or better organized (code/folder structure, naming, functions...etc.).
+
 - Delete pages folder, organize components folder, and improve naming
 - Refactoring CSS into styled-components where possible and re-use this across project
 - Component modularization to better organize code and to follow DRY principle
@@ -127,15 +144,16 @@ I am aware that there are some discrepancies regarding styling and class/functio
 **'adonis seed'** must have been run and executed properly to fill DB with dummy data. The tests are designed using Jest and React Testing Library.
 
 1. Execute unit tests on the React FE application.
+
 ```
 $\web npm test
 ```
 
 2. Analyze test coverage
+
 ```
 $\web npm run coverage
 ```
-
 
 ## Practices
 
