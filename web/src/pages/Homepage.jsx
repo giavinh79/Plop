@@ -185,7 +185,7 @@ export default function Homepage() {
 
         <footer className='landing-footer'>
           <div className='landing-footer-text'>
-            <p style={{ color: '#e2e2e2', margin: 0 }}>&copy; 2020 Plop, Inc. </p>
+            <p style={{ color: '#e2e2e2', margin: 0 }}>&copy; 2021 Plop, Inc. </p>
             <p className='landing-footer-terms' onClick={() => setDisplayPrivacyModal(true)}>
               Privacy
             </p>

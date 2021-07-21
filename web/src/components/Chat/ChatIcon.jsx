@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Badge, Icon, Spin } from 'antd';
-import Chat from './Chat';
-import { ChatIconWrapper } from './ChatIconStyles';
 import Ws from '@adonisjs/websocket-client';
+
+import Chat from './Chat';
 import { WEB_SOCKET } from '../../constants';
 import { subscribeToRoom } from '../../websockets/ws';
 import { getLastReadChat, updateLastReadChat } from '../../utility/restCalls';
+
+import { ChatIconWrapper } from './ChatIconStyles';
 import { ThemeContext } from '../../colors/theme';
 
 export default function ChatIcon() {
@@ -29,7 +31,7 @@ export default function ChatIcon() {
   };
 
   useEffect(() => {
-    subscribeToRoom(ws.current, chatData, setChat, setChatData, setChatLoading, setChatNotification); // connect to team's chat
+    subscribeToRoom(ws.current, setChat, setChatData, setChatLoading, setChatNotification); // connect to team's chat
 
     return (ws) => {
       try {
@@ -40,25 +42,25 @@ export default function ChatIcon() {
 
   useEffect(() => {
     (async () => {
-      if (chatData.messages && chatData.messages.length > 0) {
-        if (chatData.messages.slice(-1)[0].userMessage) return;
-        let mostRecentChat = new Date(chatData.messages.slice(-1)[0].dateCreated);
+      if (chatData?.messages?.length > 0) {
+        const mostRecentMessage = chatData.messages.slice(-1)[0];
 
-        let {
+        if (mostRecentMessage.userMessage) {
+          return;
+        }
+
+        const mostRecentMessageDate = new Date(mostRecentMessage.dateCreated);
+
+        const {
           data: { lastCheckedChat },
         } = await getLastReadChat();
 
-        if (lastCheckedChat == null) {
+        if (lastCheckedChat == null || new Date(lastCheckedChat).getTime() < mostRecentMessageDate.getTime()) {
           setChatNotification(true);
-        } else {
-          if (new Date(lastCheckedChat).getTime() < mostRecentChat.getTime()) {
-            setChatNotification(true);
-          }
         }
       }
     })().catch((err) => {
-      // check session
-      // if not session error unknwon error ->
+      // if not session error unknown error ->
       // displaySimpleNotification();
     });
   }, [chatData]);
@@ -71,7 +73,7 @@ export default function ChatIcon() {
       theme={theme}
       placement='topRight'
       trigger={['click']}
-      disabled={chatLoading ? true : false}
+      disabled={chatLoading}
       onVisibleChange={handleChatDialogAction}
     >
       <Badge count={chatNotification ? '1' : '0'} dot style={{ margin: '0.7rem 1.2rem' }}>
