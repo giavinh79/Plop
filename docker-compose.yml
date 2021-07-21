@@ -2,27 +2,43 @@ version: '3.9'
 
 services:
   frontend:
-    build: ./web
-    restart: always
-    # network_mode: host
+    build:
+      context: ./web
+      dockerfile: Dockerfile
     init: true
+    stdin_open: true
     env_file:
       - ./web/.env.development
+    ports:
+      - '3000:3000'
 
   api:
-    build: ./server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
     restart: always
+    command: sh ./docker-start.sh
+    environment:
+      - NODE_ENV=dev
+    volumes:
+      - .:/home/app
+      - /home/app/node_modules
+    networks:
+      - default
     # network_mode: host
     init: true
-    # depends_on:
-    #   - db
+    depends_on:
+      - db
     env_file:
       - ./server/.env
+    ports:
+      - '3333:3333'
 
   db:
     image: postgres:13.3-alpine
     restart: always
-    # network_mode: host
+    ports:
+      - '8000:8000'
     init: true
     environment:
       POSTGRES_PASSWORD: password

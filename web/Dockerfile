@@ -1,15 +1,18 @@
 FROM node:lts-alpine@sha256:b2da3316acdc2bec442190a1fe10dc094e7ba4121d029cb32075ff59bb27390a as node
 
 WORKDIR /usr/src/app
+
+ENV PATH /app/node_modules/.bin:$PATH
  
 COPY package*.json ./
+COPY package-lock.json ./
 
 RUN npm install
 
 # ENV NODE_ENV production
 # ci --only=production
  
-COPY . .
+COPY . ./
  
 EXPOSE 3000
 
