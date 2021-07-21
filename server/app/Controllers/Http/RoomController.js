@@ -1,6 +1,5 @@
 'use strict';
 
-const nodemailer = require('nodemailer');
 const Env = use('Env');
 const Encryption = use('Encryption');
 const Hashids = require('hashids/cjs');
@@ -514,25 +513,11 @@ class RoomController {
 
       const encryptedRoomId = hashids.encodeHex(room.id.toString());
 
-      const mailOptions = {
-        from: Env.get('EMAIL_USER'),
-        to: user.email,
+      emailQueue.sendEmailMessage({
         subject: 'Team Credentials',
-        html: `<p>Your team ID is <strong>${encryptedRoomId}</strong> and your password is <strong>${roomPassword}</strong>.</p>`,
-      };
-
-      let transport = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        secure: 'false',
-        auth: {
-          user: Env.get('EMAIL_USER'),
-          pass: Env.get('EMAIL_PASSWORD'),
-        },
-      });
-
-      transport.sendMail(mailOptions, (res) => {
-        if (res) console.log(`MAIL_ERROR ${res}`);
-      });
+        body: `<p>Your team ID is <strong>${encryptedRoomId}</strong> and your password is <strong>${roomPassword}</strong>.</p>`,
+        to: ['user.email']
+      })
 
       response.status(200).json({ id: encryptedRoomId, name: roomName, description: roomDescription });
     } catch (err) {
@@ -605,15 +590,15 @@ class RoomController {
         roomId,
         Env.get('DEVELOPMENT') === 'true'
           ? {
-              httpOnly: true,
-              path: '/',
-            }
+            httpOnly: true,
+            path: '/',
+          }
           : {
-              httpOnly: true,
-              secure: true,
-              sameSite: 'none',
-              path: '/',
-            }
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            path: '/',
+          }
       );
 
       response.status(200).json({ id: roomId, name: result[0].name });
@@ -738,15 +723,15 @@ class RoomController {
         request.body.id,
         Env.get('DEVELOPMENT') === 'true'
           ? {
-              httpOnly: true,
-              path: '/',
-            }
+            httpOnly: true,
+            path: '/',
+          }
           : {
-              httpOnly: true,
-              secure: true,
-              sameSite: 'none',
-              path: '/',
-            }
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            path: '/',
+          }
       );
       response.status(200).send();
     } catch (err) {

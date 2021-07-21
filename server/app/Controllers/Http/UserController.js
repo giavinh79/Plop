@@ -1,12 +1,13 @@
 'use strict';
 
-const nodemailer = require('nodemailer');
 const Hashids = require('hashids/cjs');
 const hashids = new Hashids('', 9);
 const Database = use('Database');
 const Env = use('Env');
 const User = use('App/Models/User');
 const { validate } = use('Validator');
+
+const emailQueue = require('../../services/EmailQueue.js');
 
 class UserController {
   async addNewUser({ request, response }) {
@@ -24,25 +25,13 @@ class UserController {
         const { email, password } = request.body;
         user.fill({ email: email, password: password, numTeams: 0, darkMode: 0, status: 0, avatar: 1 });
         await user.save();
-        const mailOptions = {
-          from: Env.get('EMAIL_USER'),
-          to: user.email,
+
+        emailQueue.sendEmailMessage({
           subject: 'Welcome to Plop!',
-          html: '<p>You have successfully signed up.</p>',
-        };
+          body: 'You have successfully signed up.',
+          to: ['user.email']
+        })
 
-        let transport = nodemailer.createTransport({
-          host: 'smtp.gmail.com',
-          secure: 'false',
-          auth: {
-            user: Env.get('EMAIL_USER'),
-            pass: Env.get('EMAIL_PASSWORD'),
-          },
-        });
-
-        transport.sendMail(mailOptions, (res) => {
-          if (res) console.log(`MAIL_ERROR ${res}`);
-        });
         response.status(200).send('User created successfully');
       } catch (err) {
         console.log(`(user_add) ${new Date()}: ${err.message}`);
@@ -53,23 +42,25 @@ class UserController {
 
   async login({ request, auth, response }) {
     const { email, password } = request.body;
+
     try {
       const jwt = await auth.attempt(email, password);
-      const { token } = jwt; // add secure attribute when deployed(?)
+      const { token } = jwt;
+
       response.cookie(
         'XSStoken',
         token,
         Env.get('DEVELOPMENT') === 'true'
           ? {
-              httpOnly: true,
-              path: '/',
-            }
+            httpOnly: true,
+            path: '/',
+          }
           : {
-              httpOnly: true,
-              secure: true,
-              sameSite: 'none',
-              path: '/',
-            }
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            path: '/',
+          }
       );
 
       response.status(200).send();
@@ -163,10 +154,7 @@ class UserController {
     try {
       const user = await auth.getUser();
       response.status(200).send({ email: user.email });
-    } catch (err) {
-      console.log(err);
-      response.status(404).send();
-    }
+    } catch (err) { }
   }
 
   // JWT stored in httpOnly token to prevent XSS and CSRF
