@@ -6,7 +6,7 @@
   "dependencies": {
     "@adonisjs/websocket-client": "^1.0.9",
     "@sentry/react": "^6.9.0",
-    "@sentry/tracing": "^6.9.0",
+    "@sentry/tracing": "^7.4.0",
     "antd": "^3.20.7",
     "axios": "^0.21.1",
     "react": "^16.13.1",
