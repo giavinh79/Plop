@@ -38,7 +38,7 @@
     "patch-package": "^6.2.2",
     "pg": "^7.12.1",
     "url-parse": "^1.5.1",
-    "uuid": "^8.0.0"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {},
   "autoload": {
