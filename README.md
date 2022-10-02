@@ -138,6 +138,9 @@ I am aware that there are some discrepancies regarding styling and class/functio
 - Server app: Leverage models more, more utility/middleware functions to reduce repeated code, consistent syntax...
 - Splitting functions up more (reducing side effects, abstracting logic...)
 - Maybe take any utility functions out of each component and put them in a NameServices.js file
+- Add React Query or SWR
+- Lyra for search?
+- dnd-kit over react-beautiful-dnd?
 
 ## Testing
 
