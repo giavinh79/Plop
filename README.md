@@ -8,7 +8,7 @@ For data storage, a postgreSQL relational database is used. The Lucid ORM is lev
 
 ![Plop Dark Mode Preview](https://github.com/GV79/Plop/blob/master/readme-plop.png)
 
-> [Current deployed on https://www.plopapp.me/ as version 0.8 via Netlify. Backend is deployed on https://plopwebapp.herokuapp.com/ using Heroku.](https://www.plopapp.me/)
+> [Current deployed on https://www.plopteam.rocks/ as version 0.8 via Netlify. Backend is deployed on https://plopwebapp.herokuapp.com/ using Heroku.](https://www.plopteam.rocks/)
 
 # Features
 
@@ -138,6 +138,9 @@ I am aware that there are some discrepancies regarding styling and class/functio
 - Server app: Leverage models more, more utility/middleware functions to reduce repeated code, consistent syntax...
 - Splitting functions up more (reducing side effects, abstracting logic...)
 - Maybe take any utility functions out of each component and put them in a NameServices.js file
+- Add React Query or SWR
+- Lyra for search?
+- dnd-kit over react-beautiful-dnd?
 
 ## Testing
 
