@@ -141,6 +141,7 @@ I am aware that there are some discrepancies regarding styling and class/functio
 - Add React Query or SWR
 - Lyra for search?
 - dnd-kit over react-beautiful-dnd?
+- CI/CD pipeline with dev, staging and prod environments
 
 ## Testing
 
