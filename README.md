@@ -142,6 +142,7 @@ I am aware that there are some discrepancies regarding styling and class/functio
 - Lyra for search?
 - dnd-kit over react-beautiful-dnd?
 - CI/CD pipeline with dev, staging and prod environments
+- React Location (TanStack) instead of react-router?
 
 ## Testing
 
