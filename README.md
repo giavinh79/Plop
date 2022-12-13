@@ -122,6 +122,12 @@ postgreSQL can be hosted locally via http://www.postgresqltutorial.com/install-p
 - @ing someone in chat which creates a sound ping if they are online
 - Upgraded schedule (easily drag and drop issues on to the calendar to set/update deadlines)
 - Invite link (automatically make user join team, signup/login flow if user not logged in)
+- Add React Query or SWR
+- Lyra for search?
+- dnd-kit over react-beautiful-dnd?
+- CI/CD pipeline with dev, staging and prod environments
+- React Location (TanStack) instead of react-router?
+- NextJS instead?
 
 **Clean up Code**
 
@@ -138,11 +144,6 @@ I am aware that there are some discrepancies regarding styling and class/functio
 - Server app: Leverage models more, more utility/middleware functions to reduce repeated code, consistent syntax...
 - Splitting functions up more (reducing side effects, abstracting logic...)
 - Maybe take any utility functions out of each component and put them in a NameServices.js file
-- Add React Query or SWR
-- Lyra for search?
-- dnd-kit over react-beautiful-dnd?
-- CI/CD pipeline with dev, staging and prod environments
-- React Location (TanStack) instead of react-router?
 
 ## Testing
 
