@@ -74,6 +74,17 @@ const displaySimpleNotification = (message, duration, placement, description, ic
   });
 };
 
+const displayErrorNotification = (text) => {
+  displaySimpleNotification(
+    'Error',
+    2,
+    'bottomRight',
+    text,
+    'warning',
+    'red'
+  );
+}
+
 const displaySessionExpired = () => {
   notification.open({
     message: 'Session expired',
@@ -100,6 +111,7 @@ export {
   compareDates,
   displayInfoDialog,
   displaySimpleNotification,
+  displayErrorNotification,
   displaySessionExpired,
   displayUnknownError,
 };

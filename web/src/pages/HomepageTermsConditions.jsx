@@ -5,7 +5,7 @@ export default function HomepageTermsConditions({ setDisplayTermsModal }) {
   return (
     <Modal
       title='Terms & Conditions'
-      visible={true}
+      visible
       onCancel={() => setDisplayTermsModal(false)}
       footer={[
         <Button key='submit' type='primary' onClick={() => setDisplayTermsModal(false)}>

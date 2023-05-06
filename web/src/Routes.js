@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import { Homepage, Team } from './pages';
-import Header from './components/Header/Header';
+import Header from './components/Header/HeaderMain';
 import SideNav from './components/SideNav/SideNav';
 import TeamDashboard from './components/Dashboard/TeamDashboard';
 import UserDashboard from './components/Dashboard/UserDashboard';
@@ -21,6 +21,8 @@ import { BodyWrapper, DashboardWrapper } from './globalStyles';
 import { displaySimpleNotification } from './utility/services';
 import { ThemeProvider } from './colors/theme';
 import { checkAuth } from './utility/restCalls';
+import HeaderDashboardPage from './components/Header/HeaderDashboardPage';
+import HeaderTeamPage from './components/Header/HeaderTeamPage';
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const [authenticated, setAuthenticated] = useState(null);
@@ -46,42 +48,54 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   }
 };
 
-export default function Routes() {
-  useEffect(() => {
-    let head = document.head;
-    let link = document.createElement('link');
+const addHeader = (Component, Header) => {
+  return () => (
+    <>
+      {Header && <Header />}
+      <BodyWrapper><Component /></BodyWrapper>
+    </>
+  )
+}
 
+function lazyLoadCss() {
+  const cssToLazyLoad = ['https://fonts.googleapis.com/css?family=Montserrat'];
+  const { head } = document;
+
+  cssToLazyLoad.forEach((css) => {
+    const link = document.createElement('link');
     link.type = 'text/css';
     link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css?family=Montserrat';
-
+    link.href = css;
     head.appendChild(link);
+  });
+}
 
-    return () => {
-      head.removeChild(link);
-    };
+export default function Routes() {
+  useEffect(() => {
+    lazyLoadCss()
   }, []);
 
   return (
     <ThemeProvider>
       <Router>
-        <Header />
-        <BodyWrapper>
-          <Switch>
-            <Route exact path='/' component={Homepage} />
-            <ProtectedRoute path='/team' component={Team} />
 
-            <Route
-              path='/dashboard'
-              render={({ match: { url } }) => (
-                <>
+        <Switch>
+          <Route exact path='/' component={addHeader(Homepage, Header)} />
+          <ProtectedRoute path='/team' component={addHeader(Team, HeaderTeamPage)} />
+
+          <Route
+            path='/dashboard'
+            render={({ match: { url } }) => (
+              <>
+                <HeaderDashboardPage />
+                <BodyWrapper>
                   <SideNav path={window.location.pathname} />
                   <DashboardWrapper>
                     <Switch>
                       <ProtectedRoute path={`${url}/`} component={TeamDashboard} exact />
                       <ProtectedRoute
                         path={`${url}/issue/:id`}
-                        component={(props) => <WrappedCreateIssueForm isManualNavigation={true} {...props} />}
+                        component={(props) => <WrappedCreateIssueForm isManualNavigation {...props} />}
                       />
                       <ProtectedRoute path={`${url}/user`} component={UserDashboard} />
                       <ProtectedRoute path={`${url}/overview`} component={Overview} />
@@ -100,13 +114,13 @@ export default function Routes() {
                     </Switch>
                   </DashboardWrapper>
                   <ChatIcon />
-                </>
-              )}
-            />
-            <Redirect to='/' />
-          </Switch>
-        </BodyWrapper>
+                </BodyWrapper>
+              </>
+            )}
+          />
+          <Redirect to='/' />
+        </Switch>
       </Router>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }

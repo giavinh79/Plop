@@ -5,7 +5,7 @@ export default function HomepagePrivacyTerms({ setDisplayPrivacyModal }) {
   return (
     <Modal
       title='Privacy Policy'
-      visible={true}
+      visible
       onCancel={() => setDisplayPrivacyModal(false)}
       footer={[
         <Button key='submit' type='primary' onClick={() => setDisplayPrivacyModal(false)}>

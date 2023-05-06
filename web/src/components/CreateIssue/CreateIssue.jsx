@@ -24,15 +24,15 @@ import CommentBody from '../Comment/CommentBody.jsx';
 import ShareIssue from './ShareIssue.jsx';
 import { disabledDate, toBase64, normFile } from '../../utility/issueServices';
 import moment from 'moment';
-import { useContext } from 'react';
-import { ThemeContext } from '../../colors/theme.js';
+// import { useContext } from 'react';
+// import { ThemeContext } from '../../colors/theme.js';
 import './style.css';
 
 const { TextArea } = Input;
 
 // Divide this up into two components and make a HoC (maybe)
 export default function CreateIssue({ form, location, isManualNavigation }) {
-  const [theme] = useContext(ThemeContext);
+  // const [theme] = useContext(ThemeContext);
 
   const { getFieldDecorator } = form;
   const [defaultFileList, setDefaultFileList] = useState([]);
